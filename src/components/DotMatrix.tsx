@@ -1,6 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { motion, useAnimation } from "framer-motion";
+import { motion } from "framer-motion";
 import styles from "../styles/DotMatrix.module.css";
 
 interface Dot {
@@ -164,8 +164,7 @@ const initializeDots = (numDots: number): Dot[] => {
 
 const DotMatrix: React.FC = () => {
   const [dots, setDots] = useState<Dot[]>(initializeDots(2500));
-  const [visibleDots, setVisibleDots] = useState<number>(2500);
-  const controls = useAnimation();
+  const [toggle, setToggle] = useState<boolean>(false);
 
   useEffect(() => {
     const timeouts = dots.map(
@@ -173,31 +172,27 @@ const DotMatrix: React.FC = () => {
         setTimeout(() => {
           setDots((prevDots) => {
             const newDots: Dot[] = [...prevDots];
-            if (!newDots[index].active) {
-              newDots[index] = { ...newDots[index], active: true };
-              setVisibleDots((prev) => prev - 1);
-            }
+            newDots[index] = { ...newDots[index], active: true };
             return newDots;
           });
         }, Math.random() * 10000), // Random delay up to 10 seconds
     );
 
     return () => timeouts.forEach((timeout) => clearTimeout(timeout));
-  }, []);
+  }, [toggle]);
 
   useEffect(() => {
-    if (visibleDots === 0) {
-      controls.start({ opacity: 1, transition: { duration: 2 } });
-    }
-  }, [visibleDots, controls]);
+    const interval = setInterval(() => {
+      setToggle((prevToggle) => !prevToggle);
+    }, 10000); // 10 seconds interval for color change
+
+    return () => clearInterval(interval);
+  }, []);
 
   const handleMouseOver = (index: number) => {
     setDots((prevDots) => {
       const newDots: Dot[] = [...prevDots];
-      if (!newDots[index].active) {
-        newDots[index] = { ...newDots[index], active: true };
-        setVisibleDots((prev) => prev - 1);
-      }
+      newDots[index] = { ...newDots[index], active: true };
       return newDots;
     });
   };
@@ -209,11 +204,7 @@ const DotMatrix: React.FC = () => {
       animate={{ opacity: 1 }}
       transition={{ duration: 2 }}
     >
-      <motion.div
-        className={styles["dot-matrix-container"]}
-        initial={{ opacity: 0 }}
-        animate={controls}
-      >
+      <div className={styles["dot-matrix-container"]}>
         {dots.map((dot, index) => (
           <motion.div
             key={index}
@@ -225,7 +216,7 @@ const DotMatrix: React.FC = () => {
             transition={{ duration: 0.5 }} // Speed up the transition
           />
         ))}
-      </motion.div>
+      </div>
       <motion.div
         className={styles.cta}
         initial={{ opacity: 0 }}
@@ -242,12 +233,7 @@ const DotMatrix: React.FC = () => {
           Pre-Save
         </a>
       </motion.div>
-      <motion.div
-        className={styles["grain-overlay"]}
-        initial={{ opacity: 0 }}
-        animate={controls}
-        transition={{ duration: 2 }}
-      />
+      <div className={styles["grain-overlay"]}></div>
     </motion.div>
   );
 };
