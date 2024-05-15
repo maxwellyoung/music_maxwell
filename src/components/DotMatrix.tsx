@@ -243,7 +243,7 @@ const DotMatrix: React.FC = () => {
       </div>
       <div className={styles.cta}>
         <p className={styles.text}>
-          Freewheelin by Maxwell Young releases June 7
+          Freewheelin&apos; by Maxwell Young releases June 7
         </p>
         <a
           href="https://music.drm.co.nz/freewheelin"
