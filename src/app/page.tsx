@@ -3,7 +3,7 @@ import DotMatrix from "~/components/DotMatrix";
 
 const Home: NextPage = () => {
   return (
-    <div>
+    <div className="flex h-screen flex-col items-center justify-center">
       <DotMatrix />
       {/* <CtaSection /> */}
     </div>
