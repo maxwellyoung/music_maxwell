@@ -87,17 +87,19 @@ const DotMatrix: React.FC = () => {
   };
 
   return (
-    <div className={styles["dot-matrix-container"]}>
-      {dots.map((dot, index) => (
-        <motion.div
-          key={index}
-          className={`${styles.dot} ${dot ? styles.active : ""}`}
-          onMouseOver={() => handleMouseOver(index)}
-          initial={{ opacity: 0.5 }}
-          animate={{ opacity: dot ? 1 : 0.5 }}
-          transition={{ duration: 0.3 }}
-        />
-      ))}
+    <div>
+      <div className={styles["dot-matrix-container"]}>
+        {dots.map((dot, index) => (
+          <motion.div
+            key={index}
+            className={`${styles.dot} ${dot ? styles.active : ""}`}
+            onMouseOver={() => handleMouseOver(index)}
+            initial={{ opacity: 0.5 }}
+            animate={{ opacity: dot ? 1 : 0.5 }}
+            transition={{ duration: 0.3 }}
+          />
+        ))}
+      </div>
       <div className={`${styles.cta} ${revealed ? styles.revealed : ""}`}>
         <p className="text-2xl">Freewheelin by Maxwell Young releases June 7</p>
 
