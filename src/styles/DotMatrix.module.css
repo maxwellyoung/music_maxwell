@@ -1,0 +1,66 @@
+.dot-matrix-container {
+  display: grid;
+  grid-template-columns: repeat(
+    50,
+    10px
+  ); /* Adjust number of columns for density */
+  gap: 3px; /* Adjust for density */
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 100vw; /* Ensure it spans the full width */
+  padding: 20px 0;
+  background-color: black; /* Change background to black */
+}
+
+.dot {
+  width: 10px;
+  height: 10px;
+  background-color: gray;
+  border-radius: 50%;
+  cursor: pointer;
+  transition:
+    background-color 0.3s,
+    opacity 0.3s;
+}
+
+.dot.active {
+  background-color: white; /* Active color to white */
+}
+
+.cta {
+  margin-top: 20px;
+  text-align: center;
+  opacity: 0; /* Start hidden for fade-in effect */
+  transition: opacity 1s ease-in-out;
+  color: white; /* Change text color to white */
+}
+
+.cta.revealed {
+  opacity: 1;
+}
+
+.pre-save-button {
+  padding: 10px 20px;
+  background-color: #fff; /* Change button background to white */
+  color: #000; /* Change button text to black */
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.pre-save-button:hover {
+  background-color: #ccc;
+}
+
+@media (max-width: 600px) {
+  .dot {
+    width: 5px;
+    height: 5px;
+  }
+
+  .dot-matrix-container {
+    grid-template-columns: repeat(30, 5px); /* Adjust for mobile view */
+  }
+}

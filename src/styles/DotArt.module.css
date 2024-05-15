@@ -1,0 +1,50 @@
+.dot-matrix-container {
+  display: grid;
+  grid-template-columns: repeat(20, 1fr); /* Adjust for your needs */
+  gap: 5px;
+  justify-content: center;
+  margin-top: 20px; /* Adjust this to move the matrix down */
+}
+
+.dot {
+  width: 20px; /* Adjust size as needed */
+  height: 20px;
+  background-color: gray;
+  border-radius: 50%;
+  cursor: pointer;
+  display: inline-block;
+}
+
+.dot.active {
+  background-color: white;
+}
+
+.cta {
+  margin-top: 20px;
+  text-align: center;
+}
+
+.pre-save-button {
+  padding: 10px 20px;
+  background-color: #000;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.pre-save-button:hover {
+  background-color: #333;
+}
+
+@media (max-width: 600px) {
+  .dot {
+    width: 10px;
+    height: 10px;
+  }
+
+  .dot-matrix-container {
+    grid-template-columns: repeat(10, 1fr); /* Adjust for mobile view */
+  }
+}
