@@ -69,16 +69,28 @@
   background-color: #b62d2d;
 }
 
+.black-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #000;
+  opacity: 1; /* Adjust opacity for the desired effect */
+  z-index: 3;
+  pointer-events: none;
+}
+
 .grain-overlay {
   position: absolute;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background-image: url("/grain.png"); /* Set your grain texture URL here */
+  background-image: url("/grain.jpg"); /* Set your grain texture URL here */
   background-size: cover;
   opacity: 0.2; /* Adjust opacity for the desired effect */
-  z-index: 3;
+  z-index: 4;
   pointer-events: none;
 }
 

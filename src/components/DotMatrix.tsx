@@ -10,7 +10,7 @@ interface Dot {
 
 // Generate an array of random Pantone colors
 const getRandomColor = (): string => {
-  const colors = [
+  const colors: string[] = [
     "#F0F8FF",
     "#FAEBD7",
     "#00FFFF",
@@ -152,16 +152,17 @@ const getRandomColor = (): string => {
     "#FFFF00",
     "#9ACD32",
   ];
-  return (
-    colors[Math.floor(Math.random() * colors.length)] ?? "#000000" // Fallback color
-  );
+  return colors[Math.floor(Math.random() * colors.length)] ?? "#000000"; // Fallback color
 };
 
 const initializeDots = (numDots: number): Dot[] => {
-  return Array.from({ length: numDots }, () => ({
-    active: false,
-    color: getRandomColor(),
-  }));
+  return Array.from(
+    { length: numDots },
+    (): Dot => ({
+      active: false,
+      color: getRandomColor(),
+    }),
+  );
 };
 
 const DotMatrix: React.FC = () => {
@@ -169,43 +170,46 @@ const DotMatrix: React.FC = () => {
   const [toggle, setToggle] = useState<boolean>(false);
 
   useEffect(() => {
-    const timeouts = dots.map(
+    const timeouts: NodeJS.Timeout[] = dots.map(
       (_, index) =>
         setTimeout(() => {
           setDots((prevDots) => {
-            const newDots: Dot[] = [...prevDots];
-            newDots[index] = { ...newDots[index], active: true };
+            const newDots = [...prevDots];
+            newDots[index] = {
+              ...newDots[index],
+              active: true,
+              color: newDots[index].color || "#000000",
+            };
             return newDots;
           });
-        }, Math.random() * 10000), // Random delay up to 10 seconds
+        }, Math.random() * 20000), // Random delay up to 20 seconds
     );
 
     return () => timeouts.forEach((timeout) => clearTimeout(timeout));
-  }, [toggle]);
+  }, [dots, toggle]);
 
   useEffect(() => {
     const interval = setInterval(() => {
       setToggle((prevToggle) => !prevToggle);
-    }, 10000); // 10 seconds interval for color change
+    }, 20000); // 20 seconds interval for color change
 
     return () => clearInterval(interval);
   }, []);
 
   const handleMouseOver = (index: number) => {
     setDots((prevDots) => {
-      const newDots: Dot[] = [...prevDots];
-      newDots[index] = { ...newDots[index], active: true };
+      const newDots = [...prevDots];
+      newDots[index] = {
+        ...newDots[index],
+        active: true,
+        color: newDots[index].color || "#000000",
+      };
       return newDots;
     });
   };
 
   return (
-    <motion.div
-      className={styles.container}
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      transition={{ duration: 2 }}
-    >
+    <div className={styles.container}>
       <div className={styles["dot-matrix-container"]}>
         {dots.map((dot, index) => (
           <motion.div
@@ -215,16 +219,11 @@ const DotMatrix: React.FC = () => {
             style={{ backgroundColor: dot.color }}
             initial={{ opacity: 1 }}
             animate={{ opacity: dot.active ? 0 : 1 }}
-            transition={{ duration: 0.5 }} // Speed up the transition
+            transition={{ duration: 1 }}
           />
         ))}
       </div>
-      <motion.div
-        className={styles.cta}
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 2, delay: 1 }}
-      >
+      <div className={styles.cta}>
         <p className={styles.text}>
           Freewheelin&apos; by Maxwell Young releases June 7
         </p>
@@ -234,15 +233,8 @@ const DotMatrix: React.FC = () => {
         >
           Pre-Save
         </a>
-      </motion.div>
-      <motion.div
-        className={styles["black-overlay"]}
-        initial={{ opacity: 1 }}
-        animate={{ opacity: dots.every((dot) => dot.active) ? 0 : 1 }}
-        transition={{ duration: 2 }}
-      />
-      <div className={styles["grain-overlay"]}></div>
-    </motion.div>
+      </div>
+    </div>
   );
 };
 
