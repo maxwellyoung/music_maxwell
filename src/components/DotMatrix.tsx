@@ -180,7 +180,7 @@ const DotMatrix: React.FC = () => {
               newDots[index] = {
                 ...dot,
                 active: true,
-                color: dot.color || "#000000",
+                color: dot.color ?? "#000000",
               };
             }
             return newDots;
@@ -202,14 +202,26 @@ const DotMatrix: React.FC = () => {
   const handleMouseOver = (index: number) => {
     setDots((prevDots) => {
       const newDots = [...prevDots];
-      const dot = newDots[index];
-      if (dot) {
-        newDots[index] = {
-          ...dot,
-          active: true,
-          color: dot.color || "#000000",
-        };
+      const radius = 1; // Define the radius of affected dots
+      const gridSize = 50; // Define the grid size (number of columns)
+
+      for (let x = -radius; x <= radius; x++) {
+        for (let y = -radius; y <= radius; y++) {
+          const newIndex = index + x + y * gridSize;
+          if (
+            newIndex >= 0 &&
+            newIndex < newDots.length &&
+            newDots[newIndex] !== undefined
+          ) {
+            newDots[newIndex] = {
+              ...newDots[newIndex]!,
+              active: true,
+              color: newDots[newIndex]?.color ?? "#000000",
+            };
+          }
+        }
       }
+
       return newDots;
     });
   };
@@ -225,13 +237,13 @@ const DotMatrix: React.FC = () => {
             style={{ backgroundColor: dot.color }}
             initial={{ opacity: 1 }}
             animate={{ opacity: dot.active ? 0 : 1 }}
-            transition={{ duration: 1 }}
+            transition={{ duration: 0.5 }} // Quicker transition for hover effect
           />
         ))}
       </div>
       <div className={styles.cta}>
         <p className={styles.text}>
-          Freewheelin&apos; by Maxwell Young releases June 7
+          Freewheelin by Maxwell Young releases June 7
         </p>
         <a
           href="https://music.drm.co.nz/freewheelin"
