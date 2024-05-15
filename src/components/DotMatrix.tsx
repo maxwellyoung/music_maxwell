@@ -152,7 +152,9 @@ const getRandomColor = (): string => {
     "#FFFF00",
     "#9ACD32",
   ];
-  return colors[Math.floor(Math.random() * colors.length)];
+  return (
+    colors[Math.floor(Math.random() * colors.length)] ?? "#000000" // Fallback color
+  );
 };
 
 const initializeDots = (numDots: number): Dot[] => {
@@ -224,7 +226,7 @@ const DotMatrix: React.FC = () => {
         transition={{ duration: 2, delay: 1 }}
       >
         <p className={styles.text}>
-          Freewheelin by Maxwell Young releases June 7
+          Freewheelin&apos; by Maxwell Young releases June 7
         </p>
         <a
           href="https://music.drm.co.nz/freewheelin"
@@ -233,6 +235,12 @@ const DotMatrix: React.FC = () => {
           Pre-Save
         </a>
       </motion.div>
+      <motion.div
+        className={styles["black-overlay"]}
+        initial={{ opacity: 1 }}
+        animate={{ opacity: dots.every((dot) => dot.active) ? 0 : 1 }}
+        transition={{ duration: 2 }}
+      />
       <div className={styles["grain-overlay"]}></div>
     </motion.div>
   );
