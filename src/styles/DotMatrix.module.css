@@ -6,16 +6,18 @@
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: #000000;
+  background-color: #000;
   color: #fff;
   padding: 20px;
   box-sizing: border-box;
+  position: relative;
+  overflow: hidden;
 }
 
 .dot-matrix-container {
   display: grid;
   grid-template-columns: repeat(50, 1fr);
-  gap: 6px;
+  gap: 2px;
   justify-content: center;
   align-items: center;
   width: 100%;
@@ -24,31 +26,26 @@
   background-image: url("/artwork.jpg"); /* Set your album artwork URL here */
   background-size: cover;
   background-position: center;
+  position: relative;
+  z-index: 1;
 }
 
 .dot {
   width: 10px;
   height: 10px;
-  background-color: #000000;
   border-radius: 50%;
-  opacity: 1;
-  transition:
-    background-color 1s,
-    opacity 1s;
+  transition: opacity 0.5s;
 }
 
 .dot.active {
-  background-color: transparent;
   opacity: 0;
-}
-
-.dot-matrix-container > .dot:hover {
-  background-color: transparent !important;
 }
 
 .cta {
   text-align: center;
   margin-top: 20px;
+  z-index: 2;
+  position: relative;
 }
 
 .text {
@@ -57,7 +54,7 @@
 }
 
 .pre-save-button {
-  background-color: #ef3042;
+  background-color: #ff4747;
   color: white;
   padding: 12px 24px;
   border: none;
@@ -70,6 +67,19 @@
 
 .pre-save-button:hover {
   background-color: #b62d2d;
+}
+
+.grain-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url("/grain.png"); /* Set your grain texture URL here */
+  background-size: cover;
+  opacity: 0.2; /* Adjust opacity for the desired effect */
+  z-index: 3;
+  pointer-events: none;
 }
 
 @media (max-width: 600px) {
