@@ -1,50 +1,90 @@
+/* DotMatrix.module.css */
+
+.container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #1a1a1a;
+  color: #fff;
+  font-family: "Inter", sans-serif;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
 .dot-matrix-container {
   display: grid;
-  grid-template-columns: repeat(20, 1fr); /* Adjust for your needs */
-  gap: 5px;
+  grid-template-columns: repeat(50, 1fr);
+  gap: 2px;
   justify-content: center;
-  margin-top: 20px; /* Adjust this to move the matrix down */
+  align-items: center;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
 }
 
 .dot {
-  width: 20px; /* Adjust size as needed */
-  height: 20px;
-  background-color: gray;
+  width: 10px;
+  height: 10px;
+  background-color: #333;
   border-radius: 50%;
-  cursor: pointer;
-  display: inline-block;
+  opacity: 0.5;
+  transition:
+    background-color 0.3s,
+    opacity 0.3s;
 }
 
 .dot.active {
-  background-color: white;
+  background-color: #fff;
+  opacity: 1;
+}
+
+.dot-matrix-container > .dot:nth-child(2n) {
+  background-color: #333;
+}
+
+.dot-matrix-container > .dot.active:nth-child(2n) {
+  background-color: #fff;
 }
 
 .cta {
-  margin-top: 20px;
   text-align: center;
+  margin-top: 20px;
+}
+
+.text {
+  font-size: 2rem;
+  margin-bottom: 20px;
 }
 
 .pre-save-button {
-  padding: 10px 20px;
-  background-color: #000;
-  color: #fff;
+  background-color: #ff6347;
+  color: white;
+  padding: 12px 24px;
   border: none;
-  border-radius: 5px;
+  border-radius: 25px;
   cursor: pointer;
+  text-decoration: none;
+  font-size: 1rem;
   transition: background-color 0.3s;
 }
 
 .pre-save-button:hover {
-  background-color: #333;
+  background-color: #ff7f5a;
 }
 
 @media (max-width: 600px) {
   .dot {
-    width: 10px;
-    height: 10px;
+    width: 6px;
+    height: 6px;
   }
 
-  .dot-matrix-container {
-    grid-template-columns: repeat(10, 1fr); /* Adjust for mobile view */
+  .text {
+    font-size: 1.5rem;
+  }
+
+  .pre-save-button {
+    padding: 10px 20px;
   }
 }

@@ -1,46 +1,88 @@
-.dot-matrix-container {
-  display: grid;
-  grid-template-columns: repeat(50, 10px);
-  gap: 5px;
+/* DotMatrix.module.css */
+
+.container {
+  display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  position: relative;
-  width: 600px;
-  height: 600px;
-  margin: auto;
+  height: 100vh;
+  background-color: #000000;
+  color: #fff;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.dot-matrix-container {
+  display: grid;
+  grid-template-columns: repeat(50, 1fr);
+  gap: 6px;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  background-image: url("/artwork.jpg"); /* Set your album artwork URL here */
+  background-size: cover;
+  background-position: center;
 }
 
 .dot {
   width: 10px;
   height: 10px;
-  background-color: grey;
+  background-color: #000000;
   border-radius: 50%;
+  opacity: 1;
+  transition:
+    background-color 1s,
+    opacity 1s;
 }
 
 .dot.active {
-  background-color: white;
+  background-color: transparent;
+  opacity: 0;
+}
+
+.dot-matrix-container > .dot:hover {
+  background-color: transparent !important;
 }
 
 .cta {
-  position: absolute;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
   text-align: center;
-  color: white;
-  display: none;
+  margin-top: 20px;
 }
 
-.cta.revealed {
-  display: block;
+.text {
+  font-size: 2rem;
+  margin-bottom: 20px;
 }
 
 .pre-save-button {
-  margin-top: 10px;
-  padding: 5px 10px;
-  background-color: white;
-  color: black;
+  background-color: #ef3042;
+  color: white;
+  padding: 12px 24px;
   border: none;
-  font-size: larger;
+  border-radius: 25px;
   cursor: pointer;
+  text-decoration: none;
+  font-size: 1rem;
+  transition: background-color 0.3s;
+}
+
+.pre-save-button:hover {
+  background-color: #b62d2d;
+}
+
+@media (max-width: 600px) {
+  .dot {
+    width: 6px;
+    height: 6px;
+  }
+
+  .text {
+    font-size: 1.5rem;
+  }
+
+  .pre-save-button {
+    padding: 10px 20px;
+  }
 }
