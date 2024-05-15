@@ -175,23 +175,26 @@ const DotMatrix: React.FC = () => {
         setTimeout(() => {
           setDots((prevDots) => {
             const newDots = [...prevDots];
-            newDots[index] = {
-              ...newDots[index],
-              active: true,
-              color: newDots[index].color || "#000000",
-            };
+            const dot = newDots[index];
+            if (dot) {
+              newDots[index] = {
+                ...dot,
+                active: true,
+                color: dot.color || "#000000",
+              };
+            }
             return newDots;
           });
-        }, Math.random() * 20000), // Random delay up to 20 seconds
+        }, Math.random() * 10000), // Random delay up to 20 seconds
     );
 
     return () => timeouts.forEach((timeout) => clearTimeout(timeout));
-  }, [dots, toggle]);
+  }, [toggle, dots]);
 
   useEffect(() => {
     const interval = setInterval(() => {
       setToggle((prevToggle) => !prevToggle);
-    }, 20000); // 20 seconds interval for color change
+    }, 10000); // 20 seconds interval for color change
 
     return () => clearInterval(interval);
   }, []);
@@ -199,11 +202,14 @@ const DotMatrix: React.FC = () => {
   const handleMouseOver = (index: number) => {
     setDots((prevDots) => {
       const newDots = [...prevDots];
-      newDots[index] = {
-        ...newDots[index],
-        active: true,
-        color: newDots[index].color || "#000000",
-      };
+      const dot = newDots[index];
+      if (dot) {
+        newDots[index] = {
+          ...dot,
+          active: true,
+          color: dot.color || "#000000",
+        };
+      }
       return newDots;
     });
   };
