@@ -6,8 +6,16 @@
   font-family: "Pantasia";
   src: url("/fonts/Pantasia-Regular.otf") format("opentype");
 }
+@font-face {
+  font-family: "ReenieBeanie";
+  src: url("/fonts/ReenieBeanie-Regular.ttf") format("opentype");
+}
 
 body {
   font-family: "Pantasia", sans-serif;
   background-color: #000000;
+}
+
+.reenie {
+  font-family: "ReenieBeanie", sans-serif;
 }
