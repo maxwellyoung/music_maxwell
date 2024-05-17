@@ -163,8 +163,8 @@ const CollectableGrid: React.FC = () => {
 
   return (
     <div className="bg-dark min-h-screen overflow-x-hidden text-white">
-      <div className="container mx-auto px-4 py-16">
-        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+      <div className="container mx-auto overflow-x-hidden px-4 py-16">
+        <div className="grid grid-cols-1 gap-8 overflow-x-hidden sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {songs.map((song, index) => (
             <motion.div
               key={index}

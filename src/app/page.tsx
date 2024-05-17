@@ -5,9 +5,8 @@ import DotMatrix from "~/components/DotMatrix";
 const Home: NextPage = () => {
   return (
     <>
-      <div className="flex h-screen min-h-screen flex-col items-center justify-center bg-dark text-white">
+      <div className="bg-dark flex h-screen min-h-screen flex-col items-center justify-center overflow-x-hidden text-white">
         <DotMatrix />
-        {/* <CtaSection /> */}
       </div>
       <CollectableGrid />
     </>
