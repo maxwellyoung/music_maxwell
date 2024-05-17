@@ -2,20 +2,36 @@
 @tailwind components;
 @tailwind utilities;
 
-@font-face {
-  font-family: "Pantasia";
-  src: url("/fonts/Pantasia-Regular.otf") format("opentype");
-}
-@font-face {
-  font-family: "ReenieBeanie";
-  src: url("/fonts/ReenieBeanie-Regular.ttf") format("opentype");
-}
+@layer base {
+  :root {
+    --background: 0 0% 0%;
+    --foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 240 5.9% 10%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 240 10% 3.9%;
+    --radius: 0.5rem;
+  }
 
-body {
-  font-family: "Pantasia", sans-serif;
-  background-color: #000000;
-}
+  .dark {
+    --background: 0 0% 0%;
+    --foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 240 5.9% 10%;
+    --secondary: 240 4.8% 95.9%;
+    --secondary-foreground: 240 5.9% 10%;
+    --border: 240 5.9% 90%;
+    --input: 240 5.9% 90%;
+    --ring: 240 10% 3.9%;
+  }
 
-.reenie {
-  font-family: "ReenieBeanie", sans-serif;
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
 }
