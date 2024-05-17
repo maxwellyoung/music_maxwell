@@ -121,12 +121,12 @@ const AboutSection = () => (
         <p>
           Since then, he has been focused on creating alternative pop music
           which feels new but clarifying, songs which try to stick out with
-          newness and earnestness with his music partner Eddie "Lontalius"
-          Johnston. Many songs have been released from their collaboration as
-          well as music videos made with friends. An EP was released in 2022
-          called Birthday Girl featuring one of Maxwell's proudest songs
-          "Believe" and in 2023 Maxwell has begun attempting to be consistent
-          with releasing singles.
+          newness and earnestness with his music partner Eddie
+          &apos;Lontalius&apos; Johnston. Many songs have been released from
+          their collaboration as well as music videos made with friends. An EP
+          was released in 2022 called Birthday Girl featuring one of
+          Maxwell&apos;s proudest songs &apos;Believe&apos; and in 2023 Maxwell
+          has begun attempting to be consistent with releasing singles.
         </p>
       </CardContent>
       <CardFooter>
