@@ -358,6 +358,14 @@ const CollectableGrid: React.FC = () => {
             Twitter
           </a>
           <a
+            href="https://instagram.com/maxwell_young"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mx-2 cursor-pointer text-primary hover:underline"
+          >
+            Instagram
+          </a>
+          <a
             href="https://www.maxwellyoung.info/"
             target="_blank"
             rel="noopener noreferrer"
