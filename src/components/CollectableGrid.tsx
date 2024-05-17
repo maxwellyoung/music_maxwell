@@ -35,6 +35,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "./ui/carousel";
+import { AspectRatio } from "./ui/aspect-ratio";
 import {
   Card,
   CardContent,
@@ -60,25 +61,41 @@ type Song = {
 
 const photos = [
   { src: "/pressphotos/1.jpg", alt: "Press Photo 1" },
+  { src: "/pressphotos/1.jpg", alt: "Press Photo 1" },
+  { src: "/pressphotos/1.jpg", alt: "Press Photo 1" },
   { src: "/pressphotos/2.jpeg", alt: "Press Photo 2" },
   { src: "/pressphotos/3.jpeg", alt: "Press Photo 3" },
   // Add more photos as needed
 ];
 
+console.log("Photos array:", photos); // Debugging log
+
 const PressPhotoCarousel = () => (
   <section className="my-12">
-    <h2 className="mb-4 text-center text-2xl font-bold">Press Photos</h2>
-    <Carousel>
-      <CarouselContent>
-        {photos.map((photo, index) => (
-          <CarouselItem key={index}>
-            <Image src={photo.src} alt={photo.alt} width={800} height={600} />
-          </CarouselItem>
-        ))}
-      </CarouselContent>
-      <CarouselPrevious />
-      <CarouselNext />
-    </Carousel>
+    <div className="relative max-w-full overflow-hidden">
+      <Carousel className="max-w-full overflow-hidden">
+        <CarouselContent className="flex items-center justify-center">
+          {photos.map((photo, index) => (
+            <CarouselItem
+              key={index}
+              className="w-full flex-shrink-0 sm:w-auto"
+            >
+              <AspectRatio ratio={4 / 3} className="relative w-full">
+                <Image
+                  src={photo.src}
+                  alt={photo.alt}
+                  layout="fill"
+                  objectFit="contain"
+                  className="rounded-lg"
+                />
+              </AspectRatio>
+            </CarouselItem>
+          ))}
+        </CarouselContent>
+        <CarouselPrevious className="absolute left-0 top-1/2 -translate-y-1/2 transform rounded-full bg-black bg-opacity-50 p-2" />
+        <CarouselNext className="absolute right-0 top-1/2 -translate-y-1/2 transform rounded-full bg-black bg-opacity-50 p-2" />
+      </Carousel>
+    </div>
   </section>
 );
 
@@ -98,10 +115,9 @@ const AboutSection = () => (
           show was opening for The Internet at San Fran in Wellington. He went
           on to release a bedroom pop album featuring the likes of Clairo. He
           continued releasing music and opening for more international acts such
-          as Peanut Butter Wolf and Snail Mail. He was meant to tour Australia
+          as Peanut Butter Wolf, Snail Mail. He was meant to tour Australia
           supporting Clairo but Covid prevented that from happening.
         </p>
-        <br />
         <p>
           Since then, he has been focused on creating alternative pop music
           which feels new but clarifying, songs which try to stick out with
@@ -251,7 +267,7 @@ const CollectableGrid: React.FC = () => {
                     href={selectedSong?.links.spotify}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-blue-500 hover:underline"
+                    className="cursor-pointer text-blue-500 hover:underline"
                   >
                     Spotify
                   </a>
@@ -259,7 +275,7 @@ const CollectableGrid: React.FC = () => {
                     href={selectedSong?.links.appleMusic}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-blue-500 hover:underline"
+                    className="cursor-pointer text-blue-500 hover:underline"
                   >
                     Apple Music
                   </a>
@@ -267,7 +283,7 @@ const CollectableGrid: React.FC = () => {
                     href={selectedSong?.links.youtube}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="text-blue-500 hover:underline"
+                    className="cursor-pointer text-blue-500 hover:underline"
                   >
                     YouTube
                   </a>
@@ -278,7 +294,7 @@ const CollectableGrid: React.FC = () => {
           <DrawerFooter>
             <button
               onClick={closeDrawer}
-              className="mt-4 text-red-500 hover:underline"
+              className="mt-4 cursor-pointer text-red-500 hover:underline"
             >
               Close
             </button>
@@ -292,7 +308,7 @@ const CollectableGrid: React.FC = () => {
             href="https://open.spotify.com/artist/5HONdRTLNvBjlD2LirKp0q"
             target="_blank"
             rel="noopener noreferrer"
-            className="mx-2 text-primary hover:underline"
+            className="mx-2 cursor-pointer text-primary hover:underline"
           >
             Spotify
           </a>
@@ -300,7 +316,7 @@ const CollectableGrid: React.FC = () => {
             href="https://music.apple.com/us/artist/maxwell-young/1113632139"
             target="_blank"
             rel="noopener noreferrer"
-            className="mx-2 text-primary hover:underline"
+            className="mx-2 cursor-pointer text-primary hover:underline"
           >
             Apple Music
           </a>
@@ -308,7 +324,7 @@ const CollectableGrid: React.FC = () => {
             href="https://soundcloud.com/maxwell_young"
             target="_blank"
             rel="noopener noreferrer"
-            className="mx-2 text-primary hover:underline"
+            className="mx-2 cursor-pointer text-primary hover:underline"
           >
             SoundCloud
           </a>
@@ -316,7 +332,7 @@ const CollectableGrid: React.FC = () => {
             href="https://www.youtube.com/@maxwell_young"
             target="_blank"
             rel="noopener noreferrer"
-            className="mx-2 text-primary hover:underline"
+            className="mx-2 cursor-pointer text-primary hover:underline"
           >
             YouTube
           </a>
@@ -324,7 +340,7 @@ const CollectableGrid: React.FC = () => {
             href="https://x.com/internetmaxwell"
             target="_blank"
             rel="noopener noreferrer"
-            className="mx-2 text-primary hover:underline"
+            className="mx-2 cursor-pointer text-primary hover:underline"
           >
             Twitter
           </a>
@@ -332,7 +348,7 @@ const CollectableGrid: React.FC = () => {
             href="https://www.maxwellyoung.info/"
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-2 block text-primary hover:underline"
+            className="mt-2 block cursor-pointer text-primary hover:underline"
           >
             maxwellyoung.info
           </a>
