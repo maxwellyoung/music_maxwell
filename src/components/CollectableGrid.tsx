@@ -119,6 +119,7 @@ const AboutSection = () => (
           such as Peanut Butter Wolf, Snail Mail. He was meant to tour Australia
           supporting Clairo but Covid prevented that from happening.
         </p>
+        <br />
         <p>
           Since then, he has been focused on creating alternative pop music
           which feels new but clarifying, songs which try to stick out with
