@@ -107,7 +107,7 @@ const AboutSection = () => (
         <CardTitle>About Maxwell Young</CardTitle>
         <CardDescription>Musician, DJ, and visual artist</CardDescription>
       </CardHeader>
-      <CardContent>
+      {/* <CardContent>
         <p>
           Maxwell Young is a singer/songwriter/producer from Wellington, New
           Zealand. His music began getting attention when his boom bap beats
@@ -130,10 +130,10 @@ const AboutSection = () => (
           Maxwell&apos;s proudest songs &apos;Believe&apos; and in 2023 Maxwell
           has begun attempting to be consistent with releasing singles.
         </p>
-      </CardContent>
-      <CardFooter>
+      </CardContent> */}
+      <CardContent>
         <p>Magic is everywhere.</p>
-      </CardFooter>
+      </CardContent>
     </Card>
   </section>
 );
