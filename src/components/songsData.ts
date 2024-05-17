@@ -62,7 +62,8 @@ const songs: Song[] = [
   I wanna be there
   Ooo`,
     },
-    credits: `Produced by Maxwell Young & Eddie Johnston`,
+    credits: `Produced by Maxwell Young & Eddie Johnston
+    Artwork by Tom Shackleton & Maxwell Young`,
   },
   {
     title: "Hopeless",
@@ -117,7 +118,8 @@ const songs: Song[] = [
       I am such a child
 `,
     },
-    credits: `Produced by Maxwell Young & Eddie Johnston`,
+    credits: `Produced by Maxwell Young & Eddie Johnston
+    Artwork by Millie Dow`,
   },
   {
     title: "Call Ur Name / Go Ahead",
@@ -236,7 +238,8 @@ const songs: Song[] = [
       All the things you know, I already know
       All the things you wrote, I already wrote`,
     },
-    credits: `Produced by Maxwell Young & Eddie Johnston`,
+    credits: `Produced by Maxwell Young & Eddie Johnston
+    Artwork by Eddie Johnston`,
   },
   {
     title: "Birthday Girl",
@@ -398,10 +401,7 @@ const songs: Song[] = [
   First time there's no pressure about a pedestal for me`,
     },
     credits: `Produced by Maxwell Young & Eddie Johnston
-  Floodlight & Believe co-produced by Josh Naley
-  Piano on 'I'm Not Alone' by Solomon Gutteridge
-  Mastered by Ike Zwanikken
-  Artwork by Tom Shackleton`,
+  Artwork by Maxwell Young`,
   },
 
   {
@@ -538,7 +538,8 @@ const songs: Song[] = [
       Just know that I'm here still but I'm not your only one
       [?]`,
     },
-    credits: `Produced by Maxwell Young & Eddie Johnston`,
+    credits: `Produced by Maxwell Young & Eddie Johnston
+    Artwork by Nayan Patel`,
   },
   {
     title: "Dread!",
@@ -610,7 +611,8 @@ const songs: Song[] = [
       Don't call me a stranger
       It felt sacred & patient`,
     },
-    credits: `Produced by Maxwell Young & Eddie Johnston`,
+    credits: `Produced by Maxwell Young & Eddie Johnston
+    Artwork by Max Pirrit`,
   },
   {
     title: "Don't Waste Your Time",
@@ -681,7 +683,8 @@ const songs: Song[] = [
       Made out I can't feel weak
       Belmond, Anna on TV I told ya`,
     },
-    credits: `Produced by Maxwell Young & Eddie Johnston`,
+    credits: `Produced by Maxwell Young & Eddie Johnston
+    Artwork by Maxwell Young`,
   },
   {
     title: "No. 5",
@@ -784,7 +787,8 @@ const songs: Song[] = [
         I really like you I've found
         But I can't keep having you round`,
     },
-    credits: `Produced by Maxwell Young & Eddie Johnston`,
+    credits: `Produced by Maxwell Young & Eddie Johnston
+    Artwork by Maxwell Young & Ilena Shadbolt`,
   },
 ];
 
