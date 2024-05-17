@@ -28,10 +28,32 @@
     --ring: 240 10% 3.9%;
   }
 
+  @font-face {
+    font-family: "Pantasia";
+    src:
+      url("/fonts/Pantasia-Regular.woff2") format("woff2"),
+      url("/fonts/Pantasia-Regular.woff") format("woff"),
+      url("/fonts/Pantasia-Regular.otf") format("opentype");
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: "ReenieBeanie";
+    src: url("/fonts/ReenieBeanie-Regular.ttf") format("truetype");
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans;
+  }
+
   * {
     @apply border-border;
   }
-  body {
-    @apply bg-background text-foreground;
-  }
+}
+
+.font-reenie {
+  font-family: "ReenieBeanie", sans-serif;
 }

@@ -243,8 +243,8 @@ const DotMatrix: React.FC = () => {
       </div>
       <div className={styles.cta}>
         <p className={styles.text}>
-          Freewheelin&apos; by <span className="reenie">Maxwell Young</span>{" "}
-          releases June 7
+          Freewheelin&apos; by{" "}
+          <span className="font-reenie">Maxwell Young</span> releases June 7
         </p>
         <a
           href="https://music.drm.co.nz/freewheelin"
