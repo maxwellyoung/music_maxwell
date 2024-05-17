@@ -62,10 +62,7 @@ const songs: Song[] = [
   I wanna be there
   Ooo`,
     },
-    credits: `Produced by Maxwell Young
-  Recorded by Maxwell Young
-  Mixed by Maxwell Young
-  Mastered by Maxwell Young`,
+    credits: `Produced by Maxwell Young & Eddie Johnston`,
   },
   {
     title: "Hopeless",
