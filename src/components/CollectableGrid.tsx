@@ -44,6 +44,7 @@ import {
   CardHeader,
   CardTitle,
 } from "./ui/card";
+import { Separator } from "./ui/separator";
 import songs from "./songsData";
 
 type Song = {
@@ -130,7 +131,7 @@ const AboutSection = () => (
         </p>
       </CardContent>
       <CardFooter>
-        <p>Stay tuned for more updates and new releases.</p>
+        <p>Magic is everywhere.</p>
       </CardFooter>
     </Card>
   </section>
@@ -186,8 +187,20 @@ const CollectableGrid: React.FC = () => {
           ))}
         </div>
 
-        <PressPhotoCarousel />
-        <AboutSection />
+        <div className="hidden md:block md:flex">
+          <div className="md:w-1/2">
+            <PressPhotoCarousel />
+          </div>
+          <Separator orientation="vertical" className="mx-4 my-12" />
+          <div className="md:w-1/2">
+            <AboutSection />
+          </div>
+        </div>
+
+        <div className="md:hidden">
+          <PressPhotoCarousel />
+          <AboutSection />
+        </div>
       </div>
 
       <Drawer open={isOpen} onOpenChange={setIsOpen}>
