@@ -111,11 +111,11 @@ const AboutSection = () => (
           Maxwell Young is a singer/songwriter/producer from Wellington, New
           Zealand. His music began getting attention when his boom bap beats
           inspired by College Dropout era Kanye instrumentals were featured on a
-          selection of successful YouTuber Casey Neistat's videos. His first
-          show was opening for The Internet at San Fran in Wellington. He went
-          on to release a bedroom pop album featuring the likes of Clairo. He
-          continued releasing music and opening for more international acts such
-          as Peanut Butter Wolf, Snail Mail. He was meant to tour Australia
+          selection of successful YouTuber Casey Neistat&apos;s videos. His
+          first show was opening for The Internet at San Fran in Wellington. He
+          went on to release a bedroom pop album featuring the likes of Clairo.
+          He continued releasing music and opening for more international acts
+          such as Peanut Butter Wolf, Snail Mail. He was meant to tour Australia
           supporting Clairo but Covid prevented that from happening.
         </p>
         <p>
