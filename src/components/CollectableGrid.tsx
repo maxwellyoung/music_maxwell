@@ -28,6 +28,21 @@ import {
   AccordionTrigger,
   AccordionContent,
 } from "./ui/accordion";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+} from "./ui/carousel";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "./ui/card";
 import songs from "./songsData";
 
 type Song = {
@@ -42,6 +57,68 @@ type Song = {
   lyrics?: Record<string, string>;
   credits?: string;
 };
+
+const photos = [
+  { src: "/pressphotos/1.jpg", alt: "Press Photo 1" },
+  { src: "/pressphotos/2.jpeg", alt: "Press Photo 2" },
+  { src: "/pressphotos/3.jpeg", alt: "Press Photo 3" },
+  // Add more photos as needed
+];
+
+const PressPhotoCarousel = () => (
+  <section className="my-12">
+    <h2 className="mb-4 text-center text-2xl font-bold">Press Photos</h2>
+    <Carousel>
+      <CarouselContent>
+        {photos.map((photo, index) => (
+          <CarouselItem key={index}>
+            <Image src={photo.src} alt={photo.alt} width={800} height={600} />
+          </CarouselItem>
+        ))}
+      </CarouselContent>
+      <CarouselPrevious />
+      <CarouselNext />
+    </Carousel>
+  </section>
+);
+
+const AboutSection = () => (
+  <section className="my-12">
+    <Card>
+      <CardHeader>
+        <CardTitle>About Maxwell Young</CardTitle>
+        <CardDescription>Musician, DJ, and visual artist</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <p>
+          Maxwell Young is a singer/songwriter/producer from Wellington, New
+          Zealand. His music began getting attention when his boom bap beats
+          inspired by College Dropout era Kanye instrumentals were featured on a
+          selection of successful YouTuber Casey Neistat's videos. His first
+          show was opening for The Internet at San Fran in Wellington. He went
+          on to release a bedroom pop album featuring the likes of Clairo. He
+          continued releasing music and opening for more international acts such
+          as Peanut Butter Wolf and Snail Mail. He was meant to tour Australia
+          supporting Clairo but Covid prevented that from happening.
+        </p>
+        <br />
+        <p>
+          Since then, he has been focused on creating alternative pop music
+          which feels new but clarifying, songs which try to stick out with
+          newness and earnestness with his music partner Eddie "Lontalius"
+          Johnston. Many songs have been released from their collaboration as
+          well as music videos made with friends. An EP was released in 2022
+          called Birthday Girl featuring one of Maxwell's proudest songs
+          "Believe" and in 2023 Maxwell has begun attempting to be consistent
+          with releasing singles.
+        </p>
+      </CardContent>
+      <CardFooter>
+        <p>Stay tuned for more updates and new releases.</p>
+      </CardFooter>
+    </Card>
+  </section>
+);
 
 const CollectableGrid: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
@@ -65,7 +142,7 @@ const CollectableGrid: React.FC = () => {
   };
 
   return (
-    <div className="min-h-screen bg-dark text-white">
+    <div className="bg-dark min-h-screen text-white">
       <div className="container mx-auto px-4 py-16">
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {songs.map((song, index) => (
@@ -92,6 +169,9 @@ const CollectableGrid: React.FC = () => {
             </motion.div>
           ))}
         </div>
+
+        <PressPhotoCarousel />
+        <AboutSection />
       </div>
 
       <Drawer open={isOpen} onOpenChange={setIsOpen}>
@@ -123,7 +203,9 @@ const CollectableGrid: React.FC = () => {
                         {Object.keys(selectedSong.lyrics).length > 1 && (
                           <div className="mb-4">
                             <Select
-                              onValueChange={setSelectedLyricSong}
+                              onValueChange={(value) =>
+                                setSelectedLyricSong(value)
+                              }
                               value={selectedLyricSong ?? ""}
                             >
                               <SelectTrigger className="w-full">
@@ -141,7 +223,7 @@ const CollectableGrid: React.FC = () => {
                             </Select>
                           </div>
                         )}
-                        <div className="bg-background max-h-48 overflow-y-auto">
+                        <div className="max-h-48 overflow-y-auto bg-background">
                           {selectedLyricSong &&
                             selectedSong.lyrics[selectedLyricSong]
                               ?.split("\n")
@@ -154,7 +236,7 @@ const CollectableGrid: React.FC = () => {
                 <AccordionItem value="credits">
                   <AccordionTrigger>Credits</AccordionTrigger>
                   <AccordionContent className="max-h-48 overflow-y-auto">
-                    <div className="bg-background max-h-48 overflow-y-auto">
+                    <div className="max-h-48 overflow-y-auto bg-background">
                       {selectedSong?.credits
                         ?.split("\n")
                         .map((line, index) => <p key={index}>{line}</p>)}
