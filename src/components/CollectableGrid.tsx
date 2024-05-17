@@ -104,7 +104,9 @@ const AboutSection = () => (
   <section className="my-12">
     <Card>
       <CardHeader>
-        <CardTitle>Maxwell Young</CardTitle>
+        <CardTitle>
+          <span className="font-reenie text-4xl">Maxwell Young</span>
+        </CardTitle>
         <CardDescription>Musician, DJ, and visual artist</CardDescription>
       </CardHeader>
       <CardContent>
@@ -160,7 +162,7 @@ const CollectableGrid: React.FC = () => {
   };
 
   return (
-    <div className="bg-dark min-h-screen text-white">
+    <div className="bg-dark min-h-screen overflow-x-hidden text-white">
       <div className="container mx-auto px-4 py-16">
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {songs.map((song, index) => (
@@ -276,7 +278,7 @@ const CollectableGrid: React.FC = () => {
               </Accordion>
               <div className="mt-4">
                 <p className="text-gray-400">Available on:</p>
-                <div className="flex space-x-2">
+                <div className="flex flex-wrap space-x-2">
                   <a
                     href={selectedSong?.links.spotify}
                     target="_blank"
@@ -316,7 +318,7 @@ const CollectableGrid: React.FC = () => {
         </DrawerContent>
       </Drawer>
 
-      <footer className="bg-dark py-4 text-center text-secondary">
+      <footer className="bg-dark overflow-hidden py-4 text-center text-secondary">
         <div className="container mx-auto">
           <a
             href="https://open.spotify.com/artist/5HONdRTLNvBjlD2LirKp0q"
