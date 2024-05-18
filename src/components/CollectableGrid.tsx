@@ -118,8 +118,7 @@ const AboutSection = () => (
           first show was opening for The Internet at San Fran in Wellington. He
           went on to release a bedroom pop album featuring the likes of Clairo.
           He continued releasing music and opening for more international acts
-          such as Peanut Butter Wolf, Snail Mail. He was meant to tour Australia
-          supporting Clairo but Covid prevented that from happening.
+          such as Peanut Butter Wolf, Snail Mail.
         </p>
         <br />
         <p>
