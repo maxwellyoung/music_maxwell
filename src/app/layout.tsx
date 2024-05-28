@@ -5,7 +5,7 @@ import { Analytics } from "@vercel/analytics/react";
 export const metadata = {
   title: "Maxwell Young",
   description: "Freewheelin' out June 7",
-  icons: [{ rel: "icon", url: "/favicon.ico" }],
+  icons: [{ rel: "icon", url: "/favicon.jpg" }],
 };
 
 export default function RootLayout({
