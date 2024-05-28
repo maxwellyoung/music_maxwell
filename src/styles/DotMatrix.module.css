@@ -22,7 +22,7 @@
   width: 100%;
   max-width: 600px;
   margin: 0 auto;
-  background-image: url("/artwork.webp"); /* Set your album artwork URL here */
+  background-image: url("/artworks/Freewheelin.webp"); /* Set your album artwork URL here */
   background-size: cover;
   background-position: center;
   position: relative;
