@@ -172,7 +172,7 @@ const CollectableGrid: React.FC = () => {
               transition={{ duration: 0.5 }}
               whileHover={{ scale: 1.05 }}
               onClick={() => openDrawer(song)}
-              className="cursor-pointer"
+              className="cursor-pointer overflow-hidden rounded-lg p-4"
             >
               <Image
                 src={song.artwork}
@@ -318,63 +318,67 @@ const CollectableGrid: React.FC = () => {
       </Drawer>
 
       <footer className="bg-dark overflow-hidden py-4 text-center text-secondary">
-        <div className="container mx-auto">
-          <a
-            href="https://open.spotify.com/artist/5HONdRTLNvBjlD2LirKp0q"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mx-2 cursor-pointer text-primary hover:underline"
-          >
-            Spotify
-          </a>
-          <a
-            href="https://music.apple.com/us/artist/maxwell-young/1113632139"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mx-2 cursor-pointer text-primary hover:underline"
-          >
-            Apple Music
-          </a>
-          <a
-            href="https://soundcloud.com/maxwell_young"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mx-2 cursor-pointer text-primary hover:underline"
-          >
-            SoundCloud
-          </a>
-          <a
-            href="https://www.youtube.com/@maxwell_young"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mx-2 cursor-pointer text-primary hover:underline"
-          >
-            YouTube
-          </a>
-          <a
-            href="https://x.com/internetmaxwell"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mx-2 cursor-pointer text-primary hover:underline"
-          >
-            Twitter
-          </a>
-          <a
-            href="https://instagram.com/maxwell_young"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mx-2 cursor-pointer text-primary hover:underline"
-          >
-            Instagram
-          </a>
-          <a
-            href="https://www.maxwellyoung.info/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-2 block cursor-pointer text-primary hover:underline"
-          >
-            maxwellyoung.info
-          </a>
+        <div className="container mx-auto flex flex-col justify-center md:flex-row md:flex-wrap">
+          <div className="flex flex-wrap justify-center">
+            <a
+              href="https://open.spotify.com/artist/5HONdRTLNvBjlD2LirKp0q"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mx-2 my-1 cursor-pointer text-primary hover:underline"
+            >
+              Spotify
+            </a>
+            <a
+              href="https://music.apple.com/us/artist/maxwell-young/1113632139"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mx-2 my-1 cursor-pointer text-primary hover:underline"
+            >
+              Apple Music
+            </a>
+            <a
+              href="https://soundcloud.com/maxwell_young"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mx-2 my-1 cursor-pointer text-primary hover:underline"
+            >
+              SoundCloud
+            </a>
+            <a
+              href="https://www.youtube.com/@maxwell_young"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mx-2 my-1 cursor-pointer text-primary hover:underline"
+            >
+              YouTube
+            </a>
+            <a
+              href="https://x.com/internetmaxwell"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mx-2 my-1 cursor-pointer text-primary hover:underline"
+            >
+              Twitter
+            </a>
+            <a
+              href="https://instagram.com/maxwell_young"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mx-2 my-1 cursor-pointer text-primary hover:underline"
+            >
+              Instagram
+            </a>
+          </div>
+          <div className="mt-2 block w-full text-center md:mt-4">
+            <a
+              href="https://www.maxwellyoung.info/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="cursor-pointer text-primary hover:underline"
+            >
+              maxwellyoung.info
+            </a>
+          </div>
         </div>
       </footer>
     </div>
