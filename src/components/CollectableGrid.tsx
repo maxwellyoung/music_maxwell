@@ -61,11 +61,11 @@ type Song = {
 };
 
 const photos = [
-  { src: "/pressphotos/1.jpg", alt: "Press Photo 1" },
-  { src: "/pressphotos/1.jpg", alt: "Press Photo 1" },
-  { src: "/pressphotos/1.jpg", alt: "Press Photo 1" },
-  { src: "/pressphotos/2.jpeg", alt: "Press Photo 2" },
-  { src: "/pressphotos/3.jpeg", alt: "Press Photo 3" },
+  { src: "/pressphotos/1.webp", alt: "Press Photo 1" },
+  { src: "/pressphotos/1.webp", alt: "Press Photo 1" },
+  { src: "/pressphotos/1.webp", alt: "Press Photo 1" },
+  { src: "/pressphotos/2.webp", alt: "Press Photo 2" },
+  { src: "/pressphotos/3.webp", alt: "Press Photo 3" },
   // Add more photos as needed
 ];
 

@@ -15,7 +15,7 @@ const songs: Song[] = [
   {
     title: "I Just Wanna Fly",
     artist: "Maxwell Young",
-    artwork: "/artworks/IJustWannaFly.jpg",
+    artwork: "/artworks/IJustWannaFly.webp",
     links: {
       spotify:
         "https://open.spotify.com/track/7yBIX3tGrBzYOYFpVw7KhQ?si=5fe8124622c74381",
@@ -68,7 +68,7 @@ const songs: Song[] = [
   {
     title: "Hopeless",
     artist: "Maxwell Young",
-    artwork: "/artworks/Hopeless.jpg",
+    artwork: "/artworks/Hopeless.webp",
     links: {
       spotify:
         "https://open.spotify.com/track/3uFLa70uqobRBUp0fJWCET?si=b5b728d5793d4a71",
@@ -124,7 +124,7 @@ const songs: Song[] = [
   {
     title: "Call Ur Name / Go Ahead",
     artist: "Maxwell Young",
-    artwork: "/artworks/CallUrName.jpg",
+    artwork: "/artworks/CallUrName.webp",
     links: {
       spotify: "https://open.spotify.com/track/3",
       appleMusic: "https://music.apple.com/track/3",
@@ -244,7 +244,7 @@ const songs: Song[] = [
   {
     title: "Birthday Girl",
     artist: "Maxwell Young",
-    artwork: "/artworks/BirthdayGirl.jpg",
+    artwork: "/artworks/BirthdayGirl.webp",
     links: {
       spotify:
         "https://open.spotify.com/album/59B9dUKtmzo3X2GOXyzRbo?si=f6a7c98354ea403a",
@@ -271,7 +271,7 @@ const songs: Song[] = [
   {
     title: "Cherry Pie / Lose U Too",
     artist: "Maxwell Young",
-    artwork: "/artworks/CherryPie.jpg",
+    artwork: "/artworks/CherryPie.webp",
     links: {
       spotify: "https://spotify.link",
       appleMusic: "https://apple.link",
@@ -407,7 +407,7 @@ const songs: Song[] = [
   {
     title: "Videostar / Cleopatra",
     artist: "Maxwell Young",
-    artwork: "/artworks/Videostar.jpg",
+    artwork: "/artworks/Videostar.webp",
     links: {
       spotify:
         "https://open.spotify.com/album/5l0XJRyLOJo6Wg1Ukr6RsP?si=c64256d576a14a46",
@@ -617,7 +617,7 @@ const songs: Song[] = [
   {
     title: "Don't Waste Your Time",
     artist: "Maxwell Young",
-    artwork: "/artworks/DontWasteYourTime.jpg",
+    artwork: "/artworks/DontWasteYourTime.webp",
     links: {
       spotify:
         "https://open.spotify.com/track/5qWa7n31Zjh0tcEvtERuZA?si=24bfc78a23634103",
@@ -689,7 +689,7 @@ const songs: Song[] = [
   {
     title: "No. 5",
     artist: "Maxwell Young",
-    artwork: "/artworks/No5.jpg",
+    artwork: "/artworks/No5.webp",
     links: {
       spotify:
         "https://open.spotify.com/track/0Qxq1Nf297aBK1k8E9py5P?si=9bf7179b859b493c",
