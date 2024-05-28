@@ -69,8 +69,6 @@ const photos = [
   // Add more photos as needed
 ];
 
-console.log("Photos array:", photos); // Debugging log
-
 const PressPhotoCarousel = () => (
   <section className="my-12">
     <div className="relative max-w-full overflow-hidden">
@@ -88,6 +86,7 @@ const PressPhotoCarousel = () => (
                   layout="fill"
                   objectFit="contain"
                   className="rounded-lg"
+                  priority
                 />
               </AspectRatio>
             </CarouselItem>

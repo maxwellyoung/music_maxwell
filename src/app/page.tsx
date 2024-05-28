@@ -1,6 +1,9 @@
 import { type NextPage } from "next";
-import CollectableGrid from "~/components/CollectableGrid";
-import DotMatrix from "~/components/DotMatrix";
+
+import dynamic from "next/dynamic";
+
+const CollectableGrid = dynamic(() => import("~/components/CollectableGrid"));
+const DotMatrix = dynamic(() => import("~/components/DotMatrix"));
 
 const Home: NextPage = () => {
   return (
