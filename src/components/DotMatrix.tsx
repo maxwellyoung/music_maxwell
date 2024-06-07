@@ -250,7 +250,7 @@ const DotMatrix: React.FC = () => {
           href="https://music.drm.co.nz/freewheelin"
           className={styles["pre-save-button"]}
         >
-          Streaming Now
+          Streaming now
         </a>
       </div>
     </div>
