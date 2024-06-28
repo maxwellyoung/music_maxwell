@@ -109,27 +109,13 @@ const AboutSection = () => (
         <CardDescription>Musician, DJ, and visual artist</CardDescription>
       </CardHeader>
       <CardContent>
-        <p>
-          Maxwell Young is a singer/songwriter/producer from Wellington, New
-          Zealand. His music began getting attention when his boom bap beats
-          inspired by College Dropout era Kanye instrumentals were featured on a
-          selection of successful YouTuber Casey Neistat&apos;s videos. His
-          first show was opening for The Internet at San Fran in Wellington. He
-          went on to release a bedroom pop album featuring the likes of Clairo.
-          He continued releasing music and opening for more international acts
-          such as Peanut Butter Wolf, Snail Mail.
-        </p>
-        <br />
-        <p>
-          Since then, he has been focused on creating alternative pop music
-          which feels new but clarifying, songs which try to stick out with
-          newness and earnestness with his music partner Eddie
-          &apos;Lontalius&apos; Johnston. Many songs have been released from
-          their collaboration as well as music videos made with friends. An EP
-          was released in 2022 called Birthday Girl featuring one of
-          Maxwell&apos;s proudest songs &apos;Believe&apos; and in 2023 Maxwell
-          has begun attempting to be consistent with releasing singles.
-        </p>
+       <p>
+    Maxwell Young is a singer/songwriter/producer from Wellington, New Zealand. His music began getting attention when his boom bap beats inspired by College Dropout era Kanye instrumentals were featured on a selection of successful YouTuber Casey Neistat's videos. His first show was opening for The Internet at San Fran in Wellington. He went on to release a bedroom pop album featuring the likes of Clairo. He continued releasing music and opening for more international acts such as Peanut Butter Wolf and Snail Mail. Maxwell has garnered praise from The 1975, Phoebe Bridgers, and Brockhampton.
+</p>
+<br />
+<p>
+    Since then, he has been focused on creating alternative pop music which feels new but clarifying, songs which try to stick out with newness and earnestness with his music partner Eddie 'Lontalius' Johnston. Many songs have been released from their collaboration as well as music videos made with friends. An EP was released in 2022 called Birthday Girl featuring one of Maxwell's proudest songs 'Believe,' and in 2023 Maxwell has begun attempting to be consistent with releasing singles.
+</p>
       </CardContent>
       <CardFooter>
         <p>Magic is everywhere.</p>
