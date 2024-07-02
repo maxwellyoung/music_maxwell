@@ -5,7 +5,7 @@ export default function CtaSection() {
   return (
     <section className="my-12 flex flex-col items-center text-center">
       <h1 className="mb-4 text-4xl font-bold">
-        Freewheelin&apos; by Maxwell Young
+        Freewheelin&apos; by <span className="font-reenie">Maxwell Young</span>
       </h1>
       <p className="mb-8 text-lg">Out now. Stream everywhere.</p>
       <div className="mb-8 flex items-center justify-center">
