@@ -604,7 +604,7 @@ You know I’m saying`,
   {
     title: "Dread!",
     artist: "Maxwell Young",
-    artwork: "/artworks/Dread.png",
+    artwork: "/artworks/Dread.webp",
     links: {
       spotify:
         "https://open.spotify.com/track/4fcuc4RJCp2aogsSsNJDFg?si=2439c01879eb40b4",
