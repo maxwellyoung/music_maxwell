@@ -9,9 +9,65 @@ export type Song = {
   };
   lyrics?: Record<string, string>;
   credits?: string;
+  videoLink?: string;
 };
 
 const songs: Song[] = [
+  {
+    title: "Freewheelin'",
+    artist: "Maxwell Young",
+    artwork: "/artworks/Freewheelin.webp",
+    links: {
+      spotify:
+        "https://open.spotify.com/track/0h3h7w0j3g3k2k3j2j1j0j0j0j0j0j0j0j0j0j0",
+      appleMusic:
+        "https://music.apple.com/nz/album/freewheelin-single/1713764743",
+      youtube:
+        "https://www.youtube.com/watch?v=Q-cp7oA-gwI&pp=ygUYaSBqdXN0IHdhbm5hIGZseSBtYXh3ZWxs",
+    },
+    lyrics: {
+      Freewheelin: `Laying back with you
+I wanna do it all the time now
+Why’s it what I do and what I say is not the same thing
+Wasn’t looking for it but then I saw it on my front porch
+I was not the same as before
+
+I don’t know what you’re looking for
+I don’t know what you’re looking for
+But I get up I put on my jeans
+I get up I beg on my knees
+
+We’re walking arm in arm I feel like Bob Dylan on Freewheelin
+Quit covering my eyes now by your side I’ll just try living
+Every morning curtains open up to brand new new feelings
+Record scratch you’re wondering how I got here, I just dived in
+What I got with you they don’t need to know some things are private
+And now I care so I grab it all
+
+Know it’s not the way that we both wanted it to go
+But I’m not as happy on my own now you’re my girl
+
+You know what I’m talking about
+Cause you know you’re quite the view
+You know what I’m talking about
+When I’m naked all on you
+You know what I’m talking about
+Cause I do it just for you
+
+You know I’m saying
+You know
+You and me we could go places
+I’m saying
+You know what I’m saying
+You know what I’m saying
+Just you and me we could go places
+I’m saying
+You know I’m saying`,
+    },
+    credits: `Produced by Maxwell Young & Eddie Johnston
+    Artwork by Maxwell Young`,
+    videoLink: "https://www.youtube.com/watch?v=KYIs2B03fuY",
+  },
   {
     title: "I Just Wanna Fly",
     artist: "Maxwell Young",
@@ -64,6 +120,7 @@ const songs: Song[] = [
     },
     credits: `Produced by Maxwell Young & Eddie Johnston
     Artwork by Tom Shackleton & Maxwell Young`,
+    videoLink: "https://www.youtube.com/watch?v=Q-cp7oA-gwI",
   },
   {
     title: "Hopeless",
@@ -240,6 +297,7 @@ const songs: Song[] = [
     },
     credits: `Produced by Maxwell Young & Eddie Johnston
     Artwork by Eddie Johnston`,
+    videoLink: "https://www.youtube.com/watch?v=8xyT0yHmvXg",
   },
   {
     title: "Birthday Girl",
@@ -402,6 +460,7 @@ const songs: Song[] = [
     },
     credits: `Produced by Maxwell Young & Eddie Johnston
   Artwork by Maxwell Young`,
+    videoLink: "https://www.youtube.com/watch?v=HwndSiUB6u8",
   },
 
   {
@@ -540,6 +599,7 @@ const songs: Song[] = [
     },
     credits: `Produced by Maxwell Young & Eddie Johnston
     Artwork by Nayan Patel`,
+    videoLink: "https://www.youtube.com/watch?v=NPYnIg-fKTg",
   },
   {
     title: "Dread!",
@@ -613,6 +673,7 @@ const songs: Song[] = [
     },
     credits: `Produced by Maxwell Young & Eddie Johnston
     Artwork by Max Pirrit`,
+    videoLink: "https://www.youtube.com/watch?v=LybW6oYjbRI",
   },
   {
     title: "Don't Waste Your Time",
@@ -685,6 +746,7 @@ const songs: Song[] = [
     },
     credits: `Produced by Maxwell Young & Eddie Johnston
     Artwork by Maxwell Young`,
+    videoLink: "https://www.youtube.com/watch?v=Ix96hzEV8Nw",
   },
   {
     title: "No. 5",
@@ -789,6 +851,7 @@ const songs: Song[] = [
     },
     credits: `Produced by Maxwell Young & Eddie Johnston
     Artwork by Maxwell Young & Ilena Shadbolt`,
+    videoLink: "https://www.youtube.com/watch?v=pnlLplATAUU",
   },
 ];
 

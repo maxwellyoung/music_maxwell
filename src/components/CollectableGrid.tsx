@@ -58,6 +58,7 @@ type Song = {
   };
   lyrics?: Record<string, string>;
   credits?: string;
+  videoLink?: string;
 };
 
 const photos = [
@@ -117,7 +118,8 @@ const AboutSection = () => (
           first show was opening for The Internet at San Fran in Wellington. He
           went on to release a bedroom pop album featuring the likes of Clairo.
           He continued releasing music and opening for more international acts
-          such as Peanut Butter Wolf, Snail Mail.
+          such as Peanut Butter Wolf and Snail Mail. Maxwell has garnered praise
+          from The 1975, Phoebe Bridgers, and Brockhampton.
         </p>
         <br />
         <p>
@@ -127,8 +129,10 @@ const AboutSection = () => (
           &apos;Lontalius&apos; Johnston. Many songs have been released from
           their collaboration as well as music videos made with friends. An EP
           was released in 2022 called Birthday Girl featuring one of
-          Maxwell&apos;s proudest songs &apos;Believe&apos; and in 2023 Maxwell
-          has begun attempting to be consistent with releasing singles.
+          Maxwell&apos;s proudest songs &apos;Believe,&apos; and in 2023 Maxwell
+          began consistently releasing singles. In 2024, he continues to build
+          his catalogue with new music that pushes the boundaries of his style
+          and artistry.
         </p>
       </CardContent>
       <CardFooter>
@@ -274,6 +278,18 @@ const CollectableGrid: React.FC = () => {
                   </AccordionContent>
                 </AccordionItem>
               </Accordion>
+              {selectedSong?.videoLink && (
+                <div className="mt-4">
+                  <a
+                    href={selectedSong.videoLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-blue-500 hover:underline"
+                  >
+                    Watch Music Video
+                  </a>
+                </div>
+              )}
               <div className="mt-4">
                 <p className="text-gray-400">Available on:</p>
                 <div className="flex flex-wrap space-x-2">
