@@ -1141,7 +1141,7 @@ Been here forevermore`,
         "https://www.youtube.com/playlist?list=PLUUI0ZZx_T8f--xayoxSRsF77weAjMopb",
     },
     lyrics: {
-      "1990": `1999 was the year that I arrived
+      "1999": `1999 was the year that I arrived
 Same year I met you
 Guess we've been in this for a while
 Of you my eyes never tire
