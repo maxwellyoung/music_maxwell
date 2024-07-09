@@ -21,6 +21,7 @@ export default function CtaSection() {
             width={600}
             height={600}
             className="transform rounded-lg shadow-lg transition-transform group-hover:scale-105"
+            priority
           />
         </a>
       </div>
