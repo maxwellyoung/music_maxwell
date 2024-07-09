@@ -853,6 +853,31 @@ You know I’m saying`,
     Artwork by Maxwell Young & Ilena Shadbolt`,
     videoLink: "https://www.youtube.com/watch?v=pnlLplATAUU",
   },
+  {
+    title: "Only Romantics",
+    artist: "Maxwell Young",
+    artwork: "/artworks/OnlyRomantics.webp",
+    links: {
+      spotify:
+        "https://open.spotify.com/album/3x3tbBAQoCxTHKWMZeVIdZ?si=otfnk5hwSQ-kAlTwxwtrvA",
+      appleMusic:
+        "https://music.apple.com/us/album/only-romantics-ep/1462528934",
+      youtube:
+        "https://www.youtube.com/playlist?list=PLUUI0ZZx_T8cGcP8Ewu9yzZnK-hezT_F5",
+    },
+  },
+  {
+    title: "Daydreamer",
+    artist: "Maxwell Young",
+    artwork: "/artworks/Daydreamer.webp",
+    links: {
+      spotify:
+        "https://open.spotify.com/album/1TNWD3no292fUChXiTqxsX?si=pOooW-_wTOm6TDVNHMf1kw",
+      appleMusic: "https://music.apple.com/nz/album/daydreamer/1417117886",
+      youtube:
+        "https://www.youtube.com/playlist?list=PLUUI0ZZx_T8f--xayoxSRsF77weAjMopb",
+    },
+  },
 ];
 
 export default songs;
