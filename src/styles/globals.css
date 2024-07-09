@@ -63,4 +63,7 @@ html {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
+  ::selection {
+    background: #f02d42;
+  }
 }

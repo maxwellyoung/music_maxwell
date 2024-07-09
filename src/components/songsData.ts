@@ -865,6 +865,269 @@ You know I’m saying`,
       youtube:
         "https://www.youtube.com/playlist?list=PLUUI0ZZx_T8cGcP8Ewu9yzZnK-hezT_F5",
     },
+    lyrics: {
+      Princess: `Princess
+How you soften voices
+Laying still your choices
+Lover, you’re too gorgeous
+
+I don't feel a thing but
+Dear how I miss
+Our times on your window
+Elation morning cyclical
+
+Voices in my head
+Loop assorted phrases you have said
+Darting back my mind into memories all divine with you`,
+      "Kindred Spirits": `Always cry on aeroplanes
+Look in silence, know I'm dazed
+Tonight in the room
+Face distract all the gloom
+Ain't really special if I hesitate
+Can't hide that I'm stilled by you; meditate
+Can't fathom how I never can communicate
+Heard you say you've seen better days
+
+I don't know what
+You don't know when
+What are you living for
+A chronic for it all
+(I love you everyday, I love you every way, I love you)
+
+Trying to move to big apple
+But my money been froze
+Sometimes see right through
+Whilst my heart is on hold
+Claimed I don’t care
+Living out a tote bag
+Head down
+Because my heart is on froze
+Steel string, girlfriend in her head
+Noises shameless, painless
+
+Pretty language has purpose
+Can't forget I serve a purpose
+Forget a lot, forget it all
+Mountains make it tall
+Butterflies in my eyes and the fears all gone
+Love hear my love on the phone
+Career mean I'm never at home
+With money only make it alone
+
+Everybody scared
+Can't live without fear
+While you're here
+Hold my hand
+
+What have you got to say?
+I need more than your embrace
+I need trust
+What have you gotta say
+It's not easy anyway
+I need love
+
+I don't know what
+You don't know when
+What are you living for
+I'm a chronic for your love
+(I love you everyday, I love you every way, I love you)`,
+      "Sketches of Dragonflies": `Vapour doesn't last
+My tongue is not so fast
+In person I collapse
+Entwined I’m a mess
+
+Don’t act like it’s same since day one
+More honest with sauvignon blanc
+“Don’t tell me about your time spent wandering”
+I was on the road
+It’s alright sometimes
+(Get out my face, get out my place)
+
+Honey, why're you always talking about the fools, the drama?
+I need karma for my good deeds sometimes
+
+It’s a risky thing
+Closing your eyes
+Kissing mother goodbye
+Closing your eyes
+
+Just call me up
+It’s not that I am lost in love no more
+Still get stuck
+Lost in love no more
+(I like knowing you don't need me
+I like knowing you're not there
+Reappear, euphoria blares)
+
+Am I out of luck
+For feeling firm that two's enough
+Agonise two dragonflies
+I'm sketching all the time
+
+Cindy, am I dying?
+Stars, I’ll try defy them
+Dreaming, I’m not crying
+Let me feel alive again
+
+Cindy said I'm faking
+These maladaptive daydreams
+Hypochondriac
+Is romance in our waiting
+
+Just call me up
+It’s not that I am lost in love no more
+Still get stuck
+Lost in love no more
+
+Cindy, am I dying?
+Stars, I’ll try defy them
+Dreaming, I’m not crying
+Let me feel alive again
+
+Cindy said I'm faking
+These maladaptive daydreams
+Hypochondriac
+Is romance in our waiting`,
+      FFWD: `What do you got to be nervous for?
+Do you think she’ll runaway?
+What you feel like drowning for?
+Little louder when you say
+Timings all wrong
+Cry on shoulder
+Writing, I’m gone
+Feeling sorry for myself
+
+Out of luck, giving up from signifiers
+Not enough being with you off desire
+Can I find my speech?
+Can I tell the truth?
+The weight of being with you
+
+Wish I could fast forward
+Out the moment
+At least now
+I'm not hopeless
+But the moments been feeling helpless
+Denying things you say
+
+Wish I could fast forward to New Years Eve
+Fireworks when you’re looking at me
+Want to fast forward all of the screams
+In my head
+
+What do you got to be nervous for?
+Do you think she’ll runaway?
+What you feel like drowning for?
+Little louder when you say
+Timings all wrong
+Cry on my shoulder
+Writing, I’m gone
+Feeling sorry for myself
+
+It's not like I've had love to judge
+How much of me I should share
+Say I'm unaware
+Then let me out your way
+The gravity
+It's not like you shut it off
+One of these days you've got to come around
+
+Wish I could fast forward to New Years Eve
+Fireworks when you’re looking at me
+Want to fast forward all of the screams
+In my head
+
+What do you got to be nervous for?
+Do you think she’ll runaway?
+What you feel like drowning for?
+Little louder when you say
+Timings all wrong
+Cry on shoulder
+Writing, I’m gone
+Feeling sorry for myself
+
+(Yeah, yeah)
+I'm done waiting in the cold (yeah)
+I'm done waiting in a hole (yeah)
+I'm done waiting in the cold (yeah)
+I'm done waiting waiting in the
+
+I'm done waiting in the cold (yeah)
+I'm done waiting at my home (yeah)
+I'm done waiting for you (yeah)
+Tell me
+
+I'm done waiting in the cold (yeah)
+I'm done waiting at my home (yeah)
+I'm done waiting for you
+For you`,
+      "Popstar's Girlfriend": `Think I'm playing dead
+I don't know my head
+You know how I get
+I been tripping every second step
+Eye dart when I'm scared
+
+Popstars girlfriend
+Blue tint
+Whirlwind down
+Popstars girlfriend
+Popstars, popstars
+
+Sleep call round three
+In dreams don't bleed
+Doubt called round one
+A time I can't run
+
+I get depressed
+I don’t know why
+Girlfriend, girlfriend
+I get depressed sometimes
+I'm hoping that you'll understand
+I'm hoping that you know
+I'm here`,
+      Forevermore: `It's not what I'm looking
+When I walk out the door
+I lose my face & all
+It's not what I found
+Your love, your love
+
+Your love, love, love, love, love, love, love, love, love, love
+Your love, love, love, love
+Your love, love, love, love
+
+You know I can't keep turning out the lights
+Without a fight
+You know I can't keep turning
+Turbulence makes me cry
+
+Its not what I'm looking
+When I walk out the door
+I lose my face & all
+It's not what I found
+Your love, your love
+
+Loves not like that
+Wish it didn't hurt so bad
+Heart on my sleeve
+Forevermore
+
+Its not what I'm looking
+When I walk out the door
+I lose my face & all
+It's not what I found
+Your love, your love
+
+I crave more
+Thought about you once or twice
+Been here forevermore`,
+    },
+    credits: `Written/Produced/Recorded/Mixed/Performed by Maxwell Young
+    Artwork by Max Pirrit & Ilena Shadbolt
+    
+    Co-Production on 'Princess' by Sasha Daze
+    Additional Vocals on 'Kindred Spirits' by seungjin
+    Additional Vocals on 'Forevermore' by Xandre Frederick
+    Saxophone on 'Forevermore' by Theo Hertzig`,
   },
   {
     title: "Daydreamer",
@@ -877,6 +1140,519 @@ You know I’m saying`,
       youtube:
         "https://www.youtube.com/playlist?list=PLUUI0ZZx_T8f--xayoxSRsF77weAjMopb",
     },
+    lyrics: {
+      "1990": `1999 was the year that I arrived
+Same year I met you
+Guess we've been in this for a while
+Of you my eyes never tire
+
+She can’t tell me how to live no more
+
+Left your boyfriend with a scar
+In shattered pieces left my heart
+Staying in, my curtains shut
+Avoiding what was scaring us
+
+She can't tell me how to live no more
+
+How can I reply with more than i’m fine
+When you project all your problems and perceptions on my life
+Damn life
+
+I was down and out
+Told my friends to call
+No one was listening
+Thought there is where I end
+
+One day you popped up
+A sunflower in the dusk
+I didn't think it was much
+But you became my all
+
+Put all my hope in us
+All my happiness
+Yet neither of us were at our bests
+At rest
+
+I’ve never been love like I am with you
+But it's not enough to stay miserable
+
+I gotta get away, get away
+Girl nothing makes me sane
+I gotta get away
+There’s nothing else
+
+Ahh
+If I stick with it I know I’m gonna lose it
+Know I'm gonna lose them
+
+Hair braided
+Cross faded
+Both waiting on the other
+Bet I'm cutting ties
+With everyone else
+
+She can't tell me how to live no more`,
+      Bianca: `Found you in your Calvin Klein's
+      Wouldn't let me know if I'm right
+      Never been the one for small talk
+Keep on postponing most my problems
+
+But the moment wasn't set in stone
+It's more that I'm not warm in tone
+Who's more broken can't you see
+Won't take my hand can't start with me
+
+I heard one little promise and
+I'm bursting at the seams
+Never thought you'd help me more
+Am I ever coming clean
+I thought you knew where I was headed for
+They're taking selfies in the bathroom
+
+I had one little promise
+And I'm bursting at the seams
+Aaoo
+Selfies in the bathroom
+You doubt it cause it's too soon
+It's too soon
+
+Bianca, do I love ya?
+Might've fallen little too quick for you
+But I never thought you'd hold me back so
+But I never thought you'd hold me back so much
+Always in a different place
+My ship fly to space
+I never come back too much
+Now we runaway
+Better runaway
+Now we runaway
+Living for today
+
+I don't want to keep on playing games
+Thank the lord you stopped
+That was quite a pain
+Often left me questioning
+Was it passion that brought you to my door
+Every Saturday
+
+"Just cause you're beautiful doesn't mean you can treat people like they don't matter, I really liked you"
+
+I heard one little promise and
+I'm bursting at the seams
+Never thought you'd help me more
+am i ever coming clean
+I thought you knew where I was headed for
+They're taking selfies in the bathroom
+
+I had one little promise
+And I'm bursting at the seams
+Aaoo
+Selfies in the bathroom
+You doubt it cause it's too soon
+It's too soon
+
+Would you mind if I took your hand
+Know you got things planned
+But your smile says you want golden sand
+Smile says you want golden sand
+Agreed, putting this on you was unfair
+You're not Tiffany I won't overbear
+
+Broke your promise
+But who am I to feel discouraged
+For you aren't in a cage
+And that's enough for me
+
+Who would you follow to the ends of the earth
+I think I broke it when I took my turn
+Where is my worth
+How much of my worth is in you
+
+Who wasted the boys time
+Blame it on myself
+So I'm nothing
+Can't help it`,
+      Evergreen: `After nine
+I plan to share my mind
+Girl I try
+Yet I can't find the words
+
+I tell you once
+We put it all behind
+Both stubborn types
+Neither care to draw the line
+
+Tell me I'm the one for you
+Girl there's none other than you
+You don't need my trust
+But if I could I'd be there for you
+Be there and true
+
+My love is strong
+Might not be enough
+But I’m young
+And I can't find the words
+
+In my mind
+You're flashing all the time
+Before my eyes
+You sway from left to right
+In black and white
+
+Tell a lie
+Say goodbye
+Because I'm walking out
+But we laughed all night
+And I want you around
+Really want you around
+I'm a fool for you now
+
+(Now evergreen)
+Tell me I'm the one for you
+Girl there's none other than you
+(All I need)
+You don't need my trust
+But if I could I'd be there for you
+Be there and true
+
+My love is strong
+Might not be enough
+But I’m young
+And I can't find the words
+
+(Tell me I'm the one)
+Evergreen
+You're a little out of reach
+(Tell me I'm the one)
+Finding your face can be tough
+So I pretend reflections are enough
+No, they're not enough`,
+      "No Social Butterfly": `My hearts still aching
+      Angel, why we waiting?
+Skin liberation
+"Well can't we date then?"
+Know that nobody really got my back
+I'm feeling sick, out of breath
+I’m loving the stress
+Her lips on my neck
+See the colour of her iris
+Want to dive in
+Take my time, sin
+Predicting sinking all our time together
+Confliction, we linking through the weather
+
+Everybody's tryna impress someone
+I put my hands in the air like it's nothing
+It's nothing new
+
+You're putting all your penny’s on a shot in the dark
+Just wanna blink to feel alive without crashing your car
+It's all overrated
+It's all overrated
+Imagine colours in sleep
+Lovers at peace
+I just want a world where I can wander nights forever with you
+
+Can’t decide if you’re making up your mind
+Are you really one for walking
+Leaving here without him
+Leave him all alone
+He don't have to know
+Do you feel like a cliché
+Making moves so risqué
+Honey just try to have no fear
+Have no fear
+
+It’s still like that
+You’re running back
+Running back
+
+Everybody's tryna impress someone
+I put my hands in the air like it's nothing
+It's nothing new
+
+Feeling failure like it’s something you caught
+Tryna to keep a secret but its in the way that you walk
+whats your motivator?
+Well i’ve been sick for the sun since 99
+Always feeling sporadic, is it visible in my eyes?
+
+It’s all a loop
+Live for dreams
+Your television leaking
+Only thing that fits me
+Saint Laurent jeans
+I’m just not happy from these things no more
+
+If you wanna stop feeling so empty
+Wanna stop feeling things are all out of reach
+Go ask yourself if passions fell
+Wouldn't wanna go turning your back on real
+
+Where your head at?
+It’s raining on my bare back
+People saying you're little unaware max
+Social butterflies only try when inspired
+Staying patient shooting stars in the sky
+
+Everybody's tryna impress someone
+I put my hands in the air like it's nothing
+It's nothing new
+
+All of that weight fell off my shoulder
+Still clutch pride in getting older
+18 years, the doubt is torture
+I just wanna feel`,
+      "Worth / Gotta Get Away": `Always seem to leave a mess
+      Doubt I can bother with the stress
+I need to get some more rest
+Am I worth it?
+
+Do you think that you're worth it?
+(No more)
+
+Are you gonna flake once more
+I been waiting on you too long
+Am I better off alone
+
+Why would I lie to you
+Nothing more true
+I'm not gonna lie to you
+And I mean every word
+You deserve it
+
+I'm not gonna lie to you
+
+Because can't make one more mistake
+Spent too long taking pain
+How could I let you take my heart
+
+How can I ride
+Without my helmet
+Safety slipped my mind
+Naivety surrounding
+I'll follow you
+
+Do you think that you're worth it?
+(No more)
+
+Gotta get away
+I gotta get away
+Gotta get away, no no
+I gotta get away
+No one's listening to me anyway
+But I gotta get a
+
+No
+I gotta get away
+Away from this here
+But stilted anyway
+I gotta get away
+Away from this here
+But I stilted anyway
+Better off alone
+I'm better off alone
+I'm better in my zone
+I'm better off alone
+Lucky is a word
+Not many people can say`,
+      "	L'appel Du Vide": `AAdolescent me
+That heartbroken sheep
+Tempting my breath
+For your butterfly net
+Up by those treetops
+i wandered every evening
+i watched the moon wane breathing
+Thought one day you treat me right
+Typing to myself
+Just one inhale
+You said I stared
+I just laughed then left
+Overwhelmed I guess
+
+L’appel du vide
+Look over the edge
+L'appel du vide
+Don’t wanna get upset
+
+Stepping my way
+It’s not what you said
+It’s not how I play, baby
+If you want more I can assure loyalty
+It’s all i do
+Is wait for you
+But baby girl
+I’m not strong enough
+But I'm just not strong
+And I been waiting all long
+She took me down
+And she brought me around
+We went to our spot
+Blew smoke like movie stars
+I don't know why baby girl
+I don't know why, not at all
+I just lose my mind
+I lose it time to time
+As mindful as the world
+My trying feels absurd
+You talk to me
+You're flying out soon
+Paint my heart blue
+Pastels remind of you
+And how I wanted you
+
+L'appel du vide
+Look over the edge
+L’appel du vide
+Don't wanna get upset
+
+Voice memo of Ch'lita`,
+      "Midnight (feat. Claire Cottrill)": `Lose you in a moment
+Will I lose you when it's midnight?
+Just might
+
+I don't wanna do it no more
+It's not that I'm antisocial
+I wonder what i’d have to do for it to be enough
+For you to show your true heart
+I know how you feel
+Present from the break of dawn
+Ache from wanting
+You been toying
+It got boring
+If I took on my arm
+Would i lose you?
+
+
+Clairo:
+Country side
+I’m by your side
+It’s so hard to get by
+Without you
+Without you
+
+Cross the line
+My tears are dry
+I see you in my hairs by my side
+I miss you so much
+I need you
+It's not fair for those ones
+Who have a heavy heart
+But me it’s daylight here
+And there it’s dark
+Oh it’s dark
+
+I know how you feel present from the break of dawn
+Ache from wanting
+You been toying
+It got boring
+
+If I took you on my arm
+Would I lose you?
+
+So i guess I lost you
+Do do do do do dooo
+Oh love you’re so far away
+I just want you back
+I don’t need a casket of love
+Casket of love
+
+Do you wanna come round
+I got a lot to tell you about
+Do you wanna come over
+Got a spot for you on my shoulder
+
+We got a secret I can keep
+We got a lot to learn and leave
+And I won't follow anyone but you`,
+      Goldeneye: `Goldeneye
+You’re all too nice
+
+Let’s fall in love
+Done wasting time
+All I want, all on my mind
+Rush more than we've been so far
+Before we know our youth will be gone
+
+Don’t leave me lovelorn
+You’re all too nice
+
+Let’s get married on a monday morning
+Who can waste the weekend by
+How you smile so often
+First felt love for the world through your eyes
+
+Why’re you shrugging off romance
+When I should just be your man
+I don’t know
+I wouldn’t be so alone
+
+Walking up
+Walking up
+Such an angel from above
+
+Don’t need nobody
+I just need somebody to come home`,
+      Daydreamer: `I don't understand fashion
+So I wear plain tees
+Don't understand love
+So I'm all alone
+But I try
+I try all the time
+
+I'm working on being better at being me
+But who is that
+Well I can't see
+I'm just confused
+Not amused
+Deeper into
+Something brand new
+It's alien, alien to me
+
+But I can't see anything
+Worth following here
+I can't see anything
+Worth following
+Of course I see you there
+Of course I see you dear
+But really I'm just scared
+To understand love
+I don't understand
+
+I don't understand love
+I don't understand much
+But I'm searching
+Still searching for someone
+
+You are what you love and ain't what loves you
+Listen up
+You are what you love but ain't what loves you
+(Don't let them tell you what they think you are)
+I don't understand love, no no
+And I'm searching for someone
+
+I can't stand on what's not there
+I don't know I just get scared
+You're always on my mind
+But forever's not our time
+
+Until I realised I don’t understand myself
+And I’m not one to ask for help
+I was lying on my bed
+So overcome with dread
+Do you know me?
+Do you know my daydream?
+I really don't mind
+Just stay with me a while`,
+    },
+    credits: `Written/Produced/Performed by Maxwell Young
+    Artwork by Ch'lita Collins
+    
+    Additional Vocals on 'Evergreen' by Eddie "Lontalius" Johnston
+    Additional Production on 'Evergreen' by Aidan "Instupendo" Peterson
+    Additional Vocals on 'No Social Butterfly by Ambré
+    'Midnight' featuring Claire "Clairo" Cottrill`,
   },
 ];
 

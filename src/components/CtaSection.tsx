@@ -29,7 +29,7 @@ export default function CtaSection() {
         href="https://music.drm.co.nz/freewheelin"
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-block rounded-lg bg-red-500 px-4 py-2 text-white transition hover:bg-red-600"
+        className="inline-block rounded-lg bg-[#F02D42] px-4 py-2 text-white transition hover:bg-red-600"
       >
         Stream now
       </a>
