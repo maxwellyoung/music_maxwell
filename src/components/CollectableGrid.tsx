@@ -193,19 +193,17 @@ const CollectableGrid: React.FC = () => {
           ))}
         </div>
 
-        <div className="hidden md:block">
+        <div className="mt-12 flex flex-col items-stretch md:flex-row">
           <div className="md:w-1/2">
             <PressPhotoCarousel />
           </div>
-          <Separator orientation="vertical" className="mx-4 my-12" />
+          <Separator
+            orientation="vertical"
+            className="mx-4 my-12 hidden md:block"
+          />
           <div className="md:w-1/2">
             <AboutSection />
           </div>
-        </div>
-
-        <div className="md:hidden">
-          <PressPhotoCarousel />
-          <AboutSection />
         </div>
       </div>
 
