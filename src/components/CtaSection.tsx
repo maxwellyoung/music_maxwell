@@ -9,21 +9,22 @@ export default function CtaSection() {
       </h1>
       <p className="mb-8 text-base sm:text-lg">Out now. Stream everywhere.</p>
       <div className="mb-8 flex items-center justify-center">
-        <a
-          href="https://music.drm.co.nz/freewheelin"
-          target="_blank"
-          rel="noopener noreferrer"
-          className="group"
-        >
-          <Image
-            src="/artworks/Freewheelin.webp"
-            alt="Freewheelin' Artwork"
-            width={600}
-            height={600}
-            className="w-full max-w-xs transform rounded-lg shadow-lg transition-transform group-hover:scale-105 sm:max-w-sm md:max-w-md"
-            priority
-          />
-        </a>
+        <div className="w-full max-w-xs transform overflow-hidden rounded-lg shadow-lg">
+          <div
+            style={{ paddingBottom: "100%", position: "relative" }}
+            className="group"
+          >
+            <Image
+              src="/artworks/Freewheelin.webp"
+              alt="Freewheelin' Artwork"
+              layout="fill"
+              objectFit="cover"
+              objectPosition="center"
+              className="transition-transform group-hover:scale-105"
+              priority
+            />
+          </div>
+        </div>
       </div>
       <a
         href="https://music.drm.co.nz/freewheelin"

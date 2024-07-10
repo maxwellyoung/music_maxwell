@@ -193,7 +193,7 @@ const CollectableGrid: React.FC = () => {
           ))}
         </div>
 
-        <div className="hidden md:block md:flex">
+        <div className="hidden md:block">
           <div className="md:w-1/2">
             <PressPhotoCarousel />
           </div>
