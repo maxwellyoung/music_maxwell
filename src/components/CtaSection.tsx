@@ -1,8 +1,9 @@
 "use client";
 
-import { useRef, useEffect } from "react";
+import { useRef, useEffect, useState } from "react";
 import { Canvas, useFrame, extend, useThree } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
+import { motion } from "framer-motion";
 import type * as THREE from "three";
 
 extend({ OrbitControls });
@@ -87,54 +88,92 @@ function Scene() {
 }
 
 export default function CtaSection() {
+  const [isHovered, setIsHovered] = useState(false);
+
   return (
-    <section className="flex flex-col items-center px-4 py-12 text-center">
+    <motion.section
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.8 }}
+      className="flex flex-col items-center px-4 py-12 text-center"
+    >
       <div className="w-full max-w-4xl">
-        <h1 className="mb-2 text-5xl font-bold leading-tight text-white">
+        <motion.h1
+          initial={{ y: -20 }}
+          animate={{ y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="mb-2 text-5xl font-bold leading-tight text-white"
+        >
           Metrosexual Awareness Night
-        </h1>
-        <p className="mb-4 text-xl font-semibold text-red-400">
+        </motion.h1>
+        <motion.p
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3, duration: 0.5 }}
+          className="mb-4 text-xl font-semibold text-red-400"
+        >
           A night of music
-        </p>
+        </motion.p>
         <div className="relative mx-auto mb-8 h-[300px] w-[300px] sm:h-[400px] sm:w-[400px]">
           <Canvas>
             <Scene />
           </Canvas>
         </div>
-        <div className="mb-8 space-y-4">
+        <motion.div
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.5, duration: 0.5 }}
+          className="mb-8 space-y-4"
+        >
           <p className="text-2xl font-light text-gray-300">
             October 11 @ Whammy in Auckland, New Zealand
           </p>
           <p className="text-xl text-gray-400">
             Presented by{" "}
-            <a
+            <motion.a
               href="https://instagram.com/maxwell_young"
               target="_blank"
               rel="noopener noreferrer"
               className="font-semibold text-white hover:underline"
+              whileHover={{ scale: 1.05 }}
             >
               Maxwell Young
-            </a>{" "}
+            </motion.a>{" "}
             and{" "}
-            <a
+            <motion.a
               href="https://instagram.com/thom_haha"
               target="_blank"
               rel="noopener noreferrer"
               className="font-semibold text-white hover:underline"
+              whileHover={{ scale: 1.05 }}
             >
               Thom Haha
-            </a>
+            </motion.a>
           </p>
-        </div>
-        <a
+        </motion.div>
+        <motion.a
           href="https://metrosexualawareness.com"
           target="_blank"
           rel="noopener noreferrer"
           className="inline-block transform rounded-full bg-red-600 px-8 py-4 text-lg font-bold text-white transition-all duration-300 hover:-translate-y-1 hover:bg-red-700 hover:shadow-lg focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
+          whileHover={{ scale: 1.05 }}
+          whileTap={{ scale: 0.95 }}
+          onHoverStart={() => setIsHovered(true)}
+          onHoverEnd={() => setIsHovered(false)}
         >
           Learn More
-        </a>
+        </motion.a>
+        {isHovered && (
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            className="mt-4 text-sm text-gray-400"
+          >
+            Click to visit the event website
+          </motion.p>
+        )}
       </div>
-    </section>
+    </motion.section>
   );
 }
