@@ -44,10 +44,12 @@ const GlobeShaderMaterial = {
 
 function Globe() {
   const meshRef = useRef<THREE.Mesh>(null);
-  const materialRef = useRef<THREE.ShaderMaterial>(null);
+  const materialRef = useRef<
+    THREE.ShaderMaterial & { uniforms: { time: { value: number } } }
+  >(null);
 
   useFrame(({ clock }) => {
-    if (materialRef.current) {
+    if (materialRef.current?.uniforms?.time) {
       materialRef.current.uniforms.time.value = clock.getElapsedTime();
     }
     if (meshRef.current) {
