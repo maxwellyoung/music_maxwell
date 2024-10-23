@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion } from "framer-motion";
 import {
@@ -46,7 +46,9 @@ import {
 } from "./ui/card";
 import { Separator } from "./ui/separator";
 import songs from "./songsData";
+import { sanityClient } from "../lib/sanity";
 
+// Define the Song type
 type Song = {
   title: string;
   artist: string;
@@ -59,6 +61,21 @@ type Song = {
   lyrics?: Record<string, string>;
   credits?: string;
   videoLink?: string;
+};
+
+// Define the SanityProduct type
+type SanityProduct = {
+  _id: string;
+  title: string;
+  description?: string;
+  price?: number;
+  images?: Array<{
+    asset: {
+      url: string;
+      altText?: string;
+    };
+  }>;
+  shopifyProductId?: string;
 };
 
 const photos = [
@@ -149,6 +166,34 @@ const CollectableGrid: React.FC = () => {
   const [selectedLyricSong, setSelectedLyricSong] = useState<string | null>(
     null,
   );
+  const [products, setProducts] = useState<SanityProduct[]>([]);
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const sanityProducts: SanityProduct[] = await sanityClient.fetch(
+          `*[_type == "product"]{
+            _id,
+            title,
+            description,
+            price,
+            images[]{
+              asset->{
+                url,
+                altText
+              }
+            },
+            shopifyProductId
+          }`,
+        );
+        setProducts(sanityProducts);
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+
+    void fetchProducts();
+  }, []);
 
   const openDrawer = (song: Song) => {
     setSelectedSong(song);
@@ -165,226 +210,269 @@ const CollectableGrid: React.FC = () => {
   };
 
   return (
-    <div className="bg-dark min-h-screen overflow-x-hidden text-white">
-      <div className="container mx-auto overflow-x-hidden px-4 py-16">
-        <div className="grid grid-cols-1 gap-8 overflow-x-hidden sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-          {songs.map((song, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
-              whileHover={{ scale: 1.05 }}
-              onClick={() => openDrawer(song)}
-              className="cursor-pointer overflow-hidden rounded-lg p-4"
-            >
-              <Image
-                src={song.artwork}
-                alt={song.title}
-                width={150}
-                height={150}
-                className="mx-auto rounded-lg"
-              />
-              <h2 className="mt-4 text-xl font-bold text-primary">
-                {song.title}
-              </h2>
-              <p className="text-secondary">{song.artist}</p>
-            </motion.div>
-          ))}
-        </div>
-
-        <div className="mt-12 flex flex-col items-stretch md:flex-row">
-          <div className="md:w-1/2">
-            <PressPhotoCarousel />
-          </div>
-          <Separator
-            orientation="vertical"
-            className="mx-4 my-12 hidden md:block"
-          />
-          <div className="md:w-1/2">
-            <AboutSection />
-          </div>
-        </div>
-      </div>
-
-      <Drawer open={isOpen} onOpenChange={setIsOpen}>
-        <DrawerContent className="p-4">
-          <DrawerHeader>
-            <DrawerTitle>{selectedSong?.title}</DrawerTitle>
-            <DrawerClose onClick={closeDrawer} />
-          </DrawerHeader>
-          <ResizablePanelGroup direction="horizontal">
-            <ResizablePanel className="flex-shrink-0 p-4">
-              {selectedSong && (
+    <div className="w-full overflow-hidden">
+      <div className="bg-dark text-white">
+        <div className="container mx-auto px-4 py-16">
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            {songs.map((song, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5 }}
+                whileHover={{ scale: 1.05 }}
+                onClick={() => openDrawer(song)}
+                className="cursor-pointer overflow-hidden rounded-lg p-4"
+              >
                 <Image
-                  src={selectedSong.artwork}
-                  alt={selectedSong.title}
-                  width={300}
-                  height={300}
+                  src={song.artwork}
+                  alt={song.title}
+                  width={150}
+                  height={150}
                   className="mx-auto rounded-lg"
                 />
-              )}
-            </ResizablePanel>
-            <ResizableHandle />
-            <ResizablePanel className="max-h-96 flex-grow overflow-y-auto p-4">
-              <Accordion type="single" collapsible>
-                <AccordionItem value="lyrics">
-                  <AccordionTrigger>Lyrics</AccordionTrigger>
-                  <AccordionContent className="max-h-48 overflow-y-auto">
-                    {selectedSong?.lyrics && (
-                      <>
-                        {Object.keys(selectedSong.lyrics).length > 1 && (
-                          <div className="mb-4">
-                            <Select
-                              onValueChange={(value) =>
-                                setSelectedLyricSong(value)
-                              }
-                              value={selectedLyricSong ?? ""}
-                            >
-                              <SelectTrigger className="w-full">
-                                <SelectValue placeholder="Select a song" />
-                              </SelectTrigger>
-                              <SelectContent className="bg-background text-foreground">
-                                {Object.keys(selectedSong.lyrics).map(
-                                  (songTitle, index) => (
-                                    <SelectItem key={index} value={songTitle}>
-                                      {songTitle}
-                                    </SelectItem>
-                                  ),
-                                )}
-                              </SelectContent>
-                            </Select>
-                          </div>
-                        )}
-                        <div className="max-h-48 overflow-y-auto bg-background">
-                          {selectedLyricSong &&
-                            selectedSong.lyrics[selectedLyricSong]
-                              ?.split("\n")
-                              .map((line, index) => <p key={index}>{line}</p>)}
-                        </div>
-                      </>
-                    )}
-                  </AccordionContent>
-                </AccordionItem>
-                <AccordionItem value="credits">
-                  <AccordionTrigger>Credits</AccordionTrigger>
-                  <AccordionContent className="max-h-48 overflow-y-auto">
-                    <div className="max-h-48 overflow-y-auto bg-background">
-                      {selectedSong?.credits
-                        ?.split("\n")
-                        .map((line, index) => <p key={index}>{line}</p>)}
-                    </div>
-                  </AccordionContent>
-                </AccordionItem>
-              </Accordion>
-              {selectedSong?.videoLink && (
-                <div className="mt-4">
-                  <a
-                    href={selectedSong.videoLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-blue-500 hover:underline"
-                  >
-                    Watch Music Video
-                  </a>
-                </div>
-              )}
-              <div className="mt-4">
-                <p className="text-gray-400">Available on:</p>
-                <div className="flex flex-wrap space-x-2">
-                  <a
-                    href={selectedSong?.links.spotify}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="cursor-pointer text-blue-500 hover:underline"
-                  >
-                    Spotify
-                  </a>
-                  <a
-                    href={selectedSong?.links.appleMusic}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="cursor-pointer text-blue-500 hover:underline"
-                  >
-                    Apple Music
-                  </a>
-                  <a
-                    href={selectedSong?.links.youtube}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="cursor-pointer text-blue-500 hover:underline"
-                  >
-                    YouTube
-                  </a>
-                </div>
-              </div>
-            </ResizablePanel>
-          </ResizablePanelGroup>
-          <DrawerFooter>
-            <button
-              onClick={closeDrawer}
-              className="mt-4 cursor-pointer text-red-500 hover:underline"
-            >
-              Close
-            </button>
-          </DrawerFooter>
-        </DrawerContent>
-      </Drawer>
+                <h2 className="mt-4 text-xl font-bold text-primary">
+                  {song.title}
+                </h2>
+                <p className="text-secondary">{song.artist}</p>
+              </motion.div>
+            ))}
+          </div>
 
-      <footer className="bg-dark overflow-hidden py-4 text-center text-secondary">
-        <div className="container mx-auto flex flex-col justify-center md:flex-row md:flex-wrap">
-          <div className="flex flex-wrap justify-center">
-            <a
-              href="https://open.spotify.com/artist/5HONdRTLNvBjlD2LirKp0q"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mx-2 my-1 cursor-pointer text-primary hover:underline"
-            >
-              Spotify
-            </a>
-            <a
-              href="https://music.apple.com/us/artist/maxwell-young/1113632139"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mx-2 my-1 cursor-pointer text-primary hover:underline"
-            >
-              Apple Music
-            </a>
-            <a
-              href="https://soundcloud.com/maxwell_young"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mx-2 my-1 cursor-pointer text-primary hover:underline"
-            >
-              SoundCloud
-            </a>
-            <a
-              href="https://www.youtube.com/@maxwell_young"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mx-2 my-1 cursor-pointer text-primary hover:underline"
-            >
-              YouTube
-            </a>
-            <a
-              href="https://x.com/internetmaxwell"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mx-2 my-1 cursor-pointer text-primary hover:underline"
-            >
-              Twitter
-            </a>
-            <a
-              href="https://instagram.com/maxwell_young"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mx-2 my-1 cursor-pointer text-primary hover:underline"
-            >
-              Instagram
-            </a>
+          <div className="mt-12 flex flex-col items-stretch md:flex-row">
+            <div className="md:w-1/2">
+              <PressPhotoCarousel />
+            </div>
+            <Separator
+              orientation="vertical"
+              className="mx-4 my-12 hidden md:block"
+            />
+            <div className="md:w-1/2">
+              <AboutSection />
+            </div>
+          </div>
+
+          <div className="mt-12">
+            <h2 className="text-2xl font-bold">Products</h2>
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+              {products.map((product) => (
+                <Card key={product._id}>
+                  <CardHeader>
+                    <CardTitle>{product.title}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {product.description && <p>{product.description}</p>}
+                    {product.images?.[0]?.asset?.url && (
+                      <Image
+                        src={product.images[0].asset.url}
+                        alt={product.images[0].asset.altText ?? "Product Image"}
+                        width={150}
+                        height={150}
+                        className="rounded-lg"
+                      />
+                    )}
+                    {product.price && <p>Price: ${product.price.toFixed(2)}</p>}
+                  </CardContent>
+                  {product.shopifyProductId && (
+                    <CardFooter>
+                      <a
+                        href={`https://your-shopify-domain.com/products/${product.shopifyProductId}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-blue-500 hover:underline"
+                      >
+                        View on Shopify
+                      </a>
+                    </CardFooter>
+                  )}
+                </Card>
+              ))}
+            </div>
           </div>
         </div>
-      </footer>
+
+        <Drawer open={isOpen} onOpenChange={setIsOpen}>
+          <DrawerContent className="p-4">
+            <DrawerHeader>
+              <DrawerTitle>{selectedSong?.title}</DrawerTitle>
+              <DrawerClose onClick={closeDrawer} />
+            </DrawerHeader>
+            <ResizablePanelGroup direction="horizontal">
+              <ResizablePanel className="flex-shrink-0 p-4">
+                {selectedSong && (
+                  <Image
+                    src={selectedSong.artwork}
+                    alt={selectedSong.title}
+                    width={300}
+                    height={300}
+                    className="mx-auto rounded-lg"
+                  />
+                )}
+              </ResizablePanel>
+              <ResizableHandle />
+              <ResizablePanel className="max-h-96 flex-grow overflow-y-auto p-4">
+                <Accordion type="single" collapsible>
+                  <AccordionItem value="lyrics">
+                    <AccordionTrigger>Lyrics</AccordionTrigger>
+                    <AccordionContent className="max-h-48 overflow-y-auto">
+                      {selectedSong?.lyrics && (
+                        <>
+                          {Object.keys(selectedSong.lyrics).length > 1 && (
+                            <div className="mb-4">
+                              <Select
+                                onValueChange={(value) =>
+                                  setSelectedLyricSong(value)
+                                }
+                                value={selectedLyricSong ?? ""}
+                              >
+                                <SelectTrigger className="w-full">
+                                  <SelectValue placeholder="Select a song" />
+                                </SelectTrigger>
+                                <SelectContent className="bg-background text-foreground">
+                                  {Object.keys(selectedSong.lyrics).map(
+                                    (songTitle, index) => (
+                                      <SelectItem key={index} value={songTitle}>
+                                        {songTitle}
+                                      </SelectItem>
+                                    ),
+                                  )}
+                                </SelectContent>
+                              </Select>
+                            </div>
+                          )}
+                          <div className="max-h-48 overflow-y-auto bg-background">
+                            {selectedLyricSong &&
+                              selectedSong.lyrics[selectedLyricSong]
+                                ?.split("\n")
+                                .map((line, index) => (
+                                  <p key={index}>{line}</p>
+                                ))}
+                          </div>
+                        </>
+                      )}
+                    </AccordionContent>
+                  </AccordionItem>
+                  <AccordionItem value="credits">
+                    <AccordionTrigger>Credits</AccordionTrigger>
+                    <AccordionContent className="max-h-48 overflow-y-auto">
+                      <div className="max-h-48 overflow-y-auto bg-background">
+                        {selectedSong?.credits
+                          ?.split("\n")
+                          .map((line, index) => <p key={index}>{line}</p>)}
+                      </div>
+                    </AccordionContent>
+                  </AccordionItem>
+                </Accordion>
+                {selectedSong?.videoLink && (
+                  <div className="mt-4">
+                    <a
+                      href={selectedSong.videoLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-500 hover:underline"
+                    >
+                      Watch Music Video
+                    </a>
+                  </div>
+                )}
+                <div className="mt-4">
+                  <p className="text-gray-400">Available on:</p>
+                  <div className="flex flex-wrap space-x-2">
+                    <a
+                      href={selectedSong?.links.spotify}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="cursor-pointer text-blue-500 hover:underline"
+                    >
+                      Spotify
+                    </a>
+                    <a
+                      href={selectedSong?.links.appleMusic}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="cursor-pointer text-blue-500 hover:underline"
+                    >
+                      Apple Music
+                    </a>
+                    <a
+                      href={selectedSong?.links.youtube}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="cursor-pointer text-blue-500 hover:underline"
+                    >
+                      YouTube
+                    </a>
+                  </div>
+                </div>
+              </ResizablePanel>
+            </ResizablePanelGroup>
+            <DrawerFooter>
+              <button
+                onClick={closeDrawer}
+                className="mt-4 cursor-pointer text-red-500 hover:underline"
+              >
+                Close
+              </button>
+            </DrawerFooter>
+          </DrawerContent>
+        </Drawer>
+        {/* <StoreSectionComponent /> */}
+
+        <footer className="bg-dark py-4 text-center text-secondary">
+          <div className="container mx-auto flex flex-col justify-center md:flex-row md:flex-wrap">
+            <div className="flex flex-wrap justify-center">
+              <a
+                href="https://open.spotify.com/artist/5HONdRTLNvBjlD2LirKp0q"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mx-2 my-1 cursor-pointer text-primary hover:underline"
+              >
+                Spotify
+              </a>
+              <a
+                href="https://music.apple.com/us/artist/maxwell-young/1113632139"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mx-2 my-1 cursor-pointer text-primary hover:underline"
+              >
+                Apple Music
+              </a>
+              <a
+                href="https://soundcloud.com/maxwell_young"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mx-2 my-1 cursor-pointer text-primary hover:underline"
+              >
+                SoundCloud
+              </a>
+              <a
+                href="https://www.youtube.com/@maxwell_young"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mx-2 my-1 cursor-pointer text-primary hover:underline"
+              >
+                YouTube
+              </a>
+              <a
+                href="https://x.com/internetmaxwell"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mx-2 my-1 cursor-pointer text-primary hover:underline"
+              >
+                Twitter
+              </a>
+              <a
+                href="https://instagram.com/maxwell_young"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mx-2 my-1 cursor-pointer text-primary hover:underline"
+              >
+                Instagram
+              </a>
+            </div>
+          </div>
+        </footer>
+      </div>
     </div>
   );
 };

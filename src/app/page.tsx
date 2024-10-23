@@ -1,17 +1,19 @@
-import { type NextPage } from "next";
-import dynamic from "next/dynamic";
+import React from "react";
 import CtaSection from "~/components/CtaSection";
+import CollectableGrid from "~/components/CollectableGrid";
+import { StoreSectionComponent } from "~/components/store-section";
+import { AbstractBlakePaintingComponent } from "~/components/abstract-blake-painting";
+import { AdvancedImageCollageComponent } from "~/components/advanced-image-collage";
 
-const CollectableGrid = dynamic(() => import("~/components/CollectableGrid"));
-
-const Home: NextPage = () => {
+const Home = () => {
   return (
-    <>
-      <div className="bg-dark flex min-h-screen flex-col items-center justify-center overflow-x-hidden text-white">
-        <CtaSection />
-      </div>
+    <main className="relative flex min-h-screen flex-col items-center overflow-x-hidden">
+      {/* <AbstractBlakePaintingComponent />
+      <div className="relative z-10 w-full"> */}
+      <CtaSection />
       <CollectableGrid />
-    </>
+      {/* </div> */}
+    </main>
   );
 };
 
