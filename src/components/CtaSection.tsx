@@ -1,288 +1,123 @@
 "use client";
 
-import React, { useRef, useState, useEffect } from "react";
-import { Canvas, useFrame, extend } from "@react-three/fiber";
-import { OrbitControls } from "@react-three/drei";
-import * as THREE from "three";
-import { motion, useMotionValue, useTransform } from "framer-motion";
-import { Rnd } from "react-rnd";
+import { useEffect, useRef } from "react";
+import { useAnimationFrame } from "framer-motion";
+import LetterSwapForward from "../fancy/components/text/letter-swap-forward-anim";
+import LetterSwapPingPong from "../fancy/components/text/letter-swap-pingpong-anim";
+import Image from "next/image";
 
-extend({ OrbitControls });
-
-const GlobeShaderMaterial = {
-  uniforms: {
-    time: { value: 0 },
-  },
-  vertexShader: `
-    varying vec3 vNormal;
-    varying vec2 vUv;
-    uniform float time;
-    
-    void main() {
-      vNormal = normal;
-      vUv = uv;
-      vec3 pos = position + normal * sin(time * 1.5 + position.y * 3.0) * 0.015;
-      gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
-    }
-  `,
-  fragmentShader: `
-    varying vec3 vNormal;
-    varying vec2 vUv;
-    uniform float time;
-    
-    void main() {
-      float glimmer = sin(vUv.y * 25.0 + time * 2.5) * 0.5 + 0.5;
-      glimmer *= sin(vUv.x * 20.0 - time * 2.0) * 0.5 + 0.5;
-      
-      vec3 baseColor = vec3(0.95, 0.1, 0.1);  // Bright red
-      vec3 darkColor = vec3(0.2, 0.05, 0.05);  // Dark red
-      
-      vec3 finalColor = mix(darkColor, baseColor, glimmer * dot(vNormal, vec3(0.0, 0.0, 1.0)));
-      
-      gl_FragColor = vec4(finalColor, 1.0);
-    }
-  `,
-};
-
-function Globe() {
-  const meshRef = useRef<THREE.Mesh>(null);
-  const materialRef = useRef<
-    THREE.ShaderMaterial & { uniforms: { time: { value: number } } }
-  >(null);
-
-  useFrame(({ clock }) => {
-    if (materialRef.current?.uniforms?.time) {
-      materialRef.current.uniforms.time.value = clock.getElapsedTime();
-    }
-    if (meshRef.current) {
-      meshRef.current.rotation.y += 0.0005;
-    }
-  });
-
-  return (
-    <mesh ref={meshRef}>
-      <sphereGeometry args={[1, 128, 128]} />
-      <shaderMaterial
-        ref={materialRef}
-        attach="material"
-        args={[GlobeShaderMaterial as THREE.ShaderMaterialParameters]}
-      />
-    </mesh>
-  );
-}
-
-function Scene() {
-  return (
-    <>
-      <ambientLight intensity={0.5} />
-      <pointLight position={[10, 10, 10]} intensity={1} />
-      <Globe />
-      <OrbitControls enableZoom={false} enablePan={false} />
-    </>
-  );
-}
-
-interface Image {
-  id: string;
-  src: string;
-  alt: string;
-  initialX: number;
-  initialY: number;
-  initialWidth: number;
-  initialHeight: number;
-  initialRotation: number;
-}
-
-const images: Image[] = [
-  {
-    id: "1",
-    src: "https://hebbkx1anhila5yf.public.blob.vercel-storage.com/IMG_5435%202-6hEWiwJ4DzO8FEmQOsxjwhWlh4SNni.jpeg",
-    alt: "Me in suit in basement",
-    initialX: 50,
-    initialY: 50,
-    initialWidth: 300,
-    initialHeight: 400,
-    initialRotation: 0,
-  },
-
-  {
-    id: "2",
-    src: "./makingamixtape.webp",
-    alt: "Making a mixtape",
-    initialX: 200,
-    initialY: 300,
-    initialWidth: 600,
-    initialHeight: 100,
-    initialRotation: -10,
-  },
-  {
-    id: "3",
-    src: "/name.webp",
-    alt: "Maxwell Young",
-    initialX: 600,
-    initialY: 100,
-    initialWidth: 600,
-    initialHeight: 100,
-    initialRotation: 10,
-  },
-];
-
-const CtaSection: React.FC = () => {
-  const [zIndexes, setZIndexes] = useState<{ [key: string]: number }>(
-    Object.fromEntries(images.map((img, index) => [img.id, index + 1])),
-  );
-  const maxZIndexRef = useRef(images.length);
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
-
-  const getRandomPosition = (
-    imageWidth: number,
-    imageHeight: number,
-  ): { x: number; y: number } => {
-    const windowWidth = window.innerWidth;
-    const windowHeight = window.innerHeight;
-    const maxX = windowWidth - imageWidth;
-    const maxY = windowHeight - imageHeight;
-    const x = Math.floor(Math.random() * maxX);
-    const y = Math.floor(Math.random() * maxY);
-    return { x, y };
-  };
-
-  const [imagePositions, setImagePositions] = useState<{
-    [key: string]: { x: number; y: number };
-  }>(() => {
-    const positions: { [key: string]: { x: number; y: number } } = {};
-    images.forEach((image) => {
-      const { x, y } = getRandomPosition(
-        image.initialWidth,
-        image.initialHeight,
-      );
-      positions[image.id] = { x, y };
-    });
-    return positions;
-  });
+export default function CTASection() {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
-    const updatePositions = () => {
-      const newPositions: { [key: string]: { x: number; y: number } } = {};
-      images.forEach((image) => {
-        const { x, y } = getRandomPosition(
-          image.initialWidth,
-          image.initialHeight,
-        );
-        newPositions[image.id] = { x, y };
-      });
-      setImagePositions(newPositions);
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const updateCanvasSize = () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight * 2; // Double the height for smoother transitions
     };
 
-    window.addEventListener("resize", updatePositions);
-    return () => window.removeEventListener("resize", updatePositions);
+    updateCanvasSize();
+    window.addEventListener("resize", updateCanvasSize);
+
+    return () => window.removeEventListener("resize", updateCanvasSize);
   }, []);
 
-  const bringToFront = (id: string) => {
-    setZIndexes((prev) => {
-      maxZIndexRef.current += 1;
-      return { ...prev, [id]: maxZIndexRef.current };
-    });
-    setSelectedImage(id);
-  };
+  useAnimationFrame((t) => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
 
-  const resetPositions = () => {
-    setZIndexes(
-      Object.fromEntries(images.map((img, index) => [img.id, index + 1])),
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return;
+
+    const { width, height } = canvas;
+
+    ctx.clearRect(0, 0, width, height);
+
+    const drawGradient = (
+      x: number,
+      y: number,
+      radius: number,
+      hue: number,
+    ) => {
+      const gradient = ctx.createRadialGradient(x, y, 0, x, y, radius);
+      gradient.addColorStop(0, `hsla(${hue}, 100%, 50%, 0.8)`);
+      gradient.addColorStop(1, `hsla(${hue}, 100%, 50%, 0)`);
+      ctx.fillStyle = gradient;
+      ctx.beginPath();
+      ctx.arc(x, y, radius, 0, Math.PI * 2);
+      ctx.fill();
+    };
+
+    const numGradients = 5;
+    for (let i = 0; i < numGradients; i++) {
+      const x =
+        width *
+        (0.2 + 0.6 * Math.sin(t / 1000 + (i * Math.PI * 2) / numGradients));
+      const y =
+        height *
+        (0.2 + 0.6 * Math.cos(t / 1000 + (i * Math.PI * 2) / numGradients));
+      const radius =
+        Math.min(width, height) * (0.2 + 0.1 * Math.sin(t / 500 + i));
+      const hue = (t / 50 + (i * 360) / numGradients) % 360;
+      drawGradient(x, y, radius, hue);
+    }
+
+    // Add a gradient fade out at the bottom
+    const fadeHeight = height * 0.3; // 30% of the height
+    const fadeGradient = ctx.createLinearGradient(
+      0,
+      height - fadeHeight,
+      0,
+      height,
     );
-    maxZIndexRef.current = images.length;
-    setSelectedImage(null);
-  };
-
-  useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        resetPositions();
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, []);
+    fadeGradient.addColorStop(0, "rgba(0, 0, 0, 0)");
+    fadeGradient.addColorStop(1, "rgba(0, 0, 0, 1)");
+    ctx.fillStyle = fadeGradient;
+    ctx.fillRect(0, height - fadeHeight, width, fadeHeight);
+  });
 
   return (
-    <div className="relative h-screen w-full overflow-hidden">
-      <div className="absolute inset-0 z-0">
-        <Canvas>
-          <Scene />
-        </Canvas>
+    <section className="relative min-h-screen w-full">
+      {/* Canvas wrapper with fade out effect */}
+      <div className="absolute inset-0 overflow-hidden">
+        <canvas
+          ref={canvasRef}
+          className="pointer-events-none absolute left-0 top-0 h-[200vh] w-full"
+          style={{
+            willChange: "transform",
+            transform: "translate3d(0,0,0)",
+            zIndex: 0,
+          }}
+        />
+        {/* Additional gradient overlay */}
+        <div
+          className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black to-transparent"
+          style={{ zIndex: 1 }}
+        />
       </div>
-      <div className="absolute inset-0 z-20 flex flex-wrap items-center justify-center">
-        {images.map((image) => (
-          <Rnd
-            key={image.id}
-            default={{
-              x: imagePositions[image.id]?.x || 0,
-              y: imagePositions[image.id]?.y || 0,
-              width: image.initialWidth,
-              height: image.initialHeight,
-            }}
-            style={{ zIndex: zIndexes[image.id] }}
-            onDragStart={() => bringToFront(image.id)}
-            onResizeStart={() => bringToFront(image.id)}
-            bounds="parent"
-            enableResizing={{
-              top: true,
-              right: true,
-              bottom: true,
-              left: true,
-              topRight: true,
-              topLeft: true,
-              bottomRight: true,
-              bottomLeft: true,
-            }}
-          >
-            <motion.div
-              className="group relative h-full w-full"
-              initial={{ rotate: image.initialRotation }}
-              whileHover={{ scale: 1.02 }}
-            >
-              <img
-                src={image.src}
-                alt={image.alt}
-                className="h-full w-full rounded-lg object-cover shadow-lg"
-              />
-              <motion.div className="absolute inset-0 bg-black bg-opacity-0 transition-opacity duration-200 group-hover:bg-opacity-20" />
-              {selectedImage === image.id && (
-                <motion.div
-                  className="absolute -left-3 -top-3 h-6 w-6 cursor-move rounded-full bg-blue-500"
-                  drag
-                  dragConstraints={{
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    bottom: 0,
-                  }}
-                  dragElastic={0.1}
-                  dragMomentum={false}
-                  onDrag={(_, info) => {
-                    const rotationElement = info.point.x / 2;
-                    const parentElement = info.point.y / 2;
-                    const rotation = rotationElement + parentElement;
-                    const motionDiv = document.getElementById(
-                      `motion-div-${image.id}`,
-                    );
-                    if (motionDiv) {
-                      motionDiv.style.transform = `rotate(${rotation}deg)`;
-                    }
-                  }}
-                />
-              )}
-              <motion.div
-                id={`motion-div-${image.id}`}
-                className="h-full w-full"
-              />
-            </motion.div>
-          </Rnd>
-        ))}
-      </div>
-    </div>
-  );
-};
 
-export default CtaSection;
+      <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-4 text-center text-white">
+        <div className="flex flex-col items-center space-y-4">
+          <Image
+            src="/IMG_2094.webp"
+            alt="Maxwell Young"
+            width={300}
+            height={300}
+            className="rotate-90 p-6"
+          />
+
+          <LetterSwapPingPong
+            label="mixtape 2025"
+            staggerFrom="center"
+            className="font-pantasia mb-12 max-w-2xl text-xl md:text-2xl"
+          />
+        </div>
+      </div>
+    </section>
+  );
+}
