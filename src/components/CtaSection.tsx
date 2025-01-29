@@ -2,7 +2,6 @@
 
 import { useEffect, useRef } from "react";
 import { useAnimationFrame } from "framer-motion";
-import LetterSwapForward from "../fancy/components/text/letter-swap-forward-anim";
 import LetterSwapPingPong from "../fancy/components/text/letter-swap-pingpong-anim";
 import Image from "next/image";
 
@@ -103,6 +102,7 @@ export default function CTASection() {
 
       <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-4 text-center text-white">
         <div className="flex flex-col items-center space-y-4">
+          g{" "}
           <Image
             src="/IMG_2094.webp"
             alt="Maxwell Young"
@@ -110,7 +110,6 @@ export default function CTASection() {
             height={300}
             className="rotate-90 p-6"
           />
-
           <LetterSwapPingPong
             label="mixtape 2025"
             staggerFrom="center"

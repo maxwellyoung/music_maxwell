@@ -17,22 +17,23 @@ export default function LetterSwapForward({
   const letters = useMemo(() => {
     const chars = label.split("");
     const len = chars.length;
+    const staggerDelay = 0.1;
 
     return chars.map((char, i) => {
       let delay = 0;
 
       switch (staggerFrom) {
         case "center":
-          delay = Math.abs(i - len / 2) * 0.05;
+          delay = Math.abs(i - len / 2) * staggerDelay;
           break;
         case "end":
-          delay = (len - i) * 0.05;
+          delay = (len - i) * staggerDelay;
           break;
         default:
-          delay = i * 0.05;
+          delay = i * staggerDelay;
       }
 
-      if (reverse) delay = (len - 1) * 0.05 - delay;
+      if (reverse) delay = (len - 1) * staggerDelay - delay;
 
       return { char, delay };
     });
@@ -46,7 +47,7 @@ export default function LetterSwapForward({
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{
-            duration: 0.4,
+            duration: 0.8,
             delay,
             ease: [0.2, 0.65, 0.3, 0.9],
           }}
