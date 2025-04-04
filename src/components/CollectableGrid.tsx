@@ -246,17 +246,19 @@ const PressPhotoCarousel = () => {
 const AboutSection = () => (
   <section className="my-12">
     <Card>
-      <CardHeader>
+      <CardHeader className="space-y-3">
         <CardTitle>
-          <span className="font-reenie text-4xl">Maxwell Young</span>
+          <span className="font-reenie text-5xl tracking-wide text-white">
+            Maxwell Young
+          </span>
         </CardTitle>
-        <CardDescription>
+        <CardDescription className="text-base font-medium tracking-wide text-white/90">
           Pop because it&apos;s for people. Alternative because it has to be
           new.
         </CardDescription>
       </CardHeader>
-      <CardContent>
-        <p>
+      <CardContent className="space-y-6">
+        <p className="leading-relaxed tracking-wide text-white/75">
           Maxwell Young is a New Zealand artist making emotionally-driven
           alt-pop that&apos;s both personal and unpredictable. He started violin
           at three, learned production in his teens, and unexpectedly landed
@@ -265,14 +267,14 @@ const AboutSection = () => (
           and Snail Mail, with cosigns from The 1975, Phoebe Bridgers, and
           Brockhampton.
         </p>
-        <br />
-        <p>
-          His 2022 EP <em>Birthday Girl</em> marked a shift—toward sharper
-          textures, emotional maximalism, and songwriting that feels like
-          recollection more than storytelling. <em>In My 20s</em> (2025) picks
-          up that thread: a record about spirals, near-misses, and becoming who
-          you are while already being someone else. The songs are immediate,
-          catchy, and just off enough to stick with you.
+        <p className="leading-relaxed tracking-wide text-white/75">
+          His 2022 EP <em className="text-white/90">Birthday Girl</em> marked a
+          shift—toward sharper textures, emotional maximalism, and songwriting
+          that feels like recollection more than storytelling.{" "}
+          <em className="text-white/90">In My 20s</em> (2025) picks up that
+          thread: a record about spirals, near-misses, and becoming who you are
+          while already being someone else. The songs are immediate, catchy, and
+          just off enough to stick with you.
         </p>
       </CardContent>
     </Card>
