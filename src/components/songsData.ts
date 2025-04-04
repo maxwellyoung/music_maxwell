@@ -14,6 +14,55 @@ export type Song = {
 
 const songs: Song[] = [
   {
+    title: "Turn It Up",
+    artist: "Maxwell Young",
+    artwork: "/artworks/TurnItUp.webp",
+    links: {
+      spotify: "https://open.spotify.com/track/6J2Kd1FCDTwY5cn0cUCSd3",
+      appleMusic:
+        "https://music.apple.com/nz/album/turn-it-up-single/1730777023",
+      youtube: "https://www.youtube.com/watch?v=wMEr3mcuD7Q",
+    },
+    lyrics: {
+      "Turn It Up": `we were staying up
+  no i had enough
+  had a sudden dream
+  a sudden felt a rash
+  you look back at me
+  no more deceased
+  had a sudden dream
+  all the girls with me wanna fuck it n turn up
+  all the girls with me wanna fuck it n turn up
+  all the girls with me wanna fuck it n turn up
+
+  im in the whip ride with me
+  turn it up loud
+  no more sympathy
+  we were staying up
+  no i had enough
+  had a sudden dream
+  a sudden felt a rash
+  you look back at me
+  no more deceased
+  had a sudden dream
+  all the girls with me wanna fuck it n turn up
+  all the girls with me wanna fuck it n turn up
+  all the girls with me wanna fuck it n turn up
+
+  yeah we shoplifting
+  grab a can still gift it
+  like im ventriloquy
+  you my type had to
+  all the girls with me wanna fuck it n turn up
+  all the girls with me wanna fuck it n turn up
+  all the girls with me wanna fuck it n turn up`,
+    },
+    credits: `Produced by Maxwell Young & Thom Haha
+    Directed by Tom Shackleton
+    Shot on MiniDV`,
+    videoLink: "https://www.youtube.com/watch?v=wMEr3mcuD7Q",
+  },
+  {
     title: "Freewheelin'",
     artist: "Maxwell Young",
     artwork: "/artworks/Freewheelin.webp",
