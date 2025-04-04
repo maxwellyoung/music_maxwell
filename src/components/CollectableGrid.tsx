@@ -168,6 +168,18 @@ const CollectableGrid: React.FC = () => {
   );
   const [products, setProducts] = useState<SanityProduct[]>([]);
 
+  // Simplified animation variants
+  const albumVariants = {
+    initial: { opacity: 0.95 },
+    hover: {
+      opacity: 1,
+      transition: {
+        duration: 0.2,
+        ease: "easeOut",
+      },
+    },
+  };
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -217,20 +229,22 @@ const CollectableGrid: React.FC = () => {
             {songs.map((song, index) => (
               <motion.div
                 key={index}
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5 }}
-                whileHover={{ scale: 1.05 }}
+                variants={albumVariants}
+                initial="initial"
+                whileHover="hover"
                 onClick={() => openDrawer(song)}
-                className="cursor-pointer overflow-hidden rounded-lg p-4"
+                className="group cursor-pointer overflow-hidden rounded-lg p-4 transition-transform duration-200 hover:-translate-y-1"
               >
-                <Image
-                  src={song.artwork}
-                  alt={song.title}
-                  width={150}
-                  height={150}
-                  className="mx-auto rounded-lg"
-                />
+                <div className="relative">
+                  <Image
+                    src={song.artwork}
+                    alt={song.title}
+                    width={150}
+                    height={150}
+                    className="mx-auto rounded-lg transition-all duration-300"
+                  />
+                  <div className="absolute inset-0 rounded-lg bg-black/20 opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
+                </div>
                 <h2 className="mt-4 text-xl font-bold text-primary">
                   {song.title}
                 </h2>
@@ -253,7 +267,6 @@ const CollectableGrid: React.FC = () => {
           </div>
 
           <div className="mt-12">
-            {/* <h2 className="text-2xl font-bold">Products</h2> */}
             <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
               {products.map((product) => (
                 <Card key={product._id}>
@@ -416,7 +429,6 @@ const CollectableGrid: React.FC = () => {
             </DrawerFooter>
           </DrawerContent>
         </Drawer>
-        {/* <StoreSectionComponent /> */}
 
         <footer className="bg-dark py-4 text-center text-secondary">
           <div className="container mx-auto flex flex-col justify-center md:flex-row md:flex-wrap">

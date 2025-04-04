@@ -36,7 +36,7 @@ export const metadata: Metadata = {
     siteName: "Maxwell Young",
     images: [
       {
-        url: "https://maxwellyoung.com/og-image.jpg", // Replace with your actual OG image
+        url: "/og-image.jpg",
         width: 1200,
         height: 630,
         alt: "Maxwell Young - Freewheelin'",
@@ -51,7 +51,7 @@ export const metadata: Metadata = {
     description:
       "Freewheelin' by Maxwell Young - Out June 7. Stream now on all major platforms.",
     creator: "@internetmaxwell",
-    images: ["https://maxwellyoung.com/twitter-image.jpg"], // Replace with your actual Twitter card image
+    images: ["/twitter-image.jpg"],
   },
   robots: {
     index: true,
@@ -64,10 +64,29 @@ export const metadata: Metadata = {
       "max-snippet": -1,
     },
   },
-  icons: [
-    { rel: "icon", url: "/favicon.ico" },
-    { rel: "apple-touch-icon", url: "/apple-touch-icon.png" },
-  ],
+  manifest: "/icons/site.webmanifest",
+  icons: {
+    icon: [
+      { url: "/icons/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+      { url: "/icons/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+    ],
+    shortcut: [{ url: "/icons/favicon.ico" }],
+    apple: [
+      {
+        url: "/icons/apple-touch-icon.png",
+        sizes: "180x180",
+        type: "image/png",
+      },
+    ],
+    other: [
+      {
+        rel: "mask-icon",
+        url: "/icons/safari-pinned-tab.svg",
+        color: "#000000",
+      },
+    ],
+  },
+  themeColor: "#000000",
 };
 
 export default function RootLayout({
@@ -76,11 +95,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${GeistSans.variable}`}>
-      <head>
-        <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#ffffff" />
-      </head>
+    <html lang="en" className={GeistSans.variable}>
       <body className="overflow-x-hidden">
         {children}
         <Analytics />
