@@ -131,22 +131,22 @@ const AboutSection = () => (
       </CardHeader>
       <CardContent>
         <p>
-          Maxwell Young is a New Zealand artist blending alt-pop songwriting
-          with visual design and classical training. He began playing violin at
-          age three and taught himself production as a teenager, gaining early
-          recognition when his sample-based instrumentals appeared in Casey
-          Neistat’s vlogs. Since then, he’s opened for acts like The Internet
-          and Snail Mail, and received support from The 1975, Phoebe Bridgers,
-          and Brockhampton.
+          Maxwell Young is a New Zealand artist making emotionally-driven
+          alt-pop that’s both personal and unpredictable. He started violin at
+          three, learned production in his teens, and unexpectedly landed early
+          internet traction when his beats appeared in Casey Neistat’s vlogs.
+          Since then, he’s opened for The Internet and Snail Mail, with cosigns
+          from The 1975, Phoebe Bridgers, and Brockhampton.
         </p>
         <br />
         <p>
-          His 2022 EP <em>Birthday Girl</em> marked a turning point—toward
-          sharper textures, emotional maximalism, and songs that move more like
-          memory than narrative. <em>In My 20s</em> (2025) continues that arc:
-          an alt-pop record about spirals, false starts, and the soft violence
-          of growing up. His songs feel simple on the surface, but reward those
-          who stay inside them—hooky, heartfelt, and quietly layered with myth.
+          His 2022 EP <em>Birthday Girl</em> marked a shift—toward sharper
+          textures, emotional maximalism, and songwriting that feels like
+          recollection more than storytelling. <em>In My 20s</em> (2025) picks
+          up that thread: a record about spirals, near-misses, and becoming who
+          you are while already being someone else. The songs are immediate,
+          catchy, and quietly layered with something stranger—hooks, heart, and
+          disquiet.
         </p>
       </CardContent>
     </Card>
