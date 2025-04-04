@@ -126,17 +126,19 @@ const AboutSection = () => (
           <span className="font-reenie text-4xl">Maxwell Young</span>
         </CardTitle>
         <CardDescription>
-          Pop because it's for people. Alternative because it has to be new.
+          Pop because it&apos;s for people. Alternative because it has to be
+          new.
         </CardDescription>
       </CardHeader>
       <CardContent>
         <p>
           Maxwell Young is a New Zealand artist making emotionally-driven
-          alt-pop that’s both personal and unpredictable. He started violin at
-          three, learned production in his teens, and unexpectedly landed early
-          internet traction when his beats appeared in Casey Neistat’s vlogs.
-          Since then, he’s opened for The Internet and Snail Mail, with cosigns
-          from The 1975, Phoebe Bridgers, and Brockhampton.
+          alt-pop that&apos;s both personal and unpredictable. He started violin
+          at three, learned production in his teens, and unexpectedly landed
+          early internet traction when his beats appeared in Casey
+          Neistat&apos;s vlogs. Since then, he&apos;s opened for The Internet
+          and Snail Mail, with cosigns from The 1975, Phoebe Bridgers, and
+          Brockhampton.
         </p>
         <br />
         <p>
