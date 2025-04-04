@@ -10,6 +10,7 @@ const nextConfig = {
     domains: [
       "hebbkx1anhila5yf.public.blob.vercel-storage.com",
       "cdn.sanity.io",
+      "img.youtube.com",
     ],
   },
   async headers() {

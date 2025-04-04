@@ -68,14 +68,10 @@ type SanityProduct = {
 };
 
 const photos = [
-  { src: "/pressphotos/1.jpg", alt: "Press Photo 1" },
-  { src: "/pressphotos/1.jpg", alt: "Press Photo 1" },
+  { src: "/pressphotos/4.jpg", alt: "Press Photo 4" },
+  { src: "/pressphotos/3.jpeg", alt: "Press Photo 3" },
   { src: "/pressphotos/1.jpg", alt: "Press Photo 1" },
   { src: "/pressphotos/2.jpeg", alt: "Press Photo 2" },
-  { src: "/pressphotos/3.jpeg", alt: "Press Photo 3" },
-  { src: "/pressphotos/4.jpg", alt: "Press Photo 4" },
-
-  // Add more photos as needed
 ];
 
 // Add a reusable BlurImage component
@@ -102,37 +98,80 @@ const BlurImage = ({
       )}
       onLoadingComplete={() => setLoading(false)}
       placeholder="blur"
-      blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADc/2wBDABQODxIPDRQSEBIXFRQdHx4eHRoaHSQtJSEkLzYvLy0vLi44QzxAOEE4Ny42RUhMSk1RV1pZXTpBW2GBgWj/2wBDARUXFx4aHR4eHUE6LTo9QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUH/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k="
+      blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADc/2wBDABQODxIPDRQSEBIXFRQdHx4eHRoaHSQtJSEkLzYvLy0vLi44QzxAOEE4Ny42RUhMSk1RV1pZXTpBW2GBgWj/2wBDARUXFx4aHR4eHUE6LTo9QUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUH/wAARCAAIAAoDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAb/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k="
     />
   );
 };
 
-const PressPhotoCarousel = () => (
-  <section className="my-12">
-    <div className="relative max-w-full overflow-hidden">
-      <Carousel className="max-w-full overflow-hidden">
-        <CarouselContent className="flex items-center justify-center">
-          {photos.map((photo, index) => (
-            <CarouselItem
-              key={index}
-              className="w-full flex-shrink-0 sm:w-auto"
-            >
-              <div className="relative aspect-[2/3] w-full overflow-hidden rounded-lg">
-                <BlurImage
+// Function to extract YouTube video ID from URL
+const getYouTubeVideoId = (url: string | undefined): string | null => {
+  if (!url) return null;
+
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+  const match = url.match(regExp);
+  const id = match?.[2];
+
+  return id && id.length === 11 ? id : null;
+};
+
+// YouTube Thumbnail component
+const YouTubeThumbnail = ({
+  videoUrl,
+  alt,
+}: {
+  videoUrl: string;
+  alt: string;
+}) => {
+  const videoId = getYouTubeVideoId(videoUrl);
+  const thumbnailUrl = videoId
+    ? `https://img.youtube.com/vi/${videoId}/hqdefault.jpg`
+    : "/placeholder.svg";
+
+  return (
+    <div className="relative aspect-video w-full overflow-hidden">
+      <Image
+        src={thumbnailUrl}
+        alt={alt}
+        fill
+        sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        className="object-cover"
+      />
+    </div>
+  );
+};
+
+const PressPhotoCarousel = () => {
+  return (
+    <Carousel
+      opts={{
+        align: "center",
+        loop: true,
+      }}
+      className="mx-auto w-full max-w-sm md:max-w-md lg:max-w-lg"
+    >
+      <CarouselContent>
+        {photos.map((photo, index) => (
+          <CarouselItem key={index} className="basis-full">
+            <div className="p-1">
+              <div className="relative aspect-[3/4] w-full overflow-hidden rounded-lg">
+                <Image
                   src={photo.src}
                   alt={photo.alt}
+                  fill
                   className="object-cover"
                 />
               </div>
-            </CarouselItem>
-          ))}
-        </CarouselContent>
-        <CarouselPrevious className="absolute left-2 top-1/2 -translate-y-1/2" />
-        <CarouselNext className="absolute right-2 top-1/2 -translate-y-1/2" />
-      </Carousel>
-    </div>
-  </section>
-);
+            </div>
+          </CarouselItem>
+        ))}
+      </CarouselContent>
+      <div className="mt-4 flex justify-center gap-2">
+        <CarouselPrevious />
+        <CarouselNext />
+      </div>
+    </Carousel>
+  );
+};
 
 const AboutSection = () => (
   <section className="my-12">
@@ -179,9 +218,13 @@ const SongDrawer = ({
   open: boolean;
   onClose: () => void;
 }) => {
-  const [selectedLyricVersion, setSelectedLyricVersion] = useState<
-    string | null
-  >(song?.lyrics ? Object.keys(song.lyrics)[0] ?? null : null);
+  // Get the first available lyrics version or use the song title if no version is specified
+  const defaultVersion = song.lyrics
+    ? Object.keys(song.lyrics)[0] ?? song.title
+    : song.title;
+
+  const [selectedLyricVersion, setSelectedLyricVersion] =
+    useState<string>(defaultVersion);
 
   const fadeUp = {
     hidden: { opacity: 0, y: 20 },
@@ -202,12 +245,23 @@ const SongDrawer = ({
       .join("\n");
   };
 
+  // Get the lyrics safely
+  const getLyrics = () => {
+    if (!song.lyrics) return "";
+    // If there's only one version and it matches the song title, return that
+    if (Object.keys(song.lyrics).length === 1 && song.lyrics[song.title]) {
+      return song.lyrics[song.title];
+    }
+    // Otherwise, use the selected version
+    return song.lyrics[selectedLyricVersion] ?? "";
+  };
+
   return (
     <Drawer open={open} onOpenChange={onClose}>
-      <DrawerContent className="max-h-[90vh] rounded-t-3xl border-none bg-neutral-950 p-0 text-white shadow-xl">
-        <div className="mx-auto w-full max-w-6xl px-4 py-6 md:px-6 md:py-8">
+      <DrawerContent className="max-h-[95vh] rounded-t-3xl border-none bg-neutral-950 p-0 text-white shadow-xl">
+        <div className="mx-auto w-full max-w-6xl px-4 py-4 sm:px-6 sm:py-6">
           <DrawerHeader className="flex items-start justify-between p-0">
-            <DrawerTitle className="text-2xl font-semibold tracking-tight">
+            <DrawerTitle className="text-xl font-semibold tracking-tight sm:text-2xl">
               {song.title}
             </DrawerTitle>
             <DrawerClose className="rounded-full p-2 text-neutral-500 transition hover:bg-neutral-900 hover:text-neutral-300">
@@ -228,7 +282,7 @@ const SongDrawer = ({
             </DrawerClose>
           </DrawerHeader>
 
-          <div className="mt-6 grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-12">
+          <div className="mt-4 grid grid-cols-1 gap-6 sm:mt-6 md:grid-cols-2 md:gap-8">
             {/* Left column - Album artwork */}
             <motion.div
               initial={{ scale: 0.95, opacity: 0 }}
@@ -245,14 +299,14 @@ const SongDrawer = ({
               variants={fadeUp}
               initial="hidden"
               animate="visible"
-              className="flex flex-col space-y-6"
+              className="flex flex-col space-y-4 sm:space-y-6"
             >
-              <div className="flex flex-wrap gap-3">
+              <div className="flex flex-wrap gap-2 sm:gap-3">
                 <a
                   href={song.links.spotify}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 rounded-full bg-[#1DB954]/10 px-4 py-2 text-sm font-medium text-[#1DB954] transition-colors hover:bg-[#1DB954]/20"
+                  className="flex items-center gap-2 rounded-full bg-[#1DB954]/10 px-3 py-1.5 text-sm font-medium text-[#1DB954] transition-colors hover:bg-[#1DB954]/20 sm:px-4 sm:py-2"
                 >
                   <svg
                     width="16"
@@ -268,7 +322,7 @@ const SongDrawer = ({
                   href={song.links.appleMusic}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 rounded-full bg-[#FB233B]/10 px-4 py-2 text-sm font-medium text-[#FB233B] transition-colors hover:bg-[#FB233B]/20"
+                  className="flex items-center gap-2 rounded-full bg-[#FB233B]/10 px-3 py-1.5 text-sm font-medium text-[#FB233B] transition-colors hover:bg-[#FB233B]/20 sm:px-4 sm:py-2"
                 >
                   <svg
                     width="16"
@@ -284,7 +338,7 @@ const SongDrawer = ({
                   href={song.links.youtube}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="flex items-center gap-2 rounded-full bg-[#FF0000]/10 px-4 py-2 text-sm font-medium text-[#FF0000] transition-colors hover:bg-[#FF0000]/20"
+                  className="flex items-center gap-2 rounded-full bg-[#FF0000]/10 px-3 py-1.5 text-sm font-medium text-[#FF0000] transition-colors hover:bg-[#FF0000]/20 sm:px-4 sm:py-2"
                 >
                   <svg
                     width="16"
@@ -299,77 +353,54 @@ const SongDrawer = ({
               </div>
 
               {song.videoLink && (
-                <div className="relative aspect-video w-full overflow-hidden rounded-lg">
+                <div className="relative w-full overflow-hidden rounded-lg">
                   <a
                     href={song.videoLink}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group relative block h-full w-full"
+                    className="group relative block w-full"
                   >
                     <div className="absolute inset-0 z-10 flex items-center justify-center">
-                      <div className="rounded-full bg-white/10 p-4 backdrop-blur-sm transition-transform duration-300 group-hover:scale-110">
+                      <div className="rounded-full bg-white/10 p-3 backdrop-blur-sm transition-transform duration-300 group-hover:scale-110 sm:p-4">
                         <svg
                           width="24"
                           height="24"
                           viewBox="0 0 24 24"
                           fill="none"
-                          xmlns="http://www.w3.org/2000/svg"
                         >
                           <path d="M8 5.14v14l11-7-11-7z" fill="white" />
                         </svg>
                       </div>
                     </div>
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                    <BlurImage
-                      src={song.artwork}
-                      alt="Music Video Thumbnail"
-                      className="object-cover"
+                    <YouTubeThumbnail
+                      videoUrl={song.videoLink}
+                      alt={`${song.title} - Music Video`}
                     />
                   </a>
                 </div>
               )}
 
-              <div className="space-y-6">
+              <div className="space-y-4 sm:space-y-6">
                 {song.lyrics && (
-                  <div className="space-y-3">
-                    <h3 className="text-lg font-medium text-white">Lyrics</h3>
-
-                    {Object.keys(song.lyrics).length > 1 && (
-                      <Select
-                        value={
-                          selectedLyricVersion ?? Object.keys(song.lyrics)[0]
-                        }
-                        onValueChange={setSelectedLyricVersion}
-                      >
-                        <SelectTrigger className="w-full border-zinc-800 bg-zinc-900/50 text-white">
-                          <SelectValue placeholder="Select version" />
-                        </SelectTrigger>
-                        <SelectContent className="border-zinc-800 bg-zinc-900 text-white">
-                          {Object.keys(song.lyrics).map((version) => (
-                            <SelectItem key={version} value={version}>
-                              {version}
-                            </SelectItem>
-                          ))}
-                        </SelectContent>
-                      </Select>
-                    )}
-
-                    <div className="scrollbar-thin scrollbar-track-zinc-900 scrollbar-thumb-zinc-700 max-h-[200px] overflow-y-auto rounded-lg bg-zinc-900/50 p-4 font-mono text-sm leading-relaxed tracking-wide text-zinc-300">
+                  <div className="space-y-2 sm:space-y-3">
+                    <h3 className="text-base font-medium text-white sm:text-lg">
+                      Lyrics
+                    </h3>
+                    <div className="scrollbar-thin scrollbar-track-zinc-900 scrollbar-thumb-zinc-700 max-h-[30vh] overflow-y-auto rounded-lg bg-zinc-900/50 p-3 font-mono text-sm leading-relaxed tracking-wide text-zinc-300 sm:p-4">
                       <div className="whitespace-pre-wrap text-left">
-                        {formatText(
-                          song.lyrics[
-                            selectedLyricVersion ?? Object.keys(song.lyrics)[0]
-                          ],
-                        )}
+                        {formatText(getLyrics())}
                       </div>
                     </div>
                   </div>
                 )}
 
                 {song.credits && (
-                  <div className="space-y-3">
-                    <h3 className="text-lg font-medium text-white">Credits</h3>
-                    <div className="scrollbar-thin scrollbar-track-zinc-900 scrollbar-thumb-zinc-700 max-h-[150px] overflow-y-auto rounded-lg bg-zinc-900/50 p-4 font-mono text-sm leading-relaxed text-zinc-400">
+                  <div className="space-y-2 sm:space-y-3">
+                    <h3 className="text-base font-medium text-white sm:text-lg">
+                      Credits
+                    </h3>
+                    <div className="scrollbar-thin scrollbar-track-zinc-900 scrollbar-thumb-zinc-700 max-h-[20vh] overflow-y-auto rounded-lg bg-zinc-900/50 p-3 font-mono text-sm leading-relaxed text-zinc-400 sm:p-4">
                       <div className="whitespace-pre-wrap text-left">
                         {formatText(song.credits)}
                       </div>
@@ -388,16 +419,25 @@ const SongDrawer = ({
 const CollectableGrid: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [selectedSong, setSelectedSong] = useState<Song | null>(null);
-  const [selectedLyricSong, setSelectedLyricSong] = useState<string | null>(
-    null,
-  );
   const [products, setProducts] = useState<SanityProduct[]>([]);
 
-  // Simplified animation variants
+  // Animation variants
   const albumVariants = {
     initial: { opacity: 0.95 },
     hover: {
       opacity: 1,
+      transition: {
+        duration: 0.2,
+        ease: "easeOut",
+      },
+    },
+  };
+
+  const titleVariants = {
+    initial: { opacity: 0, y: 10 },
+    hover: {
+      opacity: 1,
+      y: 0,
       transition: {
         duration: 0.2,
         ease: "easeOut",
@@ -434,44 +474,47 @@ const CollectableGrid: React.FC = () => {
 
   const openDrawer = (song: Song) => {
     setSelectedSong(song);
-    setSelectedLyricSong(
-      song.lyrics ? Object.keys(song.lyrics)[0] ?? null : null,
-    );
     setIsOpen(true);
   };
 
   const closeDrawer = () => {
     setIsOpen(false);
     setSelectedSong(null);
-    setSelectedLyricSong(null);
   };
 
   return (
     <div className="w-full overflow-hidden">
       <div className="bg-dark text-white">
-        <div className="container mx-auto px-8 py-24">
-          <div className="grid grid-cols-1 gap-12 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+        <div className="container mx-auto px-4 py-12 sm:px-6 sm:py-16 md:px-8 md:py-24">
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 sm:gap-12 md:grid-cols-3 lg:grid-cols-4">
             {songs.map((song, index) => (
               <motion.div
                 key={index}
-                variants={albumVariants}
                 initial="initial"
                 whileHover="hover"
                 onClick={() => openDrawer(song)}
                 className="group cursor-pointer"
               >
                 <div className="relative aspect-square overflow-hidden rounded-lg">
-                  <BlurImage
-                    src={song.artwork}
-                    alt={song.title}
-                    className="transition-all duration-300 group-hover:scale-105"
-                  />
-                  <div className="absolute inset-0 bg-black/20 opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
-                </div>
-                <div className="mt-3 text-center">
-                  <h2 className="text-sm font-medium text-primary">
-                    {song.title}
-                  </h2>
+                  <motion.div variants={albumVariants}>
+                    <BlurImage
+                      src={song.artwork}
+                      alt={song.title}
+                      className="transition-all duration-300 group-hover:scale-105"
+                    />
+                  </motion.div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
+
+                  {/* Title overlay that appears on hover */}
+                  <motion.div
+                    className="absolute inset-x-0 bottom-0 p-4"
+                    variants={titleVariants}
+                  >
+                    <h2 className="text-base font-medium text-white drop-shadow-md">
+                      {song.title}
+                    </h2>
+                    <p className="text-xs text-white/80">{song.artist}</p>
+                  </motion.div>
                 </div>
               </motion.div>
             ))}

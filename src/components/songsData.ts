@@ -60,7 +60,7 @@ const songs: Song[] = [
     credits: `Produced by Maxwell Young & Thom Haha
     Directed by Tom Shackleton
     Shot on MiniDV`,
-    videoLink: "https://www.youtube.com/watch?v=wMEr3mcuD7Q",
+    videoLink: "https://www.youtube.com/watch?v=YzKTnAIGqvg&feature=youtu.be",
   },
   {
     title: "Freewheelin'",
@@ -75,43 +75,43 @@ const songs: Song[] = [
         "https://www.youtube.com/watch?v=Q-cp7oA-gwI&pp=ygUYaSBqdXN0IHdhbm5hIGZseSBtYXh3ZWxs",
     },
     lyrics: {
-      Freewheelin: `Laying back with you
+      "Freewheelin'": `Laying back with you
 I wanna do it all the time now
-Why’s it what I do and what I say is not the same thing
-Wasn’t looking for it but then I saw it on my front porch
+Why's it what I do and what I say is not the same thing
+Wasn't looking for it but then I saw it on my front porch
 I was not the same as before
 
-I don’t know what you’re looking for
-I don’t know what you’re looking for
+I don't know what you're looking for
+I don't know what you're looking for
 But I get up I put on my jeans
 I get up I beg on my knees
 
-We’re walking arm in arm I feel like Bob Dylan on Freewheelin
-Quit covering my eyes now by your side I’ll just try living
+We're walking arm in arm I feel like Bob Dylan on Freewheelin
+Quit covering my eyes now by your side I'll just try living
 Every morning curtains open up to brand new new feelings
-Record scratch you’re wondering how I got here, I just dived in
-What I got with you they don’t need to know some things are private
+Record scratch you're wondering how I got here, I just dived in
+What I got with you they don't need to know some things are private
 And now I care so I grab it all
 
-Know it’s not the way that we both wanted it to go
-But I’m not as happy on my own now you’re my girl
+Know it's not the way that we both wanted it to go
+But I'm not as happy on my own now you're my girl
 
-You know what I’m talking about
-Cause you know you’re quite the view
-You know what I’m talking about
-When I’m naked all on you
-You know what I’m talking about
+You know what I'm talking about
+Cause you know you're quite the view
+You know what I'm talking about
+When I'm naked all on you
+You know what I'm talking about
 Cause I do it just for you
 
-You know I’m saying
+You know I'm saying
 You know
 You and me we could go places
-I’m saying
-You know what I’m saying
-You know what I’m saying
+I'm saying
+You know what I'm saying
+You know what I'm saying
 Just you and me we could go places
-I’m saying
-You know I’m saying`,
+I'm saying
+You know I'm saying`,
     },
     credits: `Produced by Maxwell Young & Eddie Johnston
     Artwork by Maxwell Young`,
@@ -130,7 +130,7 @@ You know I’m saying`,
         "https://www.youtube.com/watch?v=Q-cp7oA-gwI&pp=ygUYaSBqdXN0IHdhbm5hIGZseSBtYXh3ZWxs",
     },
     lyrics: {
-      "I Just Wanna Fly": `We’ve both been here before
+      "I Just Wanna Fly": `We've both been here before
   Each time left me alone
   I wanna see you wake
   I know you wanna wait for some time
@@ -155,7 +155,7 @@ You know I’m saying`,
   And somehow sublime
   Made me feel warm
   Had me on your arm
-  Wherever we’d roam
+  Wherever we'd roam
   Making me whole
   Made it feel home
   Bringing me up
@@ -184,43 +184,43 @@ You know I’m saying`,
     },
     lyrics: {
       Hopeless: `We were so close
-      Know it’s been over a year
-      I’d see your face
-      And then I’d know I’m not scared
-      I wanna love you but I’m not prepared
+      Know it's been over a year
+      I'd see your face
+      And then I'd know I'm not scared
+      I wanna love you but I'm not prepared
       I wanna tape over my eyes and go to bed
-      It’s not with most I can be intimate
+      It's not with most I can be intimate
       Get home from work and we would take off our shirts
       Memories too good that now it really just hurts
-      I think I’m ready but I’m really not
+      I think I'm ready but I'm really not
       
-      Girl I’m hopeless
+      Girl I'm hopeless
       City makes me wild
-      Girl I’m hopeless
+      Girl I'm hopeless
       
       I took my chances
       Just to get back my heart
       Got back together
-      Just to end up where we’d start
+      Just to end up where we'd start
       How natural is it to just to really not care
-      Don’t know what you see in him
+      Don't know what you see in him
       Just hope he acts fair
       Run out of options
       Still I go back for more
       I wanna tell you
       But what would that be for
       There must be someone else
-      I’m really not sure
-      I think I’m ready but I’m really not
+      I'm really not sure
+      I think I'm ready but I'm really not
       
-      Hope when you go running you’ll still call me up fast
+      Hope when you go running you'll still call me up fast
       Hope you know I'm learning everything don't last
       Hope you know I'm good with everything that you want
       I'm just a child sometimes it gets me down
       
-      Girl I’m hopeless
+      Girl I'm hopeless
       City makes me wild
-      Girl I’m hopeless
+      Girl I'm hopeless
       I am such a child
 `,
     },
@@ -240,7 +240,7 @@ You know I’m saying`,
       "Call Ur Name": `[Verse 1]
         Guess what
         I think you're wicked
-        You’ve got me singing something special for ya girl
+        You've got me singing something special for ya girl
         You know I won't forget it
         
         [Pre-Chorus]
