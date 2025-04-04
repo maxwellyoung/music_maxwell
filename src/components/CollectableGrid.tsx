@@ -322,7 +322,7 @@ const SongDrawer = ({
   onClose: () => void;
 }) => {
   const [selectedVersion, setSelectedVersion] = useState<string>(
-    song.lyrics ? Object.keys(song.lyrics)[0] || song.title : song.title,
+    song.lyrics ? Object.keys(song.lyrics)[0] ?? song.title : song.title,
   );
 
   useEffect(() => {
@@ -624,7 +624,7 @@ const CollectableGrid: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [selectedSong, setSelectedSong] = useState<Song | null>(null);
   const [products, setProducts] = useState<SanityProduct[]>([]);
-  const [error, setError] = useState<string | null>(null);
+  const [error] = useState<string | null>(null);
 
   // Animation variants
   const albumVariants = {
@@ -670,7 +670,6 @@ const CollectableGrid: React.FC = () => {
         );
         setProducts(sanityProducts);
       } catch (error) {
-        // Just log the error, don't show it in UI since products are optional
         console.error("[Sanity] Products not available yet:", error);
         setProducts([]);
       }
