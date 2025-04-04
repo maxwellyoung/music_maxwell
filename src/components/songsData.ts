@@ -24,38 +24,38 @@ const songs: Song[] = [
       youtube: "https://www.youtube.com/watch?v=wMEr3mcuD7Q",
     },
     lyrics: {
-      "Turn It Up": `we were staying up
-  no i had enough
-  had a sudden dream
-  a sudden felt a rash
-  you look back at me
-  no more deceased
-  had a sudden dream
-  all the girls with me wanna fuck it n turn up
-  all the girls with me wanna fuck it n turn up
-  all the girls with me wanna fuck it n turn up
+      "Turn It Up": `We were staying up  
+No I had enough  
+Had a sudden dream  
+A sudden felt a rash  
+You look back at me  
+No more deceased  
+Had a sudden dream  
+All the girls with me wanna fuck it n turn up  
+All the girls with me wanna fuck it n turn up  
+All the girls with me wanna fuck it n turn up  
 
-  im in the whip ride with me
-  turn it up loud
-  no more sympathy
-  we were staying up
-  no i had enough
-  had a sudden dream
-  a sudden felt a rash
-  you look back at me
-  no more deceased
-  had a sudden dream
-  all the girls with me wanna fuck it n turn up
-  all the girls with me wanna fuck it n turn up
-  all the girls with me wanna fuck it n turn up
+I'm in the whip ride with me  
+Turn it up loud  
+No more sympathy  
+We were staying up  
+No I had enough  
+Had a sudden dream  
+A sudden felt a rash  
+You look back at me  
+No more deceased  
+Had a sudden dream  
+All the girls with me wanna fuck it n turn up  
+All the girls with me wanna fuck it n turn up  
+All the girls with me wanna fuck it n turn up  
 
-  yeah we shoplifting
-  grab a can still gift it
-  like im ventriloquy
-  you my type had to
-  all the girls with me wanna fuck it n turn up
-  all the girls with me wanna fuck it n turn up
-  all the girls with me wanna fuck it n turn up`,
+Yeah we shoplifting  
+Grab a can still gift it  
+Like I'm ventriloquy  
+You my type had to  
+All the girls with me wanna fuck it n turn up  
+All the girls with me wanna fuck it n turn up  
+All the girls with me wanna fuck it n turn up`,
     },
     credits: `Produced by Maxwell Young & Thom Haha
     Directed by Tom Shackleton
