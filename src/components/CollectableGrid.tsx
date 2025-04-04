@@ -321,7 +321,9 @@ const SongDrawer = ({
   open: boolean;
   onClose: () => void;
 }) => {
-  const [defaultLyricVersion] = useState(song.lyrics?.[0] ?? song.title);
+  const [selectedVersion, setSelectedVersion] = useState<string>(
+    song.lyrics ? Object.keys(song.lyrics)[0] || song.title : song.title,
+  );
 
   useEffect(() => {
     if (open) {
@@ -350,10 +352,7 @@ const SongDrawer = ({
   // Get the lyrics safely with proper type checking
   const getLyrics = (): string => {
     if (!song.lyrics) return "";
-    if (Object.keys(song.lyrics).length === 1 && song.lyrics[song.title]) {
-      return song.lyrics[song.title] ?? "";
-    }
-    return song.lyrics[defaultLyricVersion] ?? "";
+    return song.lyrics[selectedVersion] ?? "";
   };
 
   return (
@@ -571,14 +570,14 @@ const SongDrawer = ({
 
                         {Object.keys(song.lyrics).length > 1 ? (
                           <Select
-                            value={defaultLyricVersion}
-                            onValueChange={(_value) => {
+                            value={selectedVersion}
+                            onValueChange={(value) => {
                               vibrate(3);
-                              // Value is currently unused as we're not implementing version switching
+                              setSelectedVersion(value);
                             }}
                           >
                             <SelectTrigger className="w-full border-zinc-800 bg-zinc-900/50 text-white">
-                              <SelectValue placeholder="Select a song" />
+                              <SelectValue placeholder="Select a version" />
                             </SelectTrigger>
                             <SelectContent className="border-zinc-800 bg-zinc-900 text-white">
                               {Object.keys(song.lyrics).map((version) => (
@@ -592,14 +591,7 @@ const SongDrawer = ({
 
                         <div className="scrollbar-thin scrollbar-track-zinc-900 scrollbar-thumb-zinc-700 max-h-[35vh] overflow-y-auto rounded-lg bg-zinc-900/50 p-3 font-mono text-sm leading-relaxed tracking-wide text-zinc-300 sm:max-h-[40vh] sm:p-4">
                           <div className="whitespace-pre-wrap text-left">
-                            {Object.keys(song.lyrics).length > 1 &&
-                            !defaultLyricVersion ? (
-                              <span className="text-zinc-500">
-                                Select a song to view lyrics
-                              </span>
-                            ) : (
-                              formatText(getLyrics())
-                            )}
+                            {formatText(getLyrics())}
                           </div>
                         </div>
                       </div>
