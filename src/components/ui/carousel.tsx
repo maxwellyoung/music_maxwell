@@ -1,10 +1,8 @@
 "use client";
 
 import * as React from "react";
-import { type EmblaCarouselType } from "embla-carousel";
-import useEmblaCarousel, {
-  type UseEmblaCarouselType,
-} from "embla-carousel-react";
+import type { EmblaCarouselType } from "embla-carousel";
+import useEmblaCarousel from "embla-carousel-react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import { AnimatePresence } from "framer-motion";
 
@@ -12,21 +10,18 @@ import { cn } from "~/lib/utils";
 import { Button } from "~/components/ui/button";
 import { Carousel as CarouselPrimitive } from "~/components/ui/carousel";
 
-type CarouselApi = UseEmblaCarouselType[1];
-type UseCarouselParameters = Parameters<typeof useEmblaCarousel>;
-type CarouselOptions = UseCarouselParameters[0];
-type CarouselPlugin = UseCarouselParameters[1];
+type CarouselApi = EmblaCarouselType;
 
 interface CarouselProps {
-  opts?: CarouselOptions;
-  plugins?: CarouselPlugin;
+  opts?: Parameters<typeof useEmblaCarousel>[0];
+  plugins?: Parameters<typeof useEmblaCarousel>[1];
   orientation?: "horizontal" | "vertical";
   setApi?: (api: CarouselApi) => void;
   className?: string;
   children?: React.ReactNode;
 }
 
-interface CarouselContextProps {
+type CarouselContextProps = {
   carouselRef: ReturnType<typeof useEmblaCarousel>[0];
   api: ReturnType<typeof useEmblaCarousel>[1];
   scrollPrev: () => void;
@@ -34,21 +29,34 @@ interface CarouselContextProps {
   canScrollPrev: boolean;
   canScrollNext: boolean;
   orientation?: "horizontal" | "vertical";
-}
+} | null;
 
-const CarouselContext = React.createContext<CarouselContextProps | null>(null);
+const CarouselContext = React.createContext<CarouselContextProps>(null);
 
 function useCarousel() {
   const context = React.useContext(CarouselContext);
+
   if (!context) {
     throw new Error("useCarousel must be used within a <Carousel />");
   }
+
   return context;
 }
 
-const Carousel = React.forwardRef<HTMLDivElement, CarouselProps>(
+const Carousel = React.forwardRef<
+  HTMLDivElement,
+  React.HTMLAttributes<HTMLDivElement> & CarouselProps
+>(
   (
-    { orientation = "horizontal", opts, setApi, plugins, className, children },
+    {
+      orientation = "horizontal",
+      opts,
+      setApi,
+      plugins,
+      className,
+      children,
+      ...props
+    },
     ref,
   ) => {
     const [carouselRef, api] = useEmblaCarousel(
@@ -61,11 +69,12 @@ const Carousel = React.forwardRef<HTMLDivElement, CarouselProps>(
     const [canScrollPrev, setCanScrollPrev] = React.useState(false);
     const [canScrollNext, setCanScrollNext] = React.useState(false);
 
-    const onSelect = React.useCallback((api: CarouselApi) => {
+    const onSelect = React.useCallback(() => {
       if (!api) return;
+
       setCanScrollPrev(api.canScrollPrev());
       setCanScrollNext(api.canScrollNext());
-    }, []);
+    }, [api]);
 
     const scrollPrev = React.useCallback(() => {
       api?.scrollPrev();
@@ -77,18 +86,17 @@ const Carousel = React.forwardRef<HTMLDivElement, CarouselProps>(
 
     React.useEffect(() => {
       if (!api || !setApi) return;
-      setApi(api);
-    }, [api, setApi]);
 
-    React.useEffect(() => {
-      if (!api) return;
-      onSelect(api);
-      api.on("reInit", onSelect);
+      setApi(api);
+      onSelect();
+
       api.on("select", onSelect);
+      api.on("reInit", onSelect);
+
       return () => {
         api.off("select", onSelect);
       };
-    }, [api, onSelect]);
+    }, [api, onSelect, setApi]);
 
     return (
       <CarouselContext.Provider
@@ -107,6 +115,7 @@ const Carousel = React.forwardRef<HTMLDivElement, CarouselProps>(
           className={cn("relative", className)}
           role="region"
           aria-roledescription="carousel"
+          {...props}
         >
           <AnimatePresence mode="popLayout" initial={false}>
             {children}

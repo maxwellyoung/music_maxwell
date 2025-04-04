@@ -3,13 +3,7 @@ import type React from "react";
 import { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerHeader,
-  DrawerTitle,
-} from "./ui/drawer";
+import { Drawer, DrawerClose, DrawerContent, DrawerHeader } from "./ui/drawer";
 import {
   Select,
   SelectItem,
@@ -296,26 +290,6 @@ const vibrate = (pattern: number | number[]) => {
   }
 };
 
-const drawerVariants = {
-  hidden: { y: "100%" },
-  visible: {
-    y: "0%",
-    transition: {
-      type: "tween",
-      duration: 0.4,
-      ease: [0.4, 0.0, 0.2, 1], // Smooth ease-in-out
-    },
-  },
-  exit: {
-    y: "100%",
-    transition: {
-      type: "tween",
-      duration: 0.3,
-      ease: [0.4, 0.0, 0.2, 1],
-    },
-  },
-};
-
 const contentVariants = {
   hidden: { opacity: 0, y: 20 },
   visible: {
@@ -347,7 +321,7 @@ const SongDrawer = ({
   open: boolean;
   onClose: () => void;
 }) => {
-  const [defaultLyricVersion] = useState(song.lyrics?.[0] || song.title);
+  const [defaultLyricVersion] = useState(song.lyrics?.[0] ?? song.title);
 
   useEffect(() => {
     if (open) {
@@ -598,9 +572,9 @@ const SongDrawer = ({
                         {Object.keys(song.lyrics).length > 1 ? (
                           <Select
                             value={defaultLyricVersion}
-                            onValueChange={(value) => {
+                            onValueChange={(_value) => {
                               vibrate(3);
-                              // This is a placeholder implementation. You might want to implement a proper state update
+                              // Value is currently unused as we're not implementing version switching
                             }}
                           >
                             <SelectTrigger className="w-full border-zinc-800 bg-zinc-900/50 text-white">
