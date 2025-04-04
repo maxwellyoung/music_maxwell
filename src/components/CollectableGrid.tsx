@@ -125,37 +125,30 @@ const AboutSection = () => (
         <CardTitle>
           <span className="font-reenie text-4xl">Maxwell Young</span>
         </CardTitle>
-        <CardDescription>Musician, DJ, and visual artist</CardDescription>
+        <CardDescription>
+          Pop because it's for people. Alternative because it has to be new.
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <p>
-          Maxwell Young is a singer/songwriter/producer from Wellington, New
-          Zealand. His music began getting attention when his boom bap beats
-          inspired by College Dropout era Kanye instrumentals were featured on a
-          selection of successful YouTuber Casey Neistat&apos;s videos. His
-          first show was opening for The Internet at San Fran in Wellington. He
-          went on to release a bedroom pop album featuring the likes of Clairo.
-          He continued releasing music and opening for more international acts
-          such as Peanut Butter Wolf and Snail Mail. Maxwell has garnered praise
-          from The 1975, Phoebe Bridgers, and Brockhampton.
+          Maxwell Young is a New Zealand artist blending alt-pop songwriting
+          with visual design and classical training. He began playing violin at
+          age three and taught himself production as a teenager, gaining early
+          recognition when his sample-based instrumentals appeared in Casey
+          Neistat’s vlogs. Since then, he’s opened for acts like The Internet
+          and Snail Mail, and received support from The 1975, Phoebe Bridgers,
+          and Brockhampton.
         </p>
         <br />
         <p>
-          Since then, he has been focused on creating alternative pop music
-          which feels new but clarifying, songs which try to stick out with
-          newness and earnestness with his music partner Eddie
-          &apos;Lontalius&apos; Johnston. Many songs have been released from
-          their collaboration as well as music videos made with friends. An EP
-          was released in 2022 called Birthday Girl featuring one of
-          Maxwell&apos;s proudest songs &apos;Believe,&apos; and in 2023 Maxwell
-          began consistently releasing singles. In 2024, he continues to build
-          his catalogue with new music that pushes the boundaries of his style
-          and artistry.
+          His 2022 EP <em>Birthday Girl</em> marked a turning point—toward
+          sharper textures, emotional maximalism, and songs that move more like
+          memory than narrative. <em>In My 20s</em> (2025) continues that arc:
+          an alt-pop record about spirals, false starts, and the soft violence
+          of growing up. His songs feel simple on the surface, but reward those
+          who stay inside them—hooky, heartfelt, and quietly layered with myth.
         </p>
       </CardContent>
-      <CardFooter>
-        <p>Magic is everywhere.</p>
-      </CardFooter>
     </Card>
   </section>
 );
