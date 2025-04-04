@@ -104,12 +104,6 @@ export const metadata: Metadata = {
       },
     ],
   },
-  themeColor: "#000000",
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    maximumScale: 5,
-  },
   category: "music",
 };
 
