@@ -147,7 +147,7 @@ const AboutSection = () => (
           recollection more than storytelling. <em>In My 20s</em> (2025) picks
           up that thread: a record about spirals, near-misses, and becoming who
           you are while already being someone else. The songs are immediate,
-          catchy, and just weird enough to stick with you.
+          catchy, and just off enough to stick with you.
         </p>
       </CardContent>
     </Card>
