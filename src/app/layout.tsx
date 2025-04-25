@@ -214,7 +214,6 @@ export default function RootLayout({
         />
       </head>
       <body className="overflow-x-hidden">
-        <Wintour />
         {children}
         <Analytics />
       </body>
