@@ -14,8 +14,23 @@ export type Song = {
 
 const songs: Song[] = [
   {
-    title: "Turn It Up",
+    title: "Wintour",
     artist: "Maxwell Young",
+    artwork: "/artworks/wintour.webp",
+    links: {
+      spotify:
+        "https://open.spotify.com/track/0HVhxu3jp6TkLbqN8fi8Fl?si=96c74e819fc74d44s",
+      appleMusic:
+        "https://music.apple.com/nz/album/wintour/1802842596?i=1802842597",
+      youtube: "https://www.youtube.com/watch?v=gHFMkPDehuI",
+    },
+    credits: `Produced by Maxwell Young & Eddie Johnston
+    Artwork by Elijah Broughton`,
+    videoLink: "https://www.youtube.com/watch?v=CVpatk_f0tg",
+  },
+  {
+    title: "Turn It Up",
+    artist: "Maxwell Young & Thom Haha",
     artwork: "/artworks/TurnItUp.webp",
     links: {
       spotify: "https://open.spotify.com/track/6J2Kd1FCDTwY5cn0cUCSd3",

@@ -2,6 +2,7 @@ import "~/styles/globals.css";
 import { GeistSans } from "geist/font/sans";
 import { Analytics } from "@vercel/analytics/react";
 import { type Metadata } from "next";
+import Wintour from "~/components/Wintour";
 
 export const metadata: Metadata = {
   title: {
@@ -213,6 +214,7 @@ export default function RootLayout({
         />
       </head>
       <body className="overflow-x-hidden">
+        <Wintour />
         {children}
         <Analytics />
       </body>
