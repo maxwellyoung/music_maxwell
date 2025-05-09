@@ -23,8 +23,8 @@ export default function ChooseUsernamePage() {
     if (res.ok) {
       router.push("/forum");
     } else {
-      const data = await res.json();
-      setError(data.error || "Failed to set username");
+      const data: { error?: string } = await res.json();
+      setError(data.error ?? "Failed to set username");
     }
     setLoading(false);
   };
