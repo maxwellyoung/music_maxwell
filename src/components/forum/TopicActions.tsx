@@ -4,7 +4,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useToast } from "~/components/ui/use-toast";
 import ConfirmModal from "./ConfirmModal";
-import { Trash2 } from "lucide-react";
+import { Trash } from "phosphor-react";
 
 interface TopicActionsProps {
   topicId: string;
@@ -59,7 +59,7 @@ export default function TopicActions({ topicId }: TopicActionsProps) {
         {isDeleting ? (
           <span className="h-5 w-5 animate-spin rounded-full border-2 border-destructive border-t-transparent" />
         ) : (
-          <Trash2 className="h-5 w-5" />
+          <Trash size={20} weight="regular" />
         )}
       </button>
 

@@ -13,6 +13,7 @@ import { useState } from "react";
 import ConfirmModal from "./ConfirmModal";
 import { useToast } from "~/components/ui/use-toast";
 import React from "react";
+import { Trash, Flag } from "phosphor-react";
 
 // Utility to auto-link URLs and embed YouTube/SoundCloud
 function renderRichContent(text: string) {
@@ -301,18 +302,24 @@ export default function RepliesList({ replies }: { replies: any[] }) {
           <CardFooter className="flex gap-4">
             {(userRole === "admin" || userId === reply.authorId) && (
               <button
-                className="text-sm font-normal text-red-400 transition-colors hover:text-red-600 hover:underline"
+                className="p-1 text-red-400 transition-colors hover:text-red-600"
                 onClick={() => handleDelete(reply.id)}
                 disabled={deletingId === reply.id}
+                title="Delete"
               >
-                {deletingId === reply.id ? "Deleting..." : "Delete"}
+                {deletingId === reply.id ? (
+                  <span className="text-xs">Deleting...</span>
+                ) : (
+                  <Trash size={18} weight="regular" />
+                )}
               </button>
             )}
             <button
-              className="text-sm font-normal text-yellow-700 transition-colors hover:text-yellow-600 hover:underline"
+              className="p-1 text-yellow-700 transition-colors hover:text-yellow-600"
               onClick={() => handleReport(reply.id)}
+              title="Report"
             >
-              Report
+              <Flag size={18} weight="regular" />
             </button>
           </CardFooter>
         </Card>
