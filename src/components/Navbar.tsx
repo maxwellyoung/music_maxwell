@@ -3,9 +3,7 @@ import { usePathname, useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
-import Image from "next/image";
 import { useState } from "react";
-import { Menu, X } from "lucide-react";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -28,16 +26,20 @@ export default function Navbar() {
         </Link>
       )}
       {isForum && session && (
-        <button
-          onClick={() => {
-            setMobileOpen(false);
-            signOut();
+        <motion.button
+          key="logout"
+          onClick={async () => {
+            await signOut();
           }}
-          className="w-full cursor-pointer rounded-full border-none bg-primary px-5 py-2 font-semibold text-primary-foreground shadow-md transition hover:bg-accent focus:outline-none focus:ring-2 focus:ring-primary/60 md:w-auto"
+          initial={{ opacity: 0, y: -6 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -6 }}
+          transition={{ duration: 0.18 }}
+          className="cursor-pointer rounded-full border-none bg-primary px-5 py-2 font-semibold text-primary-foreground shadow-md transition hover:bg-accent focus:outline-none focus:ring-2 focus:ring-primary/60"
           style={{ minWidth: 90 }}
         >
           Log out
-        </button>
+        </motion.button>
       )}
       {isForum && !session && (
         <Link
@@ -57,7 +59,7 @@ export default function Navbar() {
         {/* Left: Toggle Button */}
         <div className="flex flex-1 items-center">
           <button
-            onClick={() => router.push(isForum ? "/" : "/forum")}
+            onClick={() => void router.push(isForum ? "/" : "/forum")}
             className="h flex h-12 w-12 items-center justify-center rounded-full px-2 transition focus:outline-none"
             aria-label={isForum ? "Go to Discography" : "Go to Forum"}
           >
