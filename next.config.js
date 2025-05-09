@@ -41,10 +41,16 @@ const nextConfig = {
       },
     ];
   },
+  // Add experimental features for better build handling
+  experimental: {
+    serverActions: {
+      bodySizeLimit: "2mb",
+    },
+  },
 };
 
-// Only import env validation if not in production
-if (process.env.NODE_ENV !== "production") {
+// Always validate environment variables during build
+if (!process.env.SKIP_ENV_VALIDATION) {
   await import("./src/env.js");
 }
 
