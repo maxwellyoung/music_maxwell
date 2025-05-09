@@ -1,11 +1,5 @@
 import type { Metadata } from "next";
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "~/components/ui/card";
+import { Card, CardContent } from "~/components/ui/card";
 import { Separator } from "~/components/ui/separator";
 import { prisma } from "~/lib/prisma";
 import dynamic from "next/dynamic";
@@ -56,9 +50,12 @@ export default async function TopicPage({
     );
   }
 
-  const canModify =
-    session?.user?.id === topic.authorId ||
-    (session?.user as any)?.role === "admin";
+  interface UserWithRole {
+    id: string;
+    role?: string;
+  }
+  const user = session?.user as UserWithRole | undefined;
+  const canModify = user?.id === topic.authorId || user?.role === "admin";
 
   return (
     <main className="container mx-auto px-4 py-16">

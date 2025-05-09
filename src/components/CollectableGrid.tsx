@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { Drawer, DrawerClose, DrawerContent, DrawerHeader } from "./ui/drawer";
@@ -31,7 +31,6 @@ import songs from "./songsData";
 import { sanityClient } from "../lib/sanity";
 import { cn } from "~/lib/utils";
 import { XIcon } from "lucide-react";
-import Footer from "./Footer";
 
 // Define the Song type
 type Song = {
@@ -276,52 +275,6 @@ const PressPhotoCarousel = () => {
     </Carousel>
   );
 };
-
-const AboutSection = () => (
-  <section className="my-12">
-    <Card className="border-none bg-black/70 shadow-xl backdrop-blur-md">
-      <CardHeader className="space-y-3">
-        <CardTitle>
-          <img
-            src="/icons/maxwellyoung.svg"
-            alt="Maxwell Young Logo"
-            style={{
-              height: "80px",
-              width: "auto",
-              display: "block",
-              filter: "invert(1) brightness(2)",
-              margin: 0,
-            }}
-            className="ml-0"
-          />
-        </CardTitle>
-        <CardDescription className="text-base font-medium tracking-wide text-white/90">
-          Pop because it&apos;s for people. Alternative because it has to be
-          new.
-        </CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-6">
-        <p className="leading-relaxed tracking-wide text-white/90">
-          Maxwell Young is a New Zealand artist making emotionally-driven
-          alt-pop that's both intimate and unpredictable. He started on violin
-          at three, taught himself production in his teens, and found an early
-          audience when his beats featured in Casey Neistat&apos;s vlogs. Since
-          then, he&apos;s opened for The Internet and Snail Mail, with nods from
-          members of The 1975, Phoebe Bridgers, and Brockhampton.
-        </p>
-        <p className="leading-relaxed tracking-wide text-white/90">
-          His 2022 EP <em className="text-white">Birthday Girl</em> cracked open
-          a new direction—razor-edged textures, emotional maximalism, and songs
-          that feel more like memory than narrative.{" "}
-          <em className="text-white">In My 20s</em> (2025) picks up that thread:
-          a record about spirals, false starts, and the strange in-between of
-          becoming someone new while still haunted by who you were. The songs
-          are immediate, off-kilter, and sticky in all the right ways.
-        </p>
-      </CardContent>
-    </Card>
-  </section>
-);
 
 // Add haptic feedback utility
 const vibrate = (pattern: number | number[]) => {
@@ -770,9 +723,9 @@ const CollectableGrid: React.FC = () => {
         )}
 
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8 md:grid-cols-3 lg:grid-cols-4">
-          {songs.map((song, index) => (
+          {songs.map((song) => (
             <motion.div
-              key={index}
+              key={song.title}
               initial="initial"
               whileHover="hover"
               onClick={() => openDrawer(song)}
@@ -816,9 +769,11 @@ const CollectableGrid: React.FC = () => {
               <Card className="border-none bg-black/70 shadow-xl backdrop-blur-md">
                 <CardHeader className="space-y-3">
                   <CardTitle>
-                    <img
+                    <Image
                       src="/icons/maxwellyoung.svg"
                       alt="Maxwell Young Logo"
+                      width={160}
+                      height={80}
                       style={{
                         height: "80px",
                         width: "auto",
@@ -827,6 +782,7 @@ const CollectableGrid: React.FC = () => {
                         margin: 0,
                       }}
                       className="ml-0"
+                      priority
                     />
                   </CardTitle>
                   <CardDescription className="text-base font-medium tracking-wide text-white/90">
@@ -878,10 +834,12 @@ const CollectableGrid: React.FC = () => {
                   {product.description && <p>{product.description}</p>}
                   {product.images?.[0]?.asset?.url && (
                     <div className="relative aspect-square overflow-hidden rounded-lg">
-                      <BlurImage
+                      <Image
                         src={product.images[0].asset.url}
                         alt={product.images[0].asset.altText ?? "Product Image"}
                         className="object-cover"
+                        width={400}
+                        height={400}
                       />
                     </div>
                   )}

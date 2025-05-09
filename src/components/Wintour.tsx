@@ -78,7 +78,7 @@ export default function Wintour() {
     }, 1000);
 
     return () => clearInterval(timer);
-  }, []);
+  }, [getTimeLeft]);
 
   useEffect(() => {
     const updateProgress = () => {

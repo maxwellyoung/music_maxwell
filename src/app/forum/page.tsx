@@ -8,11 +8,19 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
-import { Separator } from "~/components/ui/separator";
 import Link from "next/link";
 import { SearchTopics } from "~/components/forum/SearchTopics";
 
 // Explicit type for forum topics
+type Reply = {
+  id: string;
+  createdAt: Date;
+  updatedAt: Date;
+  content: string;
+  authorId: string;
+  topicId: string;
+};
+
 export type ForumTopic = {
   id: string;
   title: string;
@@ -20,7 +28,7 @@ export type ForumTopic = {
   createdAt: Date;
   updatedAt: Date;
   author: { name: string | null } | null;
-  replies: any[];
+  replies: Reply[];
 };
 
 export const metadata: Metadata = {
@@ -93,7 +101,7 @@ export default async function ForumPage({
           <h2 className="mb-8 text-2xl font-bold tracking-tight text-primary">
             {searchParams.q ? "Search Results" : "All Topics"}
           </h2>
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3">
+          <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
             {topics.length === 0 && (
               <div className="col-span-full text-center text-muted-foreground">
                 {searchParams.q

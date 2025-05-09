@@ -8,7 +8,7 @@ const rateLimitMap = new Map();
 
 export async function POST(request: Request) {
   const session = await getServerSession(authOptions);
-  if (!session || !session.user?.id) {
+  if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
@@ -24,13 +24,19 @@ export async function POST(request: Request) {
   rateLimitMap.set(session.user.id, now);
 
   try {
-    const { content, topicId } = await request.json();
-    if (!content || !topicId) {
+    const data: unknown = await request.json();
+    if (
+      typeof data !== "object" ||
+      data === null ||
+      !("content" in data) ||
+      !("topicId" in data)
+    ) {
       return NextResponse.json(
         { error: "Missing content or topicId" },
         { status: 400 },
       );
     }
+    const { content, topicId } = data as { content: string; topicId: string };
 
     const reply = await prisma.reply.create({
       data: {
@@ -52,15 +58,16 @@ export async function POST(request: Request) {
 
 export async function DELETE(request: Request) {
   const session = await getServerSession(authOptions);
-  if (!session || !session.user?.id) {
+  if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
-    const { replyId } = await request.json();
-    if (!replyId) {
+    const data: unknown = await request.json();
+    if (typeof data !== "object" || data === null || !("replyId" in data)) {
       return NextResponse.json({ error: "Missing replyId" }, { status: 400 });
     }
+    const { replyId } = data as { replyId: string };
 
     // Fetch the reply to check permissions
     const reply = await prisma.reply.findUnique({
@@ -72,7 +79,7 @@ export async function DELETE(request: Request) {
     }
 
     // Only allow if admin or author
-    const isAdmin = (session.user as any).role === "admin";
+    const isAdmin = (session.user as { role?: string })?.role === "admin";
     const isAuthor = session.user.id === reply.authorId;
     if (!isAdmin && !isAuthor) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });

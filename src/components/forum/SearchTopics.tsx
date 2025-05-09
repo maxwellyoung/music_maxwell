@@ -7,7 +7,7 @@ import { useDebounce } from "~/hooks/useDebounce";
 export function SearchTopics({ initialQuery }: { initialQuery?: string }) {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const [query, setQuery] = useState(initialQuery || "");
+  const [query, setQuery] = useState(initialQuery ?? "");
   const [isLoading, setIsLoading] = useState(false);
   const debouncedQuery = useDebounce(query, 300);
 

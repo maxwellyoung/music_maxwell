@@ -15,6 +15,15 @@ import { useToast } from "~/components/ui/use-toast";
 import React from "react";
 import { Trash, Flag } from "phosphor-react";
 
+// Type for a reply
+type Reply = {
+  id: string;
+  content: string;
+  createdAt: string | Date;
+  authorId: string;
+  author?: { name?: string | null; role?: string | null };
+};
+
 // Utility to auto-link URLs and embed YouTube/SoundCloud
 function renderRichContent(text: string) {
   if (!text) return null;
@@ -29,8 +38,7 @@ function renderRichContent(text: string) {
   // Generic URL
   const urlRegex = /https?:\/\/[\w\-._~:/?#[\]@!$&'()*+,;=%]+/g;
 
-  let parts: (string | JSX.Element)[] = [];
-  let lastIndex = 0;
+  const parts: (string | JSX.Element)[] = [];
   const textCopy = text;
 
   // Helper to push plain text
@@ -154,7 +162,7 @@ function renderRichContent(text: string) {
   );
 }
 
-export default function RepliesList({ replies }: { replies: any[] }) {
+export default function RepliesList({ replies }: { replies: Reply[] }) {
   const { data: session } = useSession();
   const userRole = (session?.user as { role?: string } | undefined)?.role;
   const userId = session?.user?.id;

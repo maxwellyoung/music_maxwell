@@ -5,18 +5,24 @@ import { prisma } from "~/lib/prisma";
 
 export async function POST(request: Request) {
   const session = await getServerSession(authOptions);
-  if (!session || !session.user?.id) {
+  if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
-    const { title, content } = await request.json();
-    if (!title || !content) {
+    const data: unknown = await request.json();
+    if (
+      typeof data !== "object" ||
+      data === null ||
+      !("title" in data) ||
+      !("content" in data)
+    ) {
       return NextResponse.json(
         { error: "Missing title or content" },
         { status: 400 },
       );
     }
+    const { title, content } = data as { title: string; content: string };
 
     const topic = await prisma.topic.create({
       data: {
@@ -45,15 +51,16 @@ export async function POST(request: Request) {
 
 export async function DELETE(request: Request) {
   const session = await getServerSession(authOptions);
-  if (!session || !session.user?.id) {
+  if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   try {
-    const { topicId } = await request.json();
-    if (!topicId) {
+    const data: unknown = await request.json();
+    if (typeof data !== "object" || data === null || !("topicId" in data)) {
       return NextResponse.json({ error: "Missing topicId" }, { status: 400 });
     }
+    const { topicId } = data as { topicId: string };
 
     // Fetch the topic to check permissions
     const topic = await prisma.topic.findUnique({
@@ -66,7 +73,7 @@ export async function DELETE(request: Request) {
     }
 
     // Only allow if admin or author
-    const isAdmin = (session.user as any).role === "admin";
+    const isAdmin = (session.user as { role?: string })?.role === "admin";
     const isAuthor = session.user.id === topic.authorId;
     if (!isAdmin && !isAuthor) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
