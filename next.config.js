@@ -2,7 +2,6 @@
  * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially useful
  * for Docker builds.
  */
-await import("./src/env.js");
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -43,5 +42,10 @@ const nextConfig = {
     ];
   },
 };
+
+// Only import env validation if not in production
+if (process.env.NODE_ENV !== "production") {
+  await import("./src/env.js");
+}
 
 export default nextConfig;
