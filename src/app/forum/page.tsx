@@ -1,3 +1,4 @@
+import { prisma } from "~/lib/prisma";
 import type { Metadata } from "next";
 import {
   Card,
@@ -9,6 +10,18 @@ import {
 } from "~/components/ui/card";
 import { Separator } from "~/components/ui/separator";
 import Link from "next/link";
+import { SearchTopics } from "~/components/forum/SearchTopics";
+
+// Explicit type for forum topics
+export type ForumTopic = {
+  id: string;
+  title: string;
+  content: string;
+  createdAt: Date;
+  updatedAt: Date;
+  author: { name: string | null } | null;
+  replies: any[];
+};
 
 export const metadata: Metadata = {
   title: "Forum | Maxwell Young",
@@ -16,168 +29,113 @@ export const metadata: Metadata = {
     "Join the discussion about Maxwell Young's music, upcoming projects, and more.",
 };
 
-// This would typically come from a database
-const mockTopics = [
-  {
-    id: "in-my-20s-discussion",
-    title: "In My 20s - Album Discussion",
-    description: "Share your thoughts on the upcoming 2025 project",
-    content:
-      "Join the conversation about the highly anticipated new album, its themes, and what it means for Maxwell's artistic journey.",
-    replies: 24,
-    lastUpdated: "2 days ago",
-    status: "Featured",
-  },
-  {
-    id: "birthday-girl-appreciation",
-    title: "Birthday Girl EP Appreciation",
-    description: "Discuss your favorite tracks from the 2022 EP",
-    content:
-      "A deep dive into the EP that marked a significant shift in Maxwell's musical direction. Share your favorite moments and interpretations.",
-    replies: 42,
-    lastUpdated: "1 week ago",
-    status: "Popular",
-  },
-  {
-    id: "live-show-experiences",
-    title: "Live Show Experiences",
-    description: "Share your memories from Maxwell's concerts",
-    content:
-      "From intimate venues to festival stages, share your favorite moments from live performances and connect with other fans.",
-    replies: 15,
-    lastUpdated: "3 days ago",
-  },
-  {
-    id: "music-production",
-    title: "Music Production Discussion",
-    description: "Talk about production techniques and influences",
-    content:
-      "Explore the technical aspects of Maxwell's music, from production choices to musical influences and creative process.",
-    replies: 8,
-    lastUpdated: "5 days ago",
-  },
-];
+export default async function ForumPage({
+  searchParams,
+}: {
+  searchParams: { q?: string };
+}) {
+  let topics: ForumTopic[] = [];
+  let error: string | null = null;
 
-export default function ForumPage() {
+  try {
+    // Fetch topics based on search query if present
+    topics = searchParams.q
+      ? await prisma.topic.findMany({
+          where: {
+            OR: [
+              { title: { contains: searchParams.q, mode: "insensitive" } },
+              { content: { contains: searchParams.q, mode: "insensitive" } },
+            ],
+          },
+          include: {
+            author: { select: { name: true } },
+            replies: true,
+          },
+          orderBy: { createdAt: "desc" },
+        })
+      : await prisma.topic.findMany({
+          orderBy: { createdAt: "desc" },
+          include: {
+            author: { select: { name: true } },
+            replies: true,
+          },
+        });
+  } catch (err) {
+    console.error("Error fetching topics:", err);
+    error = "Failed to load topics. Please try again later.";
+    topics = [];
+  }
+
   return (
     <main className="container mx-auto px-4 py-16">
       <div className="mb-16 text-center">
         <h1 className="mb-4 text-5xl font-extrabold leading-tight tracking-tight">
           Forum
         </h1>
-        <p className="mx-auto max-w-2xl text-xl text-muted-foreground">
-          Join the conversation about music, art, and everything in between
-        </p>
+        {/* <p className="mx-auto max-w-2xl text-xl text-muted-foreground">
+          Join the conversation
+        </p> */}
       </div>
 
       <div className="mx-auto max-w-4xl space-y-14">
         {/* Search Bar */}
-        <div className="relative mb-10">
-          <input
-            type="search"
-            placeholder="Search topics..."
-            className="w-full rounded-xl border border-border bg-white px-5 py-3 pl-12 text-lg shadow transition placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
-          />
-          <svg
-            className="absolute left-4 top-3.5 h-6 w-6 text-muted-foreground"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-            />
-          </svg>
-        </div>
+        <SearchTopics initialQuery={searchParams.q} />
 
-        {/* Featured Discussions */}
+        {/* Error Message */}
+        {error && (
+          <div className="rounded-lg bg-destructive/10 p-4 text-center text-destructive">
+            {error}
+          </div>
+        )}
+
+        {/* All Topics Grid */}
         <section>
           <h2 className="mb-8 text-2xl font-bold tracking-tight text-primary">
-            Featured Discussions
+            {searchParams.q ? "Search Results" : "All Topics"}
           </h2>
-          <div className="grid gap-8">
-            {mockTopics
-              .filter((topic) => topic.status)
-              .map((topic) => (
-                <Link
-                  key={topic.id}
-                  href={`/forum/${topic.id}`}
-                  className="group"
-                >
-                  <Card className="relative overflow-hidden border-2 border-primary/30 bg-background/80 backdrop-blur-lg transition-all duration-200 group-hover:-translate-y-1 group-hover:shadow-xl">
-                    <div className="absolute left-0 top-0 h-full w-1 bg-primary/80" />
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-xl font-bold transition-colors group-hover:text-primary">
-                        {topic.title}
-                      </CardTitle>
-                      <CardDescription className="text-base">
-                        {topic.description}
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-base leading-relaxed text-muted-foreground">
-                        {topic.content}
-                      </p>
-                    </CardContent>
-                    <CardFooter className="flex items-center justify-between border-t bg-muted/50 px-6 py-4">
-                      <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                        <span>{topic.replies} replies</span>
-                        <span>•</span>
-                        <span>Last updated {topic.lastUpdated}</span>
-                      </div>
-                      <span className="rounded-full bg-primary/10 px-3 py-1 text-xs font-semibold text-primary">
-                        {topic.status}
+          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 md:grid-cols-3">
+            {topics.length === 0 && (
+              <div className="col-span-full text-center text-muted-foreground">
+                {searchParams.q
+                  ? "No topics found matching your search."
+                  : "No topics yet. Be the first to start a discussion!"}
+              </div>
+            )}
+            {topics.map((topic) => (
+              <Link
+                key={topic.id}
+                href={`/forum/${topic.id}`}
+                className="group"
+              >
+                <Card className="relative overflow-hidden border-2 border-primary/30 bg-background/80 backdrop-blur-lg transition-all duration-200 group-hover:-translate-y-1 group-hover:shadow-xl">
+                  <CardHeader className="pb-2">
+                    <CardTitle className="text-xl font-bold transition-colors group-hover:text-primary">
+                      {topic.title}
+                    </CardTitle>
+                    <CardDescription className="text-base">
+                      by {topic.author?.name ?? "Unknown"}
+                    </CardDescription>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-base leading-relaxed text-muted-foreground">
+                      {topic.content.length > 180
+                        ? topic.content.slice(0, 180) + "..."
+                        : topic.content}
+                    </p>
+                  </CardContent>
+                  <CardFooter className="flex items-center justify-between border-t bg-muted/50 px-6 py-4">
+                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                      <span>{topic.replies.length} replies</span>
+                      <span>•</span>
+                      <span>
+                        Last updated{" "}
+                        {new Date(topic.updatedAt).toLocaleDateString()}
                       </span>
-                    </CardFooter>
-                  </Card>
-                </Link>
-              ))}
-          </div>
-        </section>
-
-        <Separator className="my-12" />
-
-        {/* Recent Topics */}
-        <section>
-          <h2 className="mb-8 text-2xl font-bold tracking-tight">
-            Recent Topics
-          </h2>
-          <div className="grid gap-8">
-            {mockTopics
-              .filter((topic) => !topic.status)
-              .map((topic) => (
-                <Link
-                  key={topic.id}
-                  href={`/forum/${topic.id}`}
-                  className="group"
-                >
-                  <Card className="overflow-hidden border bg-background/80 backdrop-blur-lg transition-all duration-200 group-hover:-translate-y-1 group-hover:shadow-lg">
-                    <CardHeader className="pb-2">
-                      <CardTitle className="text-lg font-semibold transition-colors group-hover:text-primary">
-                        {topic.title}
-                      </CardTitle>
-                      <CardDescription className="text-base">
-                        {topic.description}
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent>
-                      <p className="text-base leading-relaxed text-muted-foreground">
-                        {topic.content}
-                      </p>
-                    </CardContent>
-                    <CardFooter className="flex items-center justify-between border-t bg-muted/50 px-6 py-4">
-                      <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                        <span>{topic.replies} replies</span>
-                        <span>•</span>
-                        <span>Last updated {topic.lastUpdated}</span>
-                      </div>
-                    </CardFooter>
-                  </Card>
-                </Link>
-              ))}
+                    </div>
+                  </CardFooter>
+                </Card>
+              </Link>
+            ))}
           </div>
         </section>
 

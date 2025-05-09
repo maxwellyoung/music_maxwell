@@ -33,14 +33,14 @@ export default function AuthForm() {
     const formData = new FormData(e.currentTarget);
     const email = formData.get("email") as string;
     const password = formData.get("password") as string;
-    const name = formData.get("username") as string;
+    const username = formData.get("username") as string;
 
     try {
       if (mode === "register") {
         const res = await fetch("/api/auth/register", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ email, password, name }),
+          body: JSON.stringify({ email, password, name: username }),
         });
 
         if (!res.ok) {

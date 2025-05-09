@@ -199,8 +199,6 @@ const PressPhotoCarousel = () => {
                     priority={index === 0}
                   />
                   <div className="absolute inset-0 rounded-lg ring-1 ring-white/10" />
-                  {/* Custom cursor overlay */}
-                  <CustomCursorOverlay />
                 </div>
               </motion.div>
             </CarouselItem>
@@ -249,9 +247,18 @@ const AboutSection = () => (
     <Card className="border-none bg-black/70 shadow-xl backdrop-blur-md">
       <CardHeader className="space-y-3">
         <CardTitle>
-          <span className="font-reenie text-5xl tracking-wide text-white">
-            Maxwell Young
-          </span>
+          <img
+            src="/icons/maxwellyoung.svg"
+            alt="Maxwell Young Logo"
+            style={{
+              height: "80px",
+              width: "auto",
+              display: "block",
+              filter: "invert(1) brightness(2)",
+              margin: 0,
+            }}
+            className="ml-0"
+          />
         </CardTitle>
         <CardDescription className="text-base font-medium tracking-wide text-white/90">
           Pop because it&apos;s for people. Alternative because it has to be
@@ -750,7 +757,7 @@ const CollectableGrid: React.FC = () => {
                   className="absolute inset-x-0 bottom-0 p-4"
                   variants={titleVariants}
                 >
-                  <h2 className="text-yellow text-lg font-bold drop-shadow-md">
+                  <h2 className="text-lg font-bold text-white drop-shadow-md">
                     {song.title}
                   </h2>
                   <p className="text-xs text-white/80">{song.artist}</p>
@@ -771,9 +778,18 @@ const CollectableGrid: React.FC = () => {
               <Card className="border-none bg-black/70 shadow-xl backdrop-blur-md">
                 <CardHeader className="space-y-3">
                   <CardTitle>
-                    <span className="font-reenie text-5xl tracking-wide text-white">
-                      Maxwell Young
-                    </span>
+                    <img
+                      src="/icons/maxwellyoung.svg"
+                      alt="Maxwell Young Logo"
+                      style={{
+                        height: "80px",
+                        width: "auto",
+                        display: "block",
+                        filter: "invert(1) brightness(2)",
+                        margin: 0,
+                      }}
+                      className="ml-0"
+                    />
                   </CardTitle>
                   <CardDescription className="text-base font-medium tracking-wide text-white/90">
                     Pop because it&apos;s for people. Alternative because it has
@@ -861,60 +877,5 @@ const CollectableGrid: React.FC = () => {
     </div>
   );
 };
-
-function CustomCursorOverlay() {
-  const [side, setSide] = React.useState<null | "left" | "right">(null);
-  const [pos, setPos] = React.useState({ x: 0, y: 0 });
-  const ref = React.useRef<HTMLDivElement>(null);
-
-  React.useEffect(() => {
-    if (!ref.current) return;
-    const handleMouseMove = (e: MouseEvent) => {
-      if (!ref.current) return;
-      const rect = ref.current.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      setSide(x < rect.width / 2 ? "left" : "right");
-      setPos({ x: e.clientX, y: e.clientY });
-    };
-    const handleMouseLeave = () => setSide(null);
-    ref.current.addEventListener("mousemove", handleMouseMove);
-    ref.current.addEventListener("mouseleave", handleMouseLeave);
-    return () => {
-      ref.current?.removeEventListener("mousemove", handleMouseMove);
-      ref.current?.removeEventListener("mouseleave", handleMouseLeave);
-    };
-  }, []);
-
-  return (
-    <div
-      ref={ref}
-      className="absolute inset-0 z-30 cursor-none"
-      style={{ pointerEvents: "auto" }}
-    >
-      {side && (
-        <div
-          style={{
-            position: "fixed",
-            left: pos.x + 12,
-            top: pos.y + 12,
-            pointerEvents: "none",
-            zIndex: 9999,
-            fontFamily: "monospace",
-            fontWeight: 700,
-            fontSize: 22,
-            color: "#fff",
-            textShadow: "0 2px 8px rgba(0,0,0,0.25)",
-            background: "rgba(0,0,0,0.5)",
-            borderRadius: 8,
-            padding: "2px 12px",
-            transition: "opacity 0.15s",
-          }}
-        >
-          {side}
-        </div>
-      )}
-    </div>
-  );
-}
 
 export default CollectableGrid;

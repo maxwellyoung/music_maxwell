@@ -20,10 +20,10 @@ export default function RootLayout({
       <head>
         <link rel="icon" href="/favicon.ico" />
       </head>
-      <body className="overflow-x-hidden">
+      <body className="flex min-h-screen flex-col overflow-x-hidden">
         <SessionProvider>
           <Navbar />
-          {children}
+          <main className="flex-1">{children}</main>
           <Footer />
           <Toaster />
         </SessionProvider>

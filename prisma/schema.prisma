@@ -12,10 +12,12 @@ model User {
   name          String?
   email         String    @unique
   password      String
+  role          String    @default("user")
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
   topics        Topic[]
   replies       Reply[]
+  reports       Report[]   @relation("UserReports")
 }
 
 model Topic {
@@ -38,4 +40,15 @@ model Reply {
   authorId  String
   topic     Topic    @relation(fields: [topicId], references: [id])
   topicId   String
+  reports     Report[]   @relation("ReplyReports")
+}
+
+model Report {
+  id         String   @id @default(cuid())
+  reply      Reply    @relation("ReplyReports", fields: [replyId], references: [id])
+  replyId    String
+  reporter   User     @relation("UserReports", fields: [reporterId], references: [id])
+  reporterId String
+  reason     String
+  createdAt  DateTime @default(now())
 } 

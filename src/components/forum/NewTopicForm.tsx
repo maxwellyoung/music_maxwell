@@ -61,7 +61,7 @@ export function NewTopicForm() {
   }
 
   return (
-    <div className="flex min-h-[80vh] items-center justify-center bg-gradient-to-br from-blue-50 via-white to-primary/10 transition-all duration-500">
+    <div className="flex min-h-[80vh] items-center justify-center transition-all duration-500">
       <Card className="card animate-fade-in w-full max-w-xl bg-background/80 p-10 shadow-xl backdrop-blur-lg">
         <h1 className="mb-2 text-center text-3xl font-bold tracking-tight">
           Start a New Discussion

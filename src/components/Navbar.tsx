@@ -4,6 +4,8 @@ import { useSession, signOut } from "next-auth/react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
+import { useState } from "react";
+import { Menu, X } from "lucide-react";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -11,11 +13,48 @@ export default function Navbar() {
   const { data: session } = useSession();
   const isForum = pathname.startsWith("/forum");
   const isDiscog = pathname === "/";
+  const [mobileOpen, setMobileOpen] = useState(false);
+
+  // Action buttons for reuse
+  const actionButtons = (
+    <>
+      {isForum && session && (
+        <Link
+          href="/forum/new"
+          className="block px-4 py-2 transition hover:text-accent focus:text-accent md:px-0 md:py-0"
+          onClick={() => setMobileOpen(false)}
+        >
+          New Topic
+        </Link>
+      )}
+      {isForum && session && (
+        <button
+          onClick={() => {
+            setMobileOpen(false);
+            signOut();
+          }}
+          className="w-full cursor-pointer rounded-full border-none bg-primary px-5 py-2 font-semibold text-primary-foreground shadow-md transition hover:bg-accent focus:outline-none focus:ring-2 focus:ring-primary/60 md:w-auto"
+          style={{ minWidth: 90 }}
+        >
+          Log out
+        </button>
+      )}
+      {isForum && !session && (
+        <Link
+          href="/login"
+          className="block px-4 py-2 transition hover:text-accent focus:text-accent md:px-0 md:py-0"
+          onClick={() => setMobileOpen(false)}
+        >
+          Login
+        </Link>
+      )}
+    </>
+  );
 
   return (
     <header className="sticky top-0 z-30 mx-auto my-6 w-[95%] max-w-5xl rounded-2xl border border-border bg-background/80 shadow-2xl backdrop-blur-lg">
       <nav className="container flex h-16 items-center justify-between">
-        {/* Boolean Pill Toggle with Icons */}
+        {/* Left: Toggle Button */}
         <div className="flex flex-1 items-center">
           <button
             onClick={() => router.push(isForum ? "/" : "/forum")}
@@ -65,10 +104,19 @@ export default function Navbar() {
         <div className="flex flex-1 items-center justify-center">
           <Link
             href="/"
-            className="font-reenie text-2xl font-bold tracking-tight transition hover:opacity-80"
-            style={{ letterSpacing: "0.01em", opacity: 0.92 }}
+            className="transition hover:opacity-80"
+            aria-label="Home"
           >
-            Maxwell Young
+            <img
+              src="/icons/maxwellyoung2.svg"
+              alt="Maxwell Young Logo"
+              style={{
+                height: "48px",
+                width: "auto",
+                display: "block",
+                margin: "0 auto",
+              }}
+            />
           </Link>
         </div>
         {/* Animated Auth/Action Buttons */}
