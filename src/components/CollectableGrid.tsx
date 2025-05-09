@@ -1,6 +1,5 @@
 "use client";
-import type React from "react";
-import { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { Drawer, DrawerClose, DrawerContent, DrawerHeader } from "./ui/drawer";
@@ -190,7 +189,7 @@ const PressPhotoCarousel = () => {
                 transition={{ duration: 0.3, ease: "easeOut" }}
                 className="overflow-hidden rounded-lg"
               >
-                <div className="relative aspect-[3/4] w-full">
+                <div className="group relative aspect-[3/4] w-full">
                   <Image
                     src={photo.src}
                     alt={photo.alt}
@@ -200,6 +199,8 @@ const PressPhotoCarousel = () => {
                     priority={index === 0}
                   />
                   <div className="absolute inset-0 rounded-lg ring-1 ring-white/10" />
+                  {/* Custom cursor overlay */}
+                  <CustomCursorOverlay />
                 </div>
               </motion.div>
             </CarouselItem>
@@ -245,7 +246,7 @@ const PressPhotoCarousel = () => {
 
 const AboutSection = () => (
   <section className="my-12">
-    <Card>
+    <Card className="border-none bg-black/70 shadow-xl backdrop-blur-md">
       <CardHeader className="space-y-3">
         <CardTitle>
           <span className="font-reenie text-5xl tracking-wide text-white">
@@ -258,7 +259,7 @@ const AboutSection = () => (
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
-        <p className="leading-relaxed tracking-wide text-white/75">
+        <p className="leading-relaxed tracking-wide text-white/90">
           Maxwell Young is a New Zealand artist making emotionally-driven
           alt-pop that&apos;s both personal and unpredictable. He started violin
           at three, learned production in his teens, and unexpectedly landed
@@ -267,14 +268,14 @@ const AboutSection = () => (
           and Snail Mail, with cosigns from The 1975, Phoebe Bridgers, and
           Brockhampton.
         </p>
-        <p className="leading-relaxed tracking-wide text-white/75">
-          His 2022 EP <em className="text-white/90">Birthday Girl</em> marked a
+        <p className="leading-relaxed tracking-wide text-white/90">
+          His 2022 EP <em className="text-white">Birthday Girl</em> marked a
           shift—toward sharper textures, emotional maximalism, and songwriting
           that feels like recollection more than storytelling.{" "}
-          <em className="text-white/90">In My 20s</em> (2025) picks up that
-          thread: a record about spirals, near-misses, and becoming who you are
-          while already being someone else. The songs are immediate, catchy, and
-          just off enough to stick with you.
+          <em className="text-white">In My 20s</em> (2025) picks up that thread:
+          a record about spirals, near-misses, and becoming who you are while
+          already being someone else. The songs are immediate, catchy, and just
+          off enough to stick with you.
         </p>
       </CardContent>
     </Card>
@@ -701,111 +702,219 @@ const CollectableGrid: React.FC = () => {
   };
 
   return (
-    <div className="w-full overflow-hidden">
-      <div className="bg-dark text-white">
-        <div className="container mx-auto px-4 py-12 sm:px-6 sm:py-16 md:px-8 md:py-24">
-          {error && error !== "NO_PRODUCTS" && (
-            <div className="mb-4 rounded-lg bg-red-500/10 p-4 text-red-500">
-              {error}
-            </div>
-          )}
+    <div className="relative min-h-[90vh] w-full overflow-hidden py-8 sm:py-12">
+      {/* SVG noise overlay for artistic texture */}
+      <div className="pointer-events-none absolute inset-0 z-0 opacity-20 mix-blend-soft-light">
+        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+          <filter id="noiseFilter">
+            <feTurbulence
+              type="fractalNoise"
+              baseFrequency="0.8"
+              numOctaves="4"
+              stitchTiles="stitch"
+            />
+          </filter>
+          <rect width="100%" height="100%" filter="url(#noiseFilter)" />
+        </svg>
+      </div>
+      <div className="container relative z-10 mx-auto px-2 sm:px-4 md:px-8">
+        {error && error !== "NO_PRODUCTS" && (
+          <div className="mb-4 rounded-lg bg-red-500/10 p-4 text-red-500">
+            {error}
+          </div>
+        )}
 
-          <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 sm:gap-12 md:grid-cols-3 lg:grid-cols-4">
-            {songs.map((song, index) => (
-              <motion.div
-                key={index}
-                initial="initial"
-                whileHover="hover"
-                onClick={() => openDrawer(song)}
-                className="group cursor-pointer"
-              >
-                <div className="relative aspect-square overflow-hidden rounded-lg">
-                  <motion.div variants={albumVariants}>
-                    <BlurImage
-                      src={song.artwork}
-                      alt={song.title}
-                      className="transition-all duration-300 group-hover:scale-105"
-                    />
-                  </motion.div>
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 transition-opacity duration-200 group-hover:opacity-100" />
-                  <motion.div
-                    className="absolute inset-x-0 bottom-0 p-4"
-                    variants={titleVariants}
-                  >
-                    <h2 className="text-base font-medium text-white drop-shadow-md">
-                      {song.title}
-                    </h2>
-                    <p className="text-xs text-white/80">{song.artist}</p>
-                  </motion.div>
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8 md:grid-cols-3 lg:grid-cols-4">
+          {songs.map((song, index) => (
+            <motion.div
+              key={index}
+              initial="initial"
+              whileHover="hover"
+              onClick={() => openDrawer(song)}
+              className="group cursor-pointer"
+            >
+              <div className="relative aspect-square overflow-hidden rounded-2xl border-2 border-transparent transition-all duration-200 group-hover:z-10 group-hover:scale-105 group-hover:border-primary group-hover:shadow-2xl group-hover:ring-4 group-hover:ring-primary/20">
+                <motion.div variants={albumVariants}>
+                  <BlurImage
+                    src={song.artwork}
+                    alt={song.title}
+                    className="transition-all duration-300 group-hover:scale-110"
+                  />
+                </motion.div>
+                {/* Shine overlay */}
+                <div className="pointer-events-none absolute inset-0 z-10 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                  <div className="animate-shine absolute -left-1/3 top-0 h-full w-1/3 bg-gradient-to-r from-white/10 via-white/60 to-white/10 blur-lg" />
                 </div>
-              </motion.div>
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 transition-opacity duration-200 group-hover:opacity-80" />
+                <motion.div
+                  className="absolute inset-x-0 bottom-0 p-4"
+                  variants={titleVariants}
+                >
+                  <h2 className="text-yellow text-lg font-bold drop-shadow-md">
+                    {song.title}
+                  </h2>
+                  <p className="text-xs text-white/80">{song.artist}</p>
+                </motion.div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        <div className="mt-16 flex flex-col gap-12 md:flex-row md:items-start md:gap-12">
+          <div className="w-full md:w-1/2">
+            <PressPhotoCarousel />
+          </div>
+          <Separator orientation="vertical" className="mx-4 hidden md:block" />
+          <div className="w-full md:w-1/2">
+            {/* About Section readability improved */}
+            <section className="my-0">
+              <Card className="border-none bg-black/70 shadow-xl backdrop-blur-md">
+                <CardHeader className="space-y-3">
+                  <CardTitle>
+                    <span className="font-reenie text-5xl tracking-wide text-white">
+                      Maxwell Young
+                    </span>
+                  </CardTitle>
+                  <CardDescription className="text-base font-medium tracking-wide text-white/90">
+                    Pop because it&apos;s for people. Alternative because it has
+                    to be new.
+                  </CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <p className="leading-relaxed tracking-wide text-white/90">
+                    Maxwell Young is a New Zealand artist making
+                    emotionally-driven alt-pop that&apos;s both personal and
+                    unpredictable. He started violin at three, learned
+                    production in his teens, and unexpectedly landed early
+                    internet traction when his beats appeared in Casey
+                    Neistat&apos;s vlogs. Since then, he&apos;s opened for The
+                    Internet and Snail Mail, with cosigns from The 1975, Phoebe
+                    Bridgers, and Brockhampton.
+                  </p>
+                  <p className="leading-relaxed tracking-wide text-white/90">
+                    His 2022 EP <em className="text-white">Birthday Girl</em>{" "}
+                    marked a shift—toward sharper textures, emotional
+                    maximalism, and songwriting that feels like recollection
+                    more than storytelling.{" "}
+                    <em className="text-white">In My 20s</em> (2025) picks up
+                    that thread: a record about spirals, near-misses, and
+                    becoming who you are while already being someone else. The
+                    songs are immediate, catchy, and just off enough to stick
+                    with you.
+                  </p>
+                </CardContent>
+              </Card>
+            </section>
+          </div>
+        </div>
+
+        <div className="mt-12">
+          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            {products.map((product) => (
+              <Card
+                key={product._id}
+                className="border-2 border-accent/30 transition hover:border-accent"
+              >
+                <CardHeader>
+                  <CardTitle className="font-bold text-accent">
+                    {product.title}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {product.description && <p>{product.description}</p>}
+                  {product.images?.[0]?.asset?.url && (
+                    <div className="relative aspect-square overflow-hidden rounded-lg">
+                      <BlurImage
+                        src={product.images[0].asset.url}
+                        alt={product.images[0].asset.altText ?? "Product Image"}
+                        className="object-cover"
+                      />
+                    </div>
+                  )}
+                  {product.price && (
+                    <p className="text-highlight font-semibold">
+                      Price: ${product.price.toFixed(2)}
+                    </p>
+                  )}
+                </CardContent>
+                {product.shopifyProductId && (
+                  <CardFooter>
+                    <a
+                      href={`https://your-shopify-domain.com/products/${product.shopifyProductId}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-primary hover:text-accent"
+                    >
+                      View Product
+                    </a>
+                  </CardFooter>
+                )}
+              </Card>
             ))}
           </div>
-
-          <div className="mt-24 flex flex-col items-stretch gap-12 md:flex-row">
-            <div className="md:w-1/2">
-              <PressPhotoCarousel />
-            </div>
-            <Separator
-              orientation="vertical"
-              className="mx-4 hidden md:block"
-            />
-            <div className="md:w-1/2">
-              <AboutSection />
-            </div>
-          </div>
-
-          <div className="mt-12">
-            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-              {products.map((product) => (
-                <Card key={product._id}>
-                  <CardHeader>
-                    <CardTitle>{product.title}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    {product.description && <p>{product.description}</p>}
-                    {product.images?.[0]?.asset?.url && (
-                      <div className="relative aspect-square overflow-hidden rounded-lg">
-                        <BlurImage
-                          src={product.images[0].asset.url}
-                          alt={
-                            product.images[0].asset.altText ?? "Product Image"
-                          }
-                          className="object-cover"
-                        />
-                      </div>
-                    )}
-                    {product.price && <p>Price: ${product.price.toFixed(2)}</p>}
-                  </CardContent>
-                  {product.shopifyProductId && (
-                    <CardFooter>
-                      <a
-                        href={`https://your-shopify-domain.com/products/${product.shopifyProductId}`}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-sm text-zinc-400 hover:text-zinc-300"
-                      >
-                        View Product
-                      </a>
-                    </CardFooter>
-                  )}
-                </Card>
-              ))}
-            </div>
-          </div>
-
-          {selectedSong && (
-            <SongDrawer
-              song={selectedSong}
-              open={isOpen}
-              onClose={closeDrawer}
-            />
-          )}
         </div>
+
+        {selectedSong && (
+          <SongDrawer song={selectedSong} open={isOpen} onClose={closeDrawer} />
+        )}
       </div>
-      <Footer />
     </div>
   );
 };
+
+function CustomCursorOverlay() {
+  const [side, setSide] = React.useState<null | "left" | "right">(null);
+  const [pos, setPos] = React.useState({ x: 0, y: 0 });
+  const ref = React.useRef<HTMLDivElement>(null);
+
+  React.useEffect(() => {
+    if (!ref.current) return;
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!ref.current) return;
+      const rect = ref.current.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      setSide(x < rect.width / 2 ? "left" : "right");
+      setPos({ x: e.clientX, y: e.clientY });
+    };
+    const handleMouseLeave = () => setSide(null);
+    ref.current.addEventListener("mousemove", handleMouseMove);
+    ref.current.addEventListener("mouseleave", handleMouseLeave);
+    return () => {
+      ref.current?.removeEventListener("mousemove", handleMouseMove);
+      ref.current?.removeEventListener("mouseleave", handleMouseLeave);
+    };
+  }, []);
+
+  return (
+    <div
+      ref={ref}
+      className="absolute inset-0 z-30 cursor-none"
+      style={{ pointerEvents: "auto" }}
+    >
+      {side && (
+        <div
+          style={{
+            position: "fixed",
+            left: pos.x + 12,
+            top: pos.y + 12,
+            pointerEvents: "none",
+            zIndex: 9999,
+            fontFamily: "monospace",
+            fontWeight: 700,
+            fontSize: 22,
+            color: "#fff",
+            textShadow: "0 2px 8px rgba(0,0,0,0.25)",
+            background: "rgba(0,0,0,0.5)",
+            borderRadius: 8,
+            padding: "2px 12px",
+            transition: "opacity 0.15s",
+          }}
+        >
+          {side}
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default CollectableGrid;

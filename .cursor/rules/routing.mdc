@@ -1,0 +1,31 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Routing Structure
+
+This application uses Next.js 13+ App Router for routing. The routing is file-system based, where each folder in the `src/app` directory represents a route segment.
+
+## Main Routes
+- `/`: Home page ([src/app/page.tsx](mdc:src/app/page.tsx))
+- `/auth`: Authentication related pages
+- `/forum`: Forum related pages
+- `/api`: API routes
+
+## Route Conventions
+- `page.tsx`: Defines the UI for a route
+- `layout.tsx`: Defines shared layouts for a route and its children
+- `loading.tsx`: Loading UI for a route
+- `error.tsx`: Error UI for a route
+- `not-found.tsx`: Not found UI for a route
+
+## API Routes
+API routes are defined in the `src/app/api` directory and follow the same file-system based routing pattern. Each route can handle different HTTP methods (GET, POST, etc.).
+
+## Middleware
+The [src/middleware.ts](mdc:src/middleware.ts) file handles request processing before they reach the route handlers. It can be used for:
+- Authentication
+- Request validation
+- Redirects
+- Response modification
