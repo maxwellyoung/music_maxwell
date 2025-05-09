@@ -10,28 +10,37 @@ const Footer = () => {
             href="https://instagram.com/maxwell_young"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-muted-foreground transition-colors hover:text-accent focus:text-accent"
+            className="group relative text-muted-foreground transition-colors hover:text-accent focus:text-accent"
+            aria-label="Instagram"
           >
             <Instagram className="h-6 w-6" />
-            <span className="sr-only">Instagram</span>
+            <span className="pointer-events-none absolute -top-8 left-1/2 z-20 -translate-x-1/2 whitespace-nowrap rounded bg-black/80 px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100 group-focus:opacity-100">
+              Instagram
+            </span>
           </Link>
           <Link
             href="https://twitter.com/internetmaxwell"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-muted-foreground transition-colors hover:text-accent focus:text-accent"
+            className="group relative text-muted-foreground transition-colors hover:text-accent focus:text-accent"
+            aria-label="Twitter"
           >
             <Twitter className="h-6 w-6" />
-            <span className="sr-only">Twitter</span>
+            <span className="pointer-events-none absolute -top-8 left-1/2 z-20 -translate-x-1/2 whitespace-nowrap rounded bg-black/80 px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100 group-focus:opacity-100">
+              Twitter
+            </span>
           </Link>
           <Link
             href="https://www.youtube.com/@maxwell_young"
             target="_blank"
             rel="noopener noreferrer"
-            className="text-muted-foreground transition-colors hover:text-accent focus:text-accent"
+            className="group relative text-muted-foreground transition-colors hover:text-accent focus:text-accent"
+            aria-label="YouTube"
           >
             <Youtube className="h-6 w-6" />
-            <span className="sr-only">YouTube</span>
+            <span className="pointer-events-none absolute -top-8 left-1/2 z-20 -translate-x-1/2 whitespace-nowrap rounded bg-black/80 px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100 group-focus:opacity-100">
+              YouTube
+            </span>
           </Link>
           <Link
             href="/forum"

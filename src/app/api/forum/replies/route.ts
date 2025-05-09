@@ -24,7 +24,7 @@ export async function POST(request: Request) {
   rateLimitMap.set(session.user.id, now);
 
   try {
-    const data: unknown = await request.json();
+    const data = (await request.json()) as Record<string, unknown>;
     if (
       typeof data !== "object" ||
       data === null ||
@@ -63,7 +63,7 @@ export async function DELETE(request: Request) {
   }
 
   try {
-    const data: unknown = await request.json();
+    const data = (await request.json()) as Record<string, unknown>;
     if (typeof data !== "object" || data === null || !("replyId" in data)) {
       return NextResponse.json({ error: "Missing replyId" }, { status: 400 });
     }
