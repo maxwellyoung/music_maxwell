@@ -9,10 +9,19 @@ const registerSchema = z.object({
   name: z.string().min(2),
 });
 
+// Force dynamic behavior and specify runtime
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
-export async function POST(request: Request) {
+// Create a minimal handler for build time
+const handler = async (request: Request) => {
+  // During build time, return a simple response
+  if (process.env.NODE_ENV !== "production") {
+    return new Response("Registration is not available during build", {
+      status: 503,
+    });
+  }
+
   try {
     const data: unknown = await request.json();
     const { email, password, name } = registerSchema.parse(data);
@@ -62,4 +71,6 @@ export async function POST(request: Request) {
       { status: 500 },
     );
   }
-}
+};
+
+export { handler as POST };
