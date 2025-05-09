@@ -8,5 +8,10 @@ export const runtime = "nodejs";
 
 const handler = NextAuth(authOptions);
 
-export const GET: (req: NextRequest) => Promise<Response> = handler;
-export const POST: (req: NextRequest) => Promise<Response> = handler;
+export async function GET(req: NextRequest): Promise<Response> {
+  return handler(req) as Promise<Response>;
+}
+
+export async function POST(req: NextRequest): Promise<Response> {
+  return handler(req) as Promise<Response>;
+}
