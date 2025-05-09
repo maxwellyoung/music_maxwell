@@ -37,6 +37,9 @@ export const metadata: Metadata = {
     "Join the discussion about Maxwell Young's music, upcoming projects, and more.",
 };
 
+// Mark the page as dynamic
+export const dynamic = "force-dynamic";
+
 export default async function ForumPage({
   searchParams,
 }: {
