@@ -41,13 +41,14 @@ const limiter = rateLimit({
   uniqueTokenPerInterval: 500,
 });
 
-// Create a minimal handler for build time
-const handler = async (request: Request) => {
+// Create a handler that properly handles both build and runtime
+export async function POST(request: Request) {
   // During build time, return a simple response
-  if (process.env.NODE_ENV !== "production") {
-    return new Response("Registration is not available during build", {
-      status: 503,
-    });
+  if (
+    process.env.NODE_ENV === "development" ||
+    process.env.NEXT_PHASE === "build"
+  ) {
+    return new Response(null, { status: 204 });
   }
 
   try {
@@ -193,6 +194,4 @@ const handler = async (request: Request) => {
       { status: 500 },
     );
   }
-};
-
-export { handler as POST };
+}
