@@ -1,10 +1,10 @@
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import { type NextAuthOptions, type Session } from "next-auth";
+import type { NextAuthOptions, Session } from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
 import { compare } from "bcryptjs";
 import { prisma } from "./prisma";
-import { JWT } from "next-auth/jwt";
+import type { JWT } from "next-auth/jwt";
 
 export interface User {
   id: string;
@@ -44,6 +44,7 @@ function isUser(obj: unknown): obj is User {
 // Initialize the Prisma adapter
 const prismaAdapter = PrismaAdapter(prisma);
 
+// Create auth options with minimal configuration for build
 export const authOptions: NextAuthOptions = {
   adapter: prismaAdapter,
   providers: [
@@ -83,7 +84,8 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
-        const { password: _password, ...userWithoutPassword } = user;
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const { password, ...userWithoutPassword } = user;
         return userWithoutPassword;
       },
     }),
@@ -94,6 +96,7 @@ export const authOptions: NextAuthOptions = {
   ],
   session: {
     strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   pages: {
     signIn: "/login",
@@ -124,6 +127,7 @@ export const authOptions: NextAuthOptions = {
       return session;
     },
   },
-  debug: process.env.NODE_ENV === "development",
   secret: process.env.NEXTAUTH_SECRET,
+  // Disable debug mode during build
+  debug: false,
 };

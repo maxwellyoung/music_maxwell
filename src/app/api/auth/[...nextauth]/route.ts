@@ -1,18 +1,13 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import NextAuth from "next-auth";
 import { authOptions } from "~/lib/auth";
-import type { NextRequest } from "next/server";
 
+// Force dynamic behavior
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
-// Initialize NextAuth with explicit configuration
+// Create the handler outside of the route handlers
 const handler = NextAuth(authOptions);
 
-export async function GET(req: NextRequest): Promise<Response> {
-  return handler(req) as Promise<Response>;
-}
-
-export async function POST(req: NextRequest): Promise<Response> {
-  return handler(req) as Promise<Response>;
-}
+// Export the handler directly
+export { handler as GET, handler as POST };
