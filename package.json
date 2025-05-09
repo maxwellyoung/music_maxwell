@@ -10,11 +10,10 @@
     "start": "next start"
   },
   "dependencies": {
-    "@auth/drizzle-adapter": "^1.9.0",
     "@auth/prisma-adapter": "^2.9.0",
     "@clerk/nextjs": "^6.19.1",
     "@neondatabase/serverless": "^1.0.0",
-    "@prisma/client": "^6.7.0",
+    "@prisma/client": "^5.10.2",
     "@radix-ui/react-accordion": "^1.1.2",
     "@radix-ui/react-aspect-ratio": "^1.0.3",
     "@radix-ui/react-dialog": "^1.0.5",
@@ -76,7 +75,7 @@
     "postcss": "^8.4.34",
     "prettier": "^3.2.5",
     "prettier-plugin-tailwindcss": "^0.5.11",
-    "prisma": "^6.7.0",
+    "prisma": "^5.10.2",
     "tailwindcss": "^3.4.1",
     "typescript": "^5.4.2"
   },
