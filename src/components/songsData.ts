@@ -6,6 +6,7 @@ export type Song = {
     spotify: string;
     appleMusic: string;
     youtube: string;
+    microsite?: string;
   };
   lyrics?: Record<string, string>;
   credits?: string;
@@ -23,6 +24,7 @@ const songs: Song[] = [
       appleMusic:
         "https://music.apple.com/nz/album/wintour/1802842596?i=1802842597",
       youtube: "https://www.youtube.com/watch?v=gHFMkPDehuI",
+      microsite: "https://wintour.maxwellyoung.info/",
     },
     credits: `Produced by Maxwell Young & Eddie Johnston
     Artwork by Elijah Broughton`,
@@ -37,6 +39,7 @@ const songs: Song[] = [
       appleMusic:
         "https://music.apple.com/nz/album/turn-it-up-single/1730777023",
       youtube: "https://www.youtube.com/watch?v=wMEr3mcuD7Q",
+      microsite: "https://www.wherehaveyoubeen.blog/",
     },
     lyrics: {
       "Turn It Up": `We were staying up  
@@ -377,11 +380,11 @@ You know I'm saying`,
     },
     lyrics: {
       "My Lovely Liar":
-        "I’m wishing it were twilight\nYou look fine china\nLook up at faded skylines\nOh, who’s my lovely liar?\nOh, who’s my lovely liar?\n\nI'm breaking in and\nYou don't got the wings\nIf I dared for it\nAnd I can't handle it\nAnd I tried so much\nYou're all that I had\nAnd now it's too much\nOh baby it's still\nAnd I’ve been drowning for some time\nOh for some time\n\nSit beside each other\nSee the colours of us\nThere is not another\nTouch and feelings erupt\n\nSing praises to summer skies\nHumidity has run us tired\nTurquoise and the movie bright\nOcean swings and sinks my kite\nBetter ways to lend a hand\nThis candlestick signified shame\nShadowboxed the birthday girl\nPonytails apart, uncurled",
+        "I'm wishing it were twilight\nYou look fine china\nLook up at faded skylines\nOh, who's my lovely liar?\nOh, who's my lovely liar?\n\nI'm breaking in and\nYou don't got the wings\nIf I dared for it\nAnd I can't handle it\nAnd I tried so much\nYou're all that I had\nAnd now it's too much\nOh baby it's still\nAnd I've been drowning for some time\nOh for some time\n\nSit beside each other\nSee the colours of us\nThere is not another\nTouch and feelings erupt\n\nSing praises to summer skies\nHumidity has run us tired\nTurquoise and the movie bright\nOcean swings and sinks my kite\nBetter ways to lend a hand\nThis candlestick signified shame\nShadowboxed the birthday girl\nPonytails apart, uncurled",
       "Giving Up Again":
-        "We were moving state to state back then\nYou had someone were arranged with back then\nWe were moving on\nBut I couldn't and you couldn't too\n\nAll this meaning on microphone baby\nNot taking another home baby\nIf you'd think there's nothing wrong with it\nBecause we could and we would too\n\nBlurred colour\nHover through memories of us\nMy blurred lover, blurred lover\nI try readjust\nWith blurred colour, blurred colour\nHover through memories of us\nMy blurred lover, blurred lover\nI try readjust\n\nGiving up again\nI, I, I\nI couldn’t say it to your face\nI, I, I\nI can't keep\nBreaking everything\nI, I, I\nWanted to know\nWoke up from another dream where we touched\nTo hold you dear I'm all out of my luck\nSinging about this and I'm nauseous\nBecause we could and we would to\n\nBlurred colour\nHover through memories of us\nMy blurred lover, blurred lover\nI try readjust\nWith blurred colour, blurred colour\nHover through memories of us\nMy blurred lover, blurred lover\nI try readjust\n\nGiving up again\nI, I, I\nI couldn’t say it to your face\nI, I, I\nI can't keep\nBreaking everything\nI, I, I\nWanted to know\n\nGiving up on you tonight",
+        "We were moving state to state back then\nYou had someone were arranged with back then\nWe were moving on\nBut I couldn't and you couldn't too\n\nAll this meaning on microphone baby\nNot taking another home baby\nIf you'd think there's nothing wrong with it\nBecause we could and we would too\n\nBlurred colour\nHover through memories of us\nMy blurred lover, blurred lover\nI try readjust\nWith blurred colour, blurred colour\nHover through memories of us\nMy blurred lover, blurred lover\nI try readjust\n\nGiving up again\nI, I, I\nI couldn't say it to your face\nI, I, I\nI can't keep\nBreaking everything\nI, I, I\nWanted to know\nWoke up from another dream where we touched\nTo hold you dear I'm all out of my luck\nSinging about this and I'm nauseous\nBecause we could and we would to\n\nBlurred colour\nHover through memories of us\nMy blurred lover, blurred lover\nI try readjust\nWith blurred colour, blurred colour\nHover through memories of us\nMy blurred lover, blurred lover\nI try readjust\n\nGiving up again\nI, I, I\nI couldn't say it to your face\nI, I, I\nI can't keep\nBreaking everything\nI, I, I\nWanted to know\n\nGiving up on you tonight",
       Floodlight:
-        "I took you out\nTook you out\nTook you out\nWhen you wanted to run\n\nI took you out\nTook you out\nTook you out\nBeautiful when we waltzed\n\nI took you\nRight by my side\nTold you hold me tight\nWherever we walk\n\nI took you out\nTook you out\nTook you out\nWhen you wanted to run\n\nYou're the only one I don’t talk to on autopilot\nYou're the only one we never planned but it’s decided\nYou're the only one\nYou are\nYou are\nFloodlight\nWherever you are\nFloodlight\nWhen you're on my arm\nFloodlight\nWherever you are\nFloodlight, floodlight\nWherever you are\n\nWe talked about\nTalked about\nTalked about\nHow you love and you don’t\n\nYour pretty mouth\nPretty mouth\nPretty mouth\nWhen you’re talking in prose\n\nCut all your ties\nFeeling overexposed\nYou want more highlights\nSwear that you’re owed\n\nAnd I took you out\nTook you out\nTook you out\nWhen you wanted to go\nFloodlight\nWherever you are\nFloodlight\nWhen you're on my arm\nFloodlight\nWherever you are\nFloodlight, floodlight\nWherever you are",
+        "I took you out\nTook you out\nTook you out\nWhen you wanted to run\n\nI took you out\nTook you out\nTook you out\nBeautiful when we waltzed\n\nI took you\nRight by my side\nTold you hold me tight\nWherever we walk\n\nI took you out\nTook you out\nTook you out\nWhen you wanted to run\n\nYou're the only one I don't talk to on autopilot\nYou're the only one we never planned but it's decided\nYou're the only one\nYou are\nYou are\nFloodlight\nWherever you are\nFloodlight\nWhen you're on my arm\nFloodlight\nWherever you are\nFloodlight, floodlight\nWherever you are\n\nWe talked about\nTalked about\nTalked about\nHow you love and you don't\n\nYour pretty mouth\nPretty mouth\nPretty mouth\nWhen you're talking in prose\n\nCut all your ties\nFeeling overexposed\nYou want more highlights\nSwear that you're owed\n\nAnd I took you out\nTook you out\nTook you out\nWhen you wanted to go\nFloodlight\nWherever you are\nFloodlight\nWhen you're on my arm\nFloodlight\nWherever you are\nFloodlight, floodlight\nWherever you are",
       "Did You Have To Grow?":
         "Kissed me good\nMisunderstood\nIt was always gonna lead that way\nWhen I woke up\nOut of my luck\nIt was always gonna lead that way\nBetty and I are trading glances\nDon't think that she's felt romance yet\n\nBut did you have to grow?\nI took the picture off my wall\nDid you have to grow?\nI still miss you after all\n\nLight refracted through the window\nGlinting beautifully\nYou were sitting in the corner\nPainting abstract things\nAcrylic on the canvas colourfully dripping\nNails painted noir\nWas all I could see\nThat's all I could see\nYou & me, you & me\nJust honey tell me what\nYou been dreaming of\nI've fallen in love\nI'm overthinking touch\n(Being in my head)\nBut did you have to grow?\nI took the picture off my wall\n\nIt gets funny\nWhen the lights don't change\nYour girl don't change\nYou're in the same place\nYou're still in the same place\n\n(I don't think you really know what I'm talking about)\n\nI got a secret\nI think that planes gonna reach me\n\nI get jealous and I fuck my hand\nI am lonely\nI am honest and I'm loathful\nI get jealous and I",
       Believe:
@@ -406,7 +409,7 @@ You know I'm saying`,
   But can't decide
   If there was ever
   A light in your eyes
-  I’m in the mirror
+  I'm in the mirror
   Not in your life
   I splash some water on my face and I felt wrong (Oh no)
   
@@ -418,7 +421,7 @@ You know I'm saying`,
   Love you just a little like
   Black coffee and Cherry Pie
   If you want some other guy
-  It’s alright, it’s alright
+  It's alright, it's alright
   
   [Verse 1]
   Hit the last stop and I'll wait for another
@@ -435,30 +438,6 @@ You know I'm saying`,
   Black coffee and Cherry Pie
   If you want some other guy
   It's alright, it's alright
-  Love you just a little like
-  Black coffee and Cherry Pie
-  If you want some other guy
-  It’s alright, it’s alright
-  Love you just a little like
-  Black coffee and Cherry Pie
-  If you want some other guy
-  It's alright, it’s alright
-  
-  [Bridge]
-  Like just a little lie
-  I'm just a little lie for you
-  I bet (Oooh)
-  Five, six, seven, eight
-  
-  [Chorus]
-  Love you just a little like
-  Black coffee and Cherry Pie
-  If you want some other guy
-  It's alright, it's alright
-  Love you just a little like
-  Black coffee and Cherry Pie
-  If you want some other guy
-  It’s alright, it's alright
   Love you just a little like
   Black coffee and Cherry Pie
   If you want some other guy
@@ -513,8 +492,6 @@ You know I'm saying`,
   First time there's no pressure about a pedestal for me
   But will I lose you too?
   First time there's no pressure about a pede-pedestal
-  But will I lose you too?
-  First time there's no pressure about a pedestal for me
   But will I lose you too?
   First time there's no pressure about a pedestal for me
   But will I lose you too?
@@ -757,7 +734,7 @@ You know I'm saying`,
       You couldn't evade assuming that I was jealous
       I know what you meant
       Let's breakup before you say it
-      I know it’s not the same
+      I know it's not the same
       Baby in other ways we could
       
       Step back
@@ -780,7 +757,7 @@ You know I'm saying`,
       I felt alone tonight
       With everything you're sharing about me
       
-      (I’m in a gold state, gold state)
+      (I'm in a gold state, gold state)
       You know what I mean
       I lost the big idea
       While she's going overseas
@@ -791,12 +768,12 @@ You know I'm saying`,
       Oh no
       
       Waiting in December
-      Forgiving when it’s tempting
+      Forgiving when it's tempting
       Silver lining my headroom
       Miss you gold and glaring
       I know what you meant
       Sometimes I still forget
-      I know it’s not the same
+      I know it's not the same
       Baby in other ways we could
       
       (Gold state, gold state)
@@ -840,7 +817,7 @@ You know I'm saying`,
         Can't we try rewind?
         Dancing in Chanel
         (We'll be dancing all evening)
-        Chic chic, let’s spin round
+        Chic chic, let's spin round
         
         Don't blame me
         I've got nothing to show
@@ -859,8 +836,8 @@ You know I'm saying`,
         I thought, I thought
         Does it matter anyway?
         
-        I’m a masked rider, I inhale before I flee
-        (I’m so cool)
+        I'm a masked rider, I inhale before I flee
+        (I'm so cool)
         Catch me leaving early morning while you sleep
         (What you need?)
         I know what you need, I know
@@ -933,7 +910,7 @@ You know I'm saying`,
       Princess: `Princess
 How you soften voices
 Laying still your choices
-Lover, you’re too gorgeous
+Lover, you're too gorgeous
 
 I don't feel a thing but
 Dear how I miss
@@ -962,7 +939,7 @@ Trying to move to big apple
 But my money been froze
 Sometimes see right through
 Whilst my heart is on hold
-Claimed I don’t care
+Claimed I don't care
 Living out a tote bag
 Head down
 Because my heart is on froze
@@ -998,25 +975,25 @@ I'm a chronic for your love
       "Sketches of Dragonflies": `Vapour doesn't last
 My tongue is not so fast
 In person I collapse
-Entwined I’m a mess
+Entwined I'm a mess
 
-Don’t act like it’s same since day one
+Don't act like it's same since day one
 More honest with sauvignon blanc
-“Don’t tell me about your time spent wandering”
+"Don't tell me about your time spent wandering"
 I was on the road
-It’s alright sometimes
+It's alright sometimes
 (Get out my face, get out my place)
 
 Honey, why're you always talking about the fools, the drama?
 I need karma for my good deeds sometimes
 
-It’s a risky thing
+It's a risky thing
 Closing your eyes
 Kissing mother goodbye
 Closing your eyes
 
 Just call me up
-It’s not that I am lost in love no more
+It's not that I am lost in love no more
 Still get stuck
 Lost in love no more
 (I like knowing you don't need me
@@ -1029,8 +1006,8 @@ Agonise two dragonflies
 I'm sketching all the time
 
 Cindy, am I dying?
-Stars, I’ll try defy them
-Dreaming, I’m not crying
+Stars, I'll try defy them
+Dreaming, I'm not crying
 Let me feel alive again
 
 Cindy said I'm faking
@@ -1039,13 +1016,13 @@ Hypochondriac
 Is romance in our waiting
 
 Just call me up
-It’s not that I am lost in love no more
+It's not that I am lost in love no more
 Still get stuck
 Lost in love no more
 
 Cindy, am I dying?
-Stars, I’ll try defy them
-Dreaming, I’m not crying
+Stars, I'll try defy them
+Dreaming, I'm not crying
 Let me feel alive again
 
 Cindy said I'm faking
@@ -1053,12 +1030,12 @@ These maladaptive daydreams
 Hypochondriac
 Is romance in our waiting`,
       FFWD: `What do you got to be nervous for?
-Do you think she’ll runaway?
+Do you think she'll runaway?
 What you feel like drowning for?
 Little louder when you say
 Timings all wrong
 Cry on shoulder
-Writing, I’m gone
+Writing, I'm gone
 Feeling sorry for myself
 
 Out of luck, giving up from signifiers
@@ -1075,17 +1052,17 @@ But the moments been feeling helpless
 Denying things you say
 
 Wish I could fast forward to New Years Eve
-Fireworks when you’re looking at me
+Fireworks when you're looking at me
 Want to fast forward all of the screams
 In my head
 
 What do you got to be nervous for?
-Do you think she’ll runaway?
+Do you think she'll runaway?
 What you feel like drowning for?
 Little louder when you say
 Timings all wrong
 Cry on my shoulder
-Writing, I’m gone
+Writing, I'm gone
 Feeling sorry for myself
 
 It's not like I've had love to judge
@@ -1097,17 +1074,17 @@ It's not like you shut it off
 One of these days you've got to come around
 
 Wish I could fast forward to New Years Eve
-Fireworks when you’re looking at me
+Fireworks when you're looking at me
 Want to fast forward all of the screams
 In my head
 
 What do you got to be nervous for?
-Do you think she’ll runaway?
+Do you think she'll runaway?
 What you feel like drowning for?
 Little louder when you say
 Timings all wrong
 Cry on shoulder
-Writing, I’m gone
+Writing, I'm gone
 Feeling sorry for myself
 
 (Yeah, yeah)
@@ -1143,7 +1120,7 @@ Doubt called round one
 A time I can't run
 
 I get depressed
-I don’t know why
+I don't know why
 Girlfriend, girlfriend
 I get depressed sometimes
 I'm hoping that you'll understand
@@ -1210,7 +1187,7 @@ Same year I met you
 Guess we've been in this for a while
 Of you my eyes never tire
 
-She can’t tell me how to live no more
+She can't tell me how to live no more
 
 Left your boyfriend with a scar
 In shattered pieces left my heart
@@ -1219,7 +1196,7 @@ Avoiding what was scaring us
 
 She can't tell me how to live no more
 
-How can I reply with more than i’m fine
+How can I reply with more than i'm fine
 When you project all your problems and perceptions on my life
 Damn life
 
@@ -1238,16 +1215,16 @@ All my happiness
 Yet neither of us were at our bests
 At rest
 
-I’ve never been love like I am with you
+I've never been love like I am with you
 But it's not enough to stay miserable
 
 I gotta get away, get away
 Girl nothing makes me sane
 I gotta get away
-There’s nothing else
+There's nothing else
 
 Ahh
-If I stick with it I know I’m gonna lose it
+If I stick with it I know I'm gonna lose it
 Know I'm gonna lose them
 
 Hair braided
@@ -1355,7 +1332,7 @@ Be there and true
 
 My love is strong
 Might not be enough
-But I’m young
+But I'm young
 And I can't find the words
 
 In my mind
@@ -1382,7 +1359,7 @@ Be there and true
 
 My love is strong
 Might not be enough
-But I’m young
+But I'm young
 And I can't find the words
 
 (Tell me I'm the one)
@@ -1398,7 +1375,7 @@ Skin liberation
 "Well can't we date then?"
 Know that nobody really got my back
 I'm feeling sick, out of breath
-I’m loving the stress
+I'm loving the stress
 Her lips on my neck
 See the colour of her iris
 Want to dive in
@@ -1410,7 +1387,7 @@ Everybody's tryna impress someone
 I put my hands in the air like it's nothing
 It's nothing new
 
-You're putting all your penny’s on a shot in the dark
+You're putting all your penny's on a shot in the dark
 Just wanna blink to feel alive without crashing your car
 It's all overrated
 It's all overrated
@@ -1418,7 +1395,7 @@ Imagine colours in sleep
 Lovers at peace
 I just want a world where I can wander nights forever with you
 
-Can’t decide if you’re making up your mind
+Can't decide if you're making up your mind
 Are you really one for walking
 Leaving here without him
 Leave him all alone
@@ -1428,26 +1405,26 @@ Making moves so risqué
 Honey just try to have no fear
 Have no fear
 
-It’s still like that
-You’re running back
+It's still like that
+You're running back
 Running back
 
 Everybody's tryna impress someone
 I put my hands in the air like it's nothing
 It's nothing new
 
-Feeling failure like it’s something you caught
+Feeling failure like it's something you caught
 Tryna to keep a secret but its in the way that you walk
 whats your motivator?
-Well i’ve been sick for the sun since 99
+Well i've been sick for the sun since 99
 Always feeling sporadic, is it visible in my eyes?
 
-It’s all a loop
+It's all a loop
 Live for dreams
 Your television leaking
 Only thing that fits me
 Saint Laurent jeans
-I’m just not happy from these things no more
+I'm just not happy from these things no more
 
 If you wanna stop feeling so empty
 Wanna stop feeling things are all out of reach
@@ -1455,7 +1432,7 @@ Go ask yourself if passions fell
 Wouldn't wanna go turning your back on real
 
 Where your head at?
-It’s raining on my bare back
+It's raining on my bare back
 People saying you're little unaware max
 Social butterflies only try when inspired
 Staying patient shooting stars in the sky
@@ -1535,19 +1512,19 @@ You said I stared
 I just laughed then left
 Overwhelmed I guess
 
-L’appel du vide
+L'appel du vide
 Look over the edge
 L'appel du vide
-Don’t wanna get upset
+Don't wanna get upset
 
 Stepping my way
-It’s not what you said
-It’s not how I play, baby
+It's not what you said
+It's not how I play, baby
 If you want more I can assure loyalty
-It’s all i do
+It's all i do
 Is wait for you
 But baby girl
-I’m not strong enough
+I'm not strong enough
 But I'm just not strong
 And I been waiting all long
 She took me down
@@ -1568,7 +1545,7 @@ And how I wanted you
 
 L'appel du vide
 Look over the edge
-L’appel du vide
+L'appel du vide
 Don't wanna get upset
 
 Voice memo of Ch'lita`,
@@ -1578,7 +1555,7 @@ Just might
 
 I don't wanna do it no more
 It's not that I'm antisocial
-I wonder what i’d have to do for it to be enough
+I wonder what i'd have to do for it to be enough
 For you to show your true heart
 I know how you feel
 Present from the break of dawn
@@ -1591,8 +1568,8 @@ Would i lose you?
 
 Clairo:
 Country side
-I’m by your side
-It’s so hard to get by
+I'm by your side
+It's so hard to get by
 Without you
 Without you
 
@@ -1603,9 +1580,9 @@ I miss you so much
 I need you
 It's not fair for those ones
 Who have a heavy heart
-But me it’s daylight here
-And there it’s dark
-Oh it’s dark
+But me it's daylight here
+And there it's dark
+Oh it's dark
 
 I know how you feel present from the break of dawn
 Ache from wanting
@@ -1617,9 +1594,9 @@ Would I lose you?
 
 So i guess I lost you
 Do do do do do dooo
-Oh love you’re so far away
+Oh love you're so far away
 I just want you back
-I don’t need a casket of love
+I don't need a casket of love
 Casket of love
 
 Do you wanna come round
@@ -1631,32 +1608,32 @@ We got a secret I can keep
 We got a lot to learn and leave
 And I won't follow anyone but you`,
       Goldeneye: `Goldeneye
-You’re all too nice
+You're all too nice
 
-Let’s fall in love
+Let's fall in love
 Done wasting time
 All I want, all on my mind
 Rush more than we've been so far
 Before we know our youth will be gone
 
-Don’t leave me lovelorn
-You’re all too nice
+Don't leave me lovelorn
+You're all too nice
 
-Let’s get married on a monday morning
+Let's get married on a monday morning
 Who can waste the weekend by
 How you smile so often
 First felt love for the world through your eyes
 
-Why’re you shrugging off romance
+Why're you shrugging off romance
 When I should just be your man
-I don’t know
-I wouldn’t be so alone
+I don't know
+I wouldn't be so alone
 
 Walking up
 Walking up
 Such an angel from above
 
-Don’t need nobody
+Don't need nobody
 I just need somebody to come home`,
       Daydreamer: `I don't understand fashion
 So I wear plain tees
@@ -1701,8 +1678,8 @@ I don't know I just get scared
 You're always on my mind
 But forever's not our time
 
-Until I realised I don’t understand myself
-And I’m not one to ask for help
+Until I realised I don't understand myself
+And I'm not one to ask for help
 I was lying on my bed
 So overcome with dread
 Do you know me?
