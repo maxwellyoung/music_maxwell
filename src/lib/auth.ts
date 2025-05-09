@@ -41,8 +41,11 @@ function isUser(obj: unknown): obj is User {
   );
 }
 
+// Initialize the Prisma adapter
+const prismaAdapter = PrismaAdapter(prisma);
+
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma),
+  adapter: prismaAdapter,
   providers: [
     CredentialsProvider({
       name: "credentials",

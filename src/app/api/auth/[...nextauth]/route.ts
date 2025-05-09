@@ -6,7 +6,22 @@ import type { NextRequest } from "next/server";
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
-const handler = NextAuth(authOptions);
+// Initialize NextAuth with explicit configuration
+const handler = NextAuth({
+  ...authOptions,
+  // Ensure we're using the correct adapter
+  adapter: authOptions.adapter,
+  // Ensure we're using the correct providers
+  providers: authOptions.providers,
+  // Ensure we're using the correct session strategy
+  session: authOptions.session,
+  // Ensure we're using the correct pages
+  pages: authOptions.pages,
+  // Ensure we're using the correct callbacks
+  callbacks: authOptions.callbacks,
+  // Add debug mode for development
+  debug: process.env.NODE_ENV === "development",
+});
 
 export async function GET(req: NextRequest): Promise<Response> {
   return handler(req) as Promise<Response>;
