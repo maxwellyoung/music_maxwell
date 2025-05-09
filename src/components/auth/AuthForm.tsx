@@ -8,6 +8,7 @@ import { useRouter } from "next/navigation";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { useToast } from "~/components/ui/use-toast";
+import Link from "next/link";
 
 type AuthMode = "login" | "register";
 
@@ -82,6 +83,30 @@ export default function AuthForm() {
     }
   };
 
+  const handleGoogleSignIn = async () => {
+    setIsLoading(true);
+    try {
+      const result = await signIn("google", { redirect: false });
+      if (result?.error) {
+        throw new Error(result.error);
+      }
+      toast({
+        title: "Signed in successfully",
+        description: "Welcome back!",
+      });
+      router.push("/forum");
+      router.refresh();
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to sign in with Google",
+        variant: "destructive",
+      });
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="flex items-center justify-center">
       <Card className="card animate-fade-in w-full max-w-md bg-background/80 shadow-2xl backdrop-blur-lg">
@@ -134,6 +159,16 @@ export default function AuthForm() {
                 placeholder="Password"
                 className="h-12 border-none bg-muted/50 text-lg font-medium placeholder:text-muted-foreground focus-visible:ring-1"
               />
+              {mode === "login" && (
+                <div className="text-right">
+                  <Link
+                    href="/forgot-password"
+                    className="text-sm font-medium text-primary hover:text-primary/80"
+                  >
+                    Forgot password?
+                  </Link>
+                </div>
+              )}
             </div>
 
             {error && (
@@ -192,6 +227,18 @@ export default function AuthForm() {
                 </button>
               </>
             )}
+          </div>
+
+          <Separator className="my-8" />
+
+          <div className="space-y-6">
+            <Button
+              onClick={handleGoogleSignIn}
+              disabled={isLoading}
+              className="h-12 w-full text-lg font-semibold shadow-md"
+            >
+              {isLoading ? "Signing in..." : "Sign in with Google"}
+            </Button>
           </div>
         </CardContent>
       </Card>
