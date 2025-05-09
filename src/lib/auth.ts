@@ -9,6 +9,7 @@ export interface User {
   id: string;
   email: string;
   name: string | null;
+  username?: string | null;
 }
 
 declare module "next-auth" {
@@ -22,6 +23,7 @@ declare module "next-auth/jwt" {
     id: string;
     email: string;
     name: string | null;
+    username?: string | null;
   }
 }
 
@@ -98,6 +100,7 @@ export const authOptions: NextAuthOptions = {
         token.id = user.id;
         token.email = user.email;
         token.name = user.name;
+        token.username = user.username ?? null;
       }
       return token;
     },
@@ -106,6 +109,7 @@ export const authOptions: NextAuthOptions = {
         session.user.id = token.id;
         session.user.email = token.email;
         session.user.name = token.name;
+        session.user.username = token.username ?? null;
       }
       return session;
     },
