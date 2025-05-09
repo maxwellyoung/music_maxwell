@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
 
 export default function ChooseUsernamePage() {
-  const [username, setUsername] = useState("");
+  const [name, setName] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const router = useRouter();
@@ -18,7 +18,7 @@ export default function ChooseUsernamePage() {
     const res = await fetch("/api/auth/set-username", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ username }),
+      body: JSON.stringify({ name }),
     });
     if (res.ok) {
       router.push("/forum");
@@ -35,9 +35,9 @@ export default function ChooseUsernamePage() {
         <h1 className="text-2xl font-bold">Choose a Username</h1>
         <input
           type="text"
-          value={username}
+          value={name}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setUsername(e.target.value)
+            setName(e.target.value)
           }
           required
           minLength={3}

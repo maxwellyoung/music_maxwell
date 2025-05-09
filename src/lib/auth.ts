@@ -66,7 +66,7 @@ export const authOptions: NextAuthOptions = {
           },
         });
 
-        if (!user || !user.password) {
+        if (!user?.password) {
           return null;
         }
 
@@ -79,7 +79,7 @@ export const authOptions: NextAuthOptions = {
           return null;
         }
 
-        const { password, ...userWithoutPassword } = user;
+        const { password: _password, ...userWithoutPassword } = user;
         return userWithoutPassword;
       },
     }),

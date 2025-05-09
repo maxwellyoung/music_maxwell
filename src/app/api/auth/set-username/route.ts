@@ -8,12 +8,12 @@ export async function POST(request: Request) {
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
-  const { username } = await request.json();
-  if (!username || typeof username !== "string" || username.length < 3) {
+  const { name } = await request.json();
+  if (!name || typeof name !== "string" || name.length < 3) {
     return NextResponse.json({ error: "Invalid username" }, { status: 400 });
   }
-  // Check if username is taken
-  const existing = await prisma.user.findUnique({ where: { username } });
+  // Check if name is taken
+  const existing = await prisma.user.findFirst({ where: { name } });
   if (existing) {
     return NextResponse.json(
       { error: "Username already taken" },
@@ -23,7 +23,7 @@ export async function POST(request: Request) {
   // Update user
   await prisma.user.update({
     where: { id: session.user.id },
-    data: { username },
+    data: { name },
   });
   return NextResponse.json({ success: true });
 }
