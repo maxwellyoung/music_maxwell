@@ -6,6 +6,15 @@ import { authOptions } from "~/lib/auth";
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
+// Add logging for environment variables
+console.log("[NextAuth] Environment check:", {
+  hasNextAuthUrl: !!process.env.NEXTAUTH_URL,
+  hasNextAuthSecret: !!process.env.NEXTAUTH_SECRET,
+  hasGoogleClientId: !!process.env.GOOGLE_CLIENT_ID,
+  hasGoogleClientSecret: !!process.env.GOOGLE_CLIENT_SECRET,
+  nodeEnv: process.env.NODE_ENV,
+});
+
 // Create and export the handler
 const handler = NextAuth(authOptions);
 

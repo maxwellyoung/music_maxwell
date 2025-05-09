@@ -55,38 +55,48 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
+        console.log("[NextAuth] Attempting to authorize credentials");
         if (!credentials?.email || !credentials?.password) {
+          console.log("[NextAuth] Missing credentials");
           return null;
         }
 
-        const user = await prisma.user.findUnique({
-          where: {
-            email: credentials.email,
-          },
-          select: {
-            id: true,
-            email: true,
-            name: true,
-            password: true,
-          },
-        });
+        try {
+          const user = await prisma.user.findUnique({
+            where: {
+              email: credentials.email,
+            },
+            select: {
+              id: true,
+              email: true,
+              name: true,
+              password: true,
+            },
+          });
 
-        if (!user?.password) {
+          if (!user?.password) {
+            console.log("[NextAuth] User not found or no password");
+            return null;
+          }
+
+          const isPasswordValid = await compare(
+            credentials.password,
+            user.password,
+          );
+
+          if (!isPasswordValid) {
+            console.log("[NextAuth] Invalid password");
+            return null;
+          }
+
+          console.log("[NextAuth] Authorization successful");
+          // eslint-disable-next-line @typescript-eslint/no-unused-vars
+          const { password, ...userWithoutPassword } = user;
+          return userWithoutPassword;
+        } catch (error) {
+          console.error("[NextAuth] Authorization error:", error);
           return null;
         }
-
-        const isPasswordValid = await compare(
-          credentials.password,
-          user.password,
-        );
-
-        if (!isPasswordValid) {
-          return null;
-        }
-
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        const { password, ...userWithoutPassword } = user;
-        return userWithoutPassword;
       },
     }),
     GoogleProvider({
@@ -103,6 +113,7 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     async jwt({ token, user }) {
+      console.log("[NextAuth] JWT Callback - Token:", token);
       if (user && isUser(user)) {
         token.id = user.id;
         token.email = user.email;
@@ -118,6 +129,7 @@ export const authOptions: NextAuthOptions = {
       session: Session;
       token: JWT;
     }): Promise<Session> {
+      console.log("[NextAuth] Session Callback - Token:", token);
       if (session.user) {
         session.user.id = token.id;
         session.user.email = token.email;
@@ -128,6 +140,6 @@ export const authOptions: NextAuthOptions = {
     },
   },
   secret: process.env.NEXTAUTH_SECRET,
-  // Disable debug mode during build
-  debug: false,
+  // Enable debug mode during build to see more detailed logs
+  debug: true,
 };
