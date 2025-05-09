@@ -115,6 +115,41 @@ const getYouTubeVideoId = (url: string | undefined): string | null => {
   return id && id.length === 11 ? id : null;
 };
 
+// Update the linkifyText function to return a string
+const linkifyText = (text: string) => {
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
+  return text
+    .split(urlRegex)
+    .map((part, index) => {
+      if (part.match(urlRegex)) {
+        return `<a href="${part}" target="_blank" rel="noopener noreferrer" class="text-primary hover:underline">${part}</a>`;
+      }
+      return part;
+    })
+    .join("");
+};
+
+// Add this utility function after the getYouTubeVideoId function
+const embedSoundCloud = (text: string) => {
+  const soundcloudRegex = /(https?:\/\/soundcloud\.com\/[^\s]+)/g;
+  return text.split(soundcloudRegex).map((part, index) => {
+    if (part.match(soundcloudRegex)) {
+      return (
+        <iframe
+          key={index}
+          width="100%"
+          height="166"
+          scrolling="no"
+          frameBorder="no"
+          allow="autoplay"
+          src={`https://w.soundcloud.com/player/?url=${encodeURIComponent(part)}&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true`}
+        />
+      );
+    }
+    return part;
+  });
+};
+
 // YouTube Thumbnail component
 const YouTubeThumbnail = ({
   videoUrl,
@@ -600,7 +635,9 @@ const SongDrawer = ({
 
                         <div className="scrollbar-thin scrollbar-track-zinc-900 scrollbar-thumb-zinc-700 max-h-[35vh] overflow-y-auto rounded-lg bg-zinc-900/50 p-3 font-mono text-sm leading-relaxed tracking-wide text-zinc-300 sm:max-h-[40vh] sm:p-4">
                           <div className="whitespace-pre-wrap text-left">
-                            {formatText(getLyrics())}
+                            {embedSoundCloud(
+                              linkifyText(formatText(getLyrics())),
+                            )}
                           </div>
                         </div>
                       </div>
@@ -613,7 +650,9 @@ const SongDrawer = ({
                         </h3>
                         <div className="scrollbar-thin scrollbar-track-zinc-900 scrollbar-thumb-zinc-700 max-h-[25vh] overflow-y-auto rounded-lg bg-zinc-900/50 p-3 font-mono text-sm leading-relaxed text-zinc-400 sm:max-h-[30vh] sm:p-4">
                           <div className="whitespace-pre-wrap text-left">
-                            {formatText(song.credits)}
+                            {embedSoundCloud(
+                              linkifyText(formatText(song.credits)),
+                            )}
                           </div>
                         </div>
                       </div>
