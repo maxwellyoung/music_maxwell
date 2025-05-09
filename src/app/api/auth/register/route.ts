@@ -9,6 +9,9 @@ const registerSchema = z.object({
   name: z.string().min(2),
 });
 
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
+
 export async function POST(request: Request) {
   try {
     const data: unknown = await request.json();
