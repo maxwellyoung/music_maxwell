@@ -41,8 +41,9 @@ function isUser(obj: unknown): obj is User {
   );
 }
 
-// Initialize the Prisma adapter
-const prismaAdapter = PrismaAdapter(prisma);
+// Initialize the Prisma adapter only in production
+const prismaAdapter =
+  process.env.NODE_ENV === "production" ? PrismaAdapter(prisma) : undefined;
 
 // Create auth options with minimal configuration for build
 export const authOptions: NextAuthOptions = {
@@ -55,6 +56,12 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
+        // Skip authorization during build
+        if (process.env.NODE_ENV !== "production") {
+          console.log("[NextAuth] Skipping authorization during build");
+          return null;
+        }
+
         console.log("[NextAuth] Attempting to authorize credentials");
         if (!credentials?.email || !credentials?.password) {
           console.log("[NextAuth] Missing credentials");
@@ -113,6 +120,9 @@ export const authOptions: NextAuthOptions = {
   },
   callbacks: {
     async jwt({ token, user }) {
+      if (process.env.NODE_ENV !== "production") {
+        return token;
+      }
       console.log("[NextAuth] JWT Callback - Token:", token);
       if (user && isUser(user)) {
         token.id = user.id;
@@ -129,6 +139,9 @@ export const authOptions: NextAuthOptions = {
       session: Session;
       token: JWT;
     }): Promise<Session> {
+      if (process.env.NODE_ENV !== "production") {
+        return session;
+      }
       console.log("[NextAuth] Session Callback - Token:", token);
       if (session.user) {
         session.user.id = token.id;
@@ -140,6 +153,6 @@ export const authOptions: NextAuthOptions = {
     },
   },
   secret: process.env.NEXTAUTH_SECRET,
-  // Enable debug mode during build to see more detailed logs
-  debug: true,
+  // Only enable debug mode in production
+  debug: process.env.NODE_ENV === "production",
 };
