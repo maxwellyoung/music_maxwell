@@ -1,17 +1,10 @@
-/* eslint-disable */
-// @ts-nocheck
+/* eslint-disable react/no-unescaped-entities */
 import { Html, Body, Container, Text, Link } from "@react-email/components";
 
 export default function ResetPasswordEmail({ url }: { url: string }) {
   return (
     <Html>
-      <Body
-        style={{
-          background: "#111",
-          color: "#eee",
-          fontFamily: "Inter, sans-serif",
-        }}
-      >
+      <Body style={{ background: "#111", color: "#eee", fontFamily: "Inter" }}>
         <Container style={{ padding: "24px" }}>
           <Text style={{ fontSize: "18px", marginBottom: "16px" }}>
             Forgot your password?
@@ -32,7 +25,7 @@ export default function ResetPasswordEmail({ url }: { url: string }) {
             Reset password
           </Link>
           <Text style={{ marginTop: "32px", fontSize: "12px", opacity: 0.6 }}>
-            If you didn't request this, just ignore me—nothing changes.
+            If you didn&apos;t request this, just ignore me—nothing changes.
           </Text>
         </Container>
       </Body>
