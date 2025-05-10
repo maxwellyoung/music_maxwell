@@ -8,17 +8,17 @@ export const runtime = "nodejs";
 
 // Handle GET with dynamic imports to avoid build-time bundling
 export async function GET(request: Request) {
-  console.log("[Auth API] GET invoked - NEXT_PHASE:", process.env.NEXT_PHASE);
-  const { default: NextAuth } = await import("next-auth");
+  // Use NextAuth's App Router entrypoint to avoid core dependencies
+  const { default: NextAuth } = await import("next-auth/next");
   const { authOptions } = await import("~/lib/auth");
-  const handler = NextAuth(authOptions);
-  return handler(request);
+  // @ts-expect-error Ignoring cross-package AuthOptions type mismatch
+  return NextAuth(authOptions)(request);
 }
 
 // Handle POST with dynamic imports
 export async function POST(request: Request) {
-  const { default: NextAuth } = await import("next-auth");
+  const { default: NextAuth } = await import("next-auth/next");
   const { authOptions } = await import("~/lib/auth");
-  const handler = NextAuth(authOptions);
-  return handler(request);
+  // @ts-expect-error Ignoring cross-package AuthOptions type mismatch
+  return NextAuth(authOptions)(request);
 }
