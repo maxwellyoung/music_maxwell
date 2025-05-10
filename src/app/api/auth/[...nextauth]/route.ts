@@ -3,19 +3,17 @@
 import NextAuth from "next-auth";
 import { authOptions } from "~/lib/auth";
 
-// Force dynamic behavior and use edge runtime
-export const dynamic = "force-dynamic";
+// Use edge runtime
 export const runtime = "edge";
 
-// Create a handler that returns appropriate response based on environment
-const createHandler = () => {
-  if (process.env.NEXT_PHASE === "build") {
-    return () => new Response(null, { status: 204 });
-  }
-  return NextAuth(authOptions);
-};
+export async function GET(request: Request) {
+  console.log("[Auth API] GET invoked - NODE_ENV:", process.env.NODE_ENV);
+  const handler = NextAuth(authOptions);
+  return handler(request);
+}
 
-// Export the handlers
-const handler = createHandler();
-export const GET = handler;
-export const POST = handler;
+export async function POST(request: Request) {
+  console.log("[Auth API] POST invoked - NODE_ENV:", process.env.NODE_ENV);
+  const handler = NextAuth(authOptions);
+  return handler(request);
+}
