@@ -8,6 +8,13 @@ import Navbar from "../components/Navbar";
 export const metadata: Metadata = {
   title: "Maxwell Young",
   description: "Alternative pop artists",
+  openGraph: {
+    images: ["/icons/ss.webp"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    images: ["/icons/ss.webp"],
+  },
 };
 
 export default function RootLayout({
