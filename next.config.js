@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-return */
+
 /**
  * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially useful
  * for Docker builds.
@@ -46,6 +48,15 @@ const nextConfig = {
     serverActions: {
       bodySizeLimit: "2mb",
     },
+  },
+  // Ensure Node.js built-ins like 'crypto' are not bundled during build
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
+  webpack: (config, { isServer }) => {
+    config.resolve = config.resolve || {};
+    config.resolve.fallback = config.resolve.fallback || {};
+    // Tell Webpack not to polyfill 'crypto'; Node.js will provide it at runtime
+    config.resolve.fallback.crypto = false;
+    return config;
   },
 };
 
