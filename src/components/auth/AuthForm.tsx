@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Separator } from "~/components/ui/separator";
 import { signIn } from "next-auth/react";
@@ -9,6 +10,7 @@ import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
 import { useToast } from "~/components/ui/use-toast";
 import Link from "next/link";
+import { Spinner } from "~/components/ui/Spinner";
 
 type AuthMode = "login" | "register";
 
@@ -108,8 +110,13 @@ export default function AuthForm() {
   };
 
   return (
-    <div className="flex items-center justify-center">
-      <Card className="card animate-fade-in w-full max-w-md bg-background/80 shadow-2xl backdrop-blur-lg">
+    <motion.div
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+      className="flex items-center justify-center"
+    >
+      <Card className="w-full max-w-md bg-background/80 shadow-2xl backdrop-blur-lg">
         <CardHeader>
           <CardTitle className="mb-2 text-center text-3xl font-bold tracking-tight">
             {mode === "login" ? "Welcome Back" : "Create Account"}
@@ -189,13 +196,18 @@ export default function AuthForm() {
               disabled={isLoading}
               className="h-12 w-full text-lg font-semibold shadow-md"
             >
-              {isLoading
-                ? mode === "login"
-                  ? "Signing in..."
-                  : "Creating..."
-                : mode === "login"
-                  ? "Sign In"
-                  : "Create Account"}
+              {isLoading ? (
+                <div className="flex items-center justify-center">
+                  <Spinner size={16} />
+                  <span className="ml-2">
+                    {mode === "login" ? "Signing in..." : "Creating..."}
+                  </span>
+                </div>
+              ) : mode === "login" ? (
+                "Sign In"
+              ) : (
+                "Create Account"
+              )}
             </Button>
           </form>
 
@@ -242,6 +254,6 @@ export default function AuthForm() {
           </div>
         </CardContent>
       </Card>
-    </div>
+    </motion.div>
   );
 }

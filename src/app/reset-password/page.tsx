@@ -6,6 +6,8 @@ import { Button } from "~/components/ui/button";
 import { useState } from "react";
 import { useToast } from "~/components/ui/use-toast";
 import Link from "next/link";
+import { motion } from "framer-motion";
+import { Spinner } from "~/components/ui/Spinner";
 
 export default function ResetPasswordPage({
   searchParams,
@@ -14,19 +16,26 @@ export default function ResetPasswordPage({
 }) {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center px-4">
-      <Card className="card animate-fade-in w-full max-w-md bg-background/80 shadow-2xl backdrop-blur-lg">
-        <CardHeader>
-          <CardTitle className="mb-2 text-center text-3xl font-bold tracking-tight">
-            Reset Password
-          </CardTitle>
-          <p className="mb-2 text-center text-base font-normal text-muted-foreground">
-            Enter your new password below.
-          </p>
-        </CardHeader>
-        <CardContent>
-          <ResetPasswordForm token={searchParams.token} />
-        </CardContent>
-      </Card>
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.4 }}
+        className="w-full max-w-md"
+      >
+        <Card className="bg-background/80 shadow-2xl backdrop-blur-lg">
+          <CardHeader>
+            <CardTitle className="mb-2 text-center text-3xl font-bold tracking-tight">
+              Reset Password
+            </CardTitle>
+            <p className="mb-2 text-center text-base font-normal text-muted-foreground">
+              Enter your new password below.
+            </p>
+          </CardHeader>
+          <CardContent>
+            <ResetPasswordForm token={searchParams.token} />
+          </CardContent>
+        </Card>
+      </motion.div>
     </main>
   );
 }
@@ -132,7 +141,14 @@ function ResetPasswordForm({ token }: { token?: string }) {
         disabled={isLoading}
         className="h-12 w-full text-lg font-semibold shadow-md"
       >
-        {isLoading ? "Resetting..." : "Reset Password"}
+        {isLoading ? (
+          <div className="flex items-center justify-center">
+            <Spinner size={16} />
+            <span className="ml-2">Resetting...</span>
+          </div>
+        ) : (
+          "Reset Password"
+        )}
       </Button>
     </form>
   );
