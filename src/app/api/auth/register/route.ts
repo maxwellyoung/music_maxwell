@@ -41,6 +41,12 @@ const limiter = rateLimit({
   uniqueTokenPerInterval: 500,
 });
 
+// Handle GET requests during build & runtime
+export async function GET() {
+  // Return a no-content response to satisfy build-time data collection
+  return new Response(null, { status: 204 });
+}
+
 // Create a handler that properly handles both build and runtime
 export async function POST(request: Request) {
   // During build time, return a simple response
