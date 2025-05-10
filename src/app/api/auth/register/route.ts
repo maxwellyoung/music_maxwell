@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { hash } from "bcryptjs";
-import { prisma } from "~/lib/prisma";
+import { PHASE_PRODUCTION_BUILD } from "next/constants";
 import { z } from "zod";
 import { rateLimit } from "../../../../lib/rate-limit";
 
@@ -52,12 +52,15 @@ export async function POST(request: Request) {
   // During build time, return a simple response
   if (
     process.env.NODE_ENV === "development" ||
-    process.env.NEXT_PHASE === "build"
+    process.env.NEXT_PHASE === PHASE_PRODUCTION_BUILD
   ) {
     return new Response(null, { status: 204 });
   }
 
   try {
+    // Import Prisma only at runtime to avoid build-time errors
+    const { prisma } = await import("~/lib/prisma");
+
     // Rate limiting
     const ip = request.headers.get("x-forwarded-for") ?? "127.0.0.1";
     const { success } = await limiter.check(5, ip); // 5 requests per hour
