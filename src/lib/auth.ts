@@ -43,7 +43,8 @@ function isUser(obj: unknown): obj is User {
 
 // Create auth options with proper environment variable handling
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma),
+  adapter:
+    process.env.NEXT_PHASE === "build" ? undefined : PrismaAdapter(prisma),
   providers: [
     CredentialsProvider({
       name: "credentials",
@@ -52,6 +53,10 @@ export const authOptions: NextAuthOptions = {
         password: { label: "Password", type: "password" },
       },
       async authorize(credentials) {
+        if (process.env.NEXT_PHASE === "build") {
+          return null;
+        }
+
         if (!credentials?.email || !credentials?.password) {
           return null;
         }
