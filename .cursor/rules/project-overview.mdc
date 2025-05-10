@@ -1,0 +1,30 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Project Overview
+
+This is a Next.js application with TypeScript, Tailwind CSS, and Prisma. The project follows a modern web application architecture with the following key components:
+
+## Directory Structure
+- `src/app/`: Contains the main application routes and pages using Next.js 13+ App Router
+- `src/components/`: Reusable UI components
+- `src/lib/`: Utility functions and shared logic
+- `src/types/`: TypeScript type definitions
+- `prisma/`: Database schema and migrations
+- `public/`: Static assets
+
+## Key Files
+- [src/app/layout.tsx](mdc:src/app/layout.tsx): Root layout component
+- [src/app/page.tsx](mdc:src/app/page.tsx): Home page component
+- [src/middleware.ts](mdc:src/middleware.ts): Next.js middleware for request handling
+- [src/types.ts](mdc:src/types.ts): Global type definitions
+- [src/env.js](mdc:src/env.js): Environment configuration
+
+## Technology Stack
+- Next.js for the frontend framework
+- TypeScript for type safety
+- Tailwind CSS for styling
+- Prisma for database ORM
+- ESLint and Prettier for code quality

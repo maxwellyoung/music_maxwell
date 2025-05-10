@@ -1,0 +1,29 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Authentication Flow Guide
+
+The application's authentication is built using NextAuth and custom API routes.
+
+- NextAuth configuration: [src/lib/auth.ts](mdc:src/lib/auth.ts)
+- NextAuth App Router endpoint: [src/app/api/auth/[...nextauth]/route.ts](mdc:src/app/api/auth/[...nextauth]/route.ts)
+- Registration API route: [src/app/api/auth/register/route.ts](mdc:src/app/api/auth/register/route.ts)
+- Set-username API route: [src/app/api/auth/set-username/route.ts](mdc:src/app/api/auth/set-username/route.ts)
+- Auth form component: [src/components/auth/AuthForm.tsx](mdc:src/components/auth/AuthForm.tsx)
+- Sign-in page: [src/app/auth/signin/page.tsx](mdc:src/app/auth/signin/page.tsx)
+- Navbar sign-in/out logic: [src/components/Navbar.tsx](mdc:src/components/Navbar.tsx)
+
+## Environment Variables
+
+Ensure the following are defined in your environment:
+
+- `NEXTAUTH_SECRET`
+- `GOOGLE_CLIENT_ID`
+- `GOOGLE_CLIENT_SECRET`
+
+## Build-time Handling
+
+- Auth API routes use the Node.js runtime to allow built-in modules (e.g., `crypto`).
+- During build (`NEXT_PHASE === 'build'`), the routes return a `204 No Content` response to avoid data collection errors.

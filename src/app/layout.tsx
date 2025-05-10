@@ -1,73 +1,13 @@
 import "~/styles/globals.css";
-import { GeistSans } from "geist/font/sans";
-import { Analytics } from "@vercel/analytics/react";
 import { type Metadata } from "next";
+import { SessionProvider } from "~/components/providers/SessionProvider";
+import { Toaster } from "~/components/ui/toaster";
+import Footer from "~/components/Footer";
+import Navbar from "../components/Navbar";
 
 export const metadata: Metadata = {
-  title: {
-    default: "Maxwell Young | Singer-Songwriter",
-    template: "%s | Maxwell Young",
-  },
-  description:
-    "Freewheelin' by Maxwell Young - Out June 7. Stream now on all major platforms.",
-  keywords: [
-    "Maxwell Young",
-    "Freewheelin'",
-    "Singer-Songwriter",
-    "New Zealand Musician",
-  ],
-  authors: [{ name: "Maxwell Young" }],
-  creator: "Maxwell Young",
-  publisher: "Maxwell Young",
-  formatDetection: {
-    email: false,
-    address: false,
-    telephone: false,
-  },
-  metadataBase: new URL("https://maxwellyoung.info"),
-  alternates: {
-    canonical: "/",
-  },
-  openGraph: {
-    title: "Maxwell Young | Freewheelin'",
-    description:
-      "Freewheelin' by Maxwell Young - Out June 7. Stream now on all major platforms.",
-    url: "https://maxwellyoung.com",
-    siteName: "Maxwell Young",
-    images: [
-      {
-        url: "https://maxwellyoung.com/og-image.jpg", // Replace with your actual OG image
-        width: 1200,
-        height: 630,
-        alt: "Maxwell Young - Freewheelin'",
-      },
-    ],
-    locale: "en_US",
-    type: "website",
-  },
-  twitter: {
-    card: "summary_large_image",
-    title: "Maxwell Young | Freewheelin'",
-    description:
-      "Freewheelin' by Maxwell Young - Out June 7. Stream now on all major platforms.",
-    creator: "@internetmaxwell",
-    images: ["https://maxwellyoung.com/twitter-image.jpg"], // Replace with your actual Twitter card image
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-    },
-  },
-  icons: [
-    { rel: "icon", url: "/favicon.ico" },
-    { rel: "apple-touch-icon", url: "/apple-touch-icon.png" },
-  ],
+  title: "Maxwell Young",
+  description: "Alternative pop artists",
 };
 
 export default function RootLayout({
@@ -76,14 +16,35 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${GeistSans.variable}`}>
+    <html lang="en">
       <head>
-        <link rel="manifest" href="/manifest.json" />
-        <meta name="theme-color" content="#ffffff" />
+        <link rel="icon" href="/icons/favicon.ico" />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="32x32"
+          href="/icons/favicon-32x32.png"
+        />
+        <link
+          rel="icon"
+          type="image/png"
+          sizes="16x16"
+          href="/icons/favicon-16x16.png"
+        />
+        <link
+          rel="apple-touch-icon"
+          sizes="180x180"
+          href="/icons/apple-touch-icon.png"
+        />
+        <link rel="manifest" href="/icons/site.webmanifest" />
       </head>
-      <body className="overflow-x-hidden">
-        {children}
-        <Analytics />
+      <body className="flex min-h-screen flex-col overflow-x-hidden">
+        <SessionProvider>
+          <Navbar />
+          <main className="flex-1">{children}</main>
+          <Footer />
+          <Toaster />
+        </SessionProvider>
       </body>
     </html>
   );

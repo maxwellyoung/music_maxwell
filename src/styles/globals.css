@@ -4,16 +4,20 @@
 
 @layer base {
   :root {
-    --background: 0 0% 0%;
-    --foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 240 5.9% 10%;
-    --secondary: 240 4.8% 95.9%;
-    --secondary-foreground: 240 5.9% 10%;
-    --border: 240 5.9% 90%;
-    --input: 240 5.9% 90%;
-    --ring: 240 10% 3.9%;
-    --radius: 0.5rem;
+    --background: 220 28% 97%; /* Soft Gray (Pantone 7541 C) */
+    --foreground: 220 100% 6%; /* Rich Black (Pantone Black 6 C) */
+    --primary: 210 100% 60%; /* Electric Blue (Pantone 2727 C) #2D9CFF */
+    --primary-foreground: 0 0% 100%;
+    --accent: 320 80% 60%; /* Hot Pink (Pantone 226 C) #E93CAC */
+    --accent-foreground: 0 0% 100%;
+    --highlight: 24 100% 50%; /* Vivid Orange (Pantone 1655 C) #FF5B00 */
+    --highlight-foreground: 0 0% 100%;
+    --secondary: 80 80% 60%; /* Lime Green (Pantone 2290 C) #A8E600 */
+    --secondary-foreground: 220 100% 6%;
+    --border: 220 28% 90%;
+    --input: 220 28% 90%;
+    --ring: 210 100% 60%;
+    --radius: 0.75rem;
   }
 
   .dark {
@@ -46,7 +50,73 @@
   }
 
   body {
-    @apply bg-background font-sans text-foreground;
+    @apply min-h-screen font-sans antialiased;
+    background: linear-gradient(
+        120deg,
+        hsl(var(--primary) / 0.08) 0%,
+        hsl(var(--accent) / 0.08) 100%
+      ),
+      hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-size: 18px;
+    line-height: 1.7;
+    letter-spacing: -0.01em;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-bold;
+    color: hsl(var(--foreground));
+    letter-spacing: -0.02em;
+  }
+
+  h1 {
+    font-size: 2.8rem;
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+  }
+  h2 {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+  }
+  h3 {
+    font-size: 1.4rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .container {
+    @apply mx-auto max-w-3xl px-6;
+  }
+
+  .card {
+    @apply rounded-2xl border shadow-lg;
+    background: hsl(var(--background) / 0.95);
+    border-color: hsl(var(--border));
+    transition:
+      box-shadow 0.2s,
+      border-color 0.2s;
+  }
+  .card:hover {
+    box-shadow: 0 8px 32px 0 hsl(var(--primary) / 0.1);
+    border-color: hsl(var(--primary));
+  }
+
+  input,
+  textarea {
+    @apply rounded-lg border border-input bg-background px-4 py-3 text-base text-foreground shadow-sm transition focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary;
+  }
+
+  /* button {
+    @apply rounded-lg border-none bg-primary px-6 py-3 font-semibold text-primary-foreground shadow transition hover:bg-accent focus:outline-none focus:ring-2 focus:ring-primary;
+  } */
+
+  ::selection {
+    background: hsl(var(--highlight));
+    color: hsl(var(--highlight-foreground));
   }
 
   * {
@@ -58,12 +128,9 @@
   font-family: "ReenieBeanie", sans-serif;
 }
 
-body,
-html {
+html,
+body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
-  ::selection {
-    background: #f02d42;
-  }
 }

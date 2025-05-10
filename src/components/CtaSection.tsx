@@ -102,7 +102,6 @@ export default function CTASection() {
 
       <div className="relative z-10 flex min-h-screen flex-col items-center justify-center px-4 text-center text-white">
         <div className="flex flex-col items-center space-y-4">
-          {" "}
           <Image
             src="/IMG_2094.webp"
             alt="Maxwell Young"
@@ -111,7 +110,7 @@ export default function CTASection() {
             className="rotate-90 p-6"
           />
           <LetterSwapPingPong
-            label="mixtape 2025"
+            label="Maxwell Young album 2025"
             staggerFrom="center"
             className="font-pantasia mb-12 max-w-2xl text-xl md:text-2xl"
           />

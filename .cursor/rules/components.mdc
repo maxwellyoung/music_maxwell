@@ -1,0 +1,39 @@
+---
+description:
+globs:
+alwaysApply: false
+---
+# Component Architecture
+
+The application uses a component-based architecture with reusable UI components stored in the `src/components` directory.
+
+## Component Organization
+Components are organized by their functionality and scope:
+- `ui/`: Basic UI components (buttons, inputs, etc.)
+- `layout/`: Layout components (headers, footers, etc.)
+- `features/`: Feature-specific components
+- `shared/`: Shared components used across multiple features
+
+## Component Guidelines
+1. Each component should be in its own directory with:
+   - Component file (e.g., `Button.tsx`)
+   - Styles (if needed)
+   - Tests (if applicable)
+   - Types (if complex)
+
+2. Components should:
+   - Be typed with TypeScript
+   - Use Tailwind CSS for styling
+   - Follow React best practices
+   - Be documented with JSDoc comments
+
+## Component Usage
+Components can be imported from their respective directories. For example:
+```typescript
+import { Button } from '@/components/ui/button'
+```
+
+## State Management
+- Use React hooks for local state
+- Consider context for shared state
+- Use server components where possible for better performance

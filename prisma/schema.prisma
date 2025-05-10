@@ -1,0 +1,68 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id            String    @id @default(cuid())
+  name          String?
+  email         String    @unique
+  password      String?
+  username  String?  @unique
+  role          String    @default("user")
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  topics        Topic[]
+  replies       Reply[]
+  reports       Report[]   @relation("UserReports")
+  resetTokens   PasswordResetToken[]
+}
+
+model Topic {
+  id        String    @id @default(cuid())
+  title     String
+  content   String
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  author    User      @relation(fields: [authorId], references: [id])
+  authorId  String
+  replies   Reply[]
+}
+
+model Reply {
+  id        String   @id @default(cuid())
+  content   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  author    User     @relation(fields: [authorId], references: [id])
+  authorId  String
+  topic     Topic    @relation(fields: [topicId], references: [id])
+  topicId   String
+  reports     Report[]   @relation("ReplyReports")
+}
+
+model Report {
+  id         String   @id @default(cuid())
+  reply      Reply    @relation("ReplyReports", fields: [replyId], references: [id])
+  replyId    String
+  reporter   User     @relation("UserReports", fields: [reporterId], references: [id])
+  reporterId String
+  reason     String
+  createdAt  DateTime @default(now())
+}
+
+model PasswordResetToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expires   DateTime
+  createdAt DateTime @default(now())
+
+  @@index([token])
+  @@index([userId])
+} 
