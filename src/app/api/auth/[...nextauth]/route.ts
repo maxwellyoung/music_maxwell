@@ -11,7 +11,7 @@ export async function GET(request: Request) {
   // Use NextAuth's App Router entrypoint to avoid core dependencies
   const { default: NextAuth } = await import("next-auth/next");
   const { authOptions } = await import("~/lib/auth");
-  // @ts-expect-error Ignoring cross-package AuthOptions type mismatch
+  // @ts-expect-error Argument type mismatch across nested next-auth modules
   return NextAuth(authOptions)(request);
 }
 
@@ -19,6 +19,6 @@ export async function GET(request: Request) {
 export async function POST(request: Request) {
   const { default: NextAuth } = await import("next-auth/next");
   const { authOptions } = await import("~/lib/auth");
-  // @ts-expect-error Ignoring cross-package AuthOptions type mismatch
+  // @ts-expect-error Argument type mismatch across nested next-auth modules
   return NextAuth(authOptions)(request);
 }
