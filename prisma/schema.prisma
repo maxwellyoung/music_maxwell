@@ -12,7 +12,7 @@ model User {
   name          String?
   email         String    @unique
   image         String?
-  emailVerified DateTime?o
+  emailVerified DateTime?
   password      String?
   username      String?   @unique
   role          String    @default("user")

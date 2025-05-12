@@ -14,6 +14,7 @@ import ConfirmModal from "./ConfirmModal";
 import { useToast } from "~/components/ui/use-toast";
 import React from "react";
 import { Trash, Flag } from "phosphor-react";
+import Image from "next/image";
 
 // Type for a reply
 type Reply = {
@@ -289,11 +290,13 @@ export default function RepliesList({ replies }: { replies: Reply[] }) {
               <CardTitle className="flex items-center gap-2 text-lg font-semibold transition-colors group-hover:text-primary">
                 {reply.author?.name ?? "Unknown"}
                 {reply.author?.role === "admin" && (
-                  <img
+                  <Image
                     src="/icons/star.svg"
                     alt="Admin"
                     title="Admin"
-                    className="ml-1 inline-block h-5 w-5"
+                    width={20}
+                    height={20}
+                    className="ml-1 inline-block"
                   />
                 )}
               </CardTitle>
