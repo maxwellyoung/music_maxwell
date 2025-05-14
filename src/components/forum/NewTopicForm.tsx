@@ -62,18 +62,18 @@ export function NewTopicForm() {
 
   return (
     <div className="flex min-h-[80vh] items-center justify-center transition-all duration-500">
-      <Card className="card animate-fade-in w-full max-w-xl bg-background/80 p-10 shadow-xl backdrop-blur-lg">
-        <h1 className="mb-2 text-center text-3xl font-bold tracking-tight">
+      <Card className="card animate-fade-in w-full max-w-xl bg-background/80 p-4 shadow-xl backdrop-blur-lg transition-all duration-300 sm:p-6 md:p-10">
+        <h1 className="mb-2 text-center text-2xl font-bold tracking-tight sm:text-3xl">
           Start a New Discussion
         </h1>
-        <p className="mb-8 text-center text-base text-muted-foreground">
+        <p className="mb-8 text-center text-sm text-muted-foreground sm:text-base">
           Share your thoughts, ask a question, or start a conversation.
         </p>
-        <form onSubmit={onSubmit} className="space-y-8">
+        <form onSubmit={onSubmit} className="space-y-6 sm:space-y-8">
           <div className="space-y-2">
             <label
               htmlFor="title"
-              className="text-base font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 sm:text-base"
             >
               Title
             </label>
@@ -83,13 +83,13 @@ export function NewTopicForm() {
               placeholder="Enter topic title"
               required
               disabled={isLoading}
-              className="h-12 text-lg font-medium"
+              className="h-10 text-base font-medium transition-colors focus:ring-2 focus:ring-primary sm:h-12 sm:text-lg"
             />
           </div>
           <div className="space-y-2">
             <label
               htmlFor="content"
-              className="text-base font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 sm:text-base"
             >
               Content
             </label>
@@ -99,7 +99,7 @@ export function NewTopicForm() {
               placeholder="What do you want to discuss?"
               required
               disabled={isLoading}
-              className="min-h-[180px] text-base"
+              className="min-h-[120px] text-sm transition-colors focus:ring-2 focus:ring-primary sm:min-h-[180px] sm:text-base"
             />
           </div>
           <div className="flex justify-end gap-4 pt-2">
@@ -108,14 +108,14 @@ export function NewTopicForm() {
               variant="outline"
               onClick={() => router.back()}
               disabled={isLoading}
-              className="rounded-lg px-6 py-3 text-base font-semibold"
+              className="rounded-lg px-4 py-2 text-sm font-semibold transition-colors hover:bg-muted sm:px-6 sm:py-3 sm:text-base"
             >
               Cancel
             </Button>
             <Button
               type="submit"
               disabled={isLoading}
-              className="rounded-lg px-8 py-3 text-base font-semibold shadow-md"
+              className="rounded-lg px-6 py-2 text-sm font-semibold shadow-md transition-colors hover:bg-primary/90 sm:px-8 sm:py-3 sm:text-base"
             >
               {isLoading ? "Creating..." : "Create Topic"}
             </Button>
