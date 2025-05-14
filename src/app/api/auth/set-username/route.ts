@@ -6,27 +6,29 @@ import { prisma } from "~/lib/prisma";
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
-export async function POST(request: Request) {
-  const session = await getServerSession(authOptions);
-  if (!session?.user?.id) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+export async function POST(req: Request) {
+  try {
+    const session = await getServerSession(authOptions);
+
+    if (!session?.user?.email) {
+      return new NextResponse("Unauthorized", { status: 401 });
+    }
+
+    const { name } = await req.json();
+
+    if (!name || typeof name !== "string") {
+      return new NextResponse("Invalid username", { status: 400 });
+    }
+
+    // Update the user's name
+    await prisma.user.update({
+      where: { email: session.user.email },
+      data: { name },
+    });
+
+    return new NextResponse("Username updated successfully", { status: 200 });
+  } catch (error) {
+    console.error("[SET_USERNAME]", error);
+    return new NextResponse("Internal error", { status: 500 });
   }
-  const { name } = await request.json();
-  if (!name || typeof name !== "string" || name.length < 3) {
-    return NextResponse.json({ error: "Invalid username" }, { status: 400 });
-  }
-  // Check if name is taken
-  const existing = await prisma.user.findFirst({ where: { name } });
-  if (existing) {
-    return NextResponse.json(
-      { error: "Username already taken" },
-      { status: 409 },
-    );
-  }
-  // Update user
-  await prisma.user.update({
-    where: { id: session.user.id },
-    data: { name },
-  });
-  return NextResponse.json({ success: true });
 }

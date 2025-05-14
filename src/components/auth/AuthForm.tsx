@@ -4,7 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Separator } from "~/components/ui/separator";
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Button } from "~/components/ui/button";
 import { Input } from "~/components/ui/input";
@@ -26,6 +26,7 @@ export default function AuthForm() {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const { toast } = useToast();
+  const { update: updateSession } = useSession();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -66,12 +67,14 @@ export default function AuthForm() {
         throw new Error("Invalid credentials");
       }
 
+      await updateSession();
+
       toast({
         title: "Signed in successfully",
         description: "Welcome back!",
       });
-      router.push("/forum");
-      router.refresh();
+
+      router.replace("/forum");
     } catch (error) {
       setError("An unexpected error occurred");
       setErrorDetails([]);
@@ -88,16 +91,7 @@ export default function AuthForm() {
   const handleGoogleSignIn = async () => {
     setIsLoading(true);
     try {
-      const result = await signIn("google", { redirect: false });
-      if (result?.error) {
-        throw new Error(result.error);
-      }
-      toast({
-        title: "Signed in successfully",
-        description: "Welcome back!",
-      });
-      router.push("/forum");
-      router.refresh();
+      await signIn("google", { callbackUrl: "/forum" });
     } catch (error) {
       toast({
         title: "Error",
