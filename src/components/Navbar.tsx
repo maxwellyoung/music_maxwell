@@ -111,48 +111,71 @@ export default function Navbar() {
             </DropdownMenu.Trigger>
             <DropdownMenu.Content className="z-50 min-w-[180px] rounded-xl border border-border bg-background p-2 shadow-xl">
               {/* Your nav links here */}
-              <DropdownMenu.Item asChild>
-                <Link
-                  href="/"
-                  className="block rounded px-4 py-2 hover:bg-accent/10"
-                >
-                  Home
-                </Link>
-              </DropdownMenu.Item>
-              <DropdownMenu.Item asChild>
-                <Link
-                  href="/forum"
-                  className="block rounded px-4 py-2 hover:bg-accent/10"
-                >
-                  Forum
-                </Link>
-              </DropdownMenu.Item>
-              <DropdownMenu.Item asChild>
-                <Link
-                  href="/forum/new"
-                  className="block rounded px-4 py-2 hover:bg-accent/10"
-                >
-                  New Topic
-                </Link>
-              </DropdownMenu.Item>
-              <DropdownMenu.Item asChild>
-                <Link
-                  href="/settings"
-                  className="block rounded px-4 py-2 hover:bg-accent/10"
-                >
-                  Settings
-                </Link>
-              </DropdownMenu.Item>
-              <DropdownMenu.Separator className="my-1" />
-              <DropdownMenu.Item asChild>
-                <button
-                  onClick={() => signOut()}
-                  className="block w-full rounded px-4 py-2 text-left hover:bg-accent/10"
-                >
-                  Logout
-                </button>
-              </DropdownMenu.Item>
-              {/* ...other links/actions... */}
+              {session ? (
+                <>
+                  <DropdownMenu.Item asChild>
+                    <Link
+                      href="/"
+                      className="block rounded px-4 py-2 hover:bg-accent/10"
+                    >
+                      Home
+                    </Link>
+                  </DropdownMenu.Item>
+                  <DropdownMenu.Item asChild>
+                    <Link
+                      href="/forum"
+                      className="block rounded px-4 py-2 hover:bg-accent/10"
+                    >
+                      Forum
+                    </Link>
+                  </DropdownMenu.Item>
+                  <DropdownMenu.Item asChild>
+                    <Link
+                      href="/forum/new"
+                      className="block rounded px-4 py-2 hover:bg-accent/10"
+                    >
+                      New Topic
+                    </Link>
+                  </DropdownMenu.Item>
+                  <DropdownMenu.Item asChild>
+                    <Link
+                      href="/settings"
+                      className="block rounded px-4 py-2 hover:bg-accent/10"
+                    >
+                      Settings
+                    </Link>
+                  </DropdownMenu.Item>
+                  <DropdownMenu.Separator className="my-1" />
+                  <DropdownMenu.Item asChild>
+                    <button
+                      onClick={() => signOut()}
+                      className="block w-full rounded px-4 py-2 text-left hover:bg-accent/10"
+                    >
+                      Logout
+                    </button>
+                  </DropdownMenu.Item>
+                  {/* ...other links/actions... */}
+                </>
+              ) : (
+                <>
+                  <DropdownMenu.Item asChild>
+                    <Link
+                      href="/"
+                      className="block rounded px-4 py-2 hover:bg-muted focus:bg-muted focus:outline-none"
+                    >
+                      Home
+                    </Link>
+                  </DropdownMenu.Item>
+                  <DropdownMenu.Item asChild>
+                    <Link
+                      href="/login"
+                      className="block rounded px-4 py-2 hover:bg-muted focus:bg-muted focus:outline-none"
+                    >
+                      Login
+                    </Link>
+                  </DropdownMenu.Item>
+                </>
+              )}
             </DropdownMenu.Content>
           </DropdownMenu.Root>
         </div>

@@ -38,6 +38,7 @@ const Footer = () => {
             aria-label="YouTube"
           >
             <Youtube className="h-6 w-6" />
+
             <span className="pointer-events-none absolute -top-8 left-1/2 z-20 -translate-x-1/2 whitespace-nowrap rounded bg-black/80 px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100 group-focus:opacity-100">
               YouTube
             </span>

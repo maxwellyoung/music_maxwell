@@ -203,6 +203,13 @@ export default function AuthForm() {
                 "Create Account"
               )}
             </Button>
+            <Button
+              onClick={handleGoogleSignIn}
+              disabled={isLoading}
+              className="h-12 w-full text-lg font-semibold shadow-md"
+            >
+              {isLoading ? "Signing in..." : "Sign in with Google"}
+            </Button>
           </form>
 
           <Separator className="my-8" />
@@ -237,14 +244,16 @@ export default function AuthForm() {
 
           <Separator className="my-8" />
 
-          <div className="space-y-6">
-            <Button
-              onClick={handleGoogleSignIn}
-              disabled={isLoading}
-              className="h-12 w-full text-lg font-semibold shadow-md"
-            >
-              {isLoading ? "Signing in..." : "Sign in with Google"}
-            </Button>
+          <div className="space-y-6"></div>
+          <div className="my-6">
+            <Link href="/forum" passHref legacyBehavior>
+              <Button
+                variant="outline"
+                className="px-5 py-2 text-base font-semibold"
+              >
+                ← Back to Forum
+              </Button>
+            </Link>
           </div>
         </CardContent>
       </Card>
