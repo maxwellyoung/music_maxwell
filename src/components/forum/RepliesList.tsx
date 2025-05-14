@@ -293,12 +293,16 @@ export default function RepliesList({ replies }: { replies: Reply[] }) {
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between">
               <CardTitle className="flex items-center gap-2 text-lg font-semibold transition-colors group-hover:text-primary">
-                <Link
-                  href={`/user/${reply.author?.username}`}
-                  className="text-primary hover:underline"
-                >
-                  {reply.author?.name ?? "Unknown"}
-                </Link>
+                {reply.author?.username ? (
+                  <Link
+                    href={`/user/${reply.author.username}`}
+                    className="text-primary hover:underline"
+                  >
+                    {reply.author.username}
+                  </Link>
+                ) : (
+                  <span className="text-muted-foreground">Unknown</span>
+                )}
                 {reply.author?.role === "admin" && (
                   <Image
                     src="/icons/star.svg"

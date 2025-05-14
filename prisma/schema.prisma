@@ -26,6 +26,7 @@ model User {
   resetTokens   PasswordResetToken[]
   sessions      Session[]
   accounts      Account[]
+  needsUserName Boolean? @default(false)
 }
 
 model Account {
@@ -105,3 +106,22 @@ model PasswordResetToken {
   @@index([token])
   @@index([userId])
 } 
+
+model Demo {
+  id          Int       @id @default(autoincrement())
+  title       String
+  description String?
+  link        String?
+  status      String    @default("unfinished")
+  createdAt   DateTime  @default(now())
+  comments    Comment[]
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  demo      Demo     @relation(fields: [demoId], references: [id])
+  demoId    Int
+  author    String?
+  content   String
+  createdAt DateTime @default(now())
+}

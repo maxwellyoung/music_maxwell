@@ -40,7 +40,18 @@ export function NewTopicForm() {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to create topic");
+        let errorMsg = "Failed to create topic. Please try again.";
+        if (response.status === 400) {
+          try {
+            const data = await response.json();
+            if (data.error?.toLowerCase().includes("inappropriate")) {
+              errorMsg = "Your topic contains inappropriate language.";
+            } else {
+              errorMsg = data.error || errorMsg;
+            }
+          } catch {}
+        }
+        throw new Error(errorMsg);
       }
 
       const data = (await response.json()) as TopicResponse;
@@ -52,7 +63,10 @@ export function NewTopicForm() {
     } catch (error) {
       toast({
         title: "Error",
-        description: "Failed to create topic. Please try again.",
+        description:
+          error instanceof Error
+            ? error.message
+            : "Failed to create topic. Please try again.",
         variant: "destructive",
       });
     } finally {

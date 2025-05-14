@@ -50,7 +50,20 @@ export default function ReplyForm({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ content, topicId }),
       });
-      if (!res.ok) throw new Error("Failed to post reply");
+      if (!res.ok) {
+        let errorMsg = "Could not post reply.";
+        if (res.status === 400) {
+          try {
+            const data = await res.json();
+            if (data.error?.toLowerCase().includes("inappropriate")) {
+              errorMsg = "Your reply contains inappropriate language.";
+            } else {
+              errorMsg = data.error || errorMsg;
+            }
+          } catch {}
+        }
+        throw new Error(errorMsg);
+      }
       setContent("");
       toast({ title: "Reply posted!" });
       if (onSuccess) onSuccess();
@@ -58,7 +71,8 @@ export default function ReplyForm({
     } catch (err) {
       toast({
         title: "Error",
-        description: "Could not post reply.",
+        description:
+          err instanceof Error ? err.message : "Could not post reply.",
         variant: "destructive",
       });
     } finally {

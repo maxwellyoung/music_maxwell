@@ -3,6 +3,9 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "~/lib/auth";
 import { prisma } from "~/lib/prisma";
 
+// Add your own list of banned words
+const bannedWords = ["nigger", "faggot", "retard", "nazi", "hitler"];
+
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
@@ -14,16 +17,46 @@ export async function POST(req: Request) {
       return new NextResponse("Unauthorized", { status: 401 });
     }
 
-    const { name } = await req.json();
+    const { username } = await req.json();
 
-    if (!name || typeof name !== "string") {
+    if (
+      !username ||
+      typeof username !== "string" ||
+      username.length < 3 ||
+      username.length > 20
+    ) {
       return new NextResponse("Invalid username", { status: 400 });
     }
 
-    // Update the user's name
+    // Username must be URL-safe: only letters, numbers, underscores, hyphens
+    const usernameRegex = /^[a-zA-Z0-9_-]+$/;
+    if (!usernameRegex.test(username)) {
+      return new NextResponse(
+        "Username can only contain letters, numbers, underscores, and hyphens.",
+        { status: 400 },
+      );
+    }
+
+    // Check for offensive/banned words
+    const lowerUsername = username.toLowerCase();
+    if (bannedWords.some((word) => lowerUsername.includes(word))) {
+      return new NextResponse("Username contains inappropriate language", {
+        status: 400,
+      });
+    }
+
+    // Check for duplicate username
+    const existing = await prisma.user.findUnique({
+      where: { username },
+    });
+    if (existing) {
+      return new NextResponse("Username already taken", { status: 409 });
+    }
+
+    // Update the user's username and set needsUserName to false
     await prisma.user.update({
       where: { email: session.user.email },
-      data: { name },
+      data: { username, needsUserName: false },
     });
 
     return new NextResponse("Username updated successfully", { status: 200 });

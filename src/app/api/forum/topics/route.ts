@@ -6,6 +6,21 @@ import { prisma } from "~/lib/prisma";
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
+const bannedWords = [
+  "admin",
+  "mod",
+  "fuck",
+  "shit",
+  "bitch",
+  "asshole",
+  "nigger",
+  "faggot",
+  "cunt",
+  "retard",
+  "nazi",
+  "hitler",
+];
+
 export async function POST(request: Request) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
@@ -26,6 +41,20 @@ export async function POST(request: Request) {
       );
     }
     const { title, content } = data as { title: string; content: string };
+
+    // Check for offensive/banned words in title or content
+    const lowerTitle = title.toLowerCase();
+    const lowerContent = content.toLowerCase();
+    if (
+      bannedWords.some(
+        (word) => lowerTitle.includes(word) || lowerContent.includes(word),
+      )
+    ) {
+      return NextResponse.json(
+        { error: "Your topic contains inappropriate language." },
+        { status: 400 },
+      );
+    }
 
     const topic = await prisma.topic.create({
       data: {

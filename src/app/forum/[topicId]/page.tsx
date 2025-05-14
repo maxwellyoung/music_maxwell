@@ -84,12 +84,16 @@ export default async function TopicPage({
           <div className="flex items-center gap-4 text-base font-medium text-muted-foreground">
             <span>
               Posted by{" "}
-              <Link
-                href={`/user/${topic.author?.username}`}
-                className="text-primary hover:underline"
-              >
-                {topic.author?.name ?? "Unknown"}
-              </Link>
+              {topic.author?.username ? (
+                <Link
+                  href={`/user/${topic.author.username}`}
+                  className="text-primary hover:underline"
+                >
+                  {topic.author.username}
+                </Link>
+              ) : (
+                <span className="text-muted-foreground">Unknown</span>
+              )}
             </span>
             <span>•</span>
             <span>{topic.createdAt.toLocaleDateString()}</span>

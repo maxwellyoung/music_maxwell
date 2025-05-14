@@ -1,8 +1,6 @@
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import type { NextAuthOptions, Session } from "next-auth";
-import CredentialsProvider from "next-auth/providers/credentials";
 import GoogleProvider from "next-auth/providers/google";
-import { compare } from "bcryptjs";
 import { prisma } from "./prisma";
 import type { JWT } from "next-auth/jwt";
 
@@ -11,12 +9,11 @@ export interface User {
   email: string;
   name: string | null;
   username?: string | null;
-  hasPassword?: boolean;
 }
 
 declare module "next-auth" {
   interface Session {
-    user: User;
+    user: User & { needsUserName?: boolean };
   }
 }
 
@@ -26,7 +23,7 @@ declare module "next-auth/jwt" {
     email: string;
     name: string | null;
     username?: string | null;
-    hasPassword?: boolean;
+    needsUserName?: boolean;
   }
 }
 
@@ -60,7 +57,7 @@ async function generateUniqueUsername(
     });
 
     if (!existingUser) {
-      return username;
+      return username ?? "";
     }
 
     username = `${base}${counter}`;
@@ -79,81 +76,56 @@ export const authOptions: NextAuthOptions = {
   },
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-    }),
-    CredentialsProvider({
-      name: "credentials",
-      credentials: {
-        email: { label: "Email", type: "email" },
-        password: { label: "Password", type: "password" },
-      },
-      async authorize(credentials) {
-        if (!credentials?.email || !credentials?.password) {
-          throw new Error("Invalid credentials");
-        }
-
-        const user = await prisma.user.findUnique({
-          where: { email: credentials.email },
-        });
-
-        if (!user || !user.password) {
-          throw new Error("Invalid credentials");
-        }
-
-        const isPasswordValid = await compare(
-          credentials.password,
-          user.password,
-        );
-
-        if (!isPasswordValid) {
-          throw new Error("Invalid credentials");
-        }
-
-        return {
-          id: user.id,
-          email: user.email,
-          name: user.name,
-          username: user.username,
-          hasPassword: true,
-        };
-      },
+      clientId: process.env.GOOGLE_CLIENT_ID || "",
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
     }),
   ],
   callbacks: {
     async signIn({ user, account }) {
       if (account?.provider === "google") {
-        // Generate username for Google users
-        const username = await generateUniqueUsername(user.email!, user.name);
-
-        // Update user with generated username
-        await prisma.user.update({
+        const dbUser = await prisma.user.findUnique({
           where: { email: user.email! },
-          data: { username },
         });
-
-        user.username = username;
-        user.hasPassword = false;
+        if (dbUser && !dbUser.username) {
+          // Generate a username, but mark as needing update
+          const username = await generateUniqueUsername(
+            user.email!,
+            user.name ?? null,
+          );
+          await prisma.user.update({
+            where: { email: user.email! },
+            data: { username, needsUserName: true },
+          });
+          (user as any).username = username;
+          (user as any).needsUserName = true;
+        } else if (dbUser) {
+          (user as any).username = dbUser.username;
+          (user as any).needsUserName = dbUser.needsUserName ?? false;
+        }
       }
       return true;
     },
     async session({ session, token }) {
       if (token) {
-        session.user.id = token.id;
-        session.user.name = token.name;
-        session.user.email = token.email;
-        session.user.username = token.username;
-        session.user.hasPassword = token.hasPassword;
+        session.user.id = token.id as string;
+        session.user.name = token.name ?? null;
+        session.user.email = token.email as string;
+        session.user.username = (token as any).username as string | undefined;
+        session.user.needsUserName = (token as any).needsUserName as
+          | boolean
+          | undefined;
       }
       return session;
     },
     async jwt({ token, user }) {
       if (user) {
-        token.id = user.id;
-        token.name = user.name;
-        token.email = user.email;
-        token.username = user.username;
-        token.hasPassword = user.hasPassword;
+        token.id = (user as any).id as string;
+        token.name = (user as any).name ?? null;
+        token.email = (user as any).email as string;
+        token.username = (user as any).username as string | undefined;
+        token.needsUserName = (user as any).needsUserName as
+          | boolean
+          | undefined;
       }
       return token;
     },
