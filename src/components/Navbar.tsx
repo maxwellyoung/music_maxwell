@@ -168,6 +168,14 @@ export default function Navbar() {
                   </DropdownMenu.Item>
                   <DropdownMenu.Item asChild>
                     <Link
+                      href="/forum"
+                      className="block rounded px-4 py-2 hover:bg-muted focus:bg-muted focus:outline-none"
+                    >
+                      Forum
+                    </Link>
+                  </DropdownMenu.Item>
+                  <DropdownMenu.Item asChild>
+                    <Link
                       href="/login"
                       className="block rounded px-4 py-2 hover:bg-muted focus:bg-muted focus:outline-none"
                     >
