@@ -25,14 +25,20 @@ export async function POST(req: Request) {
       username.length < 3 ||
       username.length > 20
     ) {
-      return new NextResponse("Invalid username", { status: 400 });
+      return NextResponse.json(
+        { error: "Username must be 3-20 characters." },
+        { status: 400 },
+      );
     }
 
     // Username must be URL-safe: only letters, numbers, underscores, hyphens
     const usernameRegex = /^[a-zA-Z0-9_-]+$/;
     if (!usernameRegex.test(username)) {
-      return new NextResponse(
-        "Username can only contain letters, numbers, underscores, and hyphens.",
+      return NextResponse.json(
+        {
+          error:
+            "Username can only contain letters, numbers, underscores, and hyphens.",
+        },
         { status: 400 },
       );
     }
