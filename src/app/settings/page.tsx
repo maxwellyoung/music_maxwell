@@ -10,6 +10,7 @@ import { useToast } from "~/components/ui/use-toast";
 import { Separator } from "~/components/ui/separator";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import { Textarea } from "~/components/ui/textarea";
 
 export default function SettingsPage() {
   const { data: session, update: updateSession } = useSession();
@@ -17,31 +18,41 @@ export default function SettingsPage() {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [username, setUsername] = useState(session?.user?.name ?? "");
+  const [bio, setBio] = useState("");
+  const [displayName, setDisplayName] = useState("");
+  const [socialLinks, setSocialLinks] = useState({
+    twitter: "",
+    instagram: "",
+    website: "",
+  });
 
-  const handleUsernameUpdate = async (e: React.FormEvent) => {
+  const handleProfileUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
 
     try {
-      const res = await fetch("/api/auth/set-username", {
+      const res = await fetch("/api/user/profile", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name: username }),
+        body: JSON.stringify({
+          bio,
+          displayName,
+          socialLinks,
+        }),
       });
 
       if (!res.ok) {
-        throw new Error("Failed to update username");
+        throw new Error("Failed to update profile");
       }
 
-      await updateSession();
       toast({
         title: "Success",
-        description: "Username updated successfully",
+        description: "Profile updated successfully",
       });
     } catch (error) {
       toast({
         title: "Error",
-        description: "Failed to update username",
+        description: "Failed to update profile",
         variant: "destructive",
       });
     } finally {
@@ -82,6 +93,7 @@ export default function SettingsPage() {
 
         <Separator />
 
+        {/* Profile Settings */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -92,7 +104,7 @@ export default function SettingsPage() {
               <CardTitle>Profile Settings</CardTitle>
             </CardHeader>
             <CardContent>
-              <form onSubmit={handleUsernameUpdate} className="space-y-6">
+              <form onSubmit={handleProfileUpdate} className="space-y-6">
                 <div className="space-y-2">
                   <label
                     htmlFor="username"
@@ -108,6 +120,74 @@ export default function SettingsPage() {
                     className="h-12"
                   />
                 </div>
+                <div className="space-y-2">
+                  <label
+                    htmlFor="displayName"
+                    className="text-sm font-medium leading-none"
+                  >
+                    Display Name
+                  </label>
+                  <Input
+                    id="displayName"
+                    value={displayName}
+                    onChange={(e) => setDisplayName(e.target.value)}
+                    placeholder="Choose a display name"
+                    className="h-12"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label
+                    htmlFor="bio"
+                    className="text-sm font-medium leading-none"
+                  >
+                    Bio
+                  </label>
+                  <Textarea
+                    id="bio"
+                    value={bio}
+                    onChange={(e) => setBio(e.target.value)}
+                    placeholder="Tell us about yourself"
+                    className="h-24"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-sm font-medium leading-none">
+                    Social Links
+                  </label>
+                  <Input
+                    value={socialLinks.twitter}
+                    onChange={(e) =>
+                      setSocialLinks({
+                        ...socialLinks,
+                        twitter: e.target.value,
+                      })
+                    }
+                    placeholder="Twitter URL"
+                    className="h-12"
+                  />
+                  <Input
+                    value={socialLinks.instagram}
+                    onChange={(e) =>
+                      setSocialLinks({
+                        ...socialLinks,
+                        instagram: e.target.value,
+                      })
+                    }
+                    placeholder="Instagram URL"
+                    className="h-12"
+                  />
+                  <Input
+                    value={socialLinks.website}
+                    onChange={(e) =>
+                      setSocialLinks({
+                        ...socialLinks,
+                        website: e.target.value,
+                      })
+                    }
+                    placeholder="Website URL"
+                    className="h-12"
+                  />
+                </div>
                 <Button type="submit" disabled={isLoading} className="w-full">
                   {isLoading ? "Saving..." : "Save Changes"}
                 </Button>
@@ -116,6 +196,7 @@ export default function SettingsPage() {
           </Card>
         </motion.div>
 
+        {/* Account Information */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -131,6 +212,15 @@ export default function SettingsPage() {
                   Email
                 </label>
                 <p className="text-lg">{session.user?.email}</p>
+              </div>
+              <div className="space-y-2">
+                <Button
+                  variant="outline"
+                  className="w-full"
+                  onClick={() => router.push("/change-password")}
+                >
+                  Change Password
+                </Button>
               </div>
             </CardContent>
           </Card>

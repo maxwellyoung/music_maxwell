@@ -15,6 +15,7 @@ import { useToast } from "~/components/ui/use-toast";
 import React from "react";
 import { Trash, Flag } from "phosphor-react";
 import Image from "next/image";
+import Link from "next/link";
 
 // Type for a reply
 type Reply = {
@@ -22,7 +23,11 @@ type Reply = {
   content: string;
   createdAt: string | Date;
   authorId: string;
-  author?: { name?: string | null; role?: string | null };
+  author?: {
+    name?: string | null;
+    role?: string | null;
+    username?: string | null;
+  };
 };
 
 // Utility to auto-link URLs and embed YouTube/SoundCloud
@@ -288,7 +293,12 @@ export default function RepliesList({ replies }: { replies: Reply[] }) {
           <CardHeader className="pb-2">
             <div className="flex items-center justify-between">
               <CardTitle className="flex items-center gap-2 text-lg font-semibold transition-colors group-hover:text-primary">
-                {reply.author?.name ?? "Unknown"}
+                <Link
+                  href={`/user/${reply.author?.username}`}
+                  className="text-primary hover:underline"
+                >
+                  {reply.author?.name ?? "Unknown"}
+                </Link>
                 {reply.author?.role === "admin" && (
                   <Image
                     src="/icons/star.svg"

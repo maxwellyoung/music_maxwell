@@ -27,7 +27,7 @@ export type ForumTopic = {
   content: string;
   createdAt: Date;
   updatedAt: Date;
-  author: { name: string | null } | null;
+  author: { name: string | null; username: string | null } | null;
   replies: Reply[];
 };
 
@@ -59,7 +59,7 @@ export default async function ForumPage({
             ],
           },
           include: {
-            author: { select: { name: true } },
+            author: { select: { name: true, username: true } },
             replies: true,
           },
           orderBy: { createdAt: "desc" },
@@ -67,7 +67,7 @@ export default async function ForumPage({
       : await prisma.topic.findMany({
           orderBy: { createdAt: "desc" },
           include: {
-            author: { select: { name: true } },
+            author: { select: { name: true, username: true } },
             replies: true,
           },
         });
@@ -124,7 +124,13 @@ export default async function ForumPage({
                       {topic.title}
                     </CardTitle>
                     <CardDescription className="text-base">
-                      by {topic.author?.name ?? "Unknown"}
+                      by{" "}
+                      <Link
+                        href={`/user/${topic.author?.username}`}
+                        className="text-primary hover:underline"
+                      >
+                        {topic.author?.name ?? "Unknown"}
+                      </Link>
                     </CardDescription>
                   </CardHeader>
                   <CardContent>

@@ -32,9 +32,11 @@ export default async function TopicPage({
   const topic = await prisma.topic.findUnique({
     where: { id: params.topicId },
     include: {
-      author: { select: { name: true, id: true } },
+      author: { select: { name: true, id: true, username: true } },
       replies: {
-        include: { author: { select: { name: true, role: true } } },
+        include: {
+          author: { select: { name: true, role: true, username: true } },
+        },
         orderBy: { createdAt: "asc" },
       },
     },
@@ -80,7 +82,15 @@ export default async function TopicPage({
             {canModify && <TopicActions topicId={topic.id} />}
           </div>
           <div className="flex items-center gap-4 text-base font-medium text-muted-foreground">
-            <span>Posted by {topic.author?.name ?? "Unknown"}</span>
+            <span>
+              Posted by{" "}
+              <Link
+                href={`/user/${topic.author?.username}`}
+                className="text-primary hover:underline"
+              >
+                {topic.author?.name ?? "Unknown"}
+              </Link>
+            </span>
             <span>•</span>
             <span>{topic.createdAt.toLocaleDateString()}</span>
           </div>
