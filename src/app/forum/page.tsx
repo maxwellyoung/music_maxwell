@@ -125,12 +125,16 @@ export default async function ForumPage({
                     </CardTitle>
                     <CardDescription className="text-base">
                       by{" "}
-                      <Link
-                        href={`/user/${topic.author?.username}`}
-                        className="text-primary hover:underline"
-                      >
-                        {topic.author?.name ?? "Unknown"}
-                      </Link>
+                      {topic.author?.username ? (
+                        <Link
+                          href={`/user/${topic.author.username}`}
+                          className="text-primary hover:underline"
+                        >
+                          {topic.author.username}
+                        </Link>
+                      ) : (
+                        <span className="text-muted-foreground">Unknown</span>
+                      )}
                     </CardDescription>
                   </CardHeader>
                   <CardContent>

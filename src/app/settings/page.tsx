@@ -17,16 +17,15 @@ import {
   DialogHeader,
   DialogTitle,
   DialogFooter,
-} from "~/components/ui/dialog";
+} from "../../components/ui/dialog";
 
 export default function SettingsPage() {
   const { data: session, update: updateSession } = useSession();
   const router = useRouter();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
-  const [username, setUsername] = useState(session?.user?.name ?? "");
+  const [username, setUsername] = useState(session?.user?.username ?? "");
   const [bio, setBio] = useState("");
-  const [displayName, setDisplayName] = useState("");
   const [socialLinks, setSocialLinks] = useState({
     twitter: "",
     instagram: "",
@@ -45,7 +44,6 @@ export default function SettingsPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           bio,
-          displayName,
           socialLinks,
         }),
       });
@@ -154,21 +152,6 @@ export default function SettingsPage() {
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
                     placeholder="Choose a username"
-                    className="h-12"
-                  />
-                </div>
-                <div className="space-y-2">
-                  <label
-                    htmlFor="displayName"
-                    className="text-sm font-medium leading-none"
-                  >
-                    Display Name
-                  </label>
-                  <Input
-                    id="displayName"
-                    value={displayName}
-                    onChange={(e) => setDisplayName(e.target.value)}
-                    placeholder="Choose a display name"
                     className="h-12"
                   />
                 </div>

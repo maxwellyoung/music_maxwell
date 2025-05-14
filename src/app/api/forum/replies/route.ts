@@ -9,6 +9,21 @@ export const runtime = "nodejs";
 // In-memory rate limit store (for demo/dev only)
 const rateLimitMap = new Map();
 
+const bannedWords = [
+  "admin",
+  "mod",
+  "fuck",
+  "shit",
+  "bitch",
+  "asshole",
+  "nigger",
+  "faggot",
+  "cunt",
+  "retard",
+  "nazi",
+  "hitler",
+];
+
 export async function POST(request: Request) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
@@ -40,6 +55,15 @@ export async function POST(request: Request) {
       );
     }
     const { content, topicId } = data as { content: string; topicId: string };
+
+    // Check for offensive/banned words in content
+    const lowerContent = content.toLowerCase();
+    if (bannedWords.some((word) => lowerContent.includes(word))) {
+      return NextResponse.json(
+        { error: "Your reply contains inappropriate language." },
+        { status: 400 },
+      );
+    }
 
     const reply = await prisma.reply.create({
       data: {
