@@ -1,29 +1,72 @@
-# Create T3 App
+# Music Maxwell
 
-This is a [T3 Stack](https://create.t3.gg/) project bootstrapped with `create-t3-app`.
+A platform for music enthusiasts built with Next.js, Prisma, and NextAuth.js.
 
-## What's next? How do I make an app with this?
+## Getting Started
 
-We try to keep this project as simple as possible, so you can start with just the scaffolding we set up for you, and add additional things later when they become necessary.
+### 1. Clone the repository
 
-If you are not familiar with the different technologies used in this project, please refer to the respective docs. If you still are in the wind, please join our [Discord](https://t3.gg/discord) and ask for help.
+```bash
+git clone https://github.com/yourusername/music_maxwell.git
+cd music_maxwell
+```
 
-- [Next.js](https://nextjs.org)
-- [NextAuth.js](https://next-auth.js.org)
-- [Prisma](https://prisma.io)
-- [Drizzle](https://orm.drizzle.team)
-- [Tailwind CSS](https://tailwindcss.com)
-- [tRPC](https://trpc.io)
+### 2. Install dependencies
 
-## Learn More
+```bash
+pnpm install
+```
 
-To learn more about the [T3 Stack](https://create.t3.gg/), take a look at the following resources:
+### 3. Set up environment variables
 
-- [Documentation](https://create.t3.gg/)
-- [Learn the T3 Stack](https://create.t3.gg/en/faq#what-learning-resources-are-currently-available) — Check out these awesome tutorials
+Create a `.env` file in the project root with the following variables:
 
-You can check out the [create-t3-app GitHub repository](https://github.com/t3-oss/create-t3-app) — your feedback and contributions are welcome!
+```env
+# NextAuth
+NEXTAUTH_URL="https://www.maxwellyoung.info" # or your local URL for development
+NEXTAUTH_SECRET="your_generated_secret_here"
 
-## How do I deploy this?
+# Database
+DATABASE_URL="your_database_url_here"
 
-Follow our deployment guides for [Vercel](https://create.t3.gg/en/deployment/vercel), [Netlify](https://create.t3.gg/en/deployment/netlify) and [Docker](https://create.t3.gg/en/deployment/docker) for more information.
+# Google OAuth (required if using Google login)
+GOOGLE_CLIENT_ID="your_google_client_id"
+GOOGLE_CLIENT_SECRET="your_google_client_secret"
+```
+
+- To generate a secret, run: `openssl rand -base64 32`
+- For local development, set `NEXTAUTH_URL="http://localhost:3000"`
+- If you are not using Google login, set `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` to dummy values (e.g., `dummy`)
+
+### 4. Set up the database
+
+If using Prisma:
+
+```bash
+pnpm prisma migrate dev
+```
+
+### 5. Run the development server
+
+```bash
+pnpm dev
+```
+
+The app will be available at [http://localhost:3000](http://localhost:3000) (or another port if 3000 is in use).
+
+## Deployment
+
+- Set all required environment variables in your deployment platform (e.g., Vercel).
+- Make sure `DATABASE_URL`, `NEXTAUTH_URL`, `NEXTAUTH_SECRET`, `GOOGLE_CLIENT_ID`, and `GOOGLE_CLIENT_SECRET` are set for production.
+- Redeploy after making changes to environment variables.
+
+## Troubleshooting
+
+- **Port in use:** If port 3000 is busy, Next.js will try 3001, 3002, etc.
+- **Invalid environment variables:** Make sure all required variables are set and not empty.
+- **Static file 404s:** Ensure your `public` directory contains all referenced assets.
+- **Prisma errors:** Run `pnpm prisma generate` if you see missing Prisma client errors.
+
+## License
+
+MIT
