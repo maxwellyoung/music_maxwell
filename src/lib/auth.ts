@@ -1,14 +1,14 @@
 import { PrismaAdapter } from "@auth/prisma-adapter";
-import type { NextAuthOptions, Session } from "next-auth";
+import type { NextAuthOptions } from "next-auth";
 import GoogleProvider from "next-auth/providers/google";
 import { prisma } from "./prisma";
-import type { JWT } from "next-auth/jwt";
 
 export interface User {
   id: string;
   email: string;
   name: string | null;
   username?: string | null;
+  hasPassword?: boolean;
 }
 
 declare module "next-auth" {
@@ -24,20 +24,8 @@ declare module "next-auth/jwt" {
     name: string | null;
     username?: string | null;
     needsUserName?: boolean;
+    hasPassword?: boolean;
   }
-}
-
-function isUser(obj: unknown): obj is User {
-  return (
-    typeof obj === "object" &&
-    obj !== null &&
-    "id" in obj &&
-    typeof obj.id === "string" &&
-    "email" in obj &&
-    typeof obj.email === "string" &&
-    "name" in obj &&
-    (obj.name === null || typeof obj.name === "string")
-  );
 }
 
 // Generate a unique username from email or name
@@ -65,7 +53,11 @@ async function generateUniqueUsername(
   }
 }
 
-// Create auth options with proper environment variable handling
+// Add a type for the user object in signIn callback
+interface CallbackUser extends User {
+  needsUserName?: boolean;
+}
+
 export const authOptions: NextAuthOptions = {
   adapter: PrismaAdapter(prisma),
   session: {
@@ -76,8 +68,8 @@ export const authOptions: NextAuthOptions = {
   },
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID || "",
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
+      clientId: process.env.GOOGLE_CLIENT_ID ?? "",
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET ?? "",
     }),
   ],
   callbacks: {
@@ -86,6 +78,7 @@ export const authOptions: NextAuthOptions = {
         const dbUser = await prisma.user.findUnique({
           where: { email: user.email! },
         });
+        const callbackUser = user as CallbackUser;
         if (dbUser && !dbUser.username) {
           // Generate a username, but mark as needing update
           const username = await generateUniqueUsername(
@@ -96,39 +89,42 @@ export const authOptions: NextAuthOptions = {
             where: { email: user.email! },
             data: { username, needsUserName: true },
           });
-          (user as any).username = username;
-          (user as any).needsUserName = true;
+          callbackUser.username = username;
+          callbackUser.needsUserName = true;
         } else if (dbUser) {
-          (user as any).username = dbUser.username;
-          (user as any).needsUserName = dbUser.needsUserName ?? false;
+          callbackUser.username = dbUser.username ?? undefined;
+          callbackUser.needsUserName = dbUser.needsUserName ?? false;
+        }
+        // Set hasPassword based on dbUser.password
+        if (dbUser) {
+          callbackUser.hasPassword = !!dbUser.password;
         }
       }
       return true;
     },
     async session({ session, token }) {
       if (token) {
-        session.user.id = token.id as string;
+        session.user.id = token.id;
         session.user.name = token.name ?? null;
-        session.user.email = token.email as string;
-        session.user.username = (token as any).username as string | undefined;
-        session.user.needsUserName = (token as any).needsUserName as
-          | boolean
-          | undefined;
+        session.user.email = token.email;
+        session.user.username = token.username;
+        session.user.needsUserName = token.needsUserName;
+        session.user.hasPassword = token.hasPassword;
       }
       return session;
     },
     async jwt({ token, user }) {
       if (user) {
-        token.id = (user as any).id as string;
-        token.name = (user as any).name ?? null;
-        token.email = (user as any).email as string;
-        token.username = (user as any).username as string | undefined;
-        token.needsUserName = (user as any).needsUserName as
-          | boolean
-          | undefined;
+        const u = user as User & { needsUserName?: boolean };
+        token.id = u.id;
+        token.name = u.name ?? null;
+        token.email = u.email;
+        token.username = u.username;
+        token.needsUserName = u.needsUserName;
+        token.hasPassword = u.hasPassword;
       }
       return token;
     },
   },
-  secret: process.env.NEXTAUTH_SECRET,
+  secret: process.env.NEXTAUTH_SECRET ?? "",
 };

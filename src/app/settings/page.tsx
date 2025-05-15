@@ -176,7 +176,7 @@ export default function SettingsPage() {
                   </label>
                   <Input
                     value={socialLinks.twitter}
-                    onChange={(e) =>
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                       setSocialLinks({
                         ...socialLinks,
                         twitter: e.target.value,
@@ -187,7 +187,7 @@ export default function SettingsPage() {
                   />
                   <Input
                     value={socialLinks.instagram}
-                    onChange={(e) =>
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                       setSocialLinks({
                         ...socialLinks,
                         instagram: e.target.value,
@@ -198,7 +198,7 @@ export default function SettingsPage() {
                   />
                   <Input
                     value={socialLinks.website}
-                    onChange={(e) =>
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                       setSocialLinks({
                         ...socialLinks,
                         website: e.target.value,

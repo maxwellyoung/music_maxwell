@@ -2,9 +2,9 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "~/lib/auth";
 import { prisma } from "~/lib/prisma";
-import { Prisma } from "@prisma/client";
+import { PrismaClientKnownRequestError } from "@prisma/client/runtime/library";
 
-export async function DELETE(req: Request) {
+export async function DELETE(_req: Request) {
   try {
     const session = await getServerSession(authOptions);
     if (!session?.user?.email) {
@@ -34,7 +34,7 @@ export async function DELETE(req: Request) {
       console.log("Deleted replies:", deletedReplies.count);
     } catch (error) {
       console.error("Error deleting replies:", error);
-      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error instanceof PrismaClientKnownRequestError) {
         console.error("Prisma error code:", error.code);
         console.error("Prisma error meta:", error.meta);
       }
@@ -48,7 +48,7 @@ export async function DELETE(req: Request) {
       console.log("Deleted topics:", deletedTopics.count);
     } catch (error) {
       console.error("Error deleting topics:", error);
-      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error instanceof PrismaClientKnownRequestError) {
         console.error("Prisma error code:", error.code);
         console.error("Prisma error meta:", error.meta);
       }
@@ -62,7 +62,7 @@ export async function DELETE(req: Request) {
       console.log("Deleted user:", deletedUser.id);
     } catch (error) {
       console.error("Error deleting user:", error);
-      if (error instanceof Prisma.PrismaClientKnownRequestError) {
+      if (error instanceof PrismaClientKnownRequestError) {
         console.error("Prisma error code:", error.code);
         console.error("Prisma error meta:", error.meta);
       }
@@ -73,7 +73,7 @@ export async function DELETE(req: Request) {
   } catch (error) {
     console.error("Error in delete account process:", error);
 
-    if (error instanceof Prisma.PrismaClientKnownRequestError) {
+    if (error instanceof PrismaClientKnownRequestError) {
       console.error("Prisma error details:", {
         code: error.code,
         meta: error.meta,

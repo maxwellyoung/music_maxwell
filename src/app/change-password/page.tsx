@@ -134,7 +134,9 @@ export default function ChangePasswordPage() {
                       id="currentPassword"
                       type="password"
                       value={currentPassword}
-                      onChange={(e) => setCurrentPassword(e.target.value)}
+                      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        setCurrentPassword(e.target.value)
+                      }
                       required
                       className="h-12"
                     />
@@ -151,7 +153,9 @@ export default function ChangePasswordPage() {
                     id="newPassword"
                     type="password"
                     value={newPassword}
-                    onChange={(e) => setNewPassword(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      setNewPassword(e.target.value)
+                    }
                     required
                     minLength={8}
                     className="h-12"
@@ -168,7 +172,9 @@ export default function ChangePasswordPage() {
                     id="confirmPassword"
                     type="password"
                     value={confirmPassword}
-                    onChange={(e) => setConfirmPassword(e.target.value)}
+                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                      setConfirmPassword(e.target.value)
+                    }
                     required
                     minLength={8}
                     className="h-12"

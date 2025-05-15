@@ -15,7 +15,10 @@ export async function POST(req: Request) {
       );
     }
 
-    const { currentPassword, newPassword } = await req.json();
+    const {
+      currentPassword,
+      newPassword,
+    }: { currentPassword?: string; newPassword: string } = await req.json();
 
     const user = await prisma.user.findUnique({
       where: { email: session.user.email },
