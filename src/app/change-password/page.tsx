@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
@@ -12,13 +12,36 @@ import { motion } from "framer-motion";
 import Link from "next/link";
 
 export default function ChangePasswordPage() {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
   const router = useRouter();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/login");
+    }
+  }, [status, router]);
+
+  if (status === "loading") {
+    return (
+      <main className="container mx-auto px-4 py-16">
+        <div className="mx-auto max-w-2xl space-y-8">
+          <div className="animate-pulse">
+            <div className="h-8 w-48 rounded bg-gray-200"></div>
+            <div className="mt-2 h-4 w-64 rounded bg-gray-200"></div>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
+  if (!session) {
+    return null;
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -49,7 +72,7 @@ export default function ChangePasswordPage() {
 
       if (!res.ok) {
         const data = await res.json();
-        throw new Error(data.error || "Failed to change password");
+        throw new Error((data.error as string) || "Failed to change password");
       }
 
       toast({
@@ -71,11 +94,6 @@ export default function ChangePasswordPage() {
       setIsLoading(false);
     }
   };
-
-  if (!session) {
-    router.push("/login");
-    return null;
-  }
 
   return (
     <main className="container mx-auto px-4 py-16">

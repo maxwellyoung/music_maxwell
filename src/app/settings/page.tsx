@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useSession, signOut } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
@@ -20,11 +20,11 @@ import {
 } from "../../components/ui/dialog";
 
 export default function SettingsPage() {
-  const { data: session, update: updateSession } = useSession();
+  const { data: session, status } = useSession();
   const router = useRouter();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
-  const [username, setUsername] = useState(session?.user?.username ?? "");
+  const [username, setUsername] = useState("");
   const [bio, setBio] = useState("");
   const [socialLinks, setSocialLinks] = useState({
     twitter: "",
@@ -33,6 +33,31 @@ export default function SettingsPage() {
   });
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    if (status === "unauthenticated") {
+      router.push("/login");
+    } else if (status === "authenticated" && session?.user) {
+      setUsername(session.user.username ?? "");
+    }
+  }, [status, session, router]);
+
+  if (status === "loading") {
+    return (
+      <main className="container mx-auto px-4 py-16">
+        <div className="mx-auto max-w-2xl space-y-8">
+          <div className="animate-pulse">
+            <div className="h-8 w-48 rounded bg-gray-200"></div>
+            <div className="mt-2 h-4 w-64 rounded bg-gray-200"></div>
+          </div>
+        </div>
+      </main>
+    );
+  }
+
+  if (!session) {
+    return null;
+  }
 
   const handleProfileUpdate = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -73,7 +98,7 @@ export default function SettingsPage() {
       const res = await fetch("/api/user/delete", { method: "DELETE" });
       if (!res.ok) {
         const data = await res.json();
-        throw new Error(data.error || "Failed to delete account");
+        throw new Error((data.error as string) || "Failed to delete account");
       }
       toast({
         title: "Account deleted",
@@ -94,11 +119,6 @@ export default function SettingsPage() {
       setShowDeleteDialog(false);
     }
   };
-
-  if (!session) {
-    router.push("/login");
-    return null;
-  }
 
   return (
     <main className="container mx-auto px-4 py-16">
@@ -250,40 +270,40 @@ export default function SettingsPage() {
           <Button
             variant="destructive"
             onClick={() => setShowDeleteDialog(true)}
-            className="w-full max-w-xs"
+            disabled={isDeleting}
           >
-            Delete Account
+            {isDeleting ? "Deleting..." : "Delete Account"}
           </Button>
         </div>
-      </div>
 
-      <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
-        <DialogContent>
-          <DialogHeader>
-            <DialogTitle>Delete Account</DialogTitle>
-          </DialogHeader>
-          <p className="mb-4 text-base text-muted-foreground">
-            Are you sure you want to delete your account? This action cannot be
-            undone.
-          </p>
-          <DialogFooter>
-            <Button
-              variant="outline"
-              onClick={() => setShowDeleteDialog(false)}
-              disabled={isDeleting}
-            >
-              Cancel
-            </Button>
-            <Button
-              variant="destructive"
-              onClick={handleDeleteAccount}
-              disabled={isDeleting}
-            >
-              {isDeleting ? "Deleting..." : "Delete Account"}
-            </Button>
-          </DialogFooter>
-        </DialogContent>
-      </Dialog>
+        <Dialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Delete Account</DialogTitle>
+            </DialogHeader>
+            <p className="text-sm text-muted-foreground">
+              Are you sure you want to delete your account? This action cannot
+              be undone.
+            </p>
+            <DialogFooter>
+              <Button
+                variant="outline"
+                onClick={() => setShowDeleteDialog(false)}
+                disabled={isDeleting}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant="destructive"
+                onClick={handleDeleteAccount}
+                disabled={isDeleting}
+              >
+                {isDeleting ? "Deleting..." : "Delete Account"}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      </div>
     </main>
   );
 }
