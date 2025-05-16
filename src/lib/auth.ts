@@ -13,7 +13,7 @@ export interface User {
 
 declare module "next-auth" {
   interface Session {
-    user: User & { needsUserName?: boolean };
+    user: User & { needsUserName?: boolean; role?: string };
   }
 }
 
@@ -25,6 +25,7 @@ declare module "next-auth/jwt" {
     username?: string | null;
     needsUserName?: boolean;
     hasPassword?: boolean;
+    role?: string;
   }
 }
 
@@ -110,18 +111,33 @@ export const authOptions: NextAuthOptions = {
         session.user.username = token.username;
         session.user.needsUserName = token.needsUserName;
         session.user.hasPassword = token.hasPassword;
+        session.user.role = token.role;
       }
       return session;
     },
     async jwt({ token, user }) {
       if (user) {
-        const u = user as User & { needsUserName?: boolean };
-        token.id = u.id;
-        token.name = u.name ?? null;
-        token.email = u.email;
-        token.username = u.username;
-        token.needsUserName = u.needsUserName;
-        token.hasPassword = u.hasPassword;
+        const dbUser = await prisma.user.findUnique({
+          where: { email: typeof user.email === "string" ? user.email : "" },
+          select: {
+            id: true,
+            name: true,
+            email: true,
+            username: true,
+            needsUserName: true,
+            password: true,
+            role: true,
+          },
+        });
+        if (dbUser) {
+          token.id = dbUser.id;
+          token.name = dbUser.name ?? null;
+          token.email = typeof dbUser.email === "string" ? dbUser.email : "";
+          token.username = dbUser.username ?? undefined;
+          token.needsUserName = dbUser.needsUserName ?? false;
+          token.hasPassword = !!dbUser.password;
+          token.role = dbUser.role;
+        }
       }
       return token;
     },
