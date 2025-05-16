@@ -125,9 +125,9 @@ export default function UserProfilePage() {
         </motion.div>
 
         {/* Social Links */}
-        {(profile.socialLinks.twitter ||
-          profile.socialLinks.instagram ||
-          profile.socialLinks.website) && (
+        {(profile.socialLinks?.twitter ||
+          profile.socialLinks?.instagram ||
+          profile.socialLinks?.website) && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -138,7 +138,7 @@ export default function UserProfilePage() {
                 <CardTitle>Social Links</CardTitle>
               </CardHeader>
               <CardContent className="space-y-2">
-                {profile.socialLinks.twitter && (
+                {profile.socialLinks?.twitter && (
                   <a
                     href={profile.socialLinks.twitter}
                     target="_blank"
@@ -148,7 +148,7 @@ export default function UserProfilePage() {
                     Twitter
                   </a>
                 )}
-                {profile.socialLinks.instagram && (
+                {profile.socialLinks?.instagram && (
                   <a
                     href={profile.socialLinks.instagram}
                     target="_blank"
@@ -158,7 +158,7 @@ export default function UserProfilePage() {
                     Instagram
                   </a>
                 )}
-                {profile.socialLinks.website && (
+                {profile.socialLinks?.website && (
                   <a
                     href={profile.socialLinks.website}
                     target="_blank"

@@ -130,3 +130,32 @@ export async function DELETE(request: Request) {
     );
   }
 }
+
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const skip = parseInt(searchParams.get("skip") ?? "0", 10);
+  const take = parseInt(searchParams.get("take") ?? "10", 10);
+
+  try {
+    const [topics, total] = await Promise.all([
+      prisma.topic.findMany({
+        skip,
+        take,
+        orderBy: { createdAt: "desc" },
+        include: {
+          author: { select: { name: true, username: true } },
+          _count: { select: { replies: true } },
+        },
+      }),
+      prisma.topic.count(),
+    ]);
+
+    return NextResponse.json({ topics, total });
+  } catch (error) {
+    console.error("Error fetching topics (GET):", error);
+    return NextResponse.json(
+      { error: "Failed to fetch topics" },
+      { status: 500 },
+    );
+  }
+}

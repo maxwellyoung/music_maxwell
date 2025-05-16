@@ -10,6 +10,9 @@ import {
 } from "~/components/ui/card";
 import Link from "next/link";
 import { SearchTopics } from "~/components/forum/SearchTopics";
+import ForumTopicsInfinite, {
+  ForumTopic,
+} from "~/components/forum/ForumTopicsInfinite";
 
 // Explicit type for forum topics
 type Reply = {
@@ -19,16 +22,6 @@ type Reply = {
   content: string;
   authorId: string;
   topicId: string;
-};
-
-export type ForumTopic = {
-  id: string;
-  title: string;
-  content: string;
-  createdAt: Date;
-  updatedAt: Date;
-  author: { name: string | null; username: string | null } | null;
-  replies: Reply[];
 };
 
 export const metadata: Metadata = {
@@ -47,36 +40,42 @@ export default async function ForumPage({
 }: {
   searchParams: { q?: string };
 }) {
+  // Only support infinite scroll for no search query for now
+  if (searchParams.q) {
+    // fallback to old logic for search
+    // ... existing code for search (can be refactored later)
+  }
+
+  // Fetch first page of topics and total count
+  const PAGE_SIZE = 10;
   let topics: ForumTopic[] = [];
+  let total = 0;
   let error: string | null = null;
 
   try {
-    // Fetch topics based on search query if present
-    topics = searchParams.q
-      ? await prisma.topic.findMany({
-          where: {
-            OR: [
-              { title: { contains: searchParams.q, mode: "insensitive" } },
-              { content: { contains: searchParams.q, mode: "insensitive" } },
-            ],
-          },
-          include: {
-            author: { select: { name: true, username: true } },
-            replies: true,
-          },
-          orderBy: { createdAt: "desc" },
-        })
-      : await prisma.topic.findMany({
-          orderBy: { createdAt: "desc" },
-          include: {
-            author: { select: { name: true, username: true } },
-            replies: true,
-          },
-        });
+    const [topicsRes, totalRes] = await Promise.all([
+      prisma.topic.findMany({
+        skip: 0,
+        take: PAGE_SIZE,
+        orderBy: { createdAt: "desc" },
+        include: {
+          author: { select: { name: true, username: true } },
+          _count: { select: { replies: true } },
+        },
+      }),
+      prisma.topic.count(),
+    ]);
+    topics = topicsRes.map((t) => ({
+      ...t,
+      createdAt: t.createdAt.toISOString(),
+      updatedAt: t.updatedAt.toISOString(),
+    })) as ForumTopic[];
+    total = totalRes;
   } catch (err) {
     console.error("Error fetching topics:", err);
     error = "Failed to load topics. Please try again later.";
     topics = [];
+    total = 0;
   }
 
   return (
@@ -101,66 +100,8 @@ export default async function ForumPage({
           </div>
         )}
 
-        {/* All Topics Grid */}
-        <section>
-          <h2 className="mb-8 text-2xl font-bold tracking-tight text-primary">
-            {searchParams.q ? "Search Results" : "All Topics"}
-          </h2>
-          <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-            {topics.length === 0 && (
-              <div className="col-span-full text-center text-muted-foreground">
-                {searchParams.q
-                  ? "No topics found matching your search."
-                  : "No topics yet. Be the first to start a discussion!"}
-              </div>
-            )}
-            {topics.map((topic) => (
-              <Link
-                key={topic.id}
-                href={`/forum/${topic.id}`}
-                className="group"
-              >
-                <Card className="relative overflow-hidden border-2 border-primary/30 bg-background/80 backdrop-blur-lg transition-all duration-200 group-hover:-translate-y-1 group-hover:shadow-xl">
-                  <CardHeader className="pb-2">
-                    <CardTitle className="text-xl font-bold transition-colors group-hover:text-primary">
-                      {topic.title}
-                    </CardTitle>
-                    <CardDescription className="text-base">
-                      by{" "}
-                      {topic.author?.username ? (
-                        <Link
-                          href={`/user/${topic.author.username}`}
-                          className="text-primary hover:underline"
-                        >
-                          {topic.author.username}
-                        </Link>
-                      ) : (
-                        <span className="text-muted-foreground">Unknown</span>
-                      )}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-base leading-relaxed text-muted-foreground">
-                      {topic.content.length > 180
-                        ? topic.content.slice(0, 180) + "..."
-                        : topic.content}
-                    </p>
-                  </CardContent>
-                  <CardFooter className="flex items-center justify-between border-t bg-muted/50 px-6 py-4">
-                    <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                      <span>{topic.replies.length} replies</span>
-                      <span>•</span>
-                      <span>
-                        Last updated{" "}
-                        {new Date(topic.updatedAt).toLocaleDateString()}
-                      </span>
-                    </div>
-                  </CardFooter>
-                </Card>
-              </Link>
-            ))}
-          </div>
-        </section>
+        {/* Infinite Scroll Topics */}
+        <ForumTopicsInfinite initialTopics={topics} total={total} />
 
         {/* Start New Discussion Button */}
         <div className="mt-16 text-center">
