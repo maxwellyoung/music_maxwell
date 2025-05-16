@@ -118,7 +118,7 @@ export default function ForumTopicsInfinite({
           >
             <a className="block no-underline">
               <Card className="relative overflow-hidden border-2 border-primary/30 bg-background/80 backdrop-blur-lg transition-all duration-200 group-hover:-translate-y-1 group-hover:shadow-xl">
-                <CardHeader className="flex items-start justify-between pb-2">
+                <CardHeader className="relative flex items-start justify-between pb-2">
                   <div>
                     <CardTitle className="text-xl font-bold transition-colors group-hover:text-primary">
                       {topic.title}
@@ -141,7 +141,11 @@ export default function ForumTopicsInfinite({
                       )}
                     </CardDescription>
                   </div>
-                  {userRole === "admin" && <TopicActions topicId={topic.id} />}
+                  {userRole === "admin" && (
+                    <div className="absolute right-3 top-3 z-10">
+                      <TopicActions topicId={topic.id} />
+                    </div>
+                  )}
                 </CardHeader>
                 <CardContent>
                   <p className="text-base leading-relaxed text-muted-foreground">
