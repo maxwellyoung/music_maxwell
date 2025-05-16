@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { useSession } from "next-auth/react";
+import { useSession, signIn } from "next-auth/react";
 
 export default function ChooseUsernamePage() {
   const [username, setUsername] = useState("");
@@ -27,6 +27,7 @@ export default function ChooseUsernamePage() {
       body: JSON.stringify({ username }),
     });
     if (res.ok) {
+      await signIn("google", { redirect: false });
       router.push("/forum");
     } else if (res.status === 409) {
       setError("That username is already taken. Please choose another.");

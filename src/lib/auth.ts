@@ -14,6 +14,7 @@ export interface User {
 declare module "next-auth" {
   interface Session {
     user: User & { needsUserName?: boolean; role?: string };
+    maxAge?: number | null;
   }
 }
 
@@ -74,7 +75,7 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async signIn({ user, account }) {
+    async signIn({ user, account, ...rest }) {
       if (account?.provider === "google") {
         const dbUser = await prisma.user.findUnique({
           where: { email: user.email! },
@@ -103,7 +104,7 @@ export const authOptions: NextAuthOptions = {
       }
       return true;
     },
-    async session({ session, token }) {
+    async session({ session, token, user, trigger, newSession, ...rest }) {
       if (token) {
         session.user.id = token.id;
         session.user.name = token.name ?? null;
@@ -112,6 +113,24 @@ export const authOptions: NextAuthOptions = {
         session.user.needsUserName = token.needsUserName;
         session.user.hasPassword = token.hasPassword;
         session.user.role = token.role;
+      }
+      // Set session maxAge based on rememberMe param if available
+      if ((rest as { req?: { body?: unknown } })?.req?.body) {
+        let rememberMe = null;
+        try {
+          let body = (rest as { req?: { body?: unknown } }).req?.body;
+          if (typeof body === "string") {
+            body = JSON.parse(body);
+          }
+          rememberMe = (body as { rememberMe?: string })?.rememberMe;
+        } catch {}
+        if (rememberMe === "0") {
+          // Session cookie (expires on browser close)
+          session.maxAge = null;
+        } else if (rememberMe === "1") {
+          // 30 days
+          session.maxAge = 60 * 60 * 24 * 30;
+        }
       }
       return session;
     },

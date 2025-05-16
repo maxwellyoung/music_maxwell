@@ -14,6 +14,7 @@ export default function AuthForm() {
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const [isInApp, setIsInApp] = useState(false);
+  const [rememberMe, setRememberMe] = useState(true);
 
   useEffect(() => {
     const inapp = new InApp(navigator.userAgent);
@@ -23,7 +24,10 @@ export default function AuthForm() {
   const handleGoogleSignIn = async () => {
     setIsLoading(true);
     try {
-      await signIn("google", { callbackUrl: "/choose-username" });
+      await signIn("google", {
+        callbackUrl: "/choose-username",
+        rememberMe: rememberMe ? "1" : "0",
+      });
     } catch (error) {
       toast({
         title: "Error",
@@ -63,6 +67,21 @@ export default function AuthForm() {
               </b>
             </div>
           )}
+          <div className="mb-4 flex items-center gap-2">
+            <input
+              id="rememberMe"
+              type="checkbox"
+              checked={rememberMe}
+              onChange={() => setRememberMe((v) => !v)}
+              className="h-4 w-4 rounded border-gray-300 text-primary focus:ring-primary"
+            />
+            <label
+              htmlFor="rememberMe"
+              className="select-none text-sm text-muted-foreground"
+            >
+              Remember me
+            </label>
+          </div>
           <Button
             onClick={handleGoogleSignIn}
             disabled={isLoading || isInApp}
