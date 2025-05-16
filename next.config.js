@@ -51,7 +51,7 @@ const nextConfig = {
   },
   // Ensure Node.js built-ins like 'crypto' are not bundled during build
   // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-  webpack: (config, { isServer }) => {
+  webpack: (config, { isServer: _isServer, ..._rest }) => {
     config.resolve = config.resolve || {};
     config.resolve.fallback = config.resolve.fallback || {};
     // Tell Webpack not to polyfill 'crypto'; Node.js will provide it at runtime
