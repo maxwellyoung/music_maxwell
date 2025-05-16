@@ -1,6 +1,5 @@
 "use client";
 
-import React from "react";
 import MyIcon from "../../../public/icons/yt.svg";
 
 const YoutubeIcon = () => (

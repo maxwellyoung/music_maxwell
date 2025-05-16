@@ -4,7 +4,7 @@ import { authOptions } from "~/lib/auth";
 import { prisma } from "~/lib/prisma";
 
 // Add your own list of banned words
-const bannedWords = ["nigger", "faggot", "retard", "nazi", "hitler"];
+const bannedWords = ["moist", "faggot", "retard", "nazi", "hitler"];
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";

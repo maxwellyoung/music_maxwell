@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useCallback } from "react";
 import Image from "next/image";
 import { Play, Pause, X, Plus, ArrowRight } from "lucide-react";
 import { cn } from "~/lib/utils";
@@ -9,6 +9,25 @@ import { motion, AnimatePresence } from "framer-motion";
 export default function Wintour() {
   const [isPlaying, setIsPlaying] = useState(false);
   const [releaseDate] = useState(new Date("2025-04-25T00:00:00"));
+
+  const getTimeLeft = useCallback(() => {
+    const now = new Date();
+    const difference = releaseDate.getTime() - now.getTime();
+
+    if (difference <= 0) {
+      return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+    }
+
+    const days = Math.floor(difference / (1000 * 60 * 60 * 24));
+    const hours = Math.floor(
+      (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
+    );
+    const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
+    const seconds = Math.floor((difference % (1000 * 60)) / 1000);
+
+    return { days, hours, minutes, seconds };
+  }, [releaseDate]);
+
   const [timeLeft, setTimeLeft] = useState(getTimeLeft());
   const [hasMounted, setHasMounted] = useState(false);
   const [activeSection, setActiveSection] = useState<"main" | "about">("main");
@@ -50,24 +69,6 @@ export default function Wintour() {
     "i tell why, i never lie",
     "i don't know why u make it feel like that",
   ];
-
-  function getTimeLeft() {
-    const now = new Date();
-    const difference = releaseDate.getTime() - now.getTime();
-
-    if (difference <= 0) {
-      return { days: 0, hours: 0, minutes: 0, seconds: 0 };
-    }
-
-    const days = Math.floor(difference / (1000 * 60 * 60 * 24));
-    const hours = Math.floor(
-      (difference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60),
-    );
-    const minutes = Math.floor((difference % (1000 * 60 * 60)) / (1000 * 60));
-    const seconds = Math.floor((difference % (1000 * 60)) / 1000);
-
-    return { days, hours, minutes, seconds };
-  }
 
   // Countdown timer effect
   useEffect(() => {

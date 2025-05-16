@@ -1,4 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
+import type { NextRequest } from "next/server";
+import { NextResponse } from "next/server";
 import { prisma } from "../../../../lib/prisma";
 
 // GET /api/demos/[id] - Get a single demo by ID

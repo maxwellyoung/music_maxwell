@@ -27,9 +27,9 @@ export default function UserProfilePage() {
   useEffect(() => {
     const fetchProfile = async () => {
       try {
-        const res = await fetch(`/api/user/${params.username}`);
+        const res = await fetch(`/api/user/${String(params.username)}`);
         if (!res.ok) throw new Error("Failed to fetch profile");
-        const data = await res.json();
+        const data = (await res.json()) as UserProfile;
         setProfile(data);
       } catch (error) {
         console.error("Error fetching profile:", error);
@@ -38,7 +38,7 @@ export default function UserProfilePage() {
       }
     };
 
-    fetchProfile();
+    void fetchProfile();
   }, [params.username]);
 
   if (isLoading) {
@@ -62,7 +62,8 @@ export default function UserProfilePage() {
         <div className="mx-auto max-w-2xl text-center">
           <h1 className="mb-4 text-4xl font-bold">User Not Found</h1>
           <p className="mb-8 text-lg text-muted-foreground">
-            The user you're looking for doesn't exist or has been removed.
+            The user you&apos;re looking for doesn&apos;t exist or has been
+            removed.
           </p>
           <Link href="/forum" passHref legacyBehavior>
             <Button

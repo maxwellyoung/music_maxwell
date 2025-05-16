@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { motion, AnimatePresence } from "framer-motion";
 import { Drawer, DrawerClose, DrawerContent, DrawerHeader } from "./ui/drawer";
@@ -119,7 +119,7 @@ const linkifyText = (text: string) => {
   const urlRegex = /(https?:\/\/[^\s]+)/g;
   return text
     .split(urlRegex)
-    .map((part, index) => {
+    .map((part) => {
       if (part.match(urlRegex)) {
         return `<a href="${part}" target="_blank" rel="noopener noreferrer" class="text-primary hover:underline">${part}</a>`;
       }
@@ -131,11 +131,11 @@ const linkifyText = (text: string) => {
 // Add this utility function after the getYouTubeVideoId function
 const embedSoundCloud = (text: string) => {
   const soundcloudRegex = /(https?:\/\/soundcloud\.com\/[^\s]+)/g;
-  return text.split(soundcloudRegex).map((part, index) => {
+  return text.split(soundcloudRegex).map((part, _index) => {
     if (part.match(soundcloudRegex)) {
       return (
         <iframe
-          key={index}
+          key={_index}
           width="100%"
           height="166"
           scrolling="no"
