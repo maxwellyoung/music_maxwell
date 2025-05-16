@@ -2,16 +2,20 @@ import { prisma } from "~/lib/prisma";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { SearchTopics } from "~/components/forum/SearchTopics";
-import ForumTopicsInfinite from "~/components/forum/ForumTopicsInfinite";
+import dynamicImport from "next/dynamic";
+const ForumTopicsInfinite = dynamicImport(
+  () => import("~/components/forum/ForumTopicsInfinite"),
+  { ssr: false },
+);
 import type { ForumTopic } from "~/components/forum/ForumTopicsInfinite";
+
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: "Forum | Maxwell Young",
   description:
     "Join the discussion about Maxwell Young's music, upcoming projects, and more.",
 };
-
-export const revalidate = 60; // Revalidate this page every 60 seconds for forum best practices
 
 // Mark the page as dynamic
 export const dynamic = "force-dynamic";
@@ -85,7 +89,7 @@ export default async function ForumPage({
         <ForumTopicsInfinite initialTopics={topics} total={total} />
 
         {/* Start New Discussion Button */}
-        <div className="mt-16 text-center">
+        <div className="mt-24 text-center">
           <Link
             href="/forum/new"
             className="inline-flex items-center justify-center rounded-xl bg-primary px-8 py-4 text-lg font-semibold text-primary-foreground shadow-lg transition hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"

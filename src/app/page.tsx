@@ -1,4 +1,7 @@
-import CollectableGrid from "~/components/CollectableGrid";
+import dynamic from "next/dynamic";
+const CollectableGrid = dynamic(() => import("~/components/CollectableGrid"), {
+  ssr: false,
+});
 
 export default function Home() {
   return (
