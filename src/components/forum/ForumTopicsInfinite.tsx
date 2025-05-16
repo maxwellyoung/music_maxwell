@@ -11,8 +11,14 @@ import {
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
+import { useSession } from "next-auth/react";
+import dynamic from "next/dynamic";
 
 const PAGE_SIZE = 10;
+
+const TopicActions = dynamic(() => import("~/components/forum/TopicActions"), {
+  ssr: false,
+});
 
 export type ForumTopic = {
   id: string;
@@ -36,6 +42,8 @@ export default function ForumTopicsInfinite({
   const [hasMore, setHasMore] = useState(initialTopics.length < total);
   const loaderRef = useRef<HTMLDivElement | null>(null);
   const router = useRouter();
+  const { data: session } = useSession();
+  const userRole = (session?.user as { role?: string } | undefined)?.role;
 
   const loadMore = useCallback(async () => {
     if (loading || !hasMore) return;
@@ -87,27 +95,30 @@ export default function ForumTopicsInfinite({
           >
             <a className="block no-underline">
               <Card className="relative overflow-hidden border-2 border-primary/30 bg-background/80 backdrop-blur-lg transition-all duration-200 group-hover:-translate-y-1 group-hover:shadow-xl">
-                <CardHeader className="pb-2">
-                  <CardTitle className="text-xl font-bold transition-colors group-hover:text-primary">
-                    {topic.title}
-                  </CardTitle>
-                  <CardDescription className="text-base">
-                    by{" "}
-                    {topic.author?.username ? (
-                      <span
-                        className="cursor-pointer text-primary hover:underline"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          router.push(`/user/${topic.author?.username}`);
-                        }}
-                      >
-                        {topic.author.username}
-                      </span>
-                    ) : (
-                      <span className="text-muted-foreground">Unknown</span>
-                    )}
-                  </CardDescription>
+                <CardHeader className="flex items-start justify-between pb-2">
+                  <div>
+                    <CardTitle className="text-xl font-bold transition-colors group-hover:text-primary">
+                      {topic.title}
+                    </CardTitle>
+                    <CardDescription className="text-base">
+                      by{" "}
+                      {topic.author?.username ? (
+                        <span
+                          className="cursor-pointer text-primary hover:underline"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            router.push(`/user/${topic.author?.username}`);
+                          }}
+                        >
+                          {topic.author.username}
+                        </span>
+                      ) : (
+                        <span className="text-muted-foreground">Unknown</span>
+                      )}
+                    </CardDescription>
+                  </div>
+                  {userRole === "admin" && <TopicActions topicId={topic.id} />}
                 </CardHeader>
                 <CardContent>
                   <p className="text-base leading-relaxed text-muted-foreground">

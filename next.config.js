@@ -65,7 +65,12 @@ if (!process.env.SKIP_ENV_VALIDATION) {
   await import("./src/env.js");
 }
 
-const withBundleAnalyzer = require("@next/bundle-analyzer")({
+// Remove require and use dynamic import for ESM compatibility
+// const withBundleAnalyzer = require("@next/bundle-analyzer")({
+//   enabled: process.env.ANALYZE === "true",
+// });
+
+const withBundleAnalyzer = (await import("@next/bundle-analyzer")).default({
   enabled: process.env.ANALYZE === "true",
 });
 
