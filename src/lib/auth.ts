@@ -75,7 +75,7 @@ export const authOptions: NextAuthOptions = {
     }),
   ],
   callbacks: {
-    async signIn({ user, account, ...rest }) {
+    async signIn({ user, account, ..._rest }) {
       if (account?.provider === "google") {
         const dbUser = await prisma.user.findUnique({
           where: { email: user.email! },
@@ -104,7 +104,7 @@ export const authOptions: NextAuthOptions = {
       }
       return true;
     },
-    async session({ session, token, user, trigger, newSession, ...rest }) {
+    async session({ session, token, ..._rest }) {
       if (token) {
         session.user.id = token.id;
         session.user.name = token.name ?? null;
@@ -115,10 +115,10 @@ export const authOptions: NextAuthOptions = {
         session.user.role = token.role;
       }
       // Set session maxAge based on rememberMe param if available
-      if ((rest as { req?: { body?: unknown } })?.req?.body) {
+      if ((_rest as { req?: { body?: unknown } })?.req?.body) {
         let rememberMe = null;
         try {
-          let body = (rest as { req?: { body?: unknown } }).req?.body;
+          let body = (_rest as { req?: { body?: unknown } }).req?.body;
           if (typeof body === "string") {
             body = JSON.parse(body);
           }
