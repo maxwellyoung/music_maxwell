@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "~/lib/auth";
 import { prisma } from "~/lib/prisma";
+import { triggerNewForumReply } from "~/lib/pusherServer";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -72,6 +73,9 @@ export async function POST(request: Request) {
         authorId: session.user.id,
       },
     });
+
+    // Broadcast new reply event
+    await triggerNewForumReply(topicId, reply);
 
     return NextResponse.json(reply);
   } catch (error) {

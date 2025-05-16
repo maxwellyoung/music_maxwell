@@ -13,6 +13,7 @@ import {
 } from "~/components/ui/card";
 import { useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
+import { subscribeToForumTopics } from "~/lib/pusherClient";
 
 const PAGE_SIZE = 10;
 
@@ -29,6 +30,17 @@ export type ForumTopic = {
   author: { name: string | null; username: string | null } | null;
   _count: { replies: number };
 };
+
+function ForumTopicSkeleton() {
+  return (
+    <div className="animate-pulse rounded-2xl border-2 border-primary/10 bg-muted/30 p-6 shadow">
+      <div className="mb-4 h-6 w-2/3 rounded bg-muted-foreground/20" />
+      <div className="mb-2 h-4 w-1/3 rounded bg-muted-foreground/10" />
+      <div className="mb-6 h-4 w-full rounded bg-muted-foreground/10" />
+      <div className="h-4 w-1/2 rounded bg-muted-foreground/10" />
+    </div>
+  );
+}
 
 export default function ForumTopicsInfinite({
   initialTopics,
@@ -73,6 +85,17 @@ export default function ForumTopicsInfinite({
     if (current) observer.observe(current);
     return () => observer.disconnect();
   }, [loadMore, hasMore]);
+
+  // Real-time updates
+  useEffect(() => {
+    const unsubscribe = subscribeToForumTopics((newTopic: ForumTopic) => {
+      setTopics((prev) => {
+        if (prev.some((t) => t.id === newTopic.id)) return prev;
+        return [newTopic, ...prev];
+      });
+    });
+    return unsubscribe;
+  }, []);
 
   return (
     <section>
@@ -141,6 +164,11 @@ export default function ForumTopicsInfinite({
             </a>
           </Link>
         ))}
+        {loading &&
+          hasMore &&
+          Array.from({ length: 2 }).map((_, i) => (
+            <ForumTopicSkeleton key={i} />
+          ))}
       </div>
       <div ref={loaderRef} className="flex h-12 items-center justify-center">
         {loading && (

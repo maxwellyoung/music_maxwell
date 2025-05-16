@@ -127,7 +127,7 @@ export default async function TopicPage({
               ({topic.replies.length})
             </span>
           </h2>
-          <RepliesList replies={topic.replies} />
+          <RepliesList replies={topic.replies} topicId={topic.id} />
         </section>
 
         {/* Reply Form (functional) */}

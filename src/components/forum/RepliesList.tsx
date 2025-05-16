@@ -9,13 +9,14 @@ import {
   CardFooter,
 } from "~/components/ui/card";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import ConfirmModal from "./ConfirmModal";
 import { useToast } from "~/components/ui/use-toast";
 import React from "react";
 import { Trash, Flag } from "phosphor-react";
 import Image from "next/image";
 import Link from "next/link";
+import { pusherClient } from "~/lib/pusherClient";
 
 // Type for a reply
 type Reply = {
@@ -168,7 +169,13 @@ function renderRichContent(text: string) {
   );
 }
 
-export default function RepliesList({ replies }: { replies: Reply[] }) {
+export default function RepliesList({
+  replies: initialReplies,
+  topicId,
+}: {
+  replies: Reply[];
+  topicId: string;
+}) {
   const { data: session } = useSession();
   const userRole = (session?.user as { role?: string } | undefined)?.role;
   const userId = session?.user?.id;
@@ -181,6 +188,25 @@ export default function RepliesList({ replies }: { replies: Reply[] }) {
   const [toReportId, setToReportId] = useState<string | null>(null);
   const [reportReason, setReportReason] = useState("");
   const [reportLoading, setReportLoading] = useState(false);
+  const [replies, setReplies] = useState<Reply[]>(initialReplies);
+
+  useEffect(() => {
+    // Subscribe to real-time new replies for this topic
+    const channelName = `forum-replies-${topicId}`;
+    const channel = pusherClient.subscribe(channelName);
+    const handleNewReply = (reply: Reply) => {
+      setReplies((prev) => {
+        // Avoid duplicates
+        if (prev.some((r) => r.id === reply.id)) return prev;
+        return [...prev, reply];
+      });
+    };
+    channel.bind("new-reply", handleNewReply);
+    return () => {
+      channel.unbind("new-reply", handleNewReply);
+      pusherClient.unsubscribe(channelName);
+    };
+  }, [topicId]);
 
   async function handleDelete(replyId: string) {
     setToDeleteId(replyId);

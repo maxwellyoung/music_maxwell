@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "~/lib/auth";
 import { prisma } from "~/lib/prisma";
+import { triggerNewForumTopic } from "~/lib/pusherServer";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -62,6 +63,21 @@ export async function POST(request: Request) {
         content,
         authorId: session.user.id,
       },
+      include: {
+        author: { select: { name: true, username: true } },
+        _count: { select: { replies: true } },
+      },
+    });
+
+    // Broadcast new topic event
+    await triggerNewForumTopic({
+      id: topic.id,
+      title: topic.title,
+      content: topic.content,
+      createdAt: topic.createdAt,
+      updatedAt: topic.updatedAt,
+      author: topic.author,
+      _count: topic._count,
     });
 
     return NextResponse.json({
