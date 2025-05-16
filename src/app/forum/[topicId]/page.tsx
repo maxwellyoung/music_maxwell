@@ -23,6 +23,8 @@ export const metadata: Metadata = {
   description: "Join the discussion about Maxwell Young's music and art.",
 };
 
+export const revalidate = 60; // Revalidate this page every 60 seconds for forum best practices
+
 export default async function TopicPage({
   params,
 }: {

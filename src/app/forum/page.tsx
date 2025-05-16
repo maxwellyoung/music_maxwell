@@ -37,6 +37,8 @@ export const metadata: Metadata = {
     "Join the discussion about Maxwell Young's music, upcoming projects, and more.",
 };
 
+export const revalidate = 60; // Revalidate this page every 60 seconds for forum best practices
+
 // Mark the page as dynamic
 export const dynamic = "force-dynamic";
 
