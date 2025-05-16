@@ -71,6 +71,9 @@ model Topic {
   author    User      @relation(fields: [authorId], references: [id])
   authorId  String
   replies   Reply[]
+
+  @@index([createdAt])
+  @@index([authorId])
 }
 
 model Reply {
@@ -82,7 +85,10 @@ model Reply {
   authorId  String
   topic     Topic    @relation(fields: [topicId], references: [id])
   topicId   String
-  reports     Report[]   @relation("ReplyReports")
+  reports   Report[]   @relation("ReplyReports")
+
+  @@index([createdAt])
+  @@index([topicId])
 }
 
 model Report {

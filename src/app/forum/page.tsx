@@ -1,28 +1,9 @@
 import { prisma } from "~/lib/prisma";
 import type { Metadata } from "next";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "~/components/ui/card";
 import Link from "next/link";
 import { SearchTopics } from "~/components/forum/SearchTopics";
-import ForumTopicsInfinite, {
-  ForumTopic,
-} from "~/components/forum/ForumTopicsInfinite";
-
-// Explicit type for forum topics
-type Reply = {
-  id: string;
-  createdAt: Date;
-  updatedAt: Date;
-  content: string;
-  authorId: string;
-  topicId: string;
-};
+import ForumTopicsInfinite from "~/components/forum/ForumTopicsInfinite";
+import type { ForumTopic } from "~/components/forum/ForumTopicsInfinite";
 
 export const metadata: Metadata = {
   title: "Forum | Maxwell Young",

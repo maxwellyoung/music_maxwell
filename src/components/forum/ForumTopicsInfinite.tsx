@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, useCallback } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   Card,
   CardContent,
@@ -34,6 +35,7 @@ export default function ForumTopicsInfinite({
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(initialTopics.length < total);
   const loaderRef = useRef<HTMLDivElement | null>(null);
+  const router = useRouter();
 
   const loadMore = useCallback(async () => {
     if (loading || !hasMore) return;
@@ -76,44 +78,56 @@ export default function ForumTopicsInfinite({
           </div>
         )}
         {topics.map((topic) => (
-          <Link key={topic.id} href={`/forum/${topic.id}`} className="group">
-            <Card className="relative overflow-hidden border-2 border-primary/30 bg-background/80 backdrop-blur-lg transition-all duration-200 group-hover:-translate-y-1 group-hover:shadow-xl">
-              <CardHeader className="pb-2">
-                <CardTitle className="text-xl font-bold transition-colors group-hover:text-primary">
-                  {topic.title}
-                </CardTitle>
-                <CardDescription className="text-base">
-                  by{" "}
-                  {topic.author?.username ? (
-                    <Link
-                      href={`/user/${topic.author.username}`}
-                      className="text-primary hover:underline"
-                    >
-                      {topic.author.username}
-                    </Link>
-                  ) : (
-                    <span className="text-muted-foreground">Unknown</span>
-                  )}
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <p className="text-base leading-relaxed text-muted-foreground">
-                  {topic.content.length > 180
-                    ? topic.content.slice(0, 180) + "..."
-                    : topic.content}
-                </p>
-              </CardContent>
-              <CardFooter className="flex items-center justify-between border-t bg-muted/50 px-6 py-4">
-                <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                  <span>{topic._count.replies} replies</span>
-                  <span>•</span>
-                  <span>
-                    Last updated{" "}
-                    {new Date(topic.updatedAt).toLocaleDateString()}
-                  </span>
-                </div>
-              </CardFooter>
-            </Card>
+          <Link
+            key={topic.id}
+            href={`/forum/${topic.id}`}
+            className="group"
+            passHref
+            legacyBehavior
+          >
+            <a className="block no-underline">
+              <Card className="relative overflow-hidden border-2 border-primary/30 bg-background/80 backdrop-blur-lg transition-all duration-200 group-hover:-translate-y-1 group-hover:shadow-xl">
+                <CardHeader className="pb-2">
+                  <CardTitle className="text-xl font-bold transition-colors group-hover:text-primary">
+                    {topic.title}
+                  </CardTitle>
+                  <CardDescription className="text-base">
+                    by{" "}
+                    {topic.author?.username ? (
+                      <span
+                        className="cursor-pointer text-primary hover:underline"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          router.push(`/user/${topic.author?.username}`);
+                        }}
+                      >
+                        {topic.author.username}
+                      </span>
+                    ) : (
+                      <span className="text-muted-foreground">Unknown</span>
+                    )}
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-base leading-relaxed text-muted-foreground">
+                    {topic.content.length > 180
+                      ? topic.content.slice(0, 180) + "..."
+                      : topic.content}
+                  </p>
+                </CardContent>
+                <CardFooter className="flex items-center justify-between border-t bg-muted/50 px-6 py-4">
+                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                    <span>{topic._count.replies} replies</span>
+                    <span>•</span>
+                    <span>
+                      Last updated{" "}
+                      {new Date(topic.updatedAt).toLocaleDateString()}
+                    </span>
+                  </div>
+                </CardFooter>
+              </Card>
+            </a>
           </Link>
         ))}
       </div>
