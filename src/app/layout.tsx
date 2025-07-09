@@ -7,7 +7,7 @@ import Navbar from "../components/Navbar";
 
 export const metadata: Metadata = {
   title: "Maxwell Young",
-  description: "Alternative pop artists",
+  description: "Alternative pop artist.",
   openGraph: {
     images: ["/icons/ss.webp"],
   },
