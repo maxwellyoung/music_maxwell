@@ -3,27 +3,17 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "~/lib/auth";
 import { prisma } from "~/lib/prisma";
 import { triggerNewForumReply } from "~/lib/pusherServer";
+import { containsBannedWords, RATE_LIMITS } from "~/lib/constants";
+import { rateLimit } from "~/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
-// In-memory rate limit store (for demo/dev only)
-const rateLimitMap = new Map();
-
-const bannedWords = [
-  "admin",
-  "mod",
-  "fuck",
-  "shit",
-  "bitch",
-  "asshole",
-  "nigger",
-  "faggot",
-  "cunt",
-  "retard",
-  "nazi",
-  "hitler",
-];
+// Rate limiter instance using LRU cache (works in serverless)
+const replyRateLimiter = rateLimit({
+  interval: RATE_LIMITS.REPLY_INTERVAL_MS,
+  uniqueTokenPerInterval: 500,
+});
 
 export async function POST(request: Request) {
   const session = await getServerSession(authOptions);
@@ -32,15 +22,16 @@ export async function POST(request: Request) {
   }
 
   // Rate limiting: 1 reply per 10 seconds per user
-  const now = Date.now();
-  const last = rateLimitMap.get(session.user.id) || 0;
-  if (now - last < 10_000) {
+  const rateLimitResult = await replyRateLimiter.check(
+    RATE_LIMITS.REPLY_MAX_PER_INTERVAL,
+    session.user.id,
+  );
+  if (!rateLimitResult.success) {
     return NextResponse.json(
       { error: "You are replying too fast. Please wait a few seconds." },
       { status: 429 },
     );
   }
-  rateLimitMap.set(session.user.id, now);
 
   try {
     const data = (await request.json()) as Record<string, unknown>;
@@ -58,8 +49,7 @@ export async function POST(request: Request) {
     const { content, topicId } = data as { content: string; topicId: string };
 
     // Check for offensive/banned words in content
-    const lowerContent = content.toLowerCase();
-    if (bannedWords.some((word) => lowerContent.includes(word))) {
+    if (containsBannedWords(content)) {
       return NextResponse.json(
         { error: "Your reply contains inappropriate language." },
         { status: 400 },
@@ -78,8 +68,7 @@ export async function POST(request: Request) {
     await triggerNewForumReply(topicId, reply);
 
     return NextResponse.json(reply);
-  } catch (error) {
-    console.error("Error creating reply:", error);
+  } catch {
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },
@@ -118,8 +107,7 @@ export async function DELETE(request: Request) {
 
     await prisma.reply.delete({ where: { id: replyId } });
     return NextResponse.json({ success: true });
-  } catch (error) {
-    console.error("Error deleting reply:", error);
+  } catch {
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },

@@ -72,8 +72,10 @@ Music Maxwell is a full-stack web application for music enthusiasts, built with 
 ├── /lib
 │   ├── auth.ts            # NextAuth configuration
 │   ├── prisma.ts          # Prisma client singleton
+│   ├── constants.ts       # Shared constants (banned words, rate limits)
+│   ├── validations.ts     # Zod validation schemas for API routes
 │   ├── email.ts           # Email service (nodemailer)
-│   ├── rate-limit.ts      # Rate limiting utility
+│   ├── rate-limit.ts      # Rate limiting utility (LRU cache)
 │   ├── pusherServer.ts    # Pusher server-side
 │   ├── pusherClient.ts    # Pusher client-side
 │   ├── sanity.ts          # Sanity CMS client
@@ -362,8 +364,23 @@ Next.js automatically tries 3001, 3002, etc.
 |------|---------|
 | `src/lib/auth.ts` | NextAuth configuration |
 | `src/lib/prisma.ts` | Prisma client singleton |
+| `src/lib/constants.ts` | Shared constants (banned words, rate limits) |
+| `src/lib/validations.ts` | Zod schemas for API input validation |
+| `src/lib/rate-limit.ts` | LRU-based rate limiting for serverless |
 | `src/middleware.ts` | Route protection |
 | `src/env.js` | Environment validation |
 | `prisma/schema.prisma` | Database schema |
 | `next.config.js` | Next.js configuration |
 | `tailwind.config.ts` | Tailwind CSS configuration |
+
+## Security Best Practices
+
+This codebase follows security best practices:
+
+- **No secrets in logs**: Environment variables are validated but never logged
+- **CORS**: Configured to specific origin, not wildcard
+- **Input validation**: Zod schemas validate all API inputs
+- **Rate limiting**: LRU cache-based rate limiting works in serverless
+- **Password hashing**: Consistent bcrypt rounds (12) across all routes
+- **Atomic operations**: User deletion uses Prisma transactions
+- **Content moderation**: Centralized banned words list in `src/lib/constants.ts`

@@ -6,35 +6,6 @@ const NODE_ENV = z
   .enum(["development", "production", "test"])
   .default("production");
 
-// Log all relevant env vars for debugging (remove after debugging!)
-console.log("ENV being validated:", {
-  NODE_ENV: process.env.NODE_ENV,
-  DATABASE_URL: process.env.DATABASE_URL,
-  NEXTAUTH_URL: process.env.NEXTAUTH_URL,
-  NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
-  GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
-  GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
-  SANITY_API_TOKEN: process.env.SANITY_API_TOKEN,
-  RESEND_API_KEY: process.env.RESEND_API_KEY,
-  RESEND_SENDER: process.env.RESEND_SENDER,
-  SMTP_HOST: process.env.SMTP_HOST,
-  SMTP_PORT: process.env.SMTP_PORT,
-  SMTP_SECURE: process.env.SMTP_SECURE,
-  SMTP_USER: process.env.SMTP_USER,
-  SMTP_PASSWORD: process.env.SMTP_PASSWORD,
-  SMTP_FROM: process.env.SMTP_FROM,
-  SKIP_ENV_VALIDATION: process.env.SKIP_ENV_VALIDATION,
-  NEXT_PHASE: process.env.NEXT_PHASE,
-  NEXT_PUBLIC_SANITY_PROJECT_ID: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
-  NEXT_PUBLIC_SANITY_DATASET: process.env.NEXT_PUBLIC_SANITY_DATASET,
-  NEXT_PUBLIC_SANITY_API_VERSION: process.env.NEXT_PUBLIC_SANITY_API_VERSION,
-  NEXT_PUBLIC_APP_URL: process.env.NEXT_PUBLIC_APP_URL,
-  NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN:
-    process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN,
-  NEXT_PUBLIC_SHOPIFY_ACCESS_TOKEN:
-    process.env.NEXT_PUBLIC_SHOPIFY_ACCESS_TOKEN,
-});
-
 let env;
 try {
   env = createEnv({

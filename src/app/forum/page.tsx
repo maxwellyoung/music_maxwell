@@ -9,15 +9,13 @@ const ForumTopicsInfinite = dynamicImport(
 );
 import type { ForumTopic } from "~/components/forum/ForumTopicsInfinite";
 
-export const revalidate = 60;
-
 export const metadata: Metadata = {
   title: "Forum | Maxwell Young",
   description:
     "Join the discussion about Maxwell Young's music, upcoming projects, and more.",
 };
 
-// Mark the page as dynamic
+// Use dynamic rendering for real-time forum data
 export const dynamic = "force-dynamic";
 
 export default async function ForumPage({
@@ -56,8 +54,7 @@ export default async function ForumPage({
       updatedAt: t.updatedAt.toISOString(),
     })) as ForumTopic[];
     total = totalRes;
-  } catch (err) {
-    console.error("Error fetching topics:", err);
+  } catch {
     error = "Failed to load topics. Please try again later.";
     topics = [];
     total = 0;

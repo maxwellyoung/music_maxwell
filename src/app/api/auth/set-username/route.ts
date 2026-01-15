@@ -2,9 +2,7 @@ import { NextResponse } from "next/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "~/lib/auth";
 import { prisma } from "~/lib/prisma";
-
-// Add your own list of banned words
-const bannedWords = ["moist", "faggot", "retard", "nazi", "hitler"];
+import { containsBannedWords } from "~/lib/constants";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -44,8 +42,7 @@ export async function POST(req: Request) {
     }
 
     // Check for offensive/banned words
-    const lowerUsername = username.toLowerCase();
-    if (bannedWords.some((word) => lowerUsername.includes(word))) {
+    if (containsBannedWords(username)) {
       return new NextResponse("Username contains inappropriate language", {
         status: 400,
       });
@@ -66,8 +63,7 @@ export async function POST(req: Request) {
     });
 
     return new NextResponse("Username updated successfully", { status: 200 });
-  } catch (error) {
-    console.error("[SET_USERNAME]", error);
+  } catch {
     return new NextResponse("Internal error", { status: 500 });
   }
 }

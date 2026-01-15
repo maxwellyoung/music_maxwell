@@ -27,6 +27,8 @@ model User {
   sessions      Session[]
   accounts      Account[]
   needsUserName Boolean? @default(false)
+
+  @@index([email])
 }
 
 model Account {
@@ -89,6 +91,7 @@ model Reply {
 
   @@index([createdAt])
   @@index([topicId])
+  @@index([authorId])
 }
 
 model Report {
