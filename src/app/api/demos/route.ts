@@ -36,7 +36,7 @@ export async function POST(req: NextRequest) {
       data: {
         title,
         description: description ?? null,
-        link: link || null,
+        link: link ?? null,
         status: status ?? "unfinished",
       },
     });
