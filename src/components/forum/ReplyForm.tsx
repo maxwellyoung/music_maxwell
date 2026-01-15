@@ -33,6 +33,7 @@ export default function ReplyForm({
           <button
             onClick={() => signIn()}
             className="inline-flex items-center justify-center rounded-xl bg-primary px-8 py-3 text-base font-semibold text-primary-foreground shadow-lg transition hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+            aria-label="Sign in to reply to this topic"
           >
             Sign in to reply
           </button>
@@ -96,12 +97,14 @@ export default function ReplyForm({
               onChange={(e) => setContent(e.target.value)}
               required
               disabled={isLoading}
+              aria-label="Reply content"
             />
           </div>
           <button
             type="submit"
             className="inline-flex items-center justify-center rounded-xl bg-primary px-8 py-3 text-base font-semibold text-primary-foreground shadow-lg transition hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
             disabled={isLoading || !content.trim()}
+            aria-label={isLoading ? "Posting reply" : "Post reply"}
           >
             {isLoading ? "Posting..." : "Post Reply"}
           </button>

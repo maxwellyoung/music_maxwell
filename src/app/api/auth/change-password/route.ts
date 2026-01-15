@@ -3,6 +3,9 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "~/lib/auth";
 import { prisma } from "~/lib/prisma";
 import bcrypt from "bcryptjs";
+import { changePasswordSchema } from "~/lib/validations";
+
+const HASH_ROUNDS = 12;
 
 export async function POST(req: Request) {
   try {
@@ -15,10 +18,15 @@ export async function POST(req: Request) {
       );
     }
 
-    const {
-      currentPassword,
-      newPassword,
-    }: { currentPassword?: string; newPassword: string } = await req.json();
+    const body = await req.json();
+    const parseResult = changePasswordSchema.safeParse(body);
+    if (!parseResult.success) {
+      return NextResponse.json(
+        { error: parseResult.error.errors[0]?.message ?? "Invalid input" },
+        { status: 400 },
+      );
+    }
+    const { currentPassword, newPassword } = parseResult.data;
 
     const user = await prisma.user.findUnique({
       where: { email: session.user.email },
@@ -50,16 +58,15 @@ export async function POST(req: Request) {
       }
     }
 
-    // Hash and update new password
-    const hashedPassword = await bcrypt.hash(newPassword, 10);
+    // Hash and update new password (use consistent hash rounds)
+    const hashedPassword = await bcrypt.hash(newPassword, HASH_ROUNDS);
     await prisma.user.update({
       where: { id: user.id },
       data: { password: hashedPassword },
     });
 
     return NextResponse.json({ message: "Password updated successfully" });
-  } catch (error) {
-    console.error("Error changing password:", error);
+  } catch {
     return NextResponse.json(
       { error: "Failed to change password" },
       { status: 500 },

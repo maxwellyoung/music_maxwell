@@ -3,24 +3,10 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "~/lib/auth";
 import { prisma } from "~/lib/prisma";
 import { triggerNewForumTopic } from "~/lib/pusherServer";
+import { containsBannedWords } from "~/lib/constants";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
-
-const bannedWords = [
-  "admin",
-  "mod",
-  "fuck",
-  "shit",
-  "bitch",
-  "asshole",
-  "nigger",
-  "faggot",
-  "cunt",
-  "retard",
-  "nazi",
-  "hitler",
-];
 
 export async function POST(request: Request) {
   const session = await getServerSession(authOptions);
@@ -44,13 +30,7 @@ export async function POST(request: Request) {
     const { title, content } = data as { title: string; content: string };
 
     // Check for offensive/banned words in title or content
-    const lowerTitle = title.toLowerCase();
-    const lowerContent = content.toLowerCase();
-    if (
-      bannedWords.some(
-        (word) => lowerTitle.includes(word) || lowerContent.includes(word),
-      )
-    ) {
+    if (containsBannedWords(title) || containsBannedWords(content)) {
       return NextResponse.json(
         { error: "Your topic contains inappropriate language." },
         { status: 400 },
@@ -88,8 +68,7 @@ export async function POST(request: Request) {
       updatedAt: topic.updatedAt,
       authorId: topic.authorId,
     });
-  } catch (error) {
-    console.error("Error creating topic:", error);
+  } catch {
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },
@@ -138,8 +117,7 @@ export async function DELETE(request: Request) {
     });
 
     return NextResponse.json({ success: true });
-  } catch (error) {
-    console.error("Error deleting topic:", error);
+  } catch {
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },
@@ -167,8 +145,7 @@ export async function GET(request: Request) {
     ]);
 
     return NextResponse.json({ topics, total });
-  } catch (error) {
-    console.error("Error fetching topics (GET):", error);
+  } catch {
     return NextResponse.json(
       { error: "Failed to fetch topics" },
       { status: 500 },

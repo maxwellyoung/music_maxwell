@@ -21,15 +21,15 @@ export async function GET(request: Request) {
         ],
       },
       include: {
-        author: { select: { name: true } },
-        replies: true,
+        author: { select: { name: true, username: true } },
+        _count: { select: { replies: true } },
       },
       orderBy: { createdAt: "desc" },
+      take: 50, // Limit search results
     });
 
     return NextResponse.json({ topics });
-  } catch (error) {
-    console.error("Error searching topics:", error);
+  } catch {
     return NextResponse.json(
       { error: "Internal server error" },
       { status: 500 },
