@@ -4,6 +4,8 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { useSession, signIn } from "next-auth/react";
 import { Card, CardHeader, CardTitle, CardContent } from "~/components/ui/card";
+import { Button } from "~/components/ui/button";
+import { Textarea } from "~/components/ui/textarea";
 import { useToast } from "~/components/ui/use-toast";
 
 export default function ReplyForm({
@@ -20,23 +22,33 @@ export default function ReplyForm({
   const router = useRouter();
 
   if (status === "loading") {
-    return null;
+    return (
+      <Card className="mt-8 border border-border/50 bg-background/60 backdrop-blur-sm">
+        <CardContent className="flex items-center justify-center py-8">
+          <div className="h-5 w-5 animate-spin rounded-full border-2 border-primary border-t-transparent" />
+        </CardContent>
+      </Card>
+    );
   }
 
   if (!session) {
     return (
-      <Card className="mt-12 border-2 border-primary/10 bg-background/80 shadow-md backdrop-blur-lg">
-        <CardHeader>
-          <CardTitle className="text-xl font-bold">Add a Reply</CardTitle>
+      <Card className="mt-8 border border-border/50 bg-background/60 backdrop-blur-sm">
+        <CardHeader className="pb-3">
+          <CardTitle className="text-lg font-semibold">Join the Discussion</CardTitle>
         </CardHeader>
         <CardContent>
-          <button
+          <p className="mb-4 text-sm text-muted-foreground">
+            Sign in to share your thoughts and join the conversation.
+          </p>
+          <Button
             onClick={() => signIn()}
-            className="inline-flex items-center justify-center rounded-xl bg-primary px-8 py-3 text-base font-semibold text-primary-foreground shadow-lg transition hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+            size="lg"
+            className="w-full sm:w-auto"
             aria-label="Sign in to reply to this topic"
           >
             Sign in to reply
-          </button>
+          </Button>
         </CardContent>
       </Card>
     );
@@ -81,33 +93,56 @@ export default function ReplyForm({
     }
   }
 
+  const charCount = content.length;
+  const maxChars = 5000;
+
   return (
-    <Card className="mt-12 border-2 border-primary/10 bg-background/80 shadow-md backdrop-blur-lg">
-      <CardHeader>
-        <CardTitle className="text-xl font-bold">Add a Reply</CardTitle>
+    <Card className="mt-8 border border-border/50 bg-background/60 backdrop-blur-sm">
+      <CardHeader className="pb-3">
+        <CardTitle className="text-lg font-semibold">Add a Reply</CardTitle>
       </CardHeader>
       <CardContent>
-        <form className="space-y-6" onSubmit={handleSubmit}>
+        <form className="space-y-4" onSubmit={handleSubmit}>
           <div className="space-y-2">
-            <textarea
-              className="min-h-[120px] w-full rounded-xl border border-input bg-white px-4 py-3 text-base shadow-sm transition focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary"
+            <Textarea
               placeholder="Share your thoughts..."
-              rows={5}
               value={content}
               onChange={(e) => setContent(e.target.value)}
               required
               disabled={isLoading}
               aria-label="Reply content"
+              className="min-h-[120px] resize-y"
+              maxLength={maxChars}
             />
+            <div className="flex justify-end">
+              <span
+                className={`text-xs ${
+                  charCount > maxChars * 0.9
+                    ? "text-destructive"
+                    : "text-muted-foreground"
+                }`}
+              >
+                {charCount.toLocaleString()} / {maxChars.toLocaleString()}
+              </span>
+            </div>
           </div>
-          <button
-            type="submit"
-            className="inline-flex items-center justify-center rounded-xl bg-primary px-8 py-3 text-base font-semibold text-primary-foreground shadow-lg transition hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
-            disabled={isLoading || !content.trim()}
-            aria-label={isLoading ? "Posting reply" : "Post reply"}
-          >
-            {isLoading ? "Posting..." : "Post Reply"}
-          </button>
+          <div className="flex justify-end">
+            <Button
+              type="submit"
+              size="lg"
+              disabled={isLoading || !content.trim()}
+              aria-label={isLoading ? "Posting reply" : "Post reply"}
+            >
+              {isLoading ? (
+                <>
+                  <span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
+                  Posting...
+                </>
+              ) : (
+                "Post Reply"
+              )}
+            </Button>
+          </div>
         </form>
       </CardContent>
     </Card>
