@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, AnimatePresence, MotionConfig } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { useEffect, useCallback, useRef } from "react";
 import Link from "next/link";
@@ -51,96 +51,96 @@ export function NavigationOverlay({ isOpen, onClose }: NavigationOverlayProps) {
   };
 
   return (
-    <MotionConfig transition={{ type: "spring", bounce: 0, duration: 0.5 }}>
-      <AnimatePresence>
-        {isOpen && (
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          className="fixed inset-0 z-40 flex items-center justify-center"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+        >
+          {/* Backdrop */}
           <motion.div
-            className="fixed inset-0 z-40"
+            className="absolute inset-0 bg-black"
+            onClick={onClose}
+          />
+
+          {/* Subtle grain */}
+          <div
+            className="pointer-events-none absolute inset-0 opacity-[0.03]"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+            }}
+          />
+
+          {/* Navigation - centered */}
+          <nav
+            className="relative z-10"
+            role="navigation"
+            aria-label="Main navigation"
+          >
+            <motion.ul
+              className="flex flex-col items-center gap-0"
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+              variants={{
+                hidden: {},
+                visible: {
+                  transition: { staggerChildren: 0.05, delayChildren: 0.1 }
+                }
+              }}
+            >
+              {navItems.map((item, index) => {
+                const active = isActive(item.href);
+                return (
+                  <motion.li
+                    key={item.href}
+                    variants={{
+                      hidden: { opacity: 0, y: 20 },
+                      visible: { opacity: 1, y: 0 }
+                    }}
+                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                  >
+                    <Link
+                      ref={index === 0 ? firstLinkRef : undefined}
+                      href={item.href}
+                      onClick={onClose}
+                      className="group relative block px-8 py-2"
+                    >
+                      <motion.span
+                        className="relative block text-center text-[clamp(2rem,8vw,4.5rem)] font-light"
+                        style={{
+                          fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, sans-serif",
+                          letterSpacing: "-0.03em",
+                          color: active ? "#ffffff" : "rgba(255,255,255,0.2)"
+                        }}
+                        whileHover={{
+                          color: "#ffffff",
+                          transition: { duration: 0.2 }
+                        }}
+                      >
+                        {item.label}
+                      </motion.span>
+                    </Link>
+                  </motion.li>
+                );
+              })}
+            </motion.ul>
+          </nav>
+
+          {/* Close hint - bottom */}
+          <motion.p
+            className="absolute bottom-8 left-1/2 -translate-x-1/2 text-[10px] uppercase tracking-[0.2em] text-white/20"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
+            transition={{ delay: 0.5 }}
           >
-            {/* Backdrop */}
-            <motion.div
-              className="absolute inset-0 bg-neutral-950"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={onClose}
-            />
-
-            {/* Fine film grain */}
-            <div
-              className="pointer-events-none absolute inset-0 opacity-[0.15]"
-              style={{
-                backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
-              }}
-            />
-
-            {/* Navigation */}
-            <nav
-              className="relative flex h-full flex-col items-start justify-center px-8 sm:px-12 md:px-20"
-              role="navigation"
-              aria-label="Main navigation"
-            >
-              <ul className="flex flex-col">
-                {navItems.map((item, index) => {
-                  const active = isActive(item.href);
-                  return (
-                    <motion.li
-                      key={item.href}
-                      initial={{ opacity: 0, y: 20, filter: "blur(10px)" }}
-                      animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                      exit={{ opacity: 0, y: -10, filter: "blur(5px)" }}
-                      transition={{
-                        type: "spring",
-                        bounce: 0,
-                        duration: 0.6,
-                        delay: index * 0.04,
-                      }}
-                    >
-                      <Link
-                        ref={index === 0 ? firstLinkRef : undefined}
-                        href={item.href}
-                        onClick={onClose}
-                        className="group relative block py-1"
-                      >
-                        <motion.span
-                          className={`relative block text-5xl font-normal tracking-tight sm:text-6xl md:text-7xl ${
-                            active ? "text-white" : "text-neutral-600"
-                          }`}
-                          whileHover={{ x: 8 }}
-                          transition={{ type: "spring", stiffness: 400, damping: 30 }}
-                        >
-                          {item.label}
-
-                          {/* Hover indicator - subtle line */}
-                          <motion.span
-                            className="absolute -left-6 top-1/2 h-px w-4 -translate-y-1/2 bg-white"
-                            initial={{ scaleX: 0, opacity: 0 }}
-                            whileHover={{ scaleX: 1, opacity: 1 }}
-                            transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                            style={{ originX: 0 }}
-                          />
-                        </motion.span>
-
-                        {/* Active dot */}
-                        {active && (
-                          <motion.span
-                            layoutId="nav-dot"
-                            className="absolute -left-6 top-1/2 h-2 w-2 -translate-y-1/2 rounded-full bg-white"
-                            transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                          />
-                        )}
-                      </Link>
-                    </motion.li>
-                  );
-                })}
-              </ul>
-            </nav>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </MotionConfig>
+            Click anywhere to close
+          </motion.p>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }

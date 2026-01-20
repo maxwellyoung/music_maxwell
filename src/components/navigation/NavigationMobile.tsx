@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { motion, AnimatePresence, MotionConfig } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import { useEffect, useCallback } from "react";
 
@@ -51,84 +51,75 @@ export function NavigationMobile({
   }, [isOpen, handleKeyDown]);
 
   return (
-    <MotionConfig transition={{ type: "spring", bounce: 0, duration: 0.5 }}>
-      <AnimatePresence>
-        {isOpen && (
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          className="fixed inset-0 z-40 flex items-center justify-center"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.25 }}
+        >
+          {/* Backdrop */}
           <motion.div
-            className="fixed inset-0 z-40"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            {/* Backdrop */}
-            <motion.div
-              className="absolute inset-0 bg-neutral-950"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={handleClose}
-            />
+            className="absolute inset-0 bg-black"
+            onClick={handleClose}
+          />
 
-            {/* Fine grain */}
-            <div
-              className="pointer-events-none absolute inset-0 opacity-[0.12]"
-              style={{
-                backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.7' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+          {/* Grain */}
+          <div
+            className="pointer-events-none absolute inset-0 opacity-[0.03]"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+            }}
+          />
+
+          {/* Navigation */}
+          <nav className="relative z-10" role="navigation" aria-label="Main navigation">
+            <motion.ul
+              className="flex flex-col items-center"
+              initial="hidden"
+              animate="visible"
+              exit="hidden"
+              variants={{
+                hidden: {},
+                visible: { transition: { staggerChildren: 0.04, delayChildren: 0.08 } }
               }}
-            />
-
-            {/* Navigation */}
-            <nav
-              className="relative flex h-full flex-col items-start justify-center px-6"
-              role="navigation"
-              aria-label="Main navigation"
             >
-              <ul className="flex flex-col">
-                {navItems.map((item, index) => {
-                  const active = isActive(item.href);
-                  return (
-                    <motion.li
-                      key={item.href}
-                      initial={{ opacity: 0, y: 16, filter: "blur(8px)" }}
-                      animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-                      exit={{ opacity: 0, y: -8 }}
-                      transition={{
-                        type: "spring",
-                        bounce: 0,
-                        duration: 0.5,
-                        delay: index * 0.03,
-                      }}
+              {navItems.map((item, index) => {
+                const active = isActive(item.href);
+                return (
+                  <motion.li
+                    key={item.href}
+                    variants={{
+                      hidden: { opacity: 0, y: 16 },
+                      visible: { opacity: 1, y: 0 }
+                    }}
+                    transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                  >
+                    <Link
+                      href={item.href}
+                      onClick={handleClose}
+                      className="block px-6 py-1.5"
                     >
-                      <Link
-                        href={item.href}
-                        onClick={handleClose}
-                        className="group relative block py-1.5"
+                      <span
+                        className="block text-center text-3xl font-light"
+                        style={{
+                          fontFamily: "system-ui, -apple-system, BlinkMacSystemFont, sans-serif",
+                          letterSpacing: "-0.03em",
+                          color: active ? "#ffffff" : "rgba(255,255,255,0.2)"
+                        }}
                       >
-                        <span
-                          className={`relative block text-4xl font-normal tracking-tight ${
-                            active ? "text-white" : "text-neutral-600"
-                          }`}
-                        >
-                          {item.label}
-                        </span>
-
-                        {/* Active dot */}
-                        {active && (
-                          <motion.span
-                            layoutId="nav-dot-mobile"
-                            className="absolute -left-4 top-1/2 h-1.5 w-1.5 -translate-y-1/2 rounded-full bg-white"
-                            transition={{ type: "spring", stiffness: 500, damping: 30 }}
-                          />
-                        )}
-                      </Link>
-                    </motion.li>
-                  );
-                })}
-              </ul>
-            </nav>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </MotionConfig>
+                        {item.label}
+                      </span>
+                    </Link>
+                  </motion.li>
+                );
+              })}
+            </motion.ul>
+          </nav>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 }
