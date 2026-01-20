@@ -4,7 +4,7 @@ import { SessionProvider } from "~/components/providers/SessionProvider";
 import { PostHogProvider } from "~/components/providers/PostHogProvider";
 import { Toaster } from "~/components/ui/toaster";
 import Footer from "~/components/Footer";
-import Navbar from "../components/Navbar";
+import { NavigationRoot } from "~/components/navigation";
 
 export const metadata: Metadata = {
   title: "Maxwell Young",
@@ -49,8 +49,8 @@ export default function RootLayout({
       <body className="flex min-h-screen flex-col overflow-x-hidden">
         <SessionProvider>
           <PostHogProvider>
-            <Navbar />
-            <main className="flex-1">{children}</main>
+            <NavigationRoot />
+            <main className="flex-1 pt-16">{children}</main>
             <Footer />
             <Toaster />
           </PostHogProvider>
