@@ -163,3 +163,14 @@ export const authOptions: NextAuthOptions = {
   },
   secret: process.env.NEXTAUTH_SECRET ?? "",
 };
+
+/**
+ * Verify admin role from database (don't trust JWT alone for sensitive operations)
+ */
+export async function verifyAdminRole(userId: string): Promise<boolean> {
+  const user = await prisma.user.findUnique({
+    where: { id: userId },
+    select: { role: true },
+  });
+  return user?.role === "admin";
+}

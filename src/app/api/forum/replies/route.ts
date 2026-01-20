@@ -3,27 +3,58 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "~/lib/auth";
 import { prisma } from "~/lib/prisma";
 import { triggerNewForumReply } from "~/lib/pusherServer";
+import { forumLimiter, LIMITS, getClientIdentifier } from "~/lib/rate-limit";
+import { checkContentModeration, validateLength, CONTENT_LIMITS } from "~/lib/moderation";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
-// In-memory rate limit store (for demo/dev only)
-const rateLimitMap = new Map();
+const REPLIES_PER_PAGE = 20;
 
-const bannedWords = [
-  "admin",
-  "mod",
-  "fuck",
-  "shit",
-  "bitch",
-  "asshole",
-  "nigger",
-  "faggot",
-  "cunt",
-  "retard",
-  "nazi",
-  "hitler",
-];
+export async function GET(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const topicId = searchParams.get("topicId");
+  const cursor = searchParams.get("cursor"); // ID of last reply for cursor-based pagination
+  const limit = Math.min(
+    parseInt(searchParams.get("limit") ?? String(REPLIES_PER_PAGE), 10),
+    50 // Max 50 per request
+  );
+
+  if (!topicId) {
+    return NextResponse.json({ error: "Missing topicId" }, { status: 400 });
+  }
+
+  try {
+    const replies = await prisma.reply.findMany({
+      where: { topicId },
+      include: {
+        author: { select: { name: true, role: true, username: true, id: true } },
+      },
+      orderBy: { createdAt: "asc" },
+      take: limit + 1, // Fetch one extra to check if there are more
+      ...(cursor && {
+        cursor: { id: cursor },
+        skip: 1, // Skip the cursor itself
+      }),
+    });
+
+    const hasMore = replies.length > limit;
+    const repliesPage = hasMore ? replies.slice(0, limit) : replies;
+    const nextCursor = hasMore ? repliesPage[repliesPage.length - 1]?.id : null;
+
+    return NextResponse.json({
+      replies: repliesPage,
+      nextCursor,
+      hasMore,
+    });
+  } catch (error) {
+    console.error("Error fetching replies:", error);
+    return NextResponse.json(
+      { error: "Internal server error" },
+      { status: 500 }
+    );
+  }
+}
 
 export async function POST(request: Request) {
   const session = await getServerSession(authOptions);
@@ -31,16 +62,15 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  // Rate limiting: 1 reply per 10 seconds per user
-  const now = Date.now();
-  const last = rateLimitMap.get(session.user.id) || 0;
-  if (now - last < 10_000) {
+  // Rate limiting
+  const identifier = getClientIdentifier(session.user.id, request);
+  const rateLimitResult = await forumLimiter.check(LIMITS.createReply, identifier);
+  if (!rateLimitResult.success) {
     return NextResponse.json(
-      { error: "You are replying too fast. Please wait a few seconds." },
+      { error: "You are replying too fast. Please wait a moment." },
       { status: 429 },
     );
   }
-  rateLimitMap.set(session.user.id, now);
 
   try {
     const data = (await request.json()) as Record<string, unknown>;
@@ -57,13 +87,16 @@ export async function POST(request: Request) {
     }
     const { content, topicId } = data as { content: string; topicId: string };
 
-    // Check for offensive/banned words in content
-    const lowerContent = content.toLowerCase();
-    if (bannedWords.some((word) => lowerContent.includes(word))) {
-      return NextResponse.json(
-        { error: "Your reply contains inappropriate language." },
-        { status: 400 },
-      );
+    // Validate content length
+    const contentValidation = validateLength(content, CONTENT_LIMITS.replyContent);
+    if (!contentValidation.valid) {
+      return NextResponse.json({ error: contentValidation.reason }, { status: 400 });
+    }
+
+    // Check for offensive/banned words
+    const moderation = checkContentModeration(content);
+    if (!moderation.passed) {
+      return NextResponse.json({ error: moderation.reason }, { status: 400 });
     }
 
     const reply = await prisma.reply.create({

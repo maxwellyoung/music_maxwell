@@ -4,13 +4,16 @@ import {
   type SanityClient,
 } from "@sanity/client";
 
+const isDev = process.env.NODE_ENV === "development";
+
 const config: ClientConfig = {
   projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
-  useCdn: true,
-  apiVersion: process.env.NEXT_PUBLIC_SANITY_API_VERSION, // Use a recent API version
+  useCdn: !isDev, // Disable CDN in development
+  apiVersion: process.env.NEXT_PUBLIC_SANITY_API_VERSION,
   token: process.env.SANITY_API_TOKEN,
-  withCredentials: true,
+  // Only use credentials in production (requires CORS config in Sanity dashboard)
+  withCredentials: !isDev && !!process.env.SANITY_API_TOKEN,
   perspective: "published",
 };
 

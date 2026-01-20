@@ -86,7 +86,7 @@ All the girls with me wanna fuck it n turn up`,
     artwork: "/artworks/Freewheelin.webp",
     links: {
       spotify:
-        "https://open.spotify.com/track/0h3h7w0j3g3k2k3j2j1j0j0j0j0j0j0j0j0j0j0",
+        "https://open.spotify.com/search/freewheelin%20maxwell%20young",
       appleMusic:
         "https://music.apple.com/nz/album/freewheelin-single/1713764743",
       youtube:
@@ -1697,4 +1697,5 @@ Just stay with me a while`,
   },
 ];
 
+export { songs };
 export default songs;

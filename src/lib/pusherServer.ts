@@ -26,3 +26,26 @@ export function triggerNewForumReply(
     reply,
   ) as Promise<unknown>;
 }
+
+// Marginalia events
+export function triggerNewMarginalia(
+  trackId: string,
+  marginalia: unknown,
+): Promise<unknown> {
+  return pusherServer.trigger(
+    `marginalia-${trackId}`,
+    "new-marginalia",
+    marginalia,
+  ) as Promise<unknown>;
+}
+
+export function triggerMarginaliaDeleted(
+  trackId: string,
+  marginaliaId: string,
+): Promise<unknown> {
+  return pusherServer.trigger(
+    `marginalia-${trackId}`,
+    "marginalia-deleted",
+    { marginaliaId },
+  ) as Promise<unknown>;
+}

@@ -24,12 +24,13 @@ const nextConfig = {
     ],
   },
   async headers() {
+    const allowedOrigin = process.env.NEXT_PUBLIC_APP_URL || "https://maxwellyoung.info";
     return [
       {
         source: "/api/:path*",
         headers: [
           { key: "Access-Control-Allow-Credentials", value: "true" },
-          { key: "Access-Control-Allow-Origin", value: "*" },
+          { key: "Access-Control-Allow-Origin", value: allowedOrigin },
           {
             key: "Access-Control-Allow-Methods",
             value: "GET,DELETE,PATCH,POST,PUT",

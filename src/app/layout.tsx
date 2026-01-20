@@ -1,6 +1,7 @@
 import "~/styles/globals.css";
 import { type Metadata } from "next";
 import { SessionProvider } from "~/components/providers/SessionProvider";
+import { PostHogProvider } from "~/components/providers/PostHogProvider";
 import { Toaster } from "~/components/ui/toaster";
 import Footer from "~/components/Footer";
 import Navbar from "../components/Navbar";
@@ -47,10 +48,12 @@ export default function RootLayout({
       </head>
       <body className="flex min-h-screen flex-col overflow-x-hidden">
         <SessionProvider>
-          <Navbar />
-          <main className="flex-1">{children}</main>
-          <Footer />
-          <Toaster />
+          <PostHogProvider>
+            <Navbar />
+            <main className="flex-1">{children}</main>
+            <Footer />
+            <Toaster />
+          </PostHogProvider>
         </SessionProvider>
       </body>
     </html>

@@ -1,11 +1,11 @@
 import { prisma } from "~/lib/prisma";
 import type { Metadata } from "next";
 import Link from "next/link";
-import { SearchTopics } from "~/components/forum/SearchTopics";
 import dynamicImport from "next/dynamic";
+
 const ForumTopicsInfinite = dynamicImport(
   () => import("~/components/forum/ForumTopicsInfinite"),
-  { ssr: false },
+  { ssr: false }
 );
 import type { ForumTopic } from "~/components/forum/ForumTopicsInfinite";
 
@@ -13,29 +13,15 @@ export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: "Forum | Maxwell Young",
-  description:
-    "Join the discussion about Maxwell Young's music, upcoming projects, and more.",
+  description: "Discussions",
 };
 
-// Mark the page as dynamic
 export const dynamic = "force-dynamic";
 
-export default async function ForumPage({
-  searchParams,
-}: {
-  searchParams: { q?: string };
-}) {
-  // Only support infinite scroll for no search query for now
-  if (searchParams.q) {
-    // fallback to old logic for search
-    // ... existing code for search (can be refactored later)
-  }
-
-  // Fetch first page of topics and total count
-  const PAGE_SIZE = 10;
+export default async function ForumPage() {
+  const PAGE_SIZE = 20;
   let topics: ForumTopic[] = [];
   let total = 0;
-  let error: string | null = null;
 
   try {
     const [topicsRes, totalRes] = await Promise.all([
@@ -58,43 +44,38 @@ export default async function ForumPage({
     total = totalRes;
   } catch (err) {
     console.error("Error fetching topics:", err);
-    error = "Failed to load topics. Please try again later.";
-    topics = [];
-    total = 0;
   }
 
   return (
-    <main className="container mx-auto px-4 py-16">
-      <div className="mb-16 text-center">
-        <h1 className="mb-4 text-5xl font-extrabold leading-tight tracking-tight">
-          Forum
-        </h1>
-        {/* <p className="mx-auto max-w-2xl text-xl text-muted-foreground">
-          Join the conversation
-        </p> */}
-      </div>
+    <main className="min-h-screen">
+      <div className="mx-auto max-w-2xl px-6 py-16 sm:py-24">
+        {/* Header */}
+        <header className="mb-16">
+          <h1 className="text-lg font-medium tracking-tight">Forum</h1>
+        </header>
 
-      <div className="mx-auto max-w-4xl space-y-14">
-        {/* Search Bar */}
-        <SearchTopics initialQuery={searchParams.q} />
-
-        {/* Error Message */}
-        {error && (
-          <div className="rounded-lg bg-destructive/10 p-4 text-center text-destructive">
-            {error}
-          </div>
-        )}
-
-        {/* Infinite Scroll Topics */}
+        {/* Topics */}
         <ForumTopicsInfinite initialTopics={topics} total={total} />
 
-        {/* Start New Discussion Button */}
-        <div className="mt-24 text-center">
+        {/* New post */}
+        <div className="fixed bottom-8 right-8">
           <Link
             href="/forum/new"
-            className="inline-flex items-center justify-center rounded-xl bg-primary px-8 py-4 text-lg font-semibold text-primary-foreground shadow-lg transition hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+            className="flex h-12 w-12 items-center justify-center rounded-full bg-foreground text-background shadow-lg transition-transform hover:scale-105 active:scale-95"
+            aria-label="New discussion"
           >
-            Start New Discussion
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+            >
+              <line x1="12" y1="5" x2="12" y2="19" />
+              <line x1="5" y1="12" x2="19" y2="12" />
+            </svg>
           </Link>
         </div>
       </div>

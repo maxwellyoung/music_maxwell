@@ -2,15 +2,7 @@
 
 import { useEffect, useRef, useState, useCallback } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "~/components/ui/card";
+import { motion } from "framer-motion";
 import { useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
 import { subscribeToForumTopics } from "~/lib/pusherClient";
@@ -31,15 +23,19 @@ export type ForumTopic = {
   _count: { replies: number };
 };
 
-function ForumTopicSkeleton() {
-  return (
-    <div className="animate-pulse rounded-2xl border-2 border-primary/10 bg-muted/30 p-6 shadow">
-      <div className="mb-4 h-6 w-2/3 rounded bg-muted-foreground/20" />
-      <div className="mb-2 h-4 w-1/3 rounded bg-muted-foreground/10" />
-      <div className="mb-6 h-4 w-full rounded bg-muted-foreground/10" />
-      <div className="h-4 w-1/2 rounded bg-muted-foreground/10" />
-    </div>
-  );
+function formatRelativeTime(dateString: string): string {
+  const date = new Date(dateString);
+  const now = new Date();
+  const diffMs = now.getTime() - date.getTime();
+  const diffMins = Math.floor(diffMs / 60000);
+  const diffHours = Math.floor(diffMs / 3600000);
+  const diffDays = Math.floor(diffMs / 86400000);
+
+  if (diffMins < 1) return "just now";
+  if (diffMins < 60) return `${diffMins}m ago`;
+  if (diffHours < 24) return `${diffHours}h ago`;
+  if (diffDays < 7) return `${diffDays}d ago`;
+  return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
 }
 
 export default function ForumTopicsInfinite({
@@ -53,7 +49,6 @@ export default function ForumTopicsInfinite({
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(initialTopics.length < total);
   const loaderRef = useRef<HTMLDivElement | null>(null);
-  const router = useRouter();
   const { data: session } = useSession();
   const userRole = (session?.user as { role?: string } | undefined)?.role;
 
@@ -62,13 +57,13 @@ export default function ForumTopicsInfinite({
     setLoading(true);
     try {
       const res = await fetch(
-        `/api/forum/topics?skip=${topics.length}&take=${PAGE_SIZE}`,
+        `/api/forum/topics?skip=${topics.length}&take=${PAGE_SIZE}`
       );
       const data: { topics: ForumTopic[]; total: number } = await res.json();
       setTopics((prev) => [...prev, ...data.topics]);
       setHasMore(topics.length + data.topics.length < data.total);
-    } catch (e) {
-      // Optionally handle error
+    } catch {
+      // silently handle
     } finally {
       setLoading(false);
     }
@@ -86,7 +81,6 @@ export default function ForumTopicsInfinite({
     return () => observer.disconnect();
   }, [loadMore, hasMore]);
 
-  // Real-time updates
   useEffect(() => {
     const unsubscribe = subscribeToForumTopics((newTopic: ForumTopic) => {
       setTopics((prev) => {
@@ -97,93 +91,87 @@ export default function ForumTopicsInfinite({
     return unsubscribe;
   }, []);
 
+  if (topics.length === 0) {
+    return (
+      <div className="py-24 text-center">
+        <p className="text-sm tracking-wide text-muted-foreground">
+          No discussions yet
+        </p>
+      </div>
+    );
+  }
+
   return (
-    <section>
-      <h2 className="mb-8 text-2xl font-bold tracking-tight text-primary">
-        All Topics
-      </h2>
-      <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
-        {topics.length === 0 && (
-          <div className="col-span-full text-center text-muted-foreground">
-            No topics yet. Be the first to start a discussion!
-          </div>
-        )}
-        {topics.map((topic) => (
-          <Link
-            key={topic.id}
-            href={`/forum/${topic.id}`}
-            className="group"
-            passHref
-            legacyBehavior
-          >
-            <a className="block no-underline">
-              <Card className="relative overflow-hidden border-2 border-primary/30 bg-background/80 backdrop-blur-lg transition-all duration-200 group-hover:-translate-y-1 group-hover:shadow-xl">
-                <CardHeader className="relative flex items-start justify-between pb-2">
-                  <div>
-                    <CardTitle className="text-xl font-bold transition-colors group-hover:text-primary">
-                      {topic.title}
-                    </CardTitle>
-                    <CardDescription className="text-base">
-                      by{" "}
-                      {topic.author?.username ? (
-                        <span
-                          className="cursor-pointer text-primary hover:underline"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            router.push(`/user/${topic.author?.username}`);
-                          }}
-                        >
-                          {topic.author.username}
-                        </span>
-                      ) : (
-                        <span className="text-muted-foreground">Unknown</span>
-                      )}
-                    </CardDescription>
-                  </div>
-                  {userRole === "admin" && (
-                    <div className="absolute right-3 top-3 z-10">
-                      <TopicActions topicId={topic.id} />
-                    </div>
-                  )}
-                </CardHeader>
-                <CardContent>
-                  <p className="text-base leading-relaxed text-muted-foreground">
-                    {topic.content.length > 180
-                      ? topic.content.slice(0, 180) + "..."
-                      : topic.content}
+    <section className="space-y-1">
+      {topics.map((topic, index) => (
+        <motion.div
+          key={topic.id}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.4, delay: index * 0.03 }}
+        >
+          <Link href={`/forum/${topic.id}`} className="group block">
+            <article className="relative border-b border-border py-6 transition-colors duration-300 hover:bg-muted/30">
+              <div className="flex items-start justify-between gap-4">
+                <div className="min-w-0 flex-1 space-y-2">
+                  {/* Title */}
+                  <h3 className="font-medium leading-snug tracking-tight text-foreground transition-colors duration-200 group-hover:text-foreground">
+                    {topic.title}
+                  </h3>
+
+                  {/* Preview */}
+                  <p className="line-clamp-2 text-sm leading-relaxed text-muted-foreground">
+                    {topic.content}
                   </p>
-                </CardContent>
-                <CardFooter className="flex items-center justify-between border-t bg-muted/50 px-6 py-4">
-                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
-                    <span>{topic._count.replies} replies</span>
-                    <span>•</span>
-                    <span>
-                      Last updated{" "}
-                      {new Date(topic.updatedAt).toLocaleDateString()}
+
+                  {/* Meta */}
+                  <div className="flex items-center gap-3 pt-1 text-xs text-muted-foreground">
+                    <span className="transition-colors group-hover:text-foreground">
+                      {topic.author?.username ?? "anon"}
                     </span>
+                    <span className="text-muted-foreground/50">·</span>
+                    <span>{formatRelativeTime(topic.updatedAt)}</span>
+                    {topic._count.replies > 0 && (
+                      <>
+                        <span className="text-muted-foreground/50">·</span>
+                        <span>
+                          {topic._count.replies}{" "}
+                          {topic._count.replies === 1 ? "reply" : "replies"}
+                        </span>
+                      </>
+                    )}
                   </div>
-                </CardFooter>
-              </Card>
-            </a>
+                </div>
+
+                {/* Admin actions */}
+                {userRole === "admin" && (
+                  <div
+                    className="opacity-0 transition-opacity group-hover:opacity-100"
+                    onClick={(e) => e.preventDefault()}
+                  >
+                    <TopicActions topicId={topic.id} />
+                  </div>
+                )}
+              </div>
+            </article>
           </Link>
-        ))}
-        {loading &&
-          hasMore &&
-          Array.from({ length: 2 }).map((_, i) => (
-            <ForumTopicSkeleton key={i} />
-          ))}
-      </div>
-      <div ref={loaderRef} className="flex h-12 items-center justify-center">
-        {loading && (
-          <span className="text-muted-foreground">Loading more...</span>
-        )}
-        {!hasMore && topics.length > 0 && (
-          <div className="animate-fade-in flex flex-col items-center gap-2 text-muted-foreground">
-            <span>You&rsquo;ve reached the end of the forum!</span>
-          </div>
-        )}
-      </div>
+        </motion.div>
+      ))}
+
+      {/* Load more trigger */}
+      <div ref={loaderRef} className="h-20" />
+
+      {loading && (
+        <div className="py-8 text-center">
+          <div className="inline-block h-4 w-4 animate-spin rounded-full border border-muted-foreground/40 border-t-muted-foreground" />
+        </div>
+      )}
+
+      {!hasMore && topics.length > 0 && (
+        <p className="py-12 text-center text-xs tracking-wide text-muted-foreground/60">
+          end
+        </p>
+      )}
     </section>
   );
 }

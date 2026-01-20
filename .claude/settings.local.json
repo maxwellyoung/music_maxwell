@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npx prisma migrate dev:*)",
+      "Bash(ls:*)",
+      "Bash(vercel env pull:*)",
+      "Bash(ln:*)",
+      "Bash(head:*)",
+      "Bash(find:*)",
+      "Bash(git rm:*)",
+      "Bash(node -e:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npm run build:*)",
+      "Bash(npm install:*)"
+    ]
+  }
+}

@@ -28,3 +28,30 @@ export function subscribeToForumTopics(callback: (data: ForumTopic) => void) {
     pusherClient.unsubscribe("forum-topics");
   };
 }
+
+// Marginalia types
+export type Marginalia = {
+  id: string;
+  content: string;
+  timestamp: number;
+  pseudonym: string;
+  isArtist: boolean;
+  createdAt: string;
+  parentId: string | null;
+};
+
+export function subscribeToMarginalia(
+  trackId: string,
+  onNew: (data: Marginalia) => void,
+  onDeleted: (data: { marginaliaId: string }) => void
+) {
+  const channel = pusherClient.subscribe(`marginalia-${trackId}`);
+  channel.bind("new-marginalia", onNew);
+  channel.bind("marginalia-deleted", onDeleted);
+
+  return () => {
+    channel.unbind("new-marginalia", onNew);
+    channel.unbind("marginalia-deleted", onDeleted);
+    pusherClient.unsubscribe(`marginalia-${trackId}`);
+  };
+}

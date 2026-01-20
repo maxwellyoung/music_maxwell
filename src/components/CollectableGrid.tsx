@@ -28,9 +28,9 @@ import {
 } from "./ui/card";
 import { Separator } from "./ui/separator";
 import songs from "./songsData";
-import { sanityClient } from "../lib/sanity";
 import { cn } from "~/lib/utils";
-import { XIcon } from "lucide-react";
+import { XIcon, Share2Icon, CopyIcon, CheckIcon } from "lucide-react";
+import { trackStreamingClick } from "./providers/PostHogProvider";
 
 // Define the Song type
 type Song = {
@@ -210,34 +210,31 @@ const PressPhotoCarousel = () => {
         loop: true,
       }}
       setApi={setApi}
-      className="mx-auto w-full max-w-sm md:max-w-md lg:max-w-lg"
+      className="mx-auto w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-lg"
     >
       <CarouselContent className="rounded-lg">
-        <AnimatePresence mode="wait">
-          {photos.map((photo, index) => (
-            <CarouselItem key={index} className="basis-full">
-              <motion.div
-                initial={{ scale: 0.95, opacity: 0.5 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.95, opacity: 0.5 }}
-                transition={{ duration: 0.3, ease: "easeOut" }}
-                className="overflow-hidden rounded-lg"
-              >
-                <div className="group relative aspect-[3/4] w-full">
-                  <Image
-                    src={photo.src}
-                    alt={photo.alt}
-                    fill
-                    className="rounded-lg object-cover transition duration-300 ease-out will-change-transform"
-                    sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
-                    priority={index === 0}
-                  />
-                  <div className="absolute inset-0 rounded-lg ring-1 ring-white/10" />
-                </div>
-              </motion.div>
-            </CarouselItem>
-          ))}
-        </AnimatePresence>
+        {photos.map((photo, index) => (
+          <CarouselItem key={`photo-${index}`} className="basis-full">
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0.5 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+              className="overflow-hidden rounded-lg"
+            >
+              <div className="group relative aspect-[3/4] w-full">
+                <Image
+                  src={photo.src}
+                  alt={photo.alt}
+                  fill
+                  className="rounded-lg object-cover transition duration-300 ease-out will-change-transform"
+                  sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
+                  priority={index === 0}
+                />
+                <div className="absolute inset-0 rounded-lg ring-1 ring-white/10" />
+              </div>
+            </motion.div>
+          </CarouselItem>
+        ))}
       </CarouselContent>
       <div className="mt-4 flex items-center justify-center gap-2">
         <CarouselPrevious
@@ -307,6 +304,80 @@ const contentVariants = {
       ease: "easeIn",
     },
   },
+};
+
+// Share buttons component
+const ShareButtons = ({ songTitle }: { songTitle: string }) => {
+  const [copied, setCopied] = useState(false);
+  const pageUrl = typeof window !== "undefined" ? window.location.href : "";
+
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(pageUrl);
+      setCopied(true);
+      vibrate(3);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      console.error("Failed to copy");
+    }
+  };
+
+  const handleShare = async () => {
+    if (navigator.share) {
+      try {
+        await navigator.share({
+          title: `${songTitle} - Maxwell Young`,
+          url: pageUrl,
+        });
+        vibrate(3);
+      } catch {
+        // User cancelled or error
+      }
+    } else {
+      void handleCopy();
+    }
+  };
+
+  const shareToTwitter = () => {
+    const text = `Check out "${songTitle}" by Maxwell Young!`;
+    window.open(
+      `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(pageUrl)}`,
+      "_blank",
+    );
+    vibrate(3);
+  };
+
+  return (
+    <div className="flex items-center gap-2">
+      <button
+        onClick={handleShare}
+        className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-white/70 transition-colors hover:bg-white/20 hover:text-white"
+        title="Share"
+      >
+        <Share2Icon className="h-4 w-4" />
+      </button>
+      <button
+        onClick={shareToTwitter}
+        className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-white/70 transition-colors hover:bg-white/20 hover:text-white"
+        title="Share on X"
+      >
+        <svg className="h-4 w-4" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+        </svg>
+      </button>
+      <button
+        onClick={handleCopy}
+        className="flex h-8 w-8 items-center justify-center rounded-full bg-white/10 text-white/70 transition-colors hover:bg-white/20 hover:text-white"
+        title={copied ? "Copied!" : "Copy link"}
+      >
+        {copied ? (
+          <CheckIcon className="h-4 w-4 text-green-400" />
+        ) : (
+          <CopyIcon className="h-4 w-4" />
+        )}
+      </button>
+    </div>
+  );
 };
 
 const SongDrawer = ({
@@ -385,7 +456,10 @@ const SongDrawer = ({
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex h-8 w-8 items-center justify-center rounded-full bg-[#1DB954]/10 text-[#1DB954] transition-colors hover:bg-[#1DB954]/20"
-                  onClick={() => vibrate(3)}
+                  onClick={() => {
+                    vibrate(3);
+                    trackStreamingClick("spotify", song.title);
+                  }}
                 >
                   <svg
                     width="16"
@@ -401,7 +475,10 @@ const SongDrawer = ({
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex h-8 w-8 items-center justify-center rounded-full bg-[#FB233B]/10 text-[#FB233B] transition-colors hover:bg-[#FB233B]/20"
-                  onClick={() => vibrate(3)}
+                  onClick={() => {
+                    vibrate(3);
+                    trackStreamingClick("apple", song.title);
+                  }}
                 >
                   <svg
                     width="16"
@@ -421,7 +498,10 @@ const SongDrawer = ({
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex h-8 w-8 items-center justify-center rounded-full bg-[#FF0000]/10 text-[#FF0000] transition-colors hover:bg-[#FF0000]/20"
-                  onClick={() => vibrate(3)}
+                  onClick={() => {
+                    vibrate(3);
+                    trackStreamingClick("youtube", song.title);
+                  }}
                 >
                   <svg
                     width="16"
@@ -432,6 +512,7 @@ const SongDrawer = ({
                     <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
                   </svg>
                 </a>
+                <ShareButtons songTitle={song.title} />
               </div>
             </DrawerHeader>
           </div>
@@ -467,16 +548,22 @@ const SongDrawer = ({
                 >
                   {/* Desktop streaming links */}
                   <div className="hidden space-y-4 md:block">
-                    <h3 className="text-base font-medium text-white sm:text-lg">
-                      Listen Now
-                    </h3>
+                    <div className="flex items-center justify-between">
+                      <h3 className="text-base font-medium text-white sm:text-lg">
+                        Listen Now
+                      </h3>
+                      <ShareButtons songTitle={song.title} />
+                    </div>
                     <div className="flex flex-wrap gap-3">
                       <a
                         href={song.links.spotify}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center gap-2 rounded-full bg-[#1DB954]/10 px-4 py-2 text-[#1DB954] transition-colors hover:bg-[#1DB954]/20"
-                        onClick={() => vibrate(3)}
+                        onClick={() => {
+                          vibrate(3);
+                          trackStreamingClick("spotify", song.title);
+                        }}
                       >
                         <svg
                           width="20"
@@ -493,7 +580,10 @@ const SongDrawer = ({
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center gap-2 rounded-full bg-[#FB233B]/10 px-4 py-2 text-[#FB233B] transition-colors hover:bg-[#FB233B]/20"
-                        onClick={() => vibrate(3)}
+                        onClick={() => {
+                          vibrate(3);
+                          trackStreamingClick("apple", song.title);
+                        }}
                       >
                         <svg
                           width="20"
@@ -514,7 +604,10 @@ const SongDrawer = ({
                         target="_blank"
                         rel="noopener noreferrer"
                         className="flex items-center gap-2 rounded-full bg-[#FF0000]/10 px-4 py-2 text-[#FF0000] transition-colors hover:bg-[#FF0000]/20"
-                        onClick={() => vibrate(3)}
+                        onClick={() => {
+                          vibrate(3);
+                          trackStreamingClick("youtube", song.title);
+                        }}
                       >
                         <svg
                           width="20"
@@ -621,11 +714,14 @@ const SongDrawer = ({
   );
 };
 
-const CollectableGrid: React.FC = () => {
+interface CollectableGridProps {
+  initialProducts?: SanityProduct[];
+}
+
+const CollectableGrid: React.FC<CollectableGridProps> = ({ initialProducts = [] }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [selectedSong, setSelectedSong] = useState<Song | null>(null);
-  const [products, setProducts] = useState<SanityProduct[]>([]);
-  const [error] = useState<string | null>(null);
+  const products = initialProducts;
 
   // Animation variants
   const albumVariants = {
@@ -650,34 +746,6 @@ const CollectableGrid: React.FC = () => {
       },
     },
   };
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const sanityProducts: SanityProduct[] = await sanityClient.fetch(
-          `*[_type == "product"]{
-            _id,
-            title,
-            description,
-            price,
-            images[]{
-              asset->{
-                url,
-                altText
-              }
-            },
-            shopifyProductId
-          }`,
-        );
-        setProducts(sanityProducts);
-      } catch (error) {
-        console.error("[Sanity] Products not available yet:", error);
-        setProducts([]);
-      }
-    };
-
-    void fetchProducts();
-  }, []);
 
   const openDrawer = (song: Song) => {
     try {
@@ -716,12 +784,6 @@ const CollectableGrid: React.FC = () => {
         </svg>
       </div>
       <div className="container relative z-10 mx-auto px-2 sm:px-4 md:px-8">
-        {error && error !== "NO_PRODUCTS" && (
-          <div className="mb-4 rounded-lg bg-red-500/10 p-4 text-red-500">
-            {error}
-          </div>
-        )}
-
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8 md:grid-cols-3 lg:grid-cols-4">
           {songs.map((song) => (
             <motion.div
@@ -732,7 +794,7 @@ const CollectableGrid: React.FC = () => {
               className="group cursor-pointer"
             >
               <div className="relative aspect-square overflow-hidden rounded-2xl border-2 border-transparent transition-all duration-200 group-hover:z-10 group-hover:scale-105 group-hover:border-primary group-hover:shadow-2xl group-hover:ring-4 group-hover:ring-primary/20">
-                <motion.div variants={albumVariants}>
+                <motion.div variants={albumVariants} className="relative h-full w-full">
                   <BlurImage
                     src={song.artwork}
                     alt={song.title}
@@ -758,12 +820,12 @@ const CollectableGrid: React.FC = () => {
           ))}
         </div>
 
-        <div className="mt-16 flex flex-col gap-12 md:flex-row md:items-start md:gap-12">
-          <div className="w-full md:w-1/2">
+        <div className="mt-16 flex flex-col gap-8 lg:flex-row lg:items-start lg:gap-12">
+          <div className="w-full lg:w-1/2">
             <PressPhotoCarousel />
           </div>
-          <Separator orientation="vertical" className="mx-4 hidden md:block" />
-          <div className="w-full md:w-1/2">
+          <Separator orientation="vertical" className="mx-4 hidden lg:block" />
+          <div className="w-full lg:w-1/2">
             {/* About Section readability improved */}
             <section className="my-0">
               <Card className="border-none bg-black/70 shadow-xl backdrop-blur-md">
@@ -775,8 +837,9 @@ const CollectableGrid: React.FC = () => {
                       width={160}
                       height={80}
                       style={{
-                        height: "80px",
                         width: "auto",
+                        height: "auto",
+                        maxHeight: "80px",
                         display: "block",
                         filter: "invert(1) brightness(2)",
                         margin: 0,

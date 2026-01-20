@@ -47,3 +47,44 @@ export function rateLimit(options: RateLimitOptions) {
     },
   };
 }
+
+// Pre-configured rate limiters for common actions
+export const forumLimiter = rateLimit({
+  interval: 60_000, // 1 minute
+  uniqueTokenPerInterval: 500,
+});
+
+export const searchLimiter = rateLimit({
+  interval: 60_000,
+  uniqueTokenPerInterval: 500,
+});
+
+export const authLimiter = rateLimit({
+  interval: 300_000, // 5 minutes
+  uniqueTokenPerInterval: 500,
+});
+
+// Rate limit configurations
+export const LIMITS = {
+  createTopic: 5, // 5 per minute
+  createReply: 10, // 10 per minute
+  search: 30, // 30 per minute
+  login: 5, // 5 per 5 minutes
+  marginalia: 20, // 20 per minute
+} as const;
+
+// Helper to get identifier from request
+export function getClientIdentifier(
+  userId: string | null | undefined,
+  request: Request
+): string {
+  if (userId) return `user:${userId}`;
+
+  // Try to get IP from headers (Vercel/Cloudflare)
+  const forwarded = request.headers.get("x-forwarded-for");
+  const ip = forwarded?.split(",")[0]?.trim() ??
+    request.headers.get("x-real-ip") ??
+    "unknown";
+
+  return `ip:${ip}`;
+}

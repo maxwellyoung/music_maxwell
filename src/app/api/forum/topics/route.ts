@@ -3,29 +3,26 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "~/lib/auth";
 import { prisma } from "~/lib/prisma";
 import { triggerNewForumTopic } from "~/lib/pusherServer";
+import { forumLimiter, LIMITS, getClientIdentifier } from "~/lib/rate-limit";
+import { checkContentModeration, validateLength, CONTENT_LIMITS } from "~/lib/moderation";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
-
-const bannedWords = [
-  "admin",
-  "mod",
-  "fuck",
-  "shit",
-  "bitch",
-  "asshole",
-  "nigger",
-  "faggot",
-  "cunt",
-  "retard",
-  "nazi",
-  "hitler",
-];
 
 export async function POST(request: Request) {
   const session = await getServerSession(authOptions);
   if (!session?.user?.id) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  // Rate limiting
+  const identifier = getClientIdentifier(session.user.id, request);
+  const rateLimitResult = await forumLimiter.check(LIMITS.createTopic, identifier);
+  if (!rateLimitResult.success) {
+    return NextResponse.json(
+      { error: "Too many requests. Please wait before creating another topic." },
+      { status: 429 }
+    );
   }
 
   try {
@@ -43,18 +40,20 @@ export async function POST(request: Request) {
     }
     const { title, content } = data as { title: string; content: string };
 
-    // Check for offensive/banned words in title or content
-    const lowerTitle = title.toLowerCase();
-    const lowerContent = content.toLowerCase();
-    if (
-      bannedWords.some(
-        (word) => lowerTitle.includes(word) || lowerContent.includes(word),
-      )
-    ) {
-      return NextResponse.json(
-        { error: "Your topic contains inappropriate language." },
-        { status: 400 },
-      );
+    // Validate content length
+    const titleValidation = validateLength(title, CONTENT_LIMITS.topicTitle);
+    if (!titleValidation.valid) {
+      return NextResponse.json({ error: titleValidation.reason }, { status: 400 });
+    }
+    const contentValidation = validateLength(content, CONTENT_LIMITS.topicContent);
+    if (!contentValidation.valid) {
+      return NextResponse.json({ error: contentValidation.reason }, { status: 400 });
+    }
+
+    // Check for offensive/banned words
+    const moderation = checkContentModeration(title, content);
+    if (!moderation.passed) {
+      return NextResponse.json({ error: moderation.reason }, { status: 400 });
     }
 
     const topic = await prisma.topic.create({

@@ -213,11 +213,14 @@ const DotMatrix: React.FC = () => {
             newIndex < newDots.length &&
             newDots[newIndex] !== undefined
           ) {
-            newDots[newIndex] = {
-              ...newDots[newIndex]!,
-              active: true,
-              color: newDots[newIndex]?.color ?? "#000000",
-            };
+            const currentDot = newDots[newIndex];
+            if (currentDot) {
+              newDots[newIndex] = {
+                ...currentDot,
+                active: true,
+                color: currentDot.color ?? "#000000",
+              };
+            }
           }
         }
       }

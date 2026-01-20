@@ -4,7 +4,6 @@ import * as React from "react";
 import type { EmblaCarouselType } from "embla-carousel";
 import useEmblaCarousel from "embla-carousel-react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import { AnimatePresence } from "framer-motion";
 
 import { cn } from "~/lib/utils";
 import { Button } from "~/components/ui/button";
@@ -116,9 +115,7 @@ const Carousel = React.forwardRef<
           aria-roledescription="carousel"
           {...props}
         >
-          <AnimatePresence mode="popLayout" initial={false}>
-            {children}
-          </AnimatePresence>
+          {children}
         </div>
       </CarouselContext.Provider>
     );
