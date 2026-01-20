@@ -2,9 +2,9 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { usePathname } from "next/navigation";
-import { useEffect, useCallback } from "react";
-import { NavigationItem } from "./NavigationItem";
-import { springs, containerVariants, itemVariants } from "./spring-config";
+import { useEffect, useCallback, useRef } from "react";
+import Link from "next/link";
+import { springs } from "./spring-config";
 import {
   MusicIcon,
   ForumIcon,
@@ -34,8 +34,48 @@ const navItems = [
   { href: "/guestbook", label: "Guestbook", icon: <GuestbookIcon /> },
 ];
 
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.06,
+      delayChildren: 0.1,
+    },
+  },
+  exit: {
+    opacity: 0,
+    transition: {
+      staggerChildren: 0.03,
+      staggerDirection: -1,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: {
+    opacity: 0,
+    x: -20,
+    filter: "blur(10px)",
+  },
+  visible: {
+    opacity: 1,
+    x: 0,
+    filter: "blur(0px)",
+    transition: springs.navigation,
+  },
+  exit: {
+    opacity: 0,
+    x: 20,
+    filter: "blur(10px)",
+    transition: { duration: 0.2 },
+  },
+};
+
 export function NavigationOverlay({ isOpen, onClose }: NavigationOverlayProps) {
   const pathname = usePathname();
+  const navRef = useRef<HTMLElement>(null);
+  const firstLinkRef = useRef<HTMLAnchorElement>(null);
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
@@ -50,6 +90,8 @@ export function NavigationOverlay({ isOpen, onClose }: NavigationOverlayProps) {
     if (isOpen) {
       document.addEventListener("keydown", handleKeyDown);
       document.body.style.overflow = "hidden";
+      // Focus first link when opened
+      setTimeout(() => firstLinkRef.current?.focus(), 100);
     }
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
@@ -65,51 +107,113 @@ export function NavigationOverlay({ isOpen, onClose }: NavigationOverlayProps) {
   return (
     <AnimatePresence>
       {isOpen && (
-        <>
-          {/* Backdrop */}
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
+          className="fixed inset-0 z-40"
+        >
+          {/* Full-screen dark backdrop */}
           <motion.div
+            className="absolute inset-0 bg-black/95 backdrop-blur-xl"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={springs.navigation}
-            className="fixed inset-0 z-40 bg-black/60 backdrop-blur-md"
             onClick={onClose}
             aria-hidden="true"
           />
 
-          {/* Navigation Panel */}
+          {/* Ambient glow effect */}
+          <div className="pointer-events-none absolute inset-0 overflow-hidden">
+            <div className="absolute -left-1/4 top-1/4 h-96 w-96 rounded-full bg-white/5 blur-3xl" />
+            <div className="absolute -right-1/4 bottom-1/4 h-96 w-96 rounded-full bg-white/5 blur-3xl" />
+          </div>
+
+          {/* Navigation content */}
           <motion.nav
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.95 }}
-            transition={springs.navigation}
-            className="fixed inset-x-4 bottom-24 top-20 z-40 flex items-center justify-center sm:inset-x-auto sm:left-1/2 sm:top-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2"
+            ref={navRef}
+            className="relative flex h-full flex-col items-center justify-center px-8"
             role="navigation"
             aria-label="Main navigation"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            exit="exit"
           >
-            <motion.div
-              className="w-full max-w-md rounded-2xl border border-border bg-background/95 p-6 shadow-2xl backdrop-blur-xl"
-              variants={containerVariants}
-              initial="hidden"
-              animate="visible"
-              exit="exit"
+            {/* Close hint */}
+            <motion.p
+              className="absolute top-8 text-sm tracking-widest text-white/40"
+              initial={{ opacity: 0, y: -10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.5 }}
             >
-              <motion.ul className="space-y-1">
-                {navItems.map((item) => (
-                  <motion.li key={item.href} variants={itemVariants}>
-                    <NavigationItem
-                      href={item.href}
-                      label={item.label}
-                      icon={item.icon}
-                      isActive={isActive(item.href)}
-                      onClick={onClose}
+              ESC TO CLOSE
+            </motion.p>
+
+            {/* Nav items - large, bold, centered */}
+            <ul className="flex flex-col items-center gap-2">
+              {navItems.map((item, index) => (
+                <motion.li key={item.href} variants={itemVariants}>
+                  <Link
+                    ref={index === 0 ? firstLinkRef : undefined}
+                    href={item.href}
+                    onClick={onClose}
+                    className="group relative flex items-center gap-4 px-6 py-3"
+                  >
+                    {/* Icon */}
+                    <motion.span
+                      className={`flex h-8 w-8 items-center justify-center transition-all duration-300 ${
+                        isActive(item.href)
+                          ? "text-white"
+                          : "text-white/40 group-hover:text-white/80"
+                      }`}
+                      whileHover={{ scale: 1.2, rotate: 5 }}
+                      transition={springs.micro}
+                    >
+                      {item.icon}
+                    </motion.span>
+
+                    {/* Label - large typography */}
+                    <span
+                      className={`text-3xl font-light tracking-wide transition-all duration-300 sm:text-4xl ${
+                        isActive(item.href)
+                          ? "text-white"
+                          : "text-white/40 group-hover:text-white/80"
+                      }`}
+                    >
+                      {item.label}
+                    </span>
+
+                    {/* Active indicator - vertical bar */}
+                    {isActive(item.href) && (
+                      <motion.div
+                        layoutId="nav-active-indicator"
+                        className="absolute -left-2 top-1/2 h-8 w-1 -translate-y-1/2 rounded-full bg-white"
+                        transition={springs.navigation}
+                      />
+                    )}
+
+                    {/* Hover glow */}
+                    <motion.div
+                      className="pointer-events-none absolute inset-0 -z-10 rounded-lg bg-white/0 transition-colors duration-300 group-hover:bg-white/5"
                     />
-                  </motion.li>
-                ))}
-              </motion.ul>
-            </motion.div>
+                  </Link>
+                </motion.li>
+              ))}
+            </ul>
+
+            {/* Bottom branding */}
+            <motion.p
+              className="absolute bottom-8 text-xs tracking-[0.3em] text-white/20"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.7 }}
+            >
+              MAXWELL YOUNG
+            </motion.p>
           </motion.nav>
-        </>
+        </motion.div>
       )}
     </AnimatePresence>
   );
