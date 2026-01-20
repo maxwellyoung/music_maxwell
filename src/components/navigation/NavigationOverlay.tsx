@@ -34,54 +34,13 @@ const navItems = [
   { href: "/guestbook", label: "Guestbook", icon: <GuestbookIcon /> },
 ];
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.06,
-      delayChildren: 0.1,
-    },
-  },
-  exit: {
-    opacity: 0,
-    transition: {
-      staggerChildren: 0.03,
-      staggerDirection: -1,
-    },
-  },
-};
-
-const itemVariants = {
-  hidden: {
-    opacity: 0,
-    x: -20,
-    filter: "blur(10px)",
-  },
-  visible: {
-    opacity: 1,
-    x: 0,
-    filter: "blur(0px)",
-    transition: springs.navigation,
-  },
-  exit: {
-    opacity: 0,
-    x: 20,
-    filter: "blur(10px)",
-    transition: { duration: 0.2 },
-  },
-};
-
 export function NavigationOverlay({ isOpen, onClose }: NavigationOverlayProps) {
   const pathname = usePathname();
-  const navRef = useRef<HTMLElement>(null);
   const firstLinkRef = useRef<HTMLAnchorElement>(null);
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        onClose();
-      }
+      if (e.key === "Escape") onClose();
     },
     [onClose]
   );
@@ -90,8 +49,7 @@ export function NavigationOverlay({ isOpen, onClose }: NavigationOverlayProps) {
     if (isOpen) {
       document.addEventListener("keydown", handleKeyDown);
       document.body.style.overflow = "hidden";
-      // Focus first link when opened
-      setTimeout(() => firstLinkRef.current?.focus(), 100);
+      setTimeout(() => firstLinkRef.current?.focus(), 400);
     }
     return () => {
       document.removeEventListener("keydown", handleKeyDown);
@@ -107,113 +65,114 @@ export function NavigationOverlay({ isOpen, onClose }: NavigationOverlayProps) {
   return (
     <AnimatePresence>
       {isOpen && (
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          exit={{ opacity: 0 }}
-          transition={{ duration: 0.3 }}
-          className="fixed inset-0 z-40"
-        >
-          {/* Full-screen dark backdrop */}
+        <>
+          {/* Morphing backdrop - expands from bottom-right */}
           <motion.div
-            className="absolute inset-0 bg-black/95 backdrop-blur-xl"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={onClose}
-            aria-hidden="true"
+            className="fixed inset-0 z-40 bg-neutral-950"
+            initial={{
+              clipPath: "circle(0% at calc(100% - 2.5rem) calc(100% - 2.5rem))"
+            }}
+            animate={{
+              clipPath: "circle(150% at calc(100% - 2.5rem) calc(100% - 2.5rem))"
+            }}
+            exit={{
+              clipPath: "circle(0% at calc(100% - 2.5rem) calc(100% - 2.5rem))"
+            }}
+            transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
           />
 
-          {/* Ambient glow effect */}
-          <div className="pointer-events-none absolute inset-0 overflow-hidden">
-            <div className="absolute -left-1/4 top-1/4 h-96 w-96 rounded-full bg-white/5 blur-3xl" />
-            <div className="absolute -right-1/4 bottom-1/4 h-96 w-96 rounded-full bg-white/5 blur-3xl" />
-          </div>
+          {/* Film grain overlay */}
+          <motion.div
+            className="pointer-events-none fixed inset-0 z-40 opacity-[0.35]"
+            style={{
+              backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
+            }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 0.35 }}
+            exit={{ opacity: 0 }}
+            transition={{ delay: 0.2 }}
+          />
 
           {/* Navigation content */}
           <motion.nav
-            ref={navRef}
-            className="relative flex h-full flex-col items-center justify-center px-8"
+            className="fixed inset-0 z-40 flex flex-col justify-center px-8 sm:px-16"
             role="navigation"
             aria-label="Main navigation"
-            variants={containerVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ delay: 0.25, duration: 0.3 }}
           >
-            {/* Close hint */}
-            <motion.p
-              className="absolute top-8 text-sm tracking-widest text-white/40"
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.5 }}
+            {/* Close button - top right */}
+            <motion.button
+              onClick={onClose}
+              className="absolute right-6 top-6 flex h-12 w-12 items-center justify-center rounded-full text-white/60 transition-colors hover:bg-white/10 hover:text-white"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              transition={{ delay: 0.4 }}
+              aria-label="Close navigation"
             >
-              ESC TO CLOSE
-            </motion.p>
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                <path d="M18 6L6 18M6 6l12 12" />
+              </svg>
+            </motion.button>
 
-            {/* Nav items - large, bold, centered */}
-            <ul className="flex flex-col items-center gap-2">
+            {/* Nav items */}
+            <ul className="space-y-1">
               {navItems.map((item, index) => (
-                <motion.li key={item.href} variants={itemVariants}>
+                <motion.li
+                  key={item.href}
+                  initial={{ opacity: 0, x: -40 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -20 }}
+                  transition={{
+                    delay: 0.3 + index * 0.04,
+                    duration: 0.4,
+                    ease: [0.22, 1, 0.36, 1],
+                  }}
+                >
                   <Link
                     ref={index === 0 ? firstLinkRef : undefined}
                     href={item.href}
                     onClick={onClose}
-                    className="group relative flex items-center gap-4 px-6 py-3"
+                    className="group relative flex items-center gap-5 py-2"
                   >
+                    {/* Active bar */}
+                    <motion.div
+                      className={`h-12 w-1 rounded-full transition-all duration-300 ${
+                        isActive(item.href) ? "bg-white" : "bg-white/0 group-hover:bg-white/20"
+                      }`}
+                      layoutId="nav-bar"
+                    />
+
                     {/* Icon */}
-                    <motion.span
-                      className={`flex h-8 w-8 items-center justify-center transition-all duration-300 ${
+                    <span
+                      className={`flex h-10 w-10 items-center justify-center transition-all duration-300 ${
                         isActive(item.href)
                           ? "text-white"
-                          : "text-white/40 group-hover:text-white/80"
+                          : "text-white/30 group-hover:text-white/70"
                       }`}
-                      whileHover={{ scale: 1.2, rotate: 5 }}
-                      transition={springs.micro}
                     >
                       {item.icon}
-                    </motion.span>
+                    </span>
 
-                    {/* Label - large typography */}
+                    {/* Label */}
                     <span
-                      className={`text-3xl font-light tracking-wide transition-all duration-300 sm:text-4xl ${
+                      className={`text-4xl font-extralight tracking-tight transition-all duration-300 sm:text-5xl md:text-6xl ${
                         isActive(item.href)
                           ? "text-white"
-                          : "text-white/40 group-hover:text-white/80"
+                          : "text-white/30 group-hover:text-white/70"
                       }`}
                     >
                       {item.label}
                     </span>
-
-                    {/* Active indicator - vertical bar */}
-                    {isActive(item.href) && (
-                      <motion.div
-                        layoutId="nav-active-indicator"
-                        className="absolute -left-2 top-1/2 h-8 w-1 -translate-y-1/2 rounded-full bg-white"
-                        transition={springs.navigation}
-                      />
-                    )}
-
-                    {/* Hover glow */}
-                    <motion.div
-                      className="pointer-events-none absolute inset-0 -z-10 rounded-lg bg-white/0 transition-colors duration-300 group-hover:bg-white/5"
-                    />
                   </Link>
                 </motion.li>
               ))}
             </ul>
-
-            {/* Bottom branding */}
-            <motion.p
-              className="absolute bottom-8 text-xs tracking-[0.3em] text-white/20"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ delay: 0.7 }}
-            >
-              MAXWELL YOUNG
-            </motion.p>
           </motion.nav>
-        </motion.div>
+        </>
       )}
     </AnimatePresence>
   );
