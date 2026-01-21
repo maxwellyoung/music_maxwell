@@ -14,24 +14,12 @@ export default function ReplyForm({
 }) {
   const { data: session, status } = useSession();
   const [content, setContent] = useState("");
+  const [anonName, setAnonName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
   const router = useRouter();
 
   if (status === "loading") return null;
-
-  if (!session) {
-    return (
-      <div className="border-t border-white/[0.04] pt-8">
-        <button
-          onClick={() => signIn()}
-          className="text-sm text-muted-foreground/40 underline underline-offset-4 transition-colors hover:text-muted-foreground/60 focus-visible:ring-2 focus-visible:ring-white/20 focus-visible:rounded"
-        >
-          Sign in to reply
-        </button>
-      </div>
-    );
-  }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -40,7 +28,11 @@ export default function ReplyForm({
       const res = await fetch("/api/forum/replies", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ content, topicId }),
+        body: JSON.stringify({
+          content,
+          topicId,
+          anonName: session?.user ? null : anonName || null,
+        }),
       });
       if (!res.ok) {
         let errorMsg = "Could not post reply";
@@ -53,6 +45,7 @@ export default function ReplyForm({
         throw new Error(errorMsg);
       }
       setContent("");
+      setAnonName("");
       toast({ description: "Posted" });
       if (onSuccess) onSuccess();
       router.refresh();
@@ -67,9 +60,31 @@ export default function ReplyForm({
   }
 
   return (
-    <form onSubmit={handleSubmit} className="border-t border-white/[0.04] pt-8">
+    <form onSubmit={handleSubmit} className="border-t border-foreground/5 pt-8">
+      {/* Sign-in hint for anonymous users */}
+      {!session?.user && (
+        <div className="mb-4 flex items-center gap-3 text-sm text-muted-foreground">
+          <input
+            type="text"
+            value={anonName}
+            onChange={(e) => setAnonName(e.target.value)}
+            placeholder="Nickname (optional)"
+            maxLength={30}
+            className="w-32 border-0 border-b border-foreground/10 bg-transparent py-1 text-sm placeholder:text-muted-foreground/30 focus:border-foreground/20 focus:outline-none"
+          />
+          <span className="text-muted-foreground/40">or</span>
+          <button
+            type="button"
+            onClick={() => signIn("google")}
+            className="text-foreground underline underline-offset-2 hover:no-underline"
+          >
+            sign in
+          </button>
+        </div>
+      )}
+
       <textarea
-        className="w-full resize-none border-0 bg-transparent text-foreground/80 leading-relaxed placeholder:text-muted-foreground/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/20"
+        className="w-full resize-none border-0 bg-transparent text-foreground/80 leading-relaxed placeholder:text-muted-foreground/30 focus:outline-none"
         placeholder="Write a reply…"
         aria-label="Reply content"
         rows={4}
@@ -82,7 +97,7 @@ export default function ReplyForm({
         <button
           type="submit"
           disabled={isLoading || !content.trim()}
-          className="rounded-full bg-foreground px-5 py-2 text-sm font-medium text-background transition-all hover:opacity-90 focus-visible:ring-2 focus-visible:ring-white/50 disabled:opacity-50"
+          className="rounded-full bg-foreground px-5 py-2 text-sm font-medium text-background transition-all hover:opacity-90 disabled:opacity-50"
         >
           {isLoading ? "Posting…" : "Reply"}
         </button>

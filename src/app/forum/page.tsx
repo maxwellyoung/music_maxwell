@@ -57,8 +57,8 @@ export default async function ForumPage() {
         {/* Topics */}
         <ForumTopicsInfinite initialTopics={topics} total={total} />
 
-        {/* New post */}
-        <div className="fixed bottom-8 right-8">
+        {/* New post - positioned above nav trigger */}
+        <div className="fixed bottom-24 right-6">
           <Link
             href="/forum/new"
             className="flex h-12 w-12 items-center justify-center rounded-full bg-foreground text-background shadow-lg transition-transform hover:scale-105 active:scale-95"

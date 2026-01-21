@@ -11,13 +11,14 @@ type Reply = {
   id: string;
   content: string;
   createdAt: string | Date;
-  authorId: string;
+  authorId: string | null;
+  anonName?: string | null;
   author?: {
     id?: string;
     name?: string | null;
     role?: string | null;
     username?: string | null;
-  };
+  } | null;
 };
 
 type RepliesListProps = {
@@ -144,7 +145,7 @@ export default function RepliesList({
                 {reply.author.username}
               </Link>
             ) : (
-              <span>anon</span>
+              <span>{reply.anonName ?? "anon"}</span>
             )}
             {reply.author?.role === "admin" && (
               <span className="rounded-full bg-white/[0.06] px-2 py-0.5 text-[10px] uppercase tracking-wider">

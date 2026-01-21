@@ -58,12 +58,9 @@ export async function GET(request: Request) {
 
 export async function POST(request: Request) {
   const session = await getServerSession(authOptions);
-  if (!session?.user?.id) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
 
-  // Rate limiting
-  const identifier = getClientIdentifier(session.user.id, request);
+  // Rate limiting - use user ID if signed in, otherwise use IP
+  const identifier = getClientIdentifier(session?.user?.id ?? "anon", request);
   const rateLimitResult = await forumLimiter.check(LIMITS.createReply, identifier);
   if (!rateLimitResult.success) {
     return NextResponse.json(
@@ -85,7 +82,7 @@ export async function POST(request: Request) {
         { status: 400 },
       );
     }
-    const { content, topicId } = data as { content: string; topicId: string };
+    const { content, topicId, anonName } = data as { content: string; topicId: string; anonName?: string };
 
     // Validate content length
     const contentValidation = validateLength(content, CONTENT_LIMITS.replyContent);
@@ -103,7 +100,8 @@ export async function POST(request: Request) {
       data: {
         content,
         topicId,
-        authorId: session.user.id,
+        authorId: session?.user?.id ?? null,
+        anonName: session?.user?.id ? null : (anonName?.trim() ?? null),
       },
     });
 

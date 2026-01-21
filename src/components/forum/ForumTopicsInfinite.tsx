@@ -20,6 +20,7 @@ export type ForumTopic = {
   createdAt: string;
   updatedAt: string;
   author: { name: string | null; username: string | null } | null;
+  anonName?: string | null;
   _count: { replies: number };
 };
 
@@ -127,7 +128,7 @@ export default function ForumTopicsInfinite({
                   {/* Meta */}
                   <div className="flex items-center gap-3 pt-1 text-xs text-muted-foreground">
                     <span className="transition-colors group-hover:text-foreground">
-                      {topic.author?.username ?? "anon"}
+                      {topic.author?.username ?? topic.anonName ?? "anon"}
                     </span>
                     <span className="text-muted-foreground/50">·</span>
                     <span>{formatRelativeTime(topic.updatedAt)}</span>

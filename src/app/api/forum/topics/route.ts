@@ -11,12 +11,9 @@ export const runtime = "nodejs";
 
 export async function POST(request: Request) {
   const session = await getServerSession(authOptions);
-  if (!session?.user?.id) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
 
-  // Rate limiting
-  const identifier = getClientIdentifier(session.user.id, request);
+  // Rate limiting - use user ID if signed in, otherwise use IP
+  const identifier = getClientIdentifier(session?.user?.id ?? "anon", request);
   const rateLimitResult = await forumLimiter.check(LIMITS.createTopic, identifier);
   if (!rateLimitResult.success) {
     return NextResponse.json(
@@ -38,7 +35,7 @@ export async function POST(request: Request) {
         { status: 400 },
       );
     }
-    const { title, content } = data as { title: string; content: string };
+    const { title, content, anonName } = data as { title: string; content: string; anonName?: string };
 
     // Validate content length
     const titleValidation = validateLength(title, CONTENT_LIMITS.topicTitle);
@@ -56,11 +53,13 @@ export async function POST(request: Request) {
       return NextResponse.json({ error: moderation.reason }, { status: 400 });
     }
 
+    // Create topic - signed in users get attribution, anonymous users can optionally provide a name
     const topic = await prisma.topic.create({
       data: {
         title,
         content,
-        authorId: session.user.id,
+        authorId: session?.user?.id ?? null,
+        anonName: session?.user?.id ? null : (anonName?.trim() ?? null),
       },
       include: {
         author: { select: { name: true, username: true } },
