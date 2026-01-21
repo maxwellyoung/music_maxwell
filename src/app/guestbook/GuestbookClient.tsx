@@ -100,9 +100,9 @@ export function GuestbookClient() {
         animate={{ opacity: 1, y: 0 }}
         className="mb-12 text-center"
       >
-        <h1 className="mb-4 text-4xl font-bold text-foreground">Guestbook</h1>
-        <p className="text-muted-foreground">
-          Leave a message - share your thoughts, favorite songs, or just say hi
+        <h1 className="mb-3 text-3xl font-medium tracking-tight text-foreground">Guestbook</h1>
+        <p className="text-sm italic text-muted-foreground">
+          Write something nice. Or weird. Preferably both.
         </p>
       </motion.div>
 
@@ -176,7 +176,7 @@ export function GuestbookClient() {
               id="message"
               value={message}
               onChange={(e) => setMessage(e.target.value)}
-              placeholder="Share your thoughts..."
+              placeholder="Say something memorable…"
               required
               maxLength={500}
               rows={3}

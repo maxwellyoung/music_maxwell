@@ -1,7 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { Drawer, DrawerClose, DrawerContent, DrawerHeader } from "./ui/drawer";
 import {
   Select,
@@ -29,6 +29,7 @@ import {
 import { Separator } from "./ui/separator";
 import songs from "./songsData";
 import { cn } from "~/lib/utils";
+import { AlbumCard } from "./AlbumCard";
 import { XIcon, Share2Icon, CopyIcon, CheckIcon } from "lucide-react";
 import { trackStreamingClick } from "./providers/PostHogProvider";
 
@@ -723,30 +724,6 @@ const CollectableGrid: React.FC<CollectableGridProps> = ({ initialProducts = [] 
   const [selectedSong, setSelectedSong] = useState<Song | null>(null);
   const products = initialProducts;
 
-  // Animation variants
-  const albumVariants = {
-    initial: { opacity: 0.95 },
-    hover: {
-      opacity: 1,
-      transition: {
-        duration: 0.2,
-        ease: "easeOut",
-      },
-    },
-  };
-
-  const titleVariants = {
-    initial: { opacity: 0, y: 10 },
-    hover: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.2,
-        ease: "easeOut",
-      },
-    },
-  };
-
   const openDrawer = (song: Song) => {
     try {
       setSelectedSong(song);
@@ -784,39 +761,17 @@ const CollectableGrid: React.FC<CollectableGridProps> = ({ initialProducts = [] 
         </svg>
       </div>
       <div className="container relative z-10 mx-auto px-2 sm:px-4 md:px-8">
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8 md:grid-cols-3 lg:grid-cols-4">
-          {songs.map((song) => (
-            <motion.div
+        <div className="grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-3 lg:grid-cols-4">
+          {songs.map((song, index) => (
+            <AlbumCard
               key={song.title}
-              initial="initial"
-              whileHover="hover"
+              title={song.title}
+              artist={song.artist}
+              artwork={song.artwork}
+              lyricSnippet={song.snippet}
               onClick={() => openDrawer(song)}
-              className="group cursor-pointer"
-            >
-              <div className="relative aspect-square overflow-hidden rounded-2xl border-2 border-transparent transition-all duration-200 group-hover:z-10 group-hover:scale-105 group-hover:border-primary group-hover:shadow-2xl group-hover:ring-4 group-hover:ring-primary/20">
-                <motion.div variants={albumVariants} className="relative h-full w-full">
-                  <BlurImage
-                    src={song.artwork}
-                    alt={song.title}
-                    className="transition-all duration-300 group-hover:scale-110"
-                  />
-                </motion.div>
-                {/* Shine overlay */}
-                <div className="pointer-events-none absolute inset-0 z-10 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                  <div className="animate-shine absolute -left-1/3 top-0 h-full w-1/3 bg-gradient-to-r from-white/10 via-white/60 to-white/10 blur-lg" />
-                </div>
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 transition-opacity duration-200 group-hover:opacity-80" />
-                <motion.div
-                  className="absolute inset-x-0 bottom-0 p-4"
-                  variants={titleVariants}
-                >
-                  <h2 className="text-lg font-bold text-white drop-shadow-md">
-                    {song.title}
-                  </h2>
-                  <p className="text-xs text-white/80">{song.artist}</p>
-                </motion.div>
-              </div>
-            </motion.div>
+              priority={index < 4}
+            />
           ))}
         </div>
 

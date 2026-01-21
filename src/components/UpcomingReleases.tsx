@@ -112,7 +112,7 @@ export function UpcomingReleases() {
     <motion.div
       initial={{ opacity: 0, y: -10 }}
       animate={{ opacity: 1, y: 0 }}
-      className="border-b border-border bg-gradient-to-r from-primary/5 to-transparent"
+      className="overflow-hidden border-b border-border bg-gradient-to-r from-primary/5 to-transparent"
     >
       <div className="container mx-auto px-4">
         <Link

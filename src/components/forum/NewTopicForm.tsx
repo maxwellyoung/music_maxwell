@@ -61,27 +61,29 @@ export function NewTopicForm() {
   return (
     <form onSubmit={onSubmit} className="space-y-8">
       <div className="space-y-2">
+        <label htmlFor="title" className="sr-only">Topic title</label>
         <input
           id="title"
           name="title"
           type="text"
-          placeholder="Title"
+          placeholder="Title…"
           required
           disabled={isLoading}
           autoFocus
-          className="w-full border-0 border-b border-white/[0.08] bg-transparent py-3 text-xl font-medium tracking-tight placeholder:text-muted-foreground/30 focus:border-white/20 focus:outline-none focus:ring-0"
+          className="w-full border-0 border-b border-white/[0.08] bg-transparent py-3 text-xl font-medium tracking-tight placeholder:text-muted-foreground/30 focus:border-white/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/20"
         />
       </div>
 
       <div className="space-y-2">
+        <label htmlFor="content" className="sr-only">Topic content</label>
         <textarea
           id="content"
           name="content"
-          placeholder="What's on your mind?"
+          placeholder="What's on your mind…"
           required
           disabled={isLoading}
           rows={8}
-          className="w-full resize-none border-0 bg-transparent text-foreground/80 leading-relaxed placeholder:text-muted-foreground/30 focus:outline-none focus:ring-0"
+          className="w-full resize-none border-0 bg-transparent text-foreground/80 leading-relaxed placeholder:text-muted-foreground/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/20"
         />
       </div>
 
@@ -90,16 +92,16 @@ export function NewTopicForm() {
           type="button"
           onClick={() => router.back()}
           disabled={isLoading}
-          className="text-sm text-muted-foreground/40 transition-colors hover:text-muted-foreground/60"
+          className="text-sm text-muted-foreground/40 transition-colors hover:text-muted-foreground/60 focus-visible:ring-2 focus-visible:ring-white/20 focus-visible:rounded"
         >
           Cancel
         </button>
         <button
           type="submit"
           disabled={isLoading}
-          className="rounded-full bg-foreground px-6 py-2.5 text-sm font-medium text-background transition-all hover:opacity-90 disabled:opacity-50"
+          className="rounded-full bg-foreground px-6 py-2.5 text-sm font-medium text-background transition-all hover:opacity-90 focus-visible:ring-2 focus-visible:ring-white/50 disabled:opacity-50"
         >
-          {isLoading ? "Posting..." : "Post"}
+          {isLoading ? "Posting…" : "Post"}
         </button>
       </div>
     </form>

@@ -2,6 +2,7 @@ export type Song = {
   title: string;
   artist: string;
   artwork: string;
+  snippet?: string; // A lyric snippet for hover preview
   links: {
     spotify: string;
     appleMusic: string;
@@ -34,6 +35,7 @@ const songs: Song[] = [
     title: "Turn It Up",
     artist: "Maxwell Young & Thom Haha",
     artwork: "/artworks/TurnItUp.webp",
+    snippet: "All the girls with me wanna fuck it n turn up",
     links: {
       spotify: "https://open.spotify.com/track/6J2Kd1FCDTwY5cn0cUCSd3",
       appleMusic:
@@ -84,6 +86,7 @@ All the girls with me wanna fuck it n turn up`,
     title: "Freewheelin'",
     artist: "Maxwell Young",
     artwork: "/artworks/Freewheelin.webp",
+    snippet: "We're walking arm in arm I feel like Bob Dylan on Freewheelin",
     links: {
       spotify:
         "https://open.spotify.com/search/freewheelin%20maxwell%20young",
@@ -139,6 +142,7 @@ You know I'm saying`,
     title: "I Just Wanna Fly",
     artist: "Maxwell Young",
     artwork: "/artworks/IJustWannaFly.webp",
+    snippet: "Good for a rhyme, turned on a dime",
     links: {
       spotify:
         "https://open.spotify.com/track/7yBIX3tGrBzYOYFpVw7KhQ?si=5fe8124622c74381",
@@ -193,6 +197,7 @@ You know I'm saying`,
     title: "Hopeless",
     artist: "Maxwell Young",
     artwork: "/artworks/Hopeless.webp",
+    snippet: "Girl I'm hopeless, city makes me wild",
     links: {
       spotify:
         "https://open.spotify.com/track/3uFLa70uqobRBUp0fJWCET?si=b5b728d5793d4a71",
@@ -249,6 +254,7 @@ You know I'm saying`,
     title: "Call Ur Name / Go Ahead",
     artist: "Maxwell Young",
     artwork: "/artworks/CallUrName.webp",
+    snippet: "I love to call your name, oh Delilah",
     links: {
       spotify: "https://open.spotify.com/track/3",
       appleMusic: "https://music.apple.com/track/3",
@@ -370,6 +376,7 @@ You know I'm saying`,
     title: "Birthday Girl",
     artist: "Maxwell Young",
     artwork: "/artworks/BirthdayGirl.webp",
+    snippet: "Shadowboxed the birthday girl, ponytails apart, uncurled",
     links: {
       spotify:
         "https://open.spotify.com/album/59B9dUKtmzo3X2GOXyzRbo?si=f6a7c98354ea403a",
@@ -397,6 +404,7 @@ You know I'm saying`,
     title: "Cherry Pie / Lose U Too",
     artist: "Maxwell Young",
     artwork: "/artworks/CherryPie.webp",
+    snippet: "Black coffee and cherry pie",
     links: {
       spotify: "https://spotify.link",
       appleMusic: "https://apple.link",
@@ -508,6 +516,7 @@ You know I'm saying`,
     title: "Videostar / Cleopatra",
     artist: "Maxwell Young",
     artwork: "/artworks/Videostar.webp",
+    snippet: "Dancing drunk to Dijon, I've been glassy eyed & fragile",
     links: {
       spotify:
         "https://open.spotify.com/album/5l0XJRyLOJo6Wg1Ukr6RsP?si=c64256d576a14a46",
@@ -646,6 +655,7 @@ You know I'm saying`,
     title: "Dread!",
     artist: "Maxwell Young",
     artwork: "/artworks/Dread.webp",
+    snippet: "When I was in your bed, as soon as I saw dread",
     links: {
       spotify:
         "https://open.spotify.com/track/4fcuc4RJCp2aogsSsNJDFg?si=2439c01879eb40b4",
@@ -720,6 +730,7 @@ You know I'm saying`,
     title: "Don't Waste Your Time",
     artist: "Maxwell Young",
     artwork: "/artworks/DontWasteYourTime.webp",
+    snippet: "Let's breakup before you say it",
     links: {
       spotify:
         "https://open.spotify.com/track/5qWa7n31Zjh0tcEvtERuZA?si=24bfc78a23634103",
@@ -793,6 +804,7 @@ You know I'm saying`,
     title: "No. 5",
     artist: "Maxwell Young",
     artwork: "/artworks/No5.webp",
+    snippet: "Let me try your perfume, dancing in Chanel",
     links: {
       spotify:
         "https://open.spotify.com/track/0Qxq1Nf297aBK1k8E9py5P?si=9bf7179b859b493c",
@@ -898,6 +910,7 @@ You know I'm saying`,
     title: "Only Romantics",
     artist: "Maxwell Young",
     artwork: "/artworks/OnlyRomantics.webp",
+    snippet: "Popstar's girlfriend, blue tint, whirlwind down",
     links: {
       spotify:
         "https://open.spotify.com/album/3x3tbBAQoCxTHKWMZeVIdZ?si=otfnk5hwSQ-kAlTwxwtrvA",
@@ -1174,6 +1187,7 @@ Been here forevermore`,
     title: "Daydreamer",
     artist: "Maxwell Young",
     artwork: "/artworks/Daydreamer.webp",
+    snippet: "You are what you love and ain't what loves you",
     links: {
       spotify:
         "https://open.spotify.com/album/1TNWD3no292fUChXiTqxsX?si=pOooW-_wTOm6TDVNHMf1kw",

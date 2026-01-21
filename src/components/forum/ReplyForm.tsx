@@ -25,7 +25,7 @@ export default function ReplyForm({
       <div className="border-t border-white/[0.04] pt-8">
         <button
           onClick={() => signIn()}
-          className="text-sm text-muted-foreground/40 underline underline-offset-4 transition-colors hover:text-muted-foreground/60"
+          className="text-sm text-muted-foreground/40 underline underline-offset-4 transition-colors hover:text-muted-foreground/60 focus-visible:ring-2 focus-visible:ring-white/20 focus-visible:rounded"
         >
           Sign in to reply
         </button>
@@ -69,8 +69,9 @@ export default function ReplyForm({
   return (
     <form onSubmit={handleSubmit} className="border-t border-white/[0.04] pt-8">
       <textarea
-        className="w-full resize-none border-0 bg-transparent text-foreground/80 leading-relaxed placeholder:text-muted-foreground/30 focus:outline-none focus:ring-0"
-        placeholder="Write a reply..."
+        className="w-full resize-none border-0 bg-transparent text-foreground/80 leading-relaxed placeholder:text-muted-foreground/30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/20"
+        placeholder="Write a reply…"
+        aria-label="Reply content"
         rows={4}
         value={content}
         onChange={(e) => setContent(e.target.value)}
@@ -81,9 +82,9 @@ export default function ReplyForm({
         <button
           type="submit"
           disabled={isLoading || !content.trim()}
-          className="rounded-full bg-foreground px-5 py-2 text-sm font-medium text-background transition-all hover:opacity-90 disabled:opacity-50"
+          className="rounded-full bg-foreground px-5 py-2 text-sm font-medium text-background transition-all hover:opacity-90 focus-visible:ring-2 focus-visible:ring-white/50 disabled:opacity-50"
         >
-          {isLoading ? "Posting..." : "Reply"}
+          {isLoading ? "Posting…" : "Reply"}
         </button>
       </div>
     </form>

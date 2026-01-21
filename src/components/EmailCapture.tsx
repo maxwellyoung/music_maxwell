@@ -65,19 +65,22 @@ export function EmailCapture({
         <form onSubmit={handleSubmit} className="flex gap-2">
           <input
             type="email"
+            name="email"
+            autoComplete="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="your@email.com"
-            className="w-48 rounded-lg border border-border bg-background px-3 py-1.5 text-sm text-foreground placeholder:text-muted-foreground/50 focus:border-primary/50 focus:outline-none"
+            aria-label="Email address"
+            className="w-48 rounded-lg border border-border bg-background px-3 py-1.5 text-sm text-foreground placeholder:text-muted-foreground/50 focus:border-primary/50 focus:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
             disabled={status === "loading" || status === "success"}
           />
           <button
             type="submit"
             disabled={status === "loading" || status === "success"}
-            className="rounded-lg bg-primary/10 px-3 py-1.5 text-sm text-foreground transition-colors hover:bg-primary/20 disabled:opacity-50"
+            className="rounded-lg bg-primary/10 px-3 py-1.5 text-sm text-foreground transition-colors hover:bg-primary/20 focus-visible:ring-2 focus-visible:ring-primary/50 disabled:opacity-50"
           >
             {status === "loading"
-              ? "..."
+              ? "…"
               : status === "success"
                 ? "Subscribed"
                 : "Subscribe"}
@@ -109,18 +112,21 @@ export function EmailCapture({
               <div className="flex flex-col gap-3 sm:flex-row">
                 <input
                   type="email"
+                  name="email"
+                  autoComplete="email"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your email"
-                  className="flex-1 rounded-xl border border-white/10 bg-white/5 px-5 py-3 text-white placeholder:text-white/40 focus:border-white/20 focus:outline-none focus:ring-2 focus:ring-white/10"
+                  placeholder="Enter your email…"
+                  aria-label="Email address"
+                  className="flex-1 rounded-xl border border-white/10 bg-white/5 px-5 py-3 text-white placeholder:text-white/40 focus:border-white/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/20"
                   disabled={status === "loading"}
                 />
                 <button
                   type="submit"
                   disabled={status === "loading"}
-                  className="rounded-xl bg-white px-6 py-3 font-medium text-black transition-all hover:scale-105 hover:bg-white/90 disabled:opacity-50"
+                  className="rounded-xl bg-white px-6 py-3 font-medium text-black transition-all hover:scale-105 hover:bg-white/90 focus-visible:ring-2 focus-visible:ring-white/50 disabled:opacity-50"
                 >
-                  {status === "loading" ? "Subscribing..." : "Notify Me"}
+                  {status === "loading" ? "Subscribing…" : "Notify Me"}
                 </button>
               </div>
               {status === "error" && (
@@ -157,18 +163,21 @@ export function EmailCapture({
           >
             <input
               type="email"
+              name="email"
+              autoComplete="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="your@email.com"
-              className="w-full rounded-lg border border-white/10 bg-black/50 px-4 py-3 text-white placeholder:text-white/40 focus:border-white/20 focus:outline-none focus:ring-1 focus:ring-white/20"
+              aria-label="Email address"
+              className="w-full rounded-lg border border-white/10 bg-black/50 px-4 py-3 text-white placeholder:text-white/40 focus:border-white/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-white/20"
               disabled={status === "loading"}
             />
             <button
               type="submit"
               disabled={status === "loading"}
-              className="w-full rounded-lg bg-white py-3 font-medium text-black transition-opacity hover:opacity-90 disabled:opacity-50"
+              className="w-full rounded-lg bg-white py-3 font-medium text-black transition-opacity hover:opacity-90 focus-visible:ring-2 focus-visible:ring-white/50 disabled:opacity-50"
             >
-              {status === "loading" ? "Subscribing..." : "Subscribe"}
+              {status === "loading" ? "Subscribing…" : "Subscribe"}
             </button>
             {status === "error" && (
               <p className="text-center text-sm text-red-400">{message}</p>

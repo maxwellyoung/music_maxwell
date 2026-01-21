@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, AnimatePresence, useMotionValue, useTransform, useSpring } from "framer-motion";
+import { motion, AnimatePresence, useSpring, useReducedMotion } from "framer-motion";
 import { usePathname } from "next/navigation";
 import { useEffect, useCallback, useRef, useState } from "react";
 import Link from "next/link";
@@ -11,15 +11,12 @@ interface NavigationOverlayProps {
 }
 
 const navItems = [
-  { href: "/", label: "Music" },
-  { href: "/forum", label: "Forum" },
-  { href: "/rooms", label: "Rooms" },
-  { href: "/videos", label: "Videos" },
-  { href: "/shows", label: "Shows" },
-  { href: "/lyrics", label: "Lyrics" },
-  { href: "/timeline", label: "Timeline" },
-  { href: "/bts", label: "Process" },
-  { href: "/guestbook", label: "Guestbook" },
+  { href: "/", label: "Music", aside: "the main event" },
+  { href: "/forum", label: "Forum", aside: "thoughts welcome" },
+  { href: "/videos", label: "Videos", aside: "moving pictures" },
+  { href: "/lyrics", label: "Lyrics", aside: "words, words, words" },
+  { href: "/press", label: "Press", aside: "nice things people said" },
+  { href: "/guestbook", label: "Guestbook", aside: "leave a note" },
 ];
 
 function NavItem({
@@ -27,36 +24,36 @@ function NavItem({
   index,
   isActive,
   onClose,
-  firstRef
+  firstRef,
+  reducedMotion,
 }: {
   item: typeof navItems[0];
   index: number;
   isActive: boolean;
   onClose: () => void;
-  firstRef?: React.RefObject<HTMLAnchorElement>;
+  firstRef?: React.Ref<HTMLAnchorElement>;
+  reducedMotion: boolean;
 }) {
   const [isHovered, setIsHovered] = useState(false);
 
   const springConfig = { stiffness: 400, damping: 30 };
   const x = useSpring(0, springConfig);
-  const scale = useSpring(1, springConfig);
 
   useEffect(() => {
-    x.set(isHovered ? 4 : 0);
-    scale.set(isHovered ? 1.02 : 1);
-  }, [isHovered, x, scale]);
+    if (reducedMotion) return;
+    x.set(isHovered ? 6 : 0);
+  }, [isHovered, x, reducedMotion]);
+
+  const itemTransition = reducedMotion
+    ? { duration: 0.1 }
+    : { type: "spring", stiffness: 300, damping: 30, delay: index * 0.03 };
 
   return (
     <motion.li
-      initial={{ opacity: 0, x: -8 }}
+      initial={{ opacity: 0, x: reducedMotion ? 0 : -8 }}
       animate={{ opacity: 1, x: 0 }}
-      exit={{ opacity: 0, x: -4 }}
-      transition={{
-        type: "spring",
-        stiffness: 300,
-        damping: 30,
-        delay: index * 0.03,
-      }}
+      exit={{ opacity: 0, x: reducedMotion ? 0 : -4 }}
+      transition={itemTransition}
     >
       <Link
         ref={index === 0 ? firstRef : undefined}
@@ -64,35 +61,42 @@ function NavItem({
         onClick={onClose}
         onMouseEnter={() => setIsHovered(true)}
         onMouseLeave={() => setIsHovered(false)}
-        className="group relative flex items-center gap-3 py-2"
+        className="group relative flex items-center gap-3 py-2.5"
       >
         {/* Index number */}
-        <span
-          className="w-5 font-mono text-[10px] tabular-nums"
-          style={{ color: "rgba(255,255,255,0.3)" }}
-        >
+        <span className="w-5 font-mono text-[10px] tabular-nums text-foreground/30">
           {String(index + 1).padStart(2, "0")}
         </span>
 
         {/* Label */}
         <motion.span
-          className="relative text-[15px] font-normal tracking-[-0.01em]"
-          style={{
-            x,
-            scale,
-            color: isActive ? "#fff" : "rgba(255,255,255,0.5)",
-            fontFamily: "system-ui, -apple-system, sans-serif",
-          }}
+          className={`relative text-[15px] font-medium tracking-tight ${
+            isActive ? "text-foreground" : "text-foreground/60"
+          }`}
+          style={reducedMotion ? {} : { x }}
         >
           {item.label}
+        </motion.span>
+
+        {/* Playful aside - appears on hover */}
+        <motion.span
+          className="ml-1 text-[11px] italic text-foreground/25"
+          initial={{ opacity: 0, x: -4 }}
+          animate={{
+            opacity: isHovered ? 1 : 0,
+            x: isHovered ? 0 : -4,
+          }}
+          transition={{ duration: 0.15 }}
+        >
+          {item.aside}
         </motion.span>
 
         {/* Active indicator */}
         {isActive && (
           <motion.span
             layoutId="active"
-            className="absolute -left-3 top-1/2 h-1 w-1 -translate-y-1/2 rounded-full bg-white"
-            transition={{ type: "spring", stiffness: 500, damping: 30 }}
+            className="absolute -left-3 top-1/2 h-1 w-1 -translate-y-1/2 rounded-full bg-foreground"
+            transition={reducedMotion ? { duration: 0.1 } : { type: "spring", stiffness: 500, damping: 30 }}
           />
         )}
       </Link>
@@ -103,8 +107,7 @@ function NavItem({
 export function NavigationOverlay({ isOpen, onClose }: NavigationOverlayProps) {
   const pathname = usePathname();
   const firstLinkRef = useRef<HTMLAnchorElement>(null);
-  const mouseY = useMotionValue(0);
-  const backgroundY = useTransform(mouseY, [0, 1], ["0%", "100%"]);
+  const reducedMotion = useReducedMotion() ?? false;
 
   const handleKeyDown = useCallback(
     (e: KeyboardEvent) => {
@@ -112,12 +115,6 @@ export function NavigationOverlay({ isOpen, onClose }: NavigationOverlayProps) {
     },
     [onClose]
   );
-
-  const handleMouseMove = useCallback((e: React.MouseEvent) => {
-    const rect = e.currentTarget.getBoundingClientRect();
-    const y = (e.clientY - rect.top) / rect.height;
-    mouseY.set(y);
-  }, [mouseY]);
 
   useEffect(() => {
     if (isOpen) {
@@ -145,7 +142,6 @@ export function NavigationOverlay({ isOpen, onClose }: NavigationOverlayProps) {
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.2 }}
-          onMouseMove={handleMouseMove}
         >
           {/* Backdrop - click to close */}
           <motion.div
@@ -160,34 +156,16 @@ export function NavigationOverlay({ isOpen, onClose }: NavigationOverlayProps) {
           {/* Panel */}
           <motion.aside
             className="relative z-10 flex h-full w-72 flex-col justify-center overflow-hidden"
-            initial={{ x: "100%" }}
-            animate={{ x: 0 }}
-            exit={{ x: "100%" }}
-            transition={{ type: "spring", stiffness: 400, damping: 40 }}
+            initial={{ x: reducedMotion ? 0 : "100%", opacity: reducedMotion ? 0 : 1 }}
+            animate={{ x: 0, opacity: 1 }}
+            exit={{ x: reducedMotion ? 0 : "100%", opacity: reducedMotion ? 0 : 1 }}
+            transition={reducedMotion ? { duration: 0.15 } : { type: "spring", stiffness: 400, damping: 40 }}
           >
-            {/* Gradient background - responds subtly to mouse */}
-            <motion.div
-              className="absolute inset-0"
-              style={{
-                background: `linear-gradient(to bottom,
-                  rgba(20, 20, 22, 0.98) 0%,
-                  rgba(25, 25, 30, 0.98) 50%,
-                  rgba(20, 20, 22, 0.98) 100%
-                )`,
-                backdropFilter: "blur(40px)",
-              }}
-            />
-
-            {/* Subtle color accent - Rothko energy */}
-            <motion.div
-              className="pointer-events-none absolute inset-0 opacity-30"
-              style={{
-                background: `radial-gradient(ellipse at 50% var(--y, 50%), rgba(60, 60, 80, 0.4) 0%, transparent 70%)`,
-              }}
-            />
+            {/* Glassy background with blur */}
+            <div className="absolute inset-0 bg-background/70 backdrop-blur-2xl backdrop-saturate-150" />
 
             {/* Border */}
-            <div className="absolute inset-y-0 left-0 w-px bg-white/[0.06]" />
+            <div className="absolute inset-y-0 left-0 w-px bg-foreground/10" />
 
             {/* Content */}
             <nav
@@ -204,22 +182,20 @@ export function NavigationOverlay({ isOpen, onClose }: NavigationOverlayProps) {
                     isActive={isActive(item.href)}
                     onClose={onClose}
                     firstRef={index === 0 ? firstLinkRef : undefined}
+                    reducedMotion={reducedMotion}
                   />
                 ))}
               </motion.ul>
 
               {/* Footer */}
               <motion.div
-                className="mt-12 border-t border-white/[0.06] pt-4"
+                className="mt-10 border-t border-foreground/[0.06] pt-4"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 0.3 }}
+                transition={{ delay: 0.25 }}
               >
-                <p
-                  className="font-mono text-[10px] uppercase tracking-widest"
-                  style={{ color: "rgba(255,255,255,0.2)" }}
-                >
-                  Esc to close
+                <p className="text-[11px] italic text-foreground/20">
+                  press esc to return to your regularly scheduled programming
                 </p>
               </motion.div>
             </nav>

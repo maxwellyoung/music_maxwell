@@ -71,8 +71,11 @@ export function SongDrawer({ song, open, onClose }: SongDrawerProps) {
                 <h2 className="text-lg font-medium text-white sm:text-xl">
                   {song.title}
                 </h2>
-                <DrawerClose className="rounded-lg p-2 text-white/50 transition-colors hover:text-white/75">
-                  <XIcon className="h-5 w-5" />
+                <DrawerClose
+                  className="rounded-lg p-2 text-white/50 transition-colors hover:text-white/75 focus-visible:ring-2 focus-visible:ring-white/50"
+                  aria-label="Close lyrics"
+                >
+                  <XIcon className="h-5 w-5" aria-hidden="true" />
                 </DrawerClose>
               </div>
             </DrawerHeader>
