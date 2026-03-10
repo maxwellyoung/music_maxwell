@@ -145,7 +145,8 @@ const embedSoundCloud = (text: string) => {
         />
       );
     }
-    return part;
+    // linkify non-SC text parts and render as HTML
+    return <span key={_index} dangerouslySetInnerHTML={{ __html: linkifyText(part) }} />;
   });
 };
 
@@ -589,7 +590,7 @@ const SongDrawer = ({
                         <div className="scrollbar-thin scrollbar-track-zinc-900 scrollbar-thumb-zinc-700 max-h-[35vh] overflow-y-auto rounded-lg bg-zinc-900/50 p-3 font-mono text-sm leading-relaxed tracking-wide text-zinc-300 sm:max-h-[40vh] sm:p-4">
                           <div className="whitespace-pre-wrap text-left">
                             {embedSoundCloud(
-                              linkifyText(formatText(getLyrics())),
+                              formatText(getLyrics()),
                             )}
                           </div>
                         </div>
@@ -604,7 +605,7 @@ const SongDrawer = ({
                         <div className="scrollbar-thin scrollbar-track-zinc-900 scrollbar-thumb-zinc-700 max-h-[25vh] overflow-y-auto rounded-lg bg-zinc-900/50 p-3 font-mono text-sm leading-relaxed text-zinc-400 sm:max-h-[30vh] sm:p-4">
                           <div className="whitespace-pre-wrap text-left">
                             {embedSoundCloud(
-                              linkifyText(formatText(song.credits)),
+                              formatText(song.credits),
                             )}
                           </div>
                         </div>
