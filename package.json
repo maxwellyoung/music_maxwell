@@ -6,7 +6,7 @@
   "scripts": {
     "build": "prisma generate && next build",
     "dev": "next dev",
-    "lint": "ESLINT_USE_FLAT_CONFIG=false eslint . --ext .ts,.tsx,.js,.cjs --ignore-pattern .eslintrc.cjs",
+    "lint": "ESLINT_USE_FLAT_CONFIG=false eslint . --ext .ts,.tsx,.js,.cjs --ignore-pattern .eslintrc.cjs --ignore-pattern next-env.d.ts",
     "start": "next start"
   },
   "dependencies": {
