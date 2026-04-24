@@ -54,7 +54,7 @@ export function NewTopicForm() {
             if (data.error?.toLowerCase().includes("inappropriate")) {
               errorMsg = "Your topic contains inappropriate language.";
             } else {
-              errorMsg = data.error || errorMsg;
+              errorMsg = data.error ?? errorMsg;
             }
           } catch {}
         }

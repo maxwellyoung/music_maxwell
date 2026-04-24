@@ -2,16 +2,35 @@ import { NextResponse } from "next/server";
 import { randomBytes } from "crypto";
 import { prisma } from "~/lib/prisma";
 import { hashToken, sendResetEmail } from "~/lib/auth-utils";
+import { forgotPasswordSchema } from "~/lib/validations";
+import { rateLimit } from "~/lib/rate-limit";
 
 export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 
-export async function POST(request: Request) {
-  const { email } = await request.json();
+const limiter = rateLimit({
+  interval: 60 * 60 * 1000,
+  uniqueTokenPerInterval: 500,
+});
 
-  if (!email || typeof email !== "string") {
-    return NextResponse.json({ error: "Invalid email" }, { status: 400 });
+export async function POST(request: Request) {
+  const ip = request.headers.get("x-forwarded-for") ?? "127.0.0.1";
+  const { success } = await limiter.check(5, ip);
+  if (!success) {
+    return NextResponse.json(
+      { error: "Too many reset attempts. Please try again later." },
+      { status: 429 },
+    );
   }
+
+  const parseResult = forgotPasswordSchema.safeParse(await request.json());
+  if (!parseResult.success) {
+    return NextResponse.json(
+      { error: parseResult.error.errors[0]?.message ?? "Invalid email" },
+      { status: 400 },
+    );
+  }
+  const { email } = parseResult.data;
 
   const user = await prisma.user.findUnique({ where: { email } });
   if (!user) {
@@ -19,15 +38,16 @@ export async function POST(request: Request) {
     return new Response(null, { status: 204 });
   }
 
-  const rawToken = randomBytes(32).toString("hex");
-  const tokenHash = await hashToken(rawToken);
+  const selector = randomBytes(16).toString("hex");
+  const verifier = randomBytes(32).toString("hex");
+  const rawToken = `${selector}.${verifier}`;
+  const tokenHash = await hashToken(verifier);
   const expires = new Date(Date.now() + 30 * 60 * 1000);
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  await (prisma as any).passwordResetToken.upsert({
+  await prisma.passwordResetToken.upsert({
     where: { userId: user.id },
-    update: { token: tokenHash, expires },
-    create: { userId: user.id, token: tokenHash, expires },
+    update: { token: tokenHash, tokenSelector: selector, expires },
+    create: { userId: user.id, token: tokenHash, tokenSelector: selector, expires },
   });
 
   try {

@@ -35,7 +35,7 @@ export async function sendResetEmail({
     throw new Error("RESEND_SENDER is not configured");
   }
 
-  const url = `${baseUrl}/reset?token=${token}`;
+  const url = `${baseUrl}/reset-password?token=${token}`;
   const html = await render(<ResetPasswordEmail url={url} />);
 
   const res = await resend.emails.send({

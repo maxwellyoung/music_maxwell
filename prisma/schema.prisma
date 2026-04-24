@@ -105,12 +105,13 @@ model Report {
 }
 
 model PasswordResetToken {
-  id        String   @id @default(cuid())
-  token     String   @unique
-  userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  expires   DateTime
-  createdAt DateTime @default(now())
+  id            String   @id @default(cuid())
+  token         String   @unique
+  tokenSelector String?  @unique
+  userId        String   @unique
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  expires       DateTime
+  createdAt     DateTime @default(now())
 
   @@index([token])
   @@index([userId])

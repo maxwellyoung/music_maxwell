@@ -10,6 +10,11 @@ export const createTopicSchema = z.object({
   content: z.string().min(1, "Content is required").max(10000, "Content too long"),
 });
 
+export const listTopicsSchema = z.object({
+  skip: z.coerce.number().int().min(0).default(0),
+  take: z.coerce.number().int().min(1).max(50).default(10),
+});
+
 export const deleteTopicSchema = z.object({
   topicId: z.string().min(1, "Topic ID is required"),
 });
@@ -27,6 +32,22 @@ export const deleteReplySchema = z.object({
 export const changePasswordSchema = z.object({
   currentPassword: z.string().optional(),
   newPassword: z
+    .string()
+    .min(8, "Password must be at least 8 characters")
+    .max(100, "Password too long"),
+});
+
+export const forgotPasswordSchema = z.object({
+  email: z
+    .string()
+    .email("Please enter a valid email address")
+    .max(255, "Email is too long")
+    .transform((email) => email.toLowerCase().trim()),
+});
+
+export const resetPasswordSchema = z.object({
+  token: z.string().min(80, "Invalid reset token").max(160, "Invalid reset token"),
+  password: z
     .string()
     .min(8, "Password must be at least 8 characters")
     .max(100, "Password too long"),
@@ -51,6 +72,11 @@ export const createDemoSchema = z.object({
   status: z.enum(["unfinished", "finished", "archived"]).optional(),
 });
 
+export const createDemoCommentSchema = z.object({
+  author: z.string().min(1).max(80).optional(),
+  content: z.string().min(1, "Content is required").max(2000, "Comment too long"),
+});
+
 // Report schema
 export const createReportSchema = z.object({
   replyId: z.string().min(1, "Reply ID is required"),
@@ -59,10 +85,14 @@ export const createReportSchema = z.object({
 
 // Type exports
 export type CreateTopicInput = z.infer<typeof createTopicSchema>;
+export type ListTopicsInput = z.infer<typeof listTopicsSchema>;
 export type DeleteTopicInput = z.infer<typeof deleteTopicSchema>;
 export type CreateReplyInput = z.infer<typeof createReplySchema>;
 export type DeleteReplyInput = z.infer<typeof deleteReplySchema>;
 export type ChangePasswordInput = z.infer<typeof changePasswordSchema>;
+export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;
+export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;
 export type SetUsernameInput = z.infer<typeof setUsernameSchema>;
 export type CreateDemoInput = z.infer<typeof createDemoSchema>;
+export type CreateDemoCommentInput = z.infer<typeof createDemoCommentSchema>;
 export type CreateReportInput = z.infer<typeof createReportSchema>;

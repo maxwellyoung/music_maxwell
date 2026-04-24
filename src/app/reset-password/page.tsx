@@ -3,7 +3,7 @@
 import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
 import { Input } from "~/components/ui/input";
 import { Button } from "~/components/ui/button";
-import { useState } from "react";
+import { use, useState } from "react";
 import { useToast } from "~/components/ui/use-toast";
 import Link from "next/link";
 import { motion } from "framer-motion";
@@ -12,8 +12,9 @@ import { Spinner } from "~/components/ui/Spinner";
 export default function ResetPasswordPage({
   searchParams,
 }: {
-  searchParams: { token?: string };
+  searchParams: Promise<{ token?: string }>;
 }) {
+  const token = use(searchParams).token;
   return (
     <main className="flex min-h-screen flex-col items-center justify-center px-4">
       <motion.div
@@ -32,7 +33,7 @@ export default function ResetPasswordPage({
             </p>
           </CardHeader>
           <CardContent>
-            <ResetPasswordForm token={searchParams.token} />
+            <ResetPasswordForm token={token} />
           </CardContent>
         </Card>
       </motion.div>
@@ -84,7 +85,7 @@ function ResetPasswordForm({ token }: { token?: string }) {
         description: "You can now log in with your new password.",
       });
       window.location.href = "/login";
-    } catch (error) {
+    } catch {
       toast({
         title: "Error",
         description: "Failed to reset password. Please try again.",

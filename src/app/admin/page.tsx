@@ -10,13 +10,13 @@ export default function AdminPage() {
   useEffect(() => {
     if (status === "loading") return;
     const user = session?.user as { role?: string } | undefined;
-    if (!user || user.role !== "admin") {
+    if (user?.role !== "admin") {
       router.replace("/"); // Redirect non-admins
     }
   }, [session, status, router]);
 
   const user = session?.user as { role?: string } | undefined;
-  if (status === "loading" || !user || user.role !== "admin") {
+  if (status === "loading" || user?.role !== "admin") {
     return <div>Loading...</div>;
   }
 

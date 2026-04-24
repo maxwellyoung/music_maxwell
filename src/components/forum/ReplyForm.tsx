@@ -71,7 +71,7 @@ export default function ReplyForm({
             if (data.error?.toLowerCase().includes("inappropriate")) {
               errorMsg = "Your reply contains inappropriate language.";
             } else {
-              errorMsg = data.error || errorMsg;
+              errorMsg = data.error ?? errorMsg;
             }
           } catch {}
         }

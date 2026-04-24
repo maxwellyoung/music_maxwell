@@ -67,7 +67,7 @@ export default function ForumTopicsInfinite({
       const data: { topics: ForumTopic[]; total: number } = await res.json();
       setTopics((prev) => [...prev, ...data.topics]);
       setHasMore(topics.length + data.topics.length < data.total);
-    } catch (e) {
+    } catch {
       // Optionally handle error
     } finally {
       setLoading(false);

@@ -108,10 +108,10 @@ const getYouTubeVideoId = (url: string | undefined): string | null => {
   if (!url) return null;
 
   const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
-  const match = url.match(regExp);
+  const match = regExp.exec(url);
   const id = match?.[2];
 
-  return id && id.length === 11 ? id : null;
+  return id?.length === 11 ? id : null;
 };
 
 // Update the linkifyText function to return a string
@@ -282,7 +282,7 @@ const vibrate = (pattern: number | number[]) => {
   if (typeof window !== "undefined" && "navigator" in window) {
     try {
       window.navigator.vibrate(pattern);
-    } catch (e) {
+    } catch {
       console.warn("Vibration API not supported");
     }
   }

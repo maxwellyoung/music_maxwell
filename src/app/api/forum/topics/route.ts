@@ -4,6 +4,7 @@ import { authOptions } from "~/lib/auth";
 import { prisma } from "~/lib/prisma";
 import { triggerNewForumTopic } from "~/lib/pusherServer";
 import { containsBannedWords } from "~/lib/constants";
+import { createTopicSchema, deleteTopicSchema, listTopicsSchema } from "~/lib/validations";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -15,19 +16,14 @@ export async function POST(request: Request) {
   }
 
   try {
-    const data: unknown = await request.json();
-    if (
-      typeof data !== "object" ||
-      data === null ||
-      !("title" in data) ||
-      !("content" in data)
-    ) {
+    const parseResult = createTopicSchema.safeParse(await request.json());
+    if (!parseResult.success) {
       return NextResponse.json(
-        { error: "Missing title or content" },
+        { error: parseResult.error.errors[0]?.message ?? "Invalid input" },
         { status: 400 },
       );
     }
-    const { title, content } = data as { title: string; content: string };
+    const { title, content } = parseResult.data;
 
     // Check for offensive/banned words in title or content
     if (containsBannedWords(title) || containsBannedWords(content)) {
@@ -83,11 +79,14 @@ export async function DELETE(request: Request) {
   }
 
   try {
-    const data: unknown = await request.json();
-    if (typeof data !== "object" || data === null || !("topicId" in data)) {
-      return NextResponse.json({ error: "Missing topicId" }, { status: 400 });
+    const parseResult = deleteTopicSchema.safeParse(await request.json());
+    if (!parseResult.success) {
+      return NextResponse.json(
+        { error: parseResult.error.errors[0]?.message ?? "Invalid input" },
+        { status: 400 },
+      );
     }
-    const { topicId } = data as { topicId: string };
+    const { topicId } = parseResult.data;
 
     // Fetch the topic to check permissions
     const topic = await prisma.topic.findUnique({
@@ -127,8 +126,17 @@ export async function DELETE(request: Request) {
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
-  const skip = parseInt(searchParams.get("skip") ?? "0", 10);
-  const take = parseInt(searchParams.get("take") ?? "10", 10);
+  const parseResult = listTopicsSchema.safeParse({
+    skip: searchParams.get("skip") ?? undefined,
+    take: searchParams.get("take") ?? undefined,
+  });
+  if (!parseResult.success) {
+    return NextResponse.json(
+      { error: parseResult.error.errors[0]?.message ?? "Invalid pagination" },
+      { status: 400 },
+    );
+  }
+  const { skip, take } = parseResult.data;
 
   try {
     const [topics, total] = await Promise.all([

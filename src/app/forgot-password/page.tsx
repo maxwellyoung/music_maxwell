@@ -62,7 +62,7 @@ function ForgotPasswordForm() {
         description: "Check your email for the password reset link.",
       });
       setEmail("");
-    } catch (error) {
+    } catch {
       toast({
         title: "Error",
         description: "Failed to send reset email. Please try again.",

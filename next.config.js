@@ -1,4 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unsafe-return */
+import { dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 
 /**
  * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation. This is especially useful
@@ -7,6 +9,7 @@
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  outputFileTracingRoot: dirname(fileURLToPath(import.meta.url)),
   images: {
     remotePatterns: [
       {
@@ -31,7 +34,7 @@ const nextConfig = {
           { key: "Access-Control-Allow-Credentials", value: "true" },
           {
             key: "Access-Control-Allow-Origin",
-            value: process.env.NEXTAUTH_URL || "https://www.maxwellyoung.info",
+            value: process.env.NEXTAUTH_URL ?? "https://www.maxwellyoung.info",
           },
           {
             key: "Access-Control-Allow-Methods",
@@ -55,8 +58,8 @@ const nextConfig = {
   // Ensure Node.js built-ins like 'crypto' are not bundled during build
   // eslint-disable-next-line @typescript-eslint/no-unsafe-return
   webpack: (config, { isServer: _isServer, ..._rest }) => {
-    config.resolve = config.resolve || {};
-    config.resolve.fallback = config.resolve.fallback || {};
+    config.resolve = config.resolve ?? {};
+    config.resolve.fallback = config.resolve.fallback ?? {};
     // Tell Webpack not to polyfill 'crypto'; Node.js will provide it at runtime
     config.resolve.fallback.crypto = false;
     return config;

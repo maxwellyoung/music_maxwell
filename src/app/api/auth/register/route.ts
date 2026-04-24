@@ -50,10 +50,7 @@ export async function GET() {
 // Create a handler that properly handles both build and runtime
 export async function POST(request: Request) {
   // During build time, return a simple response
-  if (
-    process.env.NODE_ENV === "development" ||
-    process.env.NEXT_PHASE === PHASE_PRODUCTION_BUILD
-  ) {
+  if (process.env.NEXT_PHASE === PHASE_PRODUCTION_BUILD) {
     return new Response(null, { status: 204 });
   }
 

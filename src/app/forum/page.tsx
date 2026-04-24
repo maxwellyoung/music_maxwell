@@ -2,12 +2,9 @@ import { prisma } from "~/lib/prisma";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { SearchTopics } from "~/components/forum/SearchTopics";
-import dynamicImport from "next/dynamic";
-const ForumTopicsInfinite = dynamicImport(
-  () => import("~/components/forum/ForumTopicsInfinite"),
-  { ssr: false },
-);
-import type { ForumTopic } from "~/components/forum/ForumTopicsInfinite";
+import ForumTopicsInfinite, {
+  type ForumTopic,
+} from "~/components/forum/ForumTopicsInfinite";
 
 export const metadata: Metadata = {
   title: "Forum | Maxwell Young",
@@ -21,10 +18,11 @@ export const dynamic = "force-dynamic";
 export default async function ForumPage({
   searchParams,
 }: {
-  searchParams: { q?: string };
+  searchParams: Promise<{ q?: string }>;
 }) {
+  const resolvedSearchParams = await searchParams;
   // Only support infinite scroll for no search query for now
-  if (searchParams.q) {
+  if (resolvedSearchParams.q) {
     // fallback to old logic for search
     // ... existing code for search (can be refactored later)
   }
@@ -52,7 +50,7 @@ export default async function ForumPage({
       ...t,
       createdAt: t.createdAt.toISOString(),
       updatedAt: t.updatedAt.toISOString(),
-    })) as ForumTopic[];
+    }));
     total = totalRes;
   } catch {
     error = "Failed to load topics. Please try again later.";
@@ -73,7 +71,7 @@ export default async function ForumPage({
 
       <div className="mx-auto max-w-4xl space-y-14">
         {/* Search Bar */}
-        <SearchTopics initialQuery={searchParams.q} />
+        <SearchTopics initialQuery={resolvedSearchParams.q} />
 
         {/* Error Message */}
         {error && (

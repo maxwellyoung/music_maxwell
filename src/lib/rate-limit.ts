@@ -21,7 +21,7 @@ export function rateLimit(options: RateLimitOptions) {
   return {
     check: async (limit: number, token: string): Promise<RateLimitResult> => {
       const cachedValue = tokenCache.get(token);
-      const tokenCount = Array.isArray(cachedValue) ? cachedValue : [0];
+      const tokenCount = Array.isArray(cachedValue) ? cachedValue : [];
       const now = Date.now();
       const windowStart = now - options.interval;
 
@@ -41,8 +41,8 @@ export function rateLimit(options: RateLimitOptions) {
       return {
         success: !isRateLimited,
         limit,
-        remaining: Math.max(0, limit - currentUsage),
-        reset: windowStart + options.interval,
+        remaining: Math.max(0, limit - tokenCount.length),
+        reset: now + options.interval,
       };
     },
   };

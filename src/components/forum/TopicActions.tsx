@@ -31,7 +31,7 @@ export default function TopicActions({ topicId }: TopicActionsProps) {
       if (!res.ok) throw new Error("Failed to delete topic");
       toast({ title: "Topic deleted successfully" });
       router.push("/forum");
-    } catch (err) {
+    } catch {
       toast({
         title: "Error",
         description: "Failed to delete topic. Please try again.",

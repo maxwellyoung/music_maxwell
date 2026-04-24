@@ -13,7 +13,7 @@ export function triggerNewForumTopic(topic: unknown): Promise<unknown> {
     "forum-topics",
     "new-topic",
     topic,
-  ) as Promise<unknown>;
+  );
 }
 
 export function triggerNewForumReply(
@@ -24,5 +24,5 @@ export function triggerNewForumReply(
     `forum-replies-${topicId}`,
     "new-reply",
     reply,
-  ) as Promise<unknown>;
+  );
 }

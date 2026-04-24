@@ -2,21 +2,13 @@ import type { Metadata } from "next";
 import { Card, CardContent } from "~/components/ui/card";
 import { Separator } from "~/components/ui/separator";
 import { prisma } from "~/lib/prisma";
-import dynamic from "next/dynamic";
 import { getServerSession } from "next-auth";
 import { authOptions } from "~/lib/auth";
 import Link from "next/link";
 import { Button } from "~/components/ui/button";
-
-const ReplyForm = dynamic(() => import("~/components/forum/ReplyForm"), {
-  ssr: false,
-});
-const RepliesList = dynamic(() => import("~/components/forum/RepliesList"), {
-  ssr: false,
-});
-const TopicActions = dynamic(() => import("~/components/forum/TopicActions"), {
-  ssr: false,
-});
+import ReplyForm from "~/components/forum/ReplyForm";
+import RepliesList from "~/components/forum/RepliesList";
+import TopicActions from "~/components/forum/TopicActions";
 
 export const metadata: Metadata = {
   title: "Topic | Maxwell Young Forum",
@@ -28,11 +20,12 @@ export const revalidate = 60; // Revalidate this page every 60 seconds for forum
 export default async function TopicPage({
   params,
 }: {
-  params: { topicId: string };
+  params: Promise<{ topicId: string }>;
 }) {
+  const { topicId } = await params;
   const session = await getServerSession(authOptions);
   const topic = await prisma.topic.findUnique({
-    where: { id: params.topicId },
+    where: { id: topicId },
     include: {
       author: { select: { name: true, id: true, username: true } },
       replies: {

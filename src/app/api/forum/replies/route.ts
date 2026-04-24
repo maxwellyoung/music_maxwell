@@ -5,6 +5,7 @@ import { prisma } from "~/lib/prisma";
 import { triggerNewForumReply } from "~/lib/pusherServer";
 import { containsBannedWords, RATE_LIMITS } from "~/lib/constants";
 import { rateLimit } from "~/lib/rate-limit";
+import { createReplySchema, deleteReplySchema } from "~/lib/validations";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -34,19 +35,14 @@ export async function POST(request: Request) {
   }
 
   try {
-    const data = (await request.json()) as Record<string, unknown>;
-    if (
-      typeof data !== "object" ||
-      data === null ||
-      !("content" in data) ||
-      !("topicId" in data)
-    ) {
+    const parseResult = createReplySchema.safeParse(await request.json());
+    if (!parseResult.success) {
       return NextResponse.json(
-        { error: "Missing content or topicId" },
+        { error: parseResult.error.errors[0]?.message ?? "Invalid input" },
         { status: 400 },
       );
     }
-    const { content, topicId } = data as { content: string; topicId: string };
+    const { content, topicId } = parseResult.data;
 
     // Check for offensive/banned words in content
     if (containsBannedWords(content)) {
@@ -83,11 +79,14 @@ export async function DELETE(request: Request) {
   }
 
   try {
-    const data = (await request.json()) as Record<string, unknown>;
-    if (typeof data !== "object" || data === null || !("replyId" in data)) {
-      return NextResponse.json({ error: "Missing replyId" }, { status: 400 });
+    const parseResult = deleteReplySchema.safeParse(await request.json());
+    if (!parseResult.success) {
+      return NextResponse.json(
+        { error: parseResult.error.errors[0]?.message ?? "Invalid input" },
+        { status: 400 },
+      );
     }
-    const { replyId } = data as { replyId: string };
+    const { replyId } = parseResult.data;
 
     // Fetch the reply to check permissions
     const reply = await prisma.reply.findUnique({

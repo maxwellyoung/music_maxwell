@@ -5,8 +5,6 @@
 /.pnp
 .pnp.js
 
-.gitignore
-
 # testing
 /coverage
 
@@ -39,7 +37,6 @@ yarn-error.log*
 .env*.local
 .env.production
 .env.development
-.env.example
 .env.production
 # vercel
 .vercel

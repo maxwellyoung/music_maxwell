@@ -224,7 +224,7 @@ export default function RepliesList({
       });
       if (!res.ok) throw new Error("Failed to delete reply");
       router.refresh();
-    } catch (err) {
+    } catch {
       toast({ title: "Failed to delete reply", variant: "destructive" });
     } finally {
       setDeletingId(null);
@@ -258,7 +258,7 @@ export default function RepliesList({
       setReportOpen(false);
       setToReportId(null);
       setReportReason("");
-    } catch (err) {
+    } catch {
       toast({ title: "Failed to report reply", variant: "destructive" });
     } finally {
       setReportLoading(false);
