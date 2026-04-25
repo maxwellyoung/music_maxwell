@@ -14,6 +14,11 @@ export type Song = {
   lyrics?: Record<string, string>;
   credits?: string;
   videoLink?: string;
+  previewUrl?: string;
+  releaseDate?: string;
+  duration?: string;
+  releaseType?: string;
+  tagline?: string;
 };
 
 const songs: Song[] = [
@@ -28,6 +33,13 @@ const songs: Song[] = [
       tidal: "https://listen.tidal.com/track/501878604",
       pandora: "https://www.pandora.com/TR:194654849",
     },
+    previewUrl:
+      "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/0b/52/db/0b52db97-778c-8c81-cf35-a73cf777a19f/mzaf_13680584974187256804.plus.aac.p.m4a",
+    releaseDate: "April 4, 2026",
+    duration: "1:52",
+    releaseType: "Single",
+    tagline:
+      "A compact new Maxwell Young single, direct from the current release cycle.",
     credits: `Released April 4, 2026
     Flying - Single
     1:52`,

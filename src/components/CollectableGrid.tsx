@@ -55,6 +55,18 @@ type Song = {
   lyrics?: Record<string, string>;
   credits?: string;
   videoLink?: string;
+  previewUrl?: string;
+  releaseDate?: string;
+  duration?: string;
+  releaseType?: string;
+  tagline?: string;
+};
+
+type StreamingLink = {
+  label: string;
+  href: string;
+  className: string;
+  shortLabel?: string;
 };
 
 const photos = [
@@ -306,16 +318,124 @@ const contentVariants = {
 const linkClassNames =
   "flex items-center gap-2 rounded-full px-4 py-2 transition-colors";
 
-const hasStreamingLinks = (song: Song) =>
-  Boolean(
-    song.links.spotify ??
-      song.links.appleMusic ??
-      song.links.youtube ??
-      song.links.smartLink ??
-      song.links.tidal ??
-      song.links.pandora ??
-      song.links.microsite,
+const streamingLinks = (song: Song): StreamingLink[] =>
+  [
+    song.links.smartLink
+      ? {
+          label: "All Links",
+          shortLabel: "Listen",
+          href: song.links.smartLink,
+          className: "bg-white/10 text-white hover:bg-white/20",
+        }
+      : null,
+    song.links.spotify
+      ? {
+          label: "Spotify",
+          href: song.links.spotify,
+          className: "bg-[#1DB954]/10 text-[#1DB954] hover:bg-[#1DB954]/20",
+        }
+      : null,
+    song.links.appleMusic
+      ? {
+          label: "Apple Music",
+          shortLabel: "Apple",
+          href: song.links.appleMusic,
+          className: "bg-[#FB233B]/10 text-[#FB233B] hover:bg-[#FB233B]/20",
+        }
+      : null,
+    song.links.youtube
+      ? {
+          label: "YouTube",
+          href: song.links.youtube,
+          className: "bg-[#FF0000]/10 text-[#FF0000] hover:bg-[#FF0000]/20",
+        }
+      : null,
+    song.links.tidal
+      ? {
+          label: "Tidal",
+          href: song.links.tidal,
+          className: "bg-cyan-300/10 text-cyan-200 hover:bg-cyan-300/20",
+        }
+      : null,
+    song.links.pandora
+      ? {
+          label: "Pandora",
+          href: song.links.pandora,
+          className: "bg-blue-400/10 text-blue-200 hover:bg-blue-400/20",
+        }
+      : null,
+    song.links.microsite
+      ? {
+          label: "Release Site",
+          shortLabel: "Site",
+          href: song.links.microsite,
+          className: "bg-white/10 text-white hover:bg-white/20",
+        }
+      : null,
+  ].filter(Boolean) as StreamingLink[];
+
+const releaseFacts = (song: Song) =>
+  [
+    song.releaseDate ? { label: "Released", value: song.releaseDate } : null,
+    song.duration ? { label: "Runtime", value: song.duration } : null,
+    song.releaseType ? { label: "Format", value: song.releaseType } : null,
+  ].filter(Boolean) as Array<{ label: string; value: string }>;
+
+const AudioPreview = ({ song }: { song: Song }) => {
+  if (!song.previewUrl) return null;
+
+  return (
+    <div className="rounded-xl border border-white/10 bg-white/5 p-3">
+      <div className="mb-2 flex items-center justify-between gap-4">
+        <p className="text-xs font-bold uppercase tracking-[0.2em] text-white/50">
+          Preview
+        </p>
+        <p className="truncate text-sm font-medium text-white/70">
+          {song.title}
+        </p>
+      </div>
+      <audio className="h-10 w-full" controls preload="none" src={song.previewUrl}>
+        <a href={song.previewUrl}>Play preview</a>
+      </audio>
+    </div>
   );
+};
+
+const StreamingLinks = ({
+  song,
+  compact = false,
+}: {
+  song: Song;
+  compact?: boolean;
+}) => {
+  const links = streamingLinks(song);
+  if (links.length === 0) return null;
+
+  return (
+    <div className="flex flex-wrap gap-3">
+      {links.map((link) => (
+        <a
+          key={link.label}
+          href={link.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={cn(
+            compact
+              ? "flex h-8 items-center justify-center rounded-full px-3 text-xs font-bold uppercase tracking-[0.14em] transition-colors"
+              : linkClassNames,
+            link.className,
+          )}
+          onClick={() => vibrate(3)}
+          aria-label={link.label}
+        >
+          <span className={compact ? "" : "text-sm font-medium"}>
+            {compact ? link.shortLabel ?? link.label : link.label}
+          </span>
+        </a>
+      ))}
+    </div>
+  );
+};
 
 const SongDrawer = ({
   song,
@@ -403,80 +523,8 @@ const SongDrawer = ({
                 {song.title}.
               </DrawerDescription>
 
-              {/* Mobile streaming links */}
-              <div className="mt-4 flex flex-wrap gap-2 sm:gap-3 md:hidden">
-                {song.links.spotify && (
-                  <a
-                    href={song.links.spotify}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex h-8 w-8 items-center justify-center rounded-full bg-[#1DB954]/10 text-[#1DB954] transition-colors hover:bg-[#1DB954]/20"
-                    onClick={() => vibrate(3)}
-                    aria-label="Spotify"
-                  >
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                    >
-                      <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z" />
-                    </svg>
-                  </a>
-                )}
-                {song.links.appleMusic && (
-                  <a
-                    href={song.links.appleMusic}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex h-8 w-8 items-center justify-center rounded-full bg-[#FB233B]/10 text-[#FB233B] transition-colors hover:bg-[#FB233B]/20"
-                    onClick={() => vibrate(3)}
-                    aria-label="Apple Music"
-                  >
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 361 361"
-                    fill="currentColor"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      clipRule="evenodd"
-                      d="M254.5 55c-.87.08-8.6 1.45-9.53 1.64l-107 21.59-.04.01c-2.79.59-4.98 1.58-6.67 3-2.04 1.71-3.17 4.13-3.6 6.95-.09.6-.24 1.82-.24 3.62v133.92c0 3.13-.25 6.17-2.37 8.76-2.12 2.59-4.74 3.37-7.81 3.99l-6.99 1.41c-8.84 1.78-14.59 2.99-19.8 5.01-4.98 1.93-8.71 4.39-11.68 7.51-5.89 6.17-8.28 14.54-7.46 22.38.7 6.69 3.71 13.09 8.88 17.82 3.49 3.2 7.85 5.63 12.99 6.66 5.33 1.07 11.01.7 19.31-.98 4.42-.89 8.56-2.28 12.5-4.61 3.9-2.3 7.24-5.37 9.85-9.11 2.62-3.75 4.31-7.92 5.24-12.35.96-4.57 1.19-8.7 1.19-13.26V64.46c0-6.16-3.25-9.96-9.04-9.46z"
-                    />
-                  </svg>
-                  </a>
-                )}
-                {song.links.youtube && (
-                  <a
-                    href={song.links.youtube}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex h-8 w-8 items-center justify-center rounded-full bg-[#FF0000]/10 text-[#FF0000] transition-colors hover:bg-[#FF0000]/20"
-                    onClick={() => vibrate(3)}
-                    aria-label="YouTube"
-                  >
-                    <svg
-                      width="16"
-                      height="16"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                    >
-                      <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
-                    </svg>
-                  </a>
-                )}
-                {song.links.smartLink && (
-                  <a
-                    href={song.links.smartLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex h-8 items-center justify-center rounded-full bg-white/10 px-3 text-xs font-bold uppercase tracking-[0.14em] text-white transition-colors hover:bg-white/20"
-                    onClick={() => vibrate(3)}
-                  >
-                    Listen
-                  </a>
-                )}
+              <div className="mt-4 md:hidden">
+                <StreamingLinks song={song} compact />
               </div>
             </DrawerHeader>
           </div>
@@ -512,106 +560,41 @@ const SongDrawer = ({
                   animate="visible"
                   className="flex flex-col space-y-4 sm:space-y-6"
                 >
-                  {/* Desktop streaming links */}
-                  {hasStreamingLinks(song) && (
-                  <div className="hidden space-y-4 md:block">
-                    <h3 className="text-base font-medium text-white sm:text-lg">
-                      Listen Now
-                    </h3>
-                    <div className="flex flex-wrap gap-3">
-                      {song.links.spotify && (
-                        <a
-                          href={song.links.spotify}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className={`${linkClassNames} bg-[#1DB954]/10 text-[#1DB954] hover:bg-[#1DB954]/20`}
-                          onClick={() => vibrate(3)}
-                        >
-                          <span className="text-sm font-medium">Spotify</span>
-                        </a>
-                      )}
-                      {song.links.appleMusic && (
-                        <a
-                          href={song.links.appleMusic}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className={`${linkClassNames} bg-[#FB233B]/10 text-[#FB233B] hover:bg-[#FB233B]/20`}
-                          onClick={() => vibrate(3)}
-                        >
-                        <svg
-                          width="20"
-                          height="20"
-                          viewBox="0 0 361 361"
-                          fill="currentColor"
-                        >
-                          <path
-                            fillRule="evenodd"
-                            clipRule="evenodd"
-                            d="M254.5 55c-.87.08-8.6 1.45-9.53 1.64l-107 21.59-.04.01c-2.79.59-4.98 1.58-6.67 3-2.04 1.71-3.17 4.13-3.6 6.95-.09.6-.24 1.82-.24 3.62v133.92c0 3.13-.25 6.17-2.37 8.76-2.12 2.59-4.74 3.37-7.81 3.99l-6.99 1.41c-8.84 1.78-14.59 2.99-19.8 5.01-4.98 1.93-8.71 4.39-11.68 7.51-5.89 6.17-8.28 14.54-7.46 22.38.7 6.69 3.71 13.09 8.88 17.82 3.49 3.2 7.85 5.63 12.99 6.66 5.33 1.07 11.01.7 19.31-.98 4.42-.89 8.56-2.28 12.5-4.61 3.9-2.3 7.24-5.37 9.85-9.11 2.62-3.75 4.31-7.92 5.24-12.35.96-4.57 1.19-8.7 1.19-13.26V64.46c0-6.16-3.25-9.96-9.04-9.46z"
-                          />
-                        </svg>
-                        <span className="text-sm font-medium">Apple Music</span>
-                        </a>
-                      )}
-                      {song.links.youtube && (
-                        <a
-                          href={song.links.youtube}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className={`${linkClassNames} bg-[#FF0000]/10 text-[#FF0000] hover:bg-[#FF0000]/20`}
-                          onClick={() => vibrate(3)}
-                        >
-                          <span className="text-sm font-medium">YouTube</span>
-                        </a>
-                      )}
-                      {song.links.smartLink && (
-                        <a
-                          href={song.links.smartLink}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className={`${linkClassNames} bg-white/10 text-white hover:bg-white/20`}
-                          onClick={() => vibrate(3)}
-                        >
-                          <span className="text-sm font-medium">All Links</span>
-                        </a>
-                      )}
-                      {song.links.tidal && (
-                        <a
-                          href={song.links.tidal}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className={`${linkClassNames} bg-cyan-300/10 text-cyan-200 hover:bg-cyan-300/20`}
-                          onClick={() => vibrate(3)}
-                        >
-                          <span className="text-sm font-medium">Tidal</span>
-                        </a>
-                      )}
-                      {song.links.pandora && (
-                        <a
-                          href={song.links.pandora}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className={`${linkClassNames} bg-blue-400/10 text-blue-200 hover:bg-blue-400/20`}
-                          onClick={() => vibrate(3)}
-                        >
-                          <span className="text-sm font-medium">Pandora</span>
-                        </a>
-                      )}
-                      {song.links.microsite && (
-                        <a
-                          href={song.links.microsite}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          className="flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-white transition-colors hover:bg-white/20"
-                          onClick={() => vibrate(3)}
-                        >
-                          <span className="text-sm font-medium">
-                            Release Site
-                          </span>
-                        </a>
-                      )}
-                    </div>
+                  <div className="space-y-3">
+                    {song.tagline && (
+                      <p className="text-base font-medium leading-relaxed text-white/75">
+                        {song.tagline}
+                      </p>
+                    )}
+                    {releaseFacts(song).length > 0 && (
+                      <div className="grid grid-cols-3 gap-2">
+                        {releaseFacts(song).map((fact) => (
+                          <div
+                            key={fact.label}
+                            className="rounded-lg border border-white/10 bg-white/5 px-3 py-2"
+                          >
+                            <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-white/40">
+                              {fact.label}
+                            </p>
+                            <p className="mt-1 text-sm font-semibold text-white">
+                              {fact.value}
+                            </p>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
+
+                  <AudioPreview song={song} />
+
+                  {/* Desktop streaming links */}
+                  {streamingLinks(song).length > 0 && (
+                    <div className="hidden space-y-4 md:block">
+                      <h3 className="text-base font-medium text-white sm:text-lg">
+                        Listen Now
+                      </h3>
+                      <StreamingLinks song={song} />
+                    </div>
                   )}
 
                   {song.videoLink && (
@@ -793,17 +776,40 @@ const CollectableGrid: React.FC = () => {
                   {featuredSong.title}
                 </h1>
                 <p className="max-w-xl text-lg font-medium leading-snug text-foreground/70 sm:text-xl">
-                  Maxwell Young&apos;s newest release, out April 4, 2026.
-                  Listen, save it, then dig through the release archive.
+                  {featuredSong.tagline ??
+                    "Listen, save it, then dig through the release archive."}
                 </p>
               </div>
+              {releaseFacts(featuredSong).length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {releaseFacts(featuredSong).map((fact) => (
+                    <div
+                      key={fact.label}
+                      className="rounded-full border border-foreground/10 bg-background/60 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.16em] text-foreground/60"
+                    >
+                      {fact.label}:{" "}
+                      <span className="text-foreground">{fact.value}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
               <div className="flex flex-wrap gap-3">
+                {featuredSong.links.smartLink && (
+                  <a
+                    href={featuredSong.links.smartLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="rounded-full bg-primary px-5 py-3 text-sm font-bold uppercase tracking-[0.18em] text-primary-foreground shadow-lg shadow-primary/20 transition hover:-translate-y-0.5 hover:bg-accent focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                  >
+                    Listen Now
+                  </a>
+                )}
                 <button
                   type="button"
                   onClick={() => openDrawer(featuredSong)}
-                  className="rounded-full bg-primary px-5 py-3 text-sm font-bold uppercase tracking-[0.18em] text-primary-foreground shadow-lg shadow-primary/20 transition hover:-translate-y-0.5 hover:bg-accent focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                  className="rounded-full border border-foreground/15 bg-background/70 px-5 py-3 text-sm font-bold uppercase tracking-[0.18em] text-foreground/70 transition hover:-translate-y-0.5 hover:border-accent hover:text-accent focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
                 >
-                  Open {featuredSong.title}
+                  Preview
                 </button>
                 {featuredSong.links.microsite && (
                   <a
@@ -863,7 +869,7 @@ const CollectableGrid: React.FC = () => {
         </div>
 
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 md:grid-cols-3 lg:grid-cols-4">
-          {songs.map((song) => (
+          {songs.map((song, index) => (
             <motion.button
               key={song.title}
               type="button"
@@ -889,6 +895,11 @@ const CollectableGrid: React.FC = () => {
                   <div className="animate-shine absolute -left-1/3 top-0 h-full w-1/3 bg-gradient-to-r from-white/10 via-white/60 to-white/10 blur-lg" />
                 </div>
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-85 transition-opacity duration-200 group-hover:opacity-90" />
+                {index === 0 && (
+                  <div className="absolute left-3 top-3 z-20 rounded-full bg-primary px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-primary-foreground shadow-lg">
+                    Latest
+                  </div>
+                )}
                 <motion.div
                   className="absolute inset-x-0 bottom-0 p-4"
                   variants={titleVariants}
