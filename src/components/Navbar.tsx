@@ -73,10 +73,9 @@ export default function Navbar() {
             <Image
               src="/icons/maxwellyoung2.svg"
               alt="Maxwell Young Logo"
-              width={48}
+              width={102}
               height={48}
               priority
-              className="h-12 w-auto"
             />
           </Link>
         </div>

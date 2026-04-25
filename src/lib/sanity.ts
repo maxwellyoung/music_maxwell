@@ -9,8 +9,9 @@ const config: ClientConfig = {
   dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
   useCdn: true,
   apiVersion: process.env.NEXT_PUBLIC_SANITY_API_VERSION, // Use a recent API version
-  token: process.env.SANITY_API_TOKEN,
-  withCredentials: true,
+  token:
+    typeof window === "undefined" ? process.env.SANITY_API_TOKEN : undefined,
+  withCredentials: false,
   perspective: "published",
 };
 

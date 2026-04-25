@@ -11,6 +11,7 @@ import { fileURLToPath } from "node:url";
 const nextConfig = {
   outputFileTracingRoot: dirname(fileURLToPath(import.meta.url)),
   images: {
+    qualities: [75, 85, 90],
     remotePatterns: [
       {
         protocol: "https",

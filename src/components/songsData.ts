@@ -3,10 +3,13 @@ export type Song = {
   artist: string;
   artwork: string;
   links: {
-    spotify: string;
-    appleMusic: string;
-    youtube: string;
+    spotify?: string;
+    appleMusic?: string;
+    youtube?: string;
     microsite?: string;
+    smartLink?: string;
+    tidal?: string;
+    pandora?: string;
   };
   lyrics?: Record<string, string>;
   credits?: string;
@@ -14,6 +17,21 @@ export type Song = {
 };
 
 const songs: Song[] = [
+  {
+    title: "Flying",
+    artist: "Maxwell Young",
+    artwork: "/artworks/Flying.jpg",
+    links: {
+      appleMusic:
+        "https://music.apple.com/us/album/flying/1879773855?i=1879773856",
+      smartLink: "https://song.link/us/i/1879773856",
+      tidal: "https://listen.tidal.com/track/501878604",
+      pandora: "https://www.pandora.com/TR:194654849",
+    },
+    credits: `Released April 4, 2026
+    Flying - Single
+    1:52`,
+  },
   {
     title: "Wintour",
     artist: "Maxwell Young",

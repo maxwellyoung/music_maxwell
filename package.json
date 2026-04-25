@@ -6,7 +6,7 @@
   "scripts": {
     "build": "prisma generate && next build",
     "dev": "next dev",
-    "lint": "ESLINT_USE_FLAT_CONFIG=false eslint . --ext .ts,.tsx,.js,.cjs --ignore-pattern .eslintrc.cjs --ignore-pattern next-env.d.ts",
+    "lint": "ESLINT_USE_FLAT_CONFIG=false eslint src tailwind.config.ts --ext .ts,.tsx,.js",
     "start": "next start"
   },
   "dependencies": {
@@ -98,6 +98,7 @@
     "overrides": {
       "@babel/runtime": "^7.29.2",
       "effect": "^3.20.0",
+      "postcss": "^8.5.10",
       "uuid": "^14.0.0"
     }
   },

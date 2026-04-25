@@ -16,8 +16,8 @@ type ZIndexes = Record<string, number>;
 
 const images: ImageData[] = [
   {
-    src: "/path/to/image1.jpg",
-    alt: "Image 1",
+    src: "/pressphotos/1.jpg",
+    alt: "Maxwell Young press photo",
     width: 400,
     height: 300,
   },

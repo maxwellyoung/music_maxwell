@@ -1,8 +1,16 @@
 "use client";
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import { motion, AnimatePresence } from "framer-motion";
-import { Drawer, DrawerClose, DrawerContent, DrawerHeader } from "./ui/drawer";
+import Link from "next/link";
+import { motion } from "framer-motion";
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerHeader,
+  DrawerTitle,
+} from "./ui/drawer";
 import {
   Select,
   SelectItem,
@@ -22,13 +30,11 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "./ui/card";
 import { Separator } from "./ui/separator";
 import songs from "./songsData";
-import { sanityClient } from "../lib/sanity";
 import { cn } from "~/lib/utils";
 import { XIcon } from "lucide-react";
 
@@ -38,28 +44,17 @@ type Song = {
   artist: string;
   artwork: string;
   links: {
-    spotify: string;
-    appleMusic: string;
-    youtube: string;
+    spotify?: string;
+    appleMusic?: string;
+    youtube?: string;
+    microsite?: string;
+    smartLink?: string;
+    tidal?: string;
+    pandora?: string;
   };
   lyrics?: Record<string, string>;
   credits?: string;
   videoLink?: string;
-};
-
-// Define the SanityProduct type
-type SanityProduct = {
-  _id: string;
-  title: string;
-  description?: string;
-  price?: number;
-  images?: Array<{
-    asset: {
-      url: string;
-      altText?: string;
-    };
-  }>;
-  shopifyProductId?: string;
 };
 
 const photos = [
@@ -114,28 +109,15 @@ const getYouTubeVideoId = (url: string | undefined): string | null => {
   return id?.length === 11 ? id : null;
 };
 
-// Update the linkifyText function to return a string
-const linkifyText = (text: string) => {
+const renderTextWithEmbeds = (text: string) => {
   const urlRegex = /(https?:\/\/[^\s]+)/g;
-  return text
-    .split(urlRegex)
-    .map((part) => {
-      if (part.match(urlRegex)) {
-        return `<a href="${part}" target="_blank" rel="noopener noreferrer" class="text-primary hover:underline">${part}</a>`;
-      }
-      return part;
-    })
-    .join("");
-};
 
-// Add this utility function after the getYouTubeVideoId function
-const embedSoundCloud = (text: string) => {
-  const soundcloudRegex = /(https?:\/\/soundcloud\.com\/[^\s]+)/g;
-  return text.split(soundcloudRegex).map((part, _index) => {
-    if (part.match(soundcloudRegex)) {
+  return text.split(urlRegex).map((part, index) => {
+    if (/^https?:\/\/soundcloud\.com\/[^\s]+$/.test(part)) {
       return (
         <iframe
-          key={_index}
+          key={`${part}-${index}`}
+          title={`SoundCloud player ${index + 1}`}
           width="100%"
           height="166"
           scrolling="no"
@@ -145,8 +127,22 @@ const embedSoundCloud = (text: string) => {
         />
       );
     }
-    // linkify non-SC text parts and render as HTML
-    return <span key={_index} dangerouslySetInnerHTML={{ __html: linkifyText(part) }} />;
+
+    if (/^https?:\/\/[^\s]+$/.test(part)) {
+      return (
+        <a
+          key={`${part}-${index}`}
+          href={part}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-primary underline decoration-primary/30 underline-offset-4 transition-colors hover:text-accent hover:decoration-accent"
+        >
+          {part}
+        </a>
+      );
+    }
+
+    return <span key={index}>{part}</span>;
   });
 };
 
@@ -214,31 +210,28 @@ const PressPhotoCarousel = () => {
       className="mx-auto w-full max-w-sm md:max-w-md lg:max-w-lg"
     >
       <CarouselContent className="rounded-lg">
-        <AnimatePresence mode="wait">
-          {photos.map((photo, index) => (
-            <CarouselItem key={index} className="basis-full">
-              <motion.div
-                initial={{ scale: 0.95, opacity: 0.5 }}
-                animate={{ scale: 1, opacity: 1 }}
-                exit={{ scale: 0.95, opacity: 0.5 }}
-                transition={{ duration: 0.3, ease: "easeOut" }}
-                className="overflow-hidden rounded-lg"
-              >
-                <div className="group relative aspect-[3/4] w-full">
-                  <Image
-                    src={photo.src}
-                    alt={photo.alt}
-                    fill
-                    className="rounded-lg object-cover transition duration-300 ease-out will-change-transform"
-                    sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
-                    priority={index === 0}
-                  />
-                  <div className="absolute inset-0 rounded-lg ring-1 ring-white/10" />
-                </div>
-              </motion.div>
-            </CarouselItem>
-          ))}
-        </AnimatePresence>
+        {photos.map((photo, index) => (
+          <CarouselItem key={photo.src} className="basis-full">
+            <motion.div
+              initial={{ scale: 0.95, opacity: 0.5 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+              className="overflow-hidden rounded-lg"
+            >
+              <div className="group relative aspect-[3/4] w-full">
+                <Image
+                  src={photo.src}
+                  alt={photo.alt}
+                  fill
+                  className="rounded-lg object-cover transition duration-300 ease-out will-change-transform"
+                  sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
+                  priority={index === 0}
+                />
+                <div className="absolute inset-0 rounded-lg ring-1 ring-white/10" />
+              </div>
+            </motion.div>
+          </CarouselItem>
+        ))}
       </CarouselContent>
       <div className="mt-4 flex items-center justify-center gap-2">
         <CarouselPrevious
@@ -283,7 +276,7 @@ const vibrate = (pattern: number | number[]) => {
     try {
       window.navigator.vibrate(pattern);
     } catch {
-      console.warn("Vibration API not supported");
+      // Optional haptics should never block the interaction.
     }
   }
 };
@@ -310,6 +303,20 @@ const contentVariants = {
   },
 };
 
+const linkClassNames =
+  "flex items-center gap-2 rounded-full px-4 py-2 transition-colors";
+
+const hasStreamingLinks = (song: Song) =>
+  Boolean(
+    song.links.spotify ??
+      song.links.appleMusic ??
+      song.links.youtube ??
+      song.links.smartLink ??
+      song.links.tidal ??
+      song.links.pandora ??
+      song.links.microsite,
+  );
+
 const SongDrawer = ({
   song,
   open,
@@ -328,6 +335,12 @@ const SongDrawer = ({
       vibrate(3);
     }
   }, [open]);
+
+  useEffect(() => {
+    setSelectedVersion(
+      song.lyrics ? Object.keys(song.lyrics)[0] ?? song.title : song.title,
+    );
+  }, [song]);
 
   const fadeUp = {
     hidden: { opacity: 0, y: 20 },
@@ -354,7 +367,14 @@ const SongDrawer = ({
   };
 
   return (
-    <Drawer open={open} onOpenChange={onClose}>
+    <Drawer
+      open={open}
+      onOpenChange={(nextOpen) => {
+        if (!nextOpen) {
+          onClose();
+        }
+      }}
+    >
       <DrawerContent className="pb-safe fixed inset-x-0 bottom-0 mt-24 h-[85vh] rounded-t-[10px] bg-black/95">
         <motion.div
           initial={{ y: "100%" }}
@@ -371,39 +391,48 @@ const SongDrawer = ({
           <div className="sticky top-0 z-10 bg-black/80 px-4 pb-4 pt-3 backdrop-blur-xl sm:px-6">
             <DrawerHeader>
               <div className="flex items-center justify-between">
-                <h2 className="text-lg font-medium text-white sm:text-xl">
+                <DrawerTitle className="text-lg font-medium text-white sm:text-xl">
                   {song.title}
-                </h2>
+                </DrawerTitle>
                 <DrawerClose className="rounded-lg p-2 text-white/50 transition-colors hover:text-white/75">
                   <XIcon className="h-5 w-5" />
                 </DrawerClose>
               </div>
+              <DrawerDescription className="sr-only">
+                Streaming links, artwork, video, lyrics, and credits for{" "}
+                {song.title}.
+              </DrawerDescription>
 
               {/* Mobile streaming links */}
               <div className="mt-4 flex flex-wrap gap-2 sm:gap-3 md:hidden">
-                <a
-                  href={song.links.spotify}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex h-8 w-8 items-center justify-center rounded-full bg-[#1DB954]/10 text-[#1DB954] transition-colors hover:bg-[#1DB954]/20"
-                  onClick={() => vibrate(3)}
-                >
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
+                {song.links.spotify && (
+                  <a
+                    href={song.links.spotify}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex h-8 w-8 items-center justify-center rounded-full bg-[#1DB954]/10 text-[#1DB954] transition-colors hover:bg-[#1DB954]/20"
+                    onClick={() => vibrate(3)}
+                    aria-label="Spotify"
                   >
-                    <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z" />
-                  </svg>
-                </a>
-                <a
-                  href={song.links.appleMusic}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex h-8 w-8 items-center justify-center rounded-full bg-[#FB233B]/10 text-[#FB233B] transition-colors hover:bg-[#FB233B]/20"
-                  onClick={() => vibrate(3)}
-                >
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                    >
+                      <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z" />
+                    </svg>
+                  </a>
+                )}
+                {song.links.appleMusic && (
+                  <a
+                    href={song.links.appleMusic}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex h-8 w-8 items-center justify-center rounded-full bg-[#FB233B]/10 text-[#FB233B] transition-colors hover:bg-[#FB233B]/20"
+                    onClick={() => vibrate(3)}
+                    aria-label="Apple Music"
+                  >
                   <svg
                     width="16"
                     height="16"
@@ -416,23 +445,38 @@ const SongDrawer = ({
                       d="M254.5 55c-.87.08-8.6 1.45-9.53 1.64l-107 21.59-.04.01c-2.79.59-4.98 1.58-6.67 3-2.04 1.71-3.17 4.13-3.6 6.95-.09.6-.24 1.82-.24 3.62v133.92c0 3.13-.25 6.17-2.37 8.76-2.12 2.59-4.74 3.37-7.81 3.99l-6.99 1.41c-8.84 1.78-14.59 2.99-19.8 5.01-4.98 1.93-8.71 4.39-11.68 7.51-5.89 6.17-8.28 14.54-7.46 22.38.7 6.69 3.71 13.09 8.88 17.82 3.49 3.2 7.85 5.63 12.99 6.66 5.33 1.07 11.01.7 19.31-.98 4.42-.89 8.56-2.28 12.5-4.61 3.9-2.3 7.24-5.37 9.85-9.11 2.62-3.75 4.31-7.92 5.24-12.35.96-4.57 1.19-8.7 1.19-13.26V64.46c0-6.16-3.25-9.96-9.04-9.46z"
                     />
                   </svg>
-                </a>
-                <a
-                  href={song.links.youtube}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex h-8 w-8 items-center justify-center rounded-full bg-[#FF0000]/10 text-[#FF0000] transition-colors hover:bg-[#FF0000]/20"
-                  onClick={() => vibrate(3)}
-                >
-                  <svg
-                    width="16"
-                    height="16"
-                    viewBox="0 0 24 24"
-                    fill="currentColor"
+                  </a>
+                )}
+                {song.links.youtube && (
+                  <a
+                    href={song.links.youtube}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex h-8 w-8 items-center justify-center rounded-full bg-[#FF0000]/10 text-[#FF0000] transition-colors hover:bg-[#FF0000]/20"
+                    onClick={() => vibrate(3)}
+                    aria-label="YouTube"
                   >
-                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
-                  </svg>
-                </a>
+                    <svg
+                      width="16"
+                      height="16"
+                      viewBox="0 0 24 24"
+                      fill="currentColor"
+                    >
+                      <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                    </svg>
+                  </a>
+                )}
+                {song.links.smartLink && (
+                  <a
+                    href={song.links.smartLink}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex h-8 items-center justify-center rounded-full bg-white/10 px-3 text-xs font-bold uppercase tracking-[0.14em] text-white transition-colors hover:bg-white/20"
+                    onClick={() => vibrate(3)}
+                  >
+                    Listen
+                  </a>
+                )}
               </div>
             </DrawerHeader>
           </div>
@@ -454,10 +498,12 @@ const SongDrawer = ({
                     stiffness: 150,
                     damping: 20,
                   }}
-                  className="relative aspect-square w-full overflow-hidden rounded-xl shadow-lg md:sticky md:top-6 md:self-start"
+                  className="w-full md:sticky md:top-6 md:self-start"
                 >
-                  <BlurImage src={song.artwork} alt={song.title} />
-                  <div className="absolute inset-0 rounded-xl ring-1 ring-white/10" />
+                  <div className="relative aspect-square w-full overflow-hidden rounded-xl shadow-lg">
+                    <BlurImage src={song.artwork} alt={song.title} />
+                    <div className="absolute inset-0 rounded-xl ring-1 ring-white/10" />
+                  </div>
                 </motion.div>
 
                 <motion.div
@@ -467,35 +513,31 @@ const SongDrawer = ({
                   className="flex flex-col space-y-4 sm:space-y-6"
                 >
                   {/* Desktop streaming links */}
+                  {hasStreamingLinks(song) && (
                   <div className="hidden space-y-4 md:block">
                     <h3 className="text-base font-medium text-white sm:text-lg">
                       Listen Now
                     </h3>
                     <div className="flex flex-wrap gap-3">
-                      <a
-                        href={song.links.spotify}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2 rounded-full bg-[#1DB954]/10 px-4 py-2 text-[#1DB954] transition-colors hover:bg-[#1DB954]/20"
-                        onClick={() => vibrate(3)}
-                      >
-                        <svg
-                          width="20"
-                          height="20"
-                          viewBox="0 0 24 24"
-                          fill="currentColor"
+                      {song.links.spotify && (
+                        <a
+                          href={song.links.spotify}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={`${linkClassNames} bg-[#1DB954]/10 text-[#1DB954] hover:bg-[#1DB954]/20`}
+                          onClick={() => vibrate(3)}
                         >
-                          <path d="M12 0C5.4 0 0 5.4 0 12s5.4 12 12 12 12-5.4 12-12S18.66 0 12 0zm5.521 17.34c-.24.359-.66.48-1.021.24-2.82-1.74-6.36-2.101-10.561-1.141-.418.122-.779-.179-.899-.539-.12-.421.18-.78.54-.9 4.56-1.021 8.52-.6 11.64 1.32.42.18.479.659.301 1.02zm1.44-3.3c-.301.42-.841.6-1.262.3-3.239-1.98-8.159-2.58-11.939-1.38-.479.12-1.02-.12-1.14-.6-.12-.48.12-1.021.6-1.141C9.6 9.9 15 10.561 18.72 12.84c.361.181.54.78.241 1.2zm.12-3.36C15.24 8.4 8.82 8.16 5.16 9.301c-.6.179-1.2-.181-1.38-.721-.18-.601.18-1.2.72-1.381 4.26-1.26 11.28-1.02 15.721 1.621.539.3.719 1.02.419 1.56-.299.421-1.02.599-1.559.3z" />
-                        </svg>
-                        <span className="text-sm font-medium">Spotify</span>
-                      </a>
-                      <a
-                        href={song.links.appleMusic}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2 rounded-full bg-[#FB233B]/10 px-4 py-2 text-[#FB233B] transition-colors hover:bg-[#FB233B]/20"
-                        onClick={() => vibrate(3)}
-                      >
+                          <span className="text-sm font-medium">Spotify</span>
+                        </a>
+                      )}
+                      {song.links.appleMusic && (
+                        <a
+                          href={song.links.appleMusic}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={`${linkClassNames} bg-[#FB233B]/10 text-[#FB233B] hover:bg-[#FB233B]/20`}
+                          onClick={() => vibrate(3)}
+                        >
                         <svg
                           width="20"
                           height="20"
@@ -509,26 +551,68 @@ const SongDrawer = ({
                           />
                         </svg>
                         <span className="text-sm font-medium">Apple Music</span>
-                      </a>
-                      <a
-                        href={song.links.youtube}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2 rounded-full bg-[#FF0000]/10 px-4 py-2 text-[#FF0000] transition-colors hover:bg-[#FF0000]/20"
-                        onClick={() => vibrate(3)}
-                      >
-                        <svg
-                          width="20"
-                          height="20"
-                          viewBox="0 0 24 24"
-                          fill="currentColor"
+                        </a>
+                      )}
+                      {song.links.youtube && (
+                        <a
+                          href={song.links.youtube}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={`${linkClassNames} bg-[#FF0000]/10 text-[#FF0000] hover:bg-[#FF0000]/20`}
+                          onClick={() => vibrate(3)}
                         >
-                          <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
-                        </svg>
-                        <span className="text-sm font-medium">YouTube</span>
-                      </a>
+                          <span className="text-sm font-medium">YouTube</span>
+                        </a>
+                      )}
+                      {song.links.smartLink && (
+                        <a
+                          href={song.links.smartLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={`${linkClassNames} bg-white/10 text-white hover:bg-white/20`}
+                          onClick={() => vibrate(3)}
+                        >
+                          <span className="text-sm font-medium">All Links</span>
+                        </a>
+                      )}
+                      {song.links.tidal && (
+                        <a
+                          href={song.links.tidal}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={`${linkClassNames} bg-cyan-300/10 text-cyan-200 hover:bg-cyan-300/20`}
+                          onClick={() => vibrate(3)}
+                        >
+                          <span className="text-sm font-medium">Tidal</span>
+                        </a>
+                      )}
+                      {song.links.pandora && (
+                        <a
+                          href={song.links.pandora}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className={`${linkClassNames} bg-blue-400/10 text-blue-200 hover:bg-blue-400/20`}
+                          onClick={() => vibrate(3)}
+                        >
+                          <span className="text-sm font-medium">Pandora</span>
+                        </a>
+                      )}
+                      {song.links.microsite && (
+                        <a
+                          href={song.links.microsite}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-white transition-colors hover:bg-white/20"
+                          onClick={() => vibrate(3)}
+                        >
+                          <span className="text-sm font-medium">
+                            Release Site
+                          </span>
+                        </a>
+                      )}
                     </div>
                   </div>
+                  )}
 
                   {song.videoLink && (
                     <div className="relative w-full overflow-hidden rounded-lg">
@@ -589,7 +673,7 @@ const SongDrawer = ({
 
                         <div className="scrollbar-thin scrollbar-track-zinc-900 scrollbar-thumb-zinc-700 max-h-[35vh] overflow-y-auto rounded-lg bg-zinc-900/50 p-3 font-mono text-sm leading-relaxed tracking-wide text-zinc-300 sm:max-h-[40vh] sm:p-4">
                           <div className="whitespace-pre-wrap text-left">
-                            {embedSoundCloud(
+                            {renderTextWithEmbeds(
                               formatText(getLyrics()),
                             )}
                           </div>
@@ -604,7 +688,7 @@ const SongDrawer = ({
                         </h3>
                         <div className="scrollbar-thin scrollbar-track-zinc-900 scrollbar-thumb-zinc-700 max-h-[25vh] overflow-y-auto rounded-lg bg-zinc-900/50 p-3 font-mono text-sm leading-relaxed text-zinc-400 sm:max-h-[30vh] sm:p-4">
                           <div className="whitespace-pre-wrap text-left">
-                            {embedSoundCloud(
+                            {renderTextWithEmbeds(
                               formatText(song.credits),
                             )}
                           </div>
@@ -625,8 +709,8 @@ const SongDrawer = ({
 const CollectableGrid: React.FC = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [selectedSong, setSelectedSong] = useState<Song | null>(null);
-  const [products, setProducts] = useState<SanityProduct[]>([]);
   const [error] = useState<string | null>(null);
+  const featuredSong = songs[0] as Song;
 
   // Animation variants
   const albumVariants = {
@@ -641,7 +725,7 @@ const CollectableGrid: React.FC = () => {
   };
 
   const titleVariants = {
-    initial: { opacity: 0, y: 10 },
+    initial: { opacity: 1, y: 0 },
     hover: {
       opacity: 1,
       y: 0,
@@ -652,39 +736,10 @@ const CollectableGrid: React.FC = () => {
     },
   };
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const sanityProducts: SanityProduct[] = await sanityClient.fetch(
-          `*[_type == "product"]{
-            _id,
-            title,
-            description,
-            price,
-            images[]{
-              asset->{
-                url,
-                altText
-              }
-            },
-            shopifyProductId
-          }`,
-        );
-        setProducts(sanityProducts);
-      } catch (error) {
-        console.error("[Sanity] Products not available yet:", error);
-        setProducts([]);
-      }
-    };
-
-    void fetchProducts();
-  }, []);
-
   const openDrawer = (song: Song) => {
     try {
       setSelectedSong(song);
       setIsOpen(true);
-      console.log("[Drawer] Opening with song:", song.title);
     } catch (error) {
       console.error("[CollectableGrid] Error opening drawer:", error);
     }
@@ -694,7 +749,6 @@ const CollectableGrid: React.FC = () => {
     try {
       setIsOpen(false);
       setTimeout(() => setSelectedSong(null), 300); // Clear song after animation
-      console.log("[Drawer] Closing");
     } catch (error) {
       console.error("[CollectableGrid] Error closing drawer:", error);
     }
@@ -723,17 +777,107 @@ const CollectableGrid: React.FC = () => {
           </div>
         )}
 
-        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8 md:grid-cols-3 lg:grid-cols-4">
+        <motion.section
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+          className="mb-10 overflow-hidden rounded-[2rem] border border-white/50 bg-white/45 p-4 shadow-2xl shadow-primary/10 backdrop-blur-xl sm:p-6 md:mb-14"
+        >
+          <div className="grid gap-6 md:grid-cols-[1.08fr_0.92fr] md:items-center">
+            <div className="relative z-10 space-y-5">
+              <div className="inline-flex rounded-full border border-primary/20 bg-background/70 px-3 py-1 text-xs font-bold uppercase tracking-[0.24em] text-primary shadow-sm">
+                Latest Single
+              </div>
+              <div>
+                <h1 className="mb-3 text-5xl leading-[0.9] tracking-[-0.05em] text-foreground sm:text-7xl md:text-8xl">
+                  {featuredSong.title}
+                </h1>
+                <p className="max-w-xl text-lg font-medium leading-snug text-foreground/70 sm:text-xl">
+                  Maxwell Young&apos;s newest release, out April 4, 2026.
+                  Listen, save it, then dig through the release archive.
+                </p>
+              </div>
+              <div className="flex flex-wrap gap-3">
+                <button
+                  type="button"
+                  onClick={() => openDrawer(featuredSong)}
+                  className="rounded-full bg-primary px-5 py-3 text-sm font-bold uppercase tracking-[0.18em] text-primary-foreground shadow-lg shadow-primary/20 transition hover:-translate-y-0.5 hover:bg-accent focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                >
+                  Open {featuredSong.title}
+                </button>
+                {featuredSong.links.microsite && (
+                  <a
+                    href={featuredSong.links.microsite}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="rounded-full border border-primary/25 bg-primary/10 px-5 py-3 text-sm font-bold uppercase tracking-[0.18em] text-primary transition hover:-translate-y-0.5 hover:border-accent hover:text-accent focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
+                  >
+                    Release Site
+                  </a>
+                )}
+                <Link
+                  href="/forum"
+                  className="rounded-full border border-foreground/15 bg-background/70 px-5 py-3 text-sm font-bold uppercase tracking-[0.18em] text-foreground/70 transition hover:-translate-y-0.5 hover:border-accent hover:text-accent focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
+                >
+                  Forum
+                </Link>
+              </div>
+            </div>
+
+            <button
+              type="button"
+              onClick={() => openDrawer(featuredSong)}
+              className="group relative aspect-square overflow-hidden rounded-[1.6rem] bg-black shadow-2xl shadow-accent/20 outline-none transition hover:-rotate-1 hover:scale-[1.015] focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-4"
+              aria-label={`Open ${featuredSong.title}`}
+            >
+              <BlurImage
+                src={featuredSong.artwork}
+                alt={featuredSong.title}
+                className="transition-transform duration-500 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+              <div className="absolute bottom-4 left-4 right-4 text-left">
+                <p className="text-xs font-bold uppercase tracking-[0.28em] text-white/70">
+                  Featured
+                </p>
+                <p className="mt-1 text-3xl font-bold leading-none text-white sm:text-5xl">
+                  {featuredSong.title}
+                </p>
+              </div>
+            </button>
+          </div>
+        </motion.section>
+
+        <div className="mb-4 flex items-end justify-between gap-4">
+          <div>
+            <p className="text-xs font-bold uppercase tracking-[0.24em] text-accent">
+              Discography
+            </p>
+            <h2 className="mb-0 text-3xl leading-tight sm:text-4xl">
+              Tap a sleeve.
+            </h2>
+          </div>
+          <p className="hidden max-w-xs text-right text-sm font-medium text-foreground/50 sm:block">
+            Lyrics, credits, videos, and links stay inside each release.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 md:grid-cols-3 lg:grid-cols-4">
           {songs.map((song) => (
-            <motion.div
+            <motion.button
               key={song.title}
+              type="button"
               initial="initial"
               whileHover="hover"
               onClick={() => openDrawer(song)}
-              className="group cursor-pointer"
+              className="group cursor-pointer text-left focus:outline-none"
+              aria-label={`Open ${song.title}`}
             >
-              <div className="relative aspect-square overflow-hidden rounded-2xl border-2 border-transparent transition-all duration-200 group-hover:z-10 group-hover:scale-105 group-hover:border-primary group-hover:shadow-2xl group-hover:ring-4 group-hover:ring-primary/20">
-                <motion.div variants={albumVariants}>
+              <div className="relative aspect-square overflow-hidden rounded-2xl border-2 border-white/40 bg-black shadow-lg shadow-primary/5 transition duration-200 ease-out group-hover:z-10 group-hover:-translate-y-1 group-hover:scale-[1.025] group-hover:border-primary group-hover:shadow-2xl group-hover:shadow-primary/20 group-hover:ring-4 group-hover:ring-primary/20 group-focus-visible:border-accent group-focus-visible:ring-4 group-focus-visible:ring-accent/25">
+                <motion.div
+                  variants={albumVariants}
+                  className="relative h-full w-full"
+                >
                   <BlurImage
                     src={song.artwork}
                     alt={song.title}
@@ -744,7 +888,7 @@ const CollectableGrid: React.FC = () => {
                 <div className="pointer-events-none absolute inset-0 z-10 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
                   <div className="animate-shine absolute -left-1/3 top-0 h-full w-1/3 bg-gradient-to-r from-white/10 via-white/60 to-white/10 blur-lg" />
                 </div>
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 transition-opacity duration-200 group-hover:opacity-80" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-85 transition-opacity duration-200 group-hover:opacity-90" />
                 <motion.div
                   className="absolute inset-x-0 bottom-0 p-4"
                   variants={titleVariants}
@@ -755,7 +899,7 @@ const CollectableGrid: React.FC = () => {
                   <p className="text-xs text-white/80">{song.artist}</p>
                 </motion.div>
               </div>
-            </motion.div>
+            </motion.button>
           ))}
         </div>
 
@@ -774,14 +918,8 @@ const CollectableGrid: React.FC = () => {
                       src="/icons/maxwellyoung.svg"
                       alt="Maxwell Young Logo"
                       width={160}
-                      height={80}
-                      style={{
-                        height: "80px",
-                        width: "auto",
-                        display: "block",
-                        filter: "invert(1) brightness(2)",
-                        margin: 0,
-                      }}
+                      height={75}
+                      style={{ filter: "invert(1) brightness(2)" }}
                       className="ml-0"
                       priority
                     />
@@ -816,54 +954,6 @@ const CollectableGrid: React.FC = () => {
                 </CardContent>
               </Card>
             </section>
-          </div>
-        </div>
-
-        <div className="mt-12">
-          <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
-            {products.map((product) => (
-              <Card
-                key={product._id}
-                className="border-2 border-accent/30 transition hover:border-accent"
-              >
-                <CardHeader>
-                  <CardTitle className="font-bold text-accent">
-                    {product.title}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  {product.description && <p>{product.description}</p>}
-                  {product.images?.[0]?.asset?.url && (
-                    <div className="relative aspect-square overflow-hidden rounded-lg">
-                      <Image
-                        src={product.images[0].asset.url}
-                        alt={product.images[0].asset.altText ?? "Product Image"}
-                        className="object-cover"
-                        width={400}
-                        height={400}
-                      />
-                    </div>
-                  )}
-                  {product.price && (
-                    <p className="text-highlight font-semibold">
-                      Price: ${product.price.toFixed(2)}
-                    </p>
-                  )}
-                </CardContent>
-                {product.shopifyProductId && (
-                  <CardFooter>
-                    <a
-                      href={`https://your-shopify-domain.com/products/${product.shopifyProductId}`}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="text-sm text-primary hover:text-accent"
-                    >
-                      View Product
-                    </a>
-                  </CardFooter>
-                )}
-              </Card>
-            ))}
           </div>
         </div>
 

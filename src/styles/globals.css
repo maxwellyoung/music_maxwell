@@ -14,6 +14,14 @@
     --highlight-foreground: 0 0% 100%;
     --secondary: 80 80% 60%; /* Lime Green (Pantone 2290 C) #A8E600 */
     --secondary-foreground: 220 100% 6%;
+    --muted: 220 28% 92%;
+    --muted-foreground: 220 12% 42%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 100% 6%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 100% 6%;
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
     --border: 220 28% 90%;
     --input: 220 28% 90%;
     --ring: 210 100% 60%;
@@ -27,6 +35,14 @@
     --primary-foreground: 240 5.9% 10%;
     --secondary: 240 4.8% 95.9%;
     --secondary-foreground: 240 5.9% 10%;
+    --muted: 240 4% 16%;
+    --muted-foreground: 240 5% 65%;
+    --card: 240 10% 4%;
+    --card-foreground: 0 0% 98%;
+    --popover: 240 10% 4%;
+    --popover-foreground: 0 0% 98%;
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 98%;
     --border: 240 5.9% 90%;
     --input: 240 5.9% 90%;
     --ring: 240 10% 3.9%;
@@ -126,6 +142,17 @@
 
 .font-reenie {
   font-family: "ReenieBeanie", sans-serif;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 html,

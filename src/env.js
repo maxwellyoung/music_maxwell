@@ -30,6 +30,9 @@ try {
       SMTP_USER: z.string().min(1).optional(), // Required if using SMTP
       SMTP_PASSWORD: z.string().min(1).optional(), // Required if using SMTP
       SMTP_FROM: z.string().min(1).optional(), // Required if using SMTP
+      PUSHER_APP_ID: z.string().min(1).optional(),
+      PUSHER_SECRET: z.string().min(1).optional(),
+      UPLOADTHING_TOKEN: z.string().min(1).optional(),
       SKIP_ENV_VALIDATION: z.string().optional(), // Used to skip env validation (builds, Docker, etc.)
       NEXT_PHASE: z.string().optional(), // Used by Next.js in some build phases
     },
@@ -47,6 +50,8 @@ try {
       NEXT_PUBLIC_APP_URL: z.string().url().optional(), // Used for client-side URL references
       NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN: z.string().min(1).optional(), // Required if using Shopify
       NEXT_PUBLIC_SHOPIFY_ACCESS_TOKEN: z.string().min(1).optional(),
+      NEXT_PUBLIC_PUSHER_KEY: z.string().min(1).optional(),
+      NEXT_PUBLIC_PUSHER_CLUSTER: z.string().min(1).optional(),
       // NEXT_PUBLIC_CLIENTVAR: z.string(),
     },
 
@@ -71,6 +76,9 @@ try {
       SMTP_USER: process.env.SMTP_USER,
       SMTP_PASSWORD: process.env.SMTP_PASSWORD,
       SMTP_FROM: process.env.SMTP_FROM,
+      PUSHER_APP_ID: process.env.PUSHER_APP_ID,
+      PUSHER_SECRET: process.env.PUSHER_SECRET,
+      UPLOADTHING_TOKEN: process.env.UPLOADTHING_TOKEN,
       SKIP_ENV_VALIDATION: process.env.SKIP_ENV_VALIDATION,
       NEXT_PHASE: process.env.NEXT_PHASE,
       // --- Client-side env vars ---
@@ -83,6 +91,8 @@ try {
         process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN,
       NEXT_PUBLIC_SHOPIFY_ACCESS_TOKEN:
         process.env.NEXT_PUBLIC_SHOPIFY_ACCESS_TOKEN,
+      NEXT_PUBLIC_PUSHER_KEY: process.env.NEXT_PUBLIC_PUSHER_KEY,
+      NEXT_PUBLIC_PUSHER_CLUSTER: process.env.NEXT_PUBLIC_PUSHER_CLUSTER,
       // NEXT_PUBLIC_CLIENTVAR: process.env.NEXT_PUBLIC_CLIENTVAR,
     },
     /**
