@@ -52,7 +52,7 @@ export default function Home() {
             />
           </Link>
         </div>
-        <CollectableGrid showFeaturedHero={false} />
+        <CollectableGrid hideFeaturedInGrid showFeaturedHero={false} />
       </section>
     </main>
   );

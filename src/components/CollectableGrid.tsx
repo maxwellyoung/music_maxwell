@@ -768,15 +768,18 @@ const SongDrawer = ({
 
 type CollectableGridProps = {
   showFeaturedHero?: boolean;
+  hideFeaturedInGrid?: boolean;
 };
 
 const CollectableGrid: React.FC<CollectableGridProps> = ({
   showFeaturedHero = true,
+  hideFeaturedInGrid = false,
 }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [selectedSong, setSelectedSong] = useState<Song | null>(null);
   const [error] = useState<string | null>(null);
   const featuredSong = songs[0] as Song;
+  const gridSongs = hideFeaturedInGrid ? songs.slice(1) : songs;
 
   // Animation variants
   const albumVariants = {
@@ -947,9 +950,7 @@ const CollectableGrid: React.FC<CollectableGridProps> = ({
             <p className="text-xs font-bold uppercase tracking-[0.24em] text-accent">
               Discography
             </p>
-            <h2 className="mb-0 text-3xl leading-tight sm:text-4xl">
-              Releases
-            </h2>
+            <h2 className="mb-0 text-3xl leading-tight sm:text-4xl">Archive</h2>
           </div>
           <p className="hidden max-w-xs text-right text-sm font-medium text-foreground/50 sm:block">
             Tap artwork for credits, lyrics, videos, and links.
@@ -957,7 +958,7 @@ const CollectableGrid: React.FC<CollectableGridProps> = ({
         </div>
 
         <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 md:grid-cols-3 lg:grid-cols-4">
-          {songs.map((song, index) => (
+          {gridSongs.map((song, index) => (
             <motion.button
               key={song.title}
               type="button"
@@ -983,7 +984,7 @@ const CollectableGrid: React.FC<CollectableGridProps> = ({
                   <div className="absolute -left-1/3 top-0 h-full w-1/3 animate-shine bg-gradient-to-r from-white/10 via-white/60 to-white/10 blur-lg" />
                 </div>
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-85 transition-opacity duration-200 group-hover:opacity-90" />
-                {index === 0 && (
+                {!hideFeaturedInGrid && index === 0 && (
                   <div className="absolute left-3 top-3 z-20 rounded-full bg-primary px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-primary-foreground shadow-lg">
                     Latest
                   </div>

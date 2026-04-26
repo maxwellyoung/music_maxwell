@@ -59,7 +59,7 @@ export default function SneakinDrinksArtworkPage() {
         <section className="grid gap-8 lg:grid-cols-[1.12fr_0.88fr] lg:items-end">
           {baseCover && (
             <article>
-              <div className="relative aspect-square overflow-hidden bg-black shadow-xl shadow-foreground/10">
+              <div className="relative aspect-square overflow-hidden rounded-[1.5rem] bg-black shadow-xl shadow-foreground/10">
                 <Image
                   src={baseCover.src}
                   alt={`${baseCover.title} for Sneakin Drinks Into Bars`}
@@ -81,7 +81,7 @@ export default function SneakinDrinksArtworkPage() {
           <div className="grid gap-5 sm:grid-cols-3 lg:grid-cols-1">
             {supportCovers.map((cover) => (
               <article key={cover.title} className="group">
-                <div className="relative aspect-square overflow-hidden bg-black shadow-md transition group-hover:-translate-y-1 group-hover:shadow-xl">
+                <div className="relative aspect-square overflow-hidden rounded-[1rem] bg-black shadow-md transition group-hover:-translate-y-1 group-hover:shadow-xl">
                   <Image
                     src={cover.src}
                     alt={`${cover.title} for Sneakin Drinks Into Bars`}
