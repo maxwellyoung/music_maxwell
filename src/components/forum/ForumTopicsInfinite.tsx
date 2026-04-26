@@ -7,7 +7,6 @@ import {
   Card,
   CardContent,
   CardDescription,
-  CardFooter,
   CardHeader,
   CardTitle,
 } from "~/components/ui/card";
@@ -100,12 +99,14 @@ export default function ForumTopicsInfinite({
   return (
     <section>
       <h2 className="mb-5 text-sm font-bold uppercase tracking-[0.18em] text-primary/70">
-        Wall
+        Fragments
       </h2>
       <div className="grid grid-cols-1 gap-4">
         {topics.length === 0 && (
-          <div className="col-span-full rounded-xl bg-muted/30 p-6 text-muted-foreground">
-            No notes yet.
+          <div className="col-span-full border-y border-border/60 py-8">
+            <p className="font-reenie text-3xl leading-none text-muted-foreground">
+              nothing on the wall yet
+            </p>
           </div>
         )}
         {topics.map((topic) => (
@@ -117,10 +118,10 @@ export default function ForumTopicsInfinite({
             legacyBehavior
           >
             <a className="block no-underline">
-              <Card className="relative overflow-hidden border-border/60 bg-background/75 shadow-sm backdrop-blur-lg transition duration-200 group-hover:border-primary/30 group-hover:bg-background group-hover:shadow-md">
+              <Card className="relative overflow-hidden border-x-0 border-b border-t-0 border-border/60 bg-transparent shadow-none transition duration-200 group-hover:border-primary/30">
                 <CardHeader className="relative flex items-start justify-between pb-2">
                   <div>
-                    <CardTitle className="text-xl font-semibold tracking-tight transition-colors group-hover:text-primary">
+                    <CardTitle className="text-2xl font-semibold tracking-tight transition-colors group-hover:text-primary">
                       {topic.title}
                     </CardTitle>
                     <CardDescription className="mt-1 text-sm">
@@ -153,14 +154,10 @@ export default function ForumTopicsInfinite({
                       : topic.content}
                   </p>
                 </CardContent>
-                <CardFooter className="flex items-center justify-between bg-muted/30 px-6 py-3">
-                  <div className="flex items-center gap-3 text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground">
-                    <span>{topic._count.replies} echoes</span>
-                    <span>
-                      Updated {new Date(topic.updatedAt).toLocaleDateString()}
-                    </span>
-                  </div>
-                </CardFooter>
+                <div className="px-6 pb-4 text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground">
+                  {topic._count.replies} echoes /{" "}
+                  {new Date(topic.updatedAt).toLocaleDateString()}
+                </div>
               </Card>
             </a>
           </Link>

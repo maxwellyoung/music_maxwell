@@ -94,10 +94,10 @@ export function NewTopicForm({
       <Card className="w-full max-w-2xl border border-border/50 bg-background/60 backdrop-blur-sm">
         <CardHeader className="space-y-1 pb-6">
           <CardTitle className="text-2xl font-bold tracking-tight">
-            Leave A Note
+            Leave One
           </CardTitle>
           <CardDescription>
-            A line, a false alarm, something you almost said.
+            a line / a false alarm / something almost said
           </CardDescription>
         </CardHeader>
         <CardContent>

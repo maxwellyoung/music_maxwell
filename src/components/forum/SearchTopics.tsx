@@ -40,11 +40,11 @@ export function SearchTopics({ initialQuery }: { initialQuery?: string }) {
     <div className="relative mb-10">
       <input
         type="search"
-        placeholder="Search topics..."
+        placeholder="Search notes..."
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         className="w-full rounded-xl border border-border bg-white px-5 py-3 pl-12 text-lg shadow transition placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
-        aria-label="Search forum topics"
+        aria-label="Search notes"
       />
       <svg
         className={`absolute left-4 top-3.5 h-6 w-6 text-muted-foreground transition-opacity ${

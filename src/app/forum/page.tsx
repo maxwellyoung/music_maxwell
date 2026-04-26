@@ -8,11 +8,23 @@ import ForumTopicsInfinite, {
 
 export const metadata: Metadata = {
   title: "Notes | Maxwell Young",
-  description: "Listener notes around Maxwell Young releases.",
+  description: "Short notes around Maxwell Young releases.",
 };
 
 // Use dynamic rendering for real-time forum data
 export const dynamic = "force-dynamic";
+
+const releaseWallWhere = {
+  OR: [
+    { createdAt: { gte: new Date("2026-04-01T00:00:00.000Z") } },
+    { title: { contains: "sneakin", mode: "insensitive" as const } },
+    { content: { contains: "sneakin", mode: "insensitive" as const } },
+    { title: { contains: "bar lights", mode: "insensitive" as const } },
+    { content: { contains: "bar lights", mode: "insensitive" as const } },
+    { title: { contains: "false alarm", mode: "insensitive" as const } },
+    { content: { contains: "false alarm", mode: "insensitive" as const } },
+  ],
+};
 
 export default async function ForumPage({
   searchParams,
@@ -35,6 +47,7 @@ export default async function ForumPage({
   try {
     const [topicsRes, totalRes] = await Promise.all([
       prisma.topic.findMany({
+        where: releaseWallWhere,
         skip: 0,
         take: PAGE_SIZE,
         orderBy: { createdAt: "desc" },
@@ -43,7 +56,7 @@ export default async function ForumPage({
           _count: { select: { replies: true } },
         },
       }),
-      prisma.topic.count(),
+      prisma.topic.count({ where: releaseWallWhere }),
     ]);
     topics = topicsRes.map((t) => ({
       ...t,
@@ -61,7 +74,7 @@ export default async function ForumPage({
     <main className="container mx-auto px-4 py-12 sm:py-16">
       <div className="mx-auto mb-12 max-w-4xl">
         <p className="mb-3 text-xs font-bold uppercase tracking-[0.2em] text-primary">
-          Maxwell Young
+          Wall
         </p>
         <h1 className="mb-3 text-4xl font-bold leading-tight tracking-tight sm:text-5xl">
           Notes
@@ -90,7 +103,7 @@ export default async function ForumPage({
             href="/forum/new"
             className="inline-flex items-center justify-center rounded-full bg-primary px-6 py-3 text-sm font-bold uppercase tracking-[0.14em] text-primary-foreground shadow-md transition hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
           >
-            Leave A Note
+            Leave One
           </Link>
         </div>
       </div>

@@ -26,10 +26,10 @@ export default function Home() {
             <SneakinLeadup />
             <div className="flex flex-wrap gap-3">
               <Link
-                href="/artwork/sneakin-drinks"
+                href="/sneakin"
                 className="rounded-full bg-foreground px-5 py-3 text-sm font-bold uppercase tracking-[0.14em] text-background transition hover:bg-foreground/85 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
               >
-                Artwork
+                Sneakin
               </Link>
               <Link
                 href="/forum/new?title=bar%20lights&content=field%20smoke%20/%20highlights"
@@ -40,7 +40,7 @@ export default function Home() {
             </div>
           </div>
           <Link
-            href="/artwork/sneakin-drinks"
+            href="/sneakin"
             className="group relative block aspect-square overflow-hidden rounded-[1.25rem] bg-black shadow-xl shadow-accent/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-4"
             aria-label="Open Sneakin Drinks artwork"
           >

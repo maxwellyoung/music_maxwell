@@ -4,7 +4,7 @@ import type { Metadata } from "next";
 
 export const metadata: Metadata = {
   title: "Sneakin Drinks | Maxwell Young",
-  description: "Artwork for Sneakin Drinks Into Bars.",
+  description: "Artwork for Sneakin Drinks Into Bars by Maxwell Young.",
 };
 
 const covers = [
@@ -49,10 +49,10 @@ export default function SneakinDrinksArtworkPage() {
             </p>
           </div>
           <Link
-            href="/"
+            href="/sneakin"
             className="inline-flex w-fit rounded-full bg-foreground px-5 py-3 text-sm font-bold uppercase tracking-[0.14em] text-background shadow-md transition hover:bg-foreground/85"
           >
-            Releases
+            Release
           </Link>
         </div>
 
