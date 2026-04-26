@@ -8,7 +8,7 @@ import ForumTopicsInfinite, {
 
 export const metadata: Metadata = {
   title: "Notes | Maxwell Young",
-  description: "Notes and threads around Maxwell Young releases.",
+  description: "Listener notes around Maxwell Young releases.",
 };
 
 // Use dynamic rendering for real-time forum data
@@ -66,8 +66,8 @@ export default async function ForumPage({
         <h1 className="mb-3 text-4xl font-bold leading-tight tracking-tight sm:text-5xl">
           Notes
         </h1>
-        <p className="max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
-          Release talk, links, questions, and stray thoughts from listeners.
+        <p className="font-reenie max-w-2xl text-3xl leading-none text-muted-foreground sm:text-4xl">
+          leave a line / a false alarm / something you almost said
         </p>
       </div>
 
@@ -85,13 +85,12 @@ export default async function ForumPage({
         {/* Infinite Scroll Topics */}
         <ForumTopicsInfinite initialTopics={topics} total={total} />
 
-        {/* New note button */}
         <div className="mt-16">
           <Link
             href="/forum/new"
             className="inline-flex items-center justify-center rounded-full bg-primary px-6 py-3 text-sm font-bold uppercase tracking-[0.14em] text-primary-foreground shadow-md transition hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
           >
-            New Note
+            Leave A Note
           </Link>
         </div>
       </div>

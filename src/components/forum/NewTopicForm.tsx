@@ -70,7 +70,7 @@ export function NewTopicForm({
       const data = (await response.json()) as TopicResponse;
       toast({
         title: "Note posted",
-        description: "Your note is live.",
+        description: "It is on the wall.",
       });
       router.push(`/forum/${data.id}`);
     } catch (error) {
@@ -94,10 +94,10 @@ export function NewTopicForm({
       <Card className="w-full max-w-2xl border border-border/50 bg-background/60 backdrop-blur-sm">
         <CardHeader className="space-y-1 pb-6">
           <CardTitle className="text-2xl font-bold tracking-tight">
-            New Note
+            Leave A Note
           </CardTitle>
           <CardDescription>
-            Share a link, question, release thought, or loose note.
+            A line, a false alarm, something you almost said.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -107,12 +107,12 @@ export function NewTopicForm({
                 htmlFor="title"
                 className="text-sm font-medium leading-none"
               >
-                Title
+                Line
               </label>
               <Input
                 id="title"
                 name="title"
-                placeholder="What's on your mind?"
+                placeholder="bar lights / field smoke / highlights"
                 required
                 disabled={isLoading}
                 value={title}
@@ -139,12 +139,12 @@ export function NewTopicForm({
                 htmlFor="content"
                 className="text-sm font-medium leading-none"
               >
-                Content
+                Note
               </label>
               <Textarea
                 id="content"
                 name="content"
-                placeholder="Write the note..."
+                placeholder="leave it here..."
                 required
                 disabled={isLoading}
                 value={content}
@@ -180,10 +180,10 @@ export function NewTopicForm({
                 {isLoading ? (
                   <>
                     <span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-                    Posting...
+                    Leaving...
                   </>
                 ) : (
-                  "Post Note"
+                  "Leave Note"
                 )}
               </Button>
             </div>

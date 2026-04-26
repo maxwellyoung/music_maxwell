@@ -766,7 +766,13 @@ const SongDrawer = ({
   );
 };
 
-const CollectableGrid: React.FC = () => {
+type CollectableGridProps = {
+  showFeaturedHero?: boolean;
+};
+
+const CollectableGrid: React.FC<CollectableGridProps> = ({
+  showFeaturedHero = true,
+}) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [selectedSong, setSelectedSong] = useState<Song | null>(null);
   const [error] = useState<string | null>(null);
@@ -837,102 +843,104 @@ const CollectableGrid: React.FC = () => {
           </div>
         )}
 
-        <motion.section
-          initial={{ opacity: 0, y: 18 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-          className="mb-10 overflow-hidden border-y border-foreground/10 bg-[#f1eadf]/55 p-4 shadow-sm shadow-foreground/5 backdrop-blur-xl sm:p-6 md:mb-14"
-        >
-          <div className="grid gap-6 md:grid-cols-[1.08fr_0.92fr] md:items-center">
-            <div className="relative z-10 space-y-5">
-              <div className="inline-flex border border-foreground/10 bg-background/45 px-3 py-1 text-xs font-bold uppercase tracking-[0.18em] text-foreground/55">
-                Out Thursday
-              </div>
-              <div>
-                <h1 className="mb-3 text-5xl leading-[0.9] tracking-[-0.05em] text-foreground sm:text-7xl md:text-8xl">
-                  {featuredSong.title}
-                </h1>
-                <p className="font-reenie max-w-xl text-3xl leading-none text-foreground/65 sm:text-4xl">
-                  {featuredSong.tagline ??
-                    "Listen now, then move through the archive."}
-                </p>
-              </div>
-              {releaseFacts(featuredSong).length > 0 && (
-                <div className="flex flex-wrap gap-2">
-                  {releaseFacts(featuredSong).map((fact) => (
-                    <div
-                      key={fact.label}
-                      className="rounded-full border border-foreground/10 bg-background/45 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.14em] text-foreground/55"
-                    >
-                      {fact.label}:{" "}
-                      <span className="text-foreground">{fact.value}</span>
-                    </div>
-                  ))}
+        {showFeaturedHero && (
+          <motion.section
+            initial={{ opacity: 0, y: 18 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+            className="mb-10 overflow-hidden border-y border-foreground/10 bg-[#f1eadf]/55 p-4 shadow-sm shadow-foreground/5 backdrop-blur-xl sm:p-6 md:mb-14"
+          >
+            <div className="grid gap-6 md:grid-cols-[1.08fr_0.92fr] md:items-center">
+              <div className="relative z-10 space-y-5">
+                <div className="inline-flex border border-foreground/10 bg-background/45 px-3 py-1 text-xs font-bold uppercase tracking-[0.18em] text-foreground/55">
+                  Out Thursday
                 </div>
-              )}
-              <div className="flex flex-wrap gap-3">
-                {featuredSong.links.smartLink && (
-                  <a
-                    href={featuredSong.links.smartLink}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="rounded-full bg-primary px-5 py-3 text-sm font-bold uppercase tracking-[0.18em] text-primary-foreground shadow-lg shadow-primary/20 transition hover:-translate-y-0.5 hover:bg-accent focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
-                  >
-                    Listen Now
-                  </a>
+                <div>
+                  <h1 className="mb-3 text-5xl leading-[0.9] tracking-[-0.05em] text-foreground sm:text-7xl md:text-8xl">
+                    {featuredSong.title}
+                  </h1>
+                  <p className="font-reenie max-w-xl text-3xl leading-none text-foreground/65 sm:text-4xl">
+                    {featuredSong.tagline ??
+                      "Listen now, then move through the archive."}
+                  </p>
+                </div>
+                {releaseFacts(featuredSong).length > 0 && (
+                  <div className="flex flex-wrap gap-2">
+                    {releaseFacts(featuredSong).map((fact) => (
+                      <div
+                        key={fact.label}
+                        className="rounded-full border border-foreground/10 bg-background/45 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.14em] text-foreground/55"
+                      >
+                        {fact.label}:{" "}
+                        <span className="text-foreground">{fact.value}</span>
+                      </div>
+                    ))}
+                  </div>
                 )}
-                <button
-                  type="button"
-                  onClick={() => openDrawer(featuredSong)}
-                  className="rounded-full bg-foreground px-5 py-3 text-sm font-bold uppercase tracking-[0.14em] text-background transition hover:-translate-y-0.5 hover:bg-foreground/85 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
-                >
-                  {featuredSong.previewUrl ? "Preview" : "Lyrics"}
-                </button>
-                {featuredSong.links.microsite && (
-                  <a
-                    href={featuredSong.links.microsite}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="rounded-full bg-primary/10 px-5 py-3 text-sm font-bold uppercase tracking-[0.14em] text-primary transition hover:-translate-y-0.5 hover:text-accent focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
+                <div className="flex flex-wrap gap-3">
+                  {featuredSong.links.smartLink && (
+                    <a
+                      href={featuredSong.links.smartLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="rounded-full bg-primary px-5 py-3 text-sm font-bold uppercase tracking-[0.18em] text-primary-foreground shadow-lg shadow-primary/20 transition hover:-translate-y-0.5 hover:bg-accent focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                    >
+                      Listen Now
+                    </a>
+                  )}
+                  <button
+                    type="button"
+                    onClick={() => openDrawer(featuredSong)}
+                    className="rounded-full bg-foreground px-5 py-3 text-sm font-bold uppercase tracking-[0.14em] text-background transition hover:-translate-y-0.5 hover:bg-foreground/85 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
                   >
-                    Release Site
-                  </a>
+                    {featuredSong.previewUrl ? "Preview" : "Lyrics"}
+                  </button>
+                  {featuredSong.links.microsite && (
+                    <a
+                      href={featuredSong.links.microsite}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="rounded-full bg-primary/10 px-5 py-3 text-sm font-bold uppercase tracking-[0.14em] text-primary transition hover:-translate-y-0.5 hover:text-accent focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
+                    >
+                      Release Site
+                    </a>
+                  )}
+                  <Link
+                    href="/forum"
+                    className="rounded-full bg-background/60 px-5 py-3 text-sm font-bold uppercase tracking-[0.14em] text-foreground/65 transition hover:-translate-y-0.5 hover:text-accent focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
+                  >
+                    Notes
+                  </Link>
+                </div>
+                {featuredSong.title === "Sneakin Drinks Into Bars" && (
+                  <ReleaseWeekPanel />
                 )}
-                <Link
-                  href="/forum"
-                  className="rounded-full bg-background/60 px-5 py-3 text-sm font-bold uppercase tracking-[0.14em] text-foreground/65 transition hover:-translate-y-0.5 hover:text-accent focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
-                >
-                  Notes
-                </Link>
               </div>
-              {featuredSong.title === "Sneakin Drinks Into Bars" && (
-                <ReleaseWeekPanel />
-              )}
-            </div>
 
-            <button
-              type="button"
-              onClick={() => openDrawer(featuredSong)}
-              className="group relative aspect-square overflow-hidden bg-black shadow-xl shadow-accent/10 outline-none transition hover:-rotate-1 hover:scale-[1.015] focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-4"
-              aria-label={`Open ${featuredSong.title}`}
-            >
-              <BlurImage
-                src={featuredSong.artwork}
-                alt={featuredSong.title}
-                className="transition-transform duration-500 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
-              <div className="absolute bottom-4 left-4 right-4 text-left">
-                <p className="text-xs font-bold uppercase tracking-[0.28em] text-white/70">
-                  Apr 30
-                </p>
-                <p className="mt-1 text-3xl font-bold leading-none text-white sm:text-5xl">
-                  {featuredSong.title}
-                </p>
-              </div>
-            </button>
-          </div>
-        </motion.section>
+              <button
+                type="button"
+                onClick={() => openDrawer(featuredSong)}
+                className="group relative aspect-square overflow-hidden bg-black shadow-xl shadow-accent/10 outline-none transition hover:-rotate-1 hover:scale-[1.015] focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-4"
+                aria-label={`Open ${featuredSong.title}`}
+              >
+                <BlurImage
+                  src={featuredSong.artwork}
+                  alt={featuredSong.title}
+                  className="transition-transform duration-500 group-hover:scale-105"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
+                <div className="absolute bottom-4 left-4 right-4 text-left">
+                  <p className="text-xs font-bold uppercase tracking-[0.28em] text-white/70">
+                    Apr 30
+                  </p>
+                  <p className="mt-1 text-3xl font-bold leading-none text-white sm:text-5xl">
+                    {featuredSong.title}
+                  </p>
+                </div>
+              </button>
+            </div>
+          </motion.section>
+        )}
 
         <div className="mb-4 flex items-end justify-between gap-4">
           <div>

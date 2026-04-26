@@ -31,6 +31,8 @@ const covers = [
 ];
 
 export default function SneakinDrinksArtworkPage() {
+  const [baseCover, ...supportCovers] = covers;
+
   return (
     <main className="container mx-auto px-4 py-12 sm:py-16">
       <div className="mx-auto max-w-6xl">
@@ -54,27 +56,50 @@ export default function SneakinDrinksArtworkPage() {
           </Link>
         </div>
 
-        <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {covers.map((cover) => (
-            <article key={cover.title} className="group">
-              <div className="relative aspect-square overflow-hidden bg-black shadow-md transition group-hover:-translate-y-1 group-hover:shadow-xl">
+        <section className="grid gap-8 lg:grid-cols-[1.12fr_0.88fr] lg:items-end">
+          {baseCover && (
+            <article>
+              <div className="relative aspect-square overflow-hidden bg-black shadow-xl shadow-foreground/10">
                 <Image
-                  src={cover.src}
-                  alt={`${cover.title} for Sneakin Drinks Into Bars`}
+                  src={baseCover.src}
+                  alt={`${baseCover.title} for Sneakin Drinks Into Bars`}
                   fill
-                  sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-                  className="object-cover transition duration-300 group-hover:scale-105"
+                  priority
+                  sizes="(min-width: 1024px) 55vw, 100vw"
+                  className="object-cover"
                 />
               </div>
-              <h2 className="mt-4 text-xl font-semibold lowercase tracking-tight">
-                {cover.title}
+              <h2 className="mt-4 text-2xl font-semibold lowercase tracking-tight">
+                {baseCover.title}
               </h2>
-              <p className="font-reenie mt-1 text-2xl leading-none text-muted-foreground">
-                {cover.note}
+              <p className="font-reenie mt-1 text-3xl leading-none text-muted-foreground">
+                {baseCover.note}
               </p>
             </article>
-          ))}
-        </div>
+          )}
+
+          <div className="grid gap-5 sm:grid-cols-3 lg:grid-cols-1">
+            {supportCovers.map((cover) => (
+              <article key={cover.title} className="group">
+                <div className="relative aspect-square overflow-hidden bg-black shadow-md transition group-hover:-translate-y-1 group-hover:shadow-xl">
+                  <Image
+                    src={cover.src}
+                    alt={`${cover.title} for Sneakin Drinks Into Bars`}
+                    fill
+                    sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
+                    className="object-cover transition duration-300 group-hover:scale-105"
+                  />
+                </div>
+                <h2 className="mt-4 text-xl font-semibold lowercase tracking-tight">
+                  {cover.title}
+                </h2>
+                <p className="font-reenie mt-1 text-2xl leading-none text-muted-foreground">
+                  {cover.note}
+                </p>
+              </article>
+            ))}
+          </div>
+        </section>
       </div>
     </main>
   );

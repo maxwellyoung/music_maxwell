@@ -99,8 +99,8 @@ export default function ForumTopicsInfinite({
 
   return (
     <section>
-      <h2 className="mb-5 text-sm font-bold uppercase tracking-[0.18em] text-primary">
-        Threads
+      <h2 className="mb-5 text-sm font-bold uppercase tracking-[0.18em] text-primary/70">
+        Wall
       </h2>
       <div className="grid grid-cols-1 gap-4">
         {topics.length === 0 && (
@@ -136,7 +136,7 @@ export default function ForumTopicsInfinite({
                           @{topic.author.username}
                         </span>
                       ) : (
-                        <span className="text-muted-foreground">Unknown</span>
+                        <span className="text-muted-foreground">anonymous</span>
                       )}
                     </CardDescription>
                   </div>
@@ -155,7 +155,7 @@ export default function ForumTopicsInfinite({
                 </CardContent>
                 <CardFooter className="flex items-center justify-between bg-muted/30 px-6 py-3">
                   <div className="flex items-center gap-3 text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground">
-                    <span>{topic._count.replies} replies</span>
+                    <span>{topic._count.replies} echoes</span>
                     <span>
                       Updated {new Date(topic.updatedAt).toLocaleDateString()}
                     </span>
