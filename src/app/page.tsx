@@ -1,6 +1,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import CollectableGrid from "~/components/CollectableGrid";
+import SneakinLeadup from "~/components/SneakinLeadup";
 import songs from "~/components/songsData";
 
 export default function Home() {
@@ -22,6 +23,7 @@ export default function Home() {
                 bar lights / field smoke / highlights
               </p>
             </div>
+            <SneakinLeadup />
             <div className="flex flex-wrap gap-3">
               <Link
                 href="/artwork/sneakin-drinks"
@@ -30,7 +32,7 @@ export default function Home() {
                 Artwork
               </Link>
               <Link
-                href="/forum/new?title=Sneakin%20Drinks&content=leave%20a%20line%20/%20a%20false%20alarm%20/%20something%20you%20almost%20said"
+                href="/forum/new?title=bar%20lights&content=field%20smoke%20/%20highlights"
                 className="rounded-full bg-background/65 px-5 py-3 text-sm font-bold uppercase tracking-[0.14em] text-foreground/65 transition hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-2"
               >
                 Leave A Note
