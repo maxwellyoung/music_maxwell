@@ -9,7 +9,7 @@ export default function Home() {
   return (
     <main className="min-h-[90vh]">
       <section className="container mx-auto px-4 pb-2 pt-8 sm:px-6 md:px-8">
-        <div className="mb-12 grid gap-7 border-y border-foreground/10 bg-[#f1eadf]/55 py-5 sm:py-6 md:grid-cols-[1.04fr_0.96fr] md:items-center">
+        <div className="mb-12 grid gap-7 rounded-[1.6rem] border border-foreground/10 bg-[#f1eadf]/55 p-5 shadow-sm shadow-foreground/5 sm:p-6 md:grid-cols-[1.04fr_0.96fr] md:items-center">
           <div className="space-y-5 md:pl-2">
             <p className="text-xs font-bold uppercase tracking-[0.18em] text-foreground/45">
               Apr 30
@@ -39,7 +39,7 @@ export default function Home() {
           </div>
           <Link
             href="/artwork/sneakin-drinks"
-            className="group relative block aspect-square overflow-hidden bg-black shadow-xl shadow-accent/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-4"
+            className="group relative block aspect-square overflow-hidden rounded-[1.25rem] bg-black shadow-xl shadow-accent/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-4"
             aria-label="Open Sneakin Drinks artwork"
           >
             <Image

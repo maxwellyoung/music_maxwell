@@ -14,7 +14,7 @@ export default function Navbar() {
   const isForum = pathname.startsWith("/forum");
 
   return (
-    <header className="sticky top-0 z-30 mx-auto my-6 w-[95%] max-w-5xl border border-border/70 bg-background/80 shadow-lg backdrop-blur-lg">
+    <header className="sticky top-0 z-30 mx-auto my-6 w-[95%] max-w-5xl rounded-2xl border border-border/70 bg-background/80 shadow-lg backdrop-blur-lg">
       <nav className="container flex h-16 items-center justify-between">
         <div className="flex flex-1 items-center">
           <button
