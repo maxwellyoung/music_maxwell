@@ -17,12 +17,6 @@ export const metadata: Metadata = {
   },
 };
 
-const artwork = [
-  "/artworks/SneakinDrinksAltCover.png",
-  "/artworks/SneakinDrinksAltDark.png",
-  "/artworks/SneakinDrinksAltPink.png",
-];
-
 const lyric = songs[0]?.lyrics?.["Sneakin Drinks Into Bars"] ?? "";
 const lyricBlocks = lyric.split("\n\n");
 
@@ -115,38 +109,21 @@ export default function SneakinPage() {
       </section>
 
       <section className="container mx-auto px-4 py-14 sm:px-6 md:px-8">
-        <div className="mb-6 flex items-end justify-between gap-4">
+        <div className="flex flex-col gap-5 border-y border-foreground/10 py-8 sm:flex-row sm:items-center sm:justify-between">
           <div>
             <p className="text-xs font-bold uppercase tracking-[0.24em] text-foreground/45">
-              Artwork
+              Wall
             </p>
-            <h2 className="mt-2 text-3xl leading-none tracking-tight">
-              four versions of the same night
+            <h2 className="font-reenie mt-2 text-4xl leading-none text-foreground/70">
+              leave a line / a false alarm / something almost said
             </h2>
           </div>
           <Link
             href="/forum"
-            className="hidden rounded-full bg-background/70 px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-foreground/55 transition hover:text-accent sm:inline-flex"
+            className="inline-flex w-fit rounded-full bg-foreground px-5 py-3 text-sm font-bold uppercase tracking-[0.14em] text-background transition hover:bg-foreground/85"
           >
             Notes
           </Link>
-        </div>
-        <div className="grid gap-4 sm:grid-cols-3">
-          {artwork.map((src, index) => (
-            <Link
-              key={src}
-              href="/artwork/sneakin-drinks"
-              className="group relative aspect-square overflow-hidden rounded-[1.1rem] bg-black"
-            >
-              <Image
-                src={src}
-                alt={`Sneakin Drinks artwork ${index + 1}`}
-                fill
-                sizes="(min-width: 640px) 33vw, 100vw"
-                className="object-cover transition duration-300 group-hover:scale-105"
-              />
-            </Link>
-          ))}
         </div>
       </section>
     </main>

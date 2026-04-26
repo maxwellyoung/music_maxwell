@@ -13,25 +13,10 @@ const covers = [
     note: "the one",
     src: "/artworks/SneakinDrinksIntoBars.jpg",
   },
-  {
-    title: "bar lights",
-    note: "louder",
-    src: "/artworks/SneakinDrinksAltCover.png",
-  },
-  {
-    title: "after midnight",
-    note: "smoke / mirror",
-    src: "/artworks/SneakinDrinksAltDark.png",
-  },
-  {
-    title: "field smoke",
-    note: "heat",
-    src: "/artworks/SneakinDrinksAltPink.png",
-  },
 ];
 
 export default function SneakinDrinksArtworkPage() {
-  const [baseCover, ...supportCovers] = covers;
+  const [baseCover] = covers;
 
   return (
     <main className="container mx-auto px-4 py-12 sm:py-16">
@@ -56,9 +41,9 @@ export default function SneakinDrinksArtworkPage() {
           </Link>
         </div>
 
-        <section className="grid gap-8 lg:grid-cols-[1.12fr_0.88fr] lg:items-end">
+        <section>
           {baseCover && (
-            <article>
+            <article className="mx-auto max-w-3xl">
               <div className="relative aspect-square overflow-hidden rounded-[1.5rem] bg-black shadow-xl shadow-foreground/10">
                 <Image
                   src={baseCover.src}
@@ -77,28 +62,6 @@ export default function SneakinDrinksArtworkPage() {
               </p>
             </article>
           )}
-
-          <div className="grid gap-5 sm:grid-cols-3 lg:grid-cols-1">
-            {supportCovers.map((cover) => (
-              <article key={cover.title} className="group">
-                <div className="relative aspect-square overflow-hidden rounded-[1rem] bg-black shadow-md transition group-hover:-translate-y-1 group-hover:shadow-xl">
-                  <Image
-                    src={cover.src}
-                    alt={`${cover.title} for Sneakin Drinks Into Bars`}
-                    fill
-                    sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
-                    className="object-cover transition duration-300 group-hover:scale-105"
-                  />
-                </div>
-                <h2 className="mt-4 text-xl font-semibold lowercase tracking-tight">
-                  {cover.title}
-                </h2>
-                <p className="font-reenie mt-1 text-2xl leading-none text-muted-foreground">
-                  {cover.note}
-                </p>
-              </article>
-            ))}
-          </div>
         </section>
       </div>
     </main>
