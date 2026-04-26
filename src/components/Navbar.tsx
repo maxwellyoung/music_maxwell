@@ -2,7 +2,6 @@
 
 import * as AlertDialog from "@radix-ui/react-alert-dialog";
 import { AnimatePresence, motion } from "framer-motion";
-import { Disc3, LogIn, LogOut, MessageCircle } from "lucide-react";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
@@ -20,14 +19,28 @@ export default function Navbar() {
         <div className="flex flex-1 items-center">
           <button
             onClick={() => void router.push(isForum ? "/" : "/forum")}
-            className="flex h-11 w-11 items-center justify-center rounded-full text-foreground/65 transition hover:bg-accent/10 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50"
+            className="group flex h-11 w-11 items-center justify-center rounded-full text-foreground/65 transition hover:bg-accent/10 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50"
             aria-label={isForum ? "Go to releases" : "Go to notes"}
             title={isForum ? "Releases" : "Notes"}
           >
             {isForum ? (
-              <Disc3 className="h-5 w-5" aria-hidden="true" />
+              <Image
+                src="/icons/musicnote.svg"
+                alt=""
+                width={254}
+                height={352}
+                className="h-7 w-7 object-contain opacity-75 transition group-hover:opacity-100"
+                aria-hidden="true"
+              />
             ) : (
-              <MessageCircle className="h-5 w-5" aria-hidden="true" />
+              <Image
+                src="/icons/speech-bubble.svg"
+                alt=""
+                width={286}
+                height={375}
+                className="h-7 w-7 object-contain opacity-75 transition group-hover:opacity-100"
+                aria-hidden="true"
+              />
             )}
           </button>
         </div>
@@ -57,11 +70,18 @@ export default function Navbar() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -6 }}
                     transition={{ duration: 0.18 }}
-                    className="flex h-11 w-11 items-center justify-center rounded-full transition hover:bg-destructive/10 hover:text-destructive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-destructive/50"
+                    className="group flex h-11 w-11 items-center justify-center rounded-full transition hover:bg-destructive/10 hover:text-destructive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-destructive/50"
                     aria-label="Log out"
                     title="Log out"
                   >
-                    <LogOut className="h-5 w-5" aria-hidden="true" />
+                    <Image
+                      src="/icons/logout.svg"
+                      alt=""
+                      width={556}
+                      height={807}
+                      className="h-7 w-7 object-contain opacity-75 transition group-hover:opacity-100"
+                      aria-hidden="true"
+                    />
                   </motion.button>
                 </AlertDialog.Trigger>
                 <AlertDialog.Portal>
@@ -102,11 +122,18 @@ export default function Navbar() {
                 >
                   <Link
                     href="/login"
-                    className="flex h-11 w-11 items-center justify-center rounded-full transition hover:bg-accent/10 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50"
+                    className="group flex h-11 w-11 items-center justify-center rounded-full transition hover:bg-accent/10 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50"
                     aria-label="Log in"
                     title="Log in"
                   >
-                    <LogIn className="h-5 w-5" aria-hidden="true" />
+                    <Image
+                      src="/icons/login.svg"
+                      alt=""
+                      width={288}
+                      height={286}
+                      className="h-6 w-6 object-contain opacity-75 transition group-hover:opacity-100"
+                      aria-hidden="true"
+                    />
                   </Link>
                 </motion.div>
               )
