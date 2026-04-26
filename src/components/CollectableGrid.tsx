@@ -57,6 +57,7 @@ type Song = {
   videoLink?: string;
   previewUrl?: string;
   releaseDate?: string;
+  releaseDateLabel?: string;
   duration?: string;
   releaseType?: string;
   tagline?: string;
@@ -376,10 +377,85 @@ const streamingLinks = (song: Song): StreamingLink[] =>
 
 const releaseFacts = (song: Song) =>
   [
-    song.releaseDate ? { label: "Released", value: song.releaseDate } : null,
+    song.releaseDate
+      ? { label: song.releaseDateLabel ?? "Released", value: song.releaseDate }
+      : null,
     song.duration ? { label: "Runtime", value: song.duration } : null,
     song.releaseType ? { label: "Format", value: song.releaseType } : null,
   ].filter(Boolean) as Array<{ label: string; value: string }>;
+
+const RELEASE_DATE = new Date("2026-04-30T00:00:00+12:00");
+
+function getReleaseStatus() {
+  const diff = RELEASE_DATE.getTime() - Date.now();
+  const days = Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
+
+  if (diff <= 0) return "Out now";
+  if (days === 1) return "Out tomorrow";
+  return `${days} days`;
+}
+
+const releaseClues = [
+  "fluent in false alarms",
+  "mirror and my match",
+  "bar lights / field smoke",
+];
+
+function ReleaseWeekPanel() {
+  const [status, setStatus] = useState("Out Thursday");
+
+  useEffect(() => {
+    setStatus(getReleaseStatus());
+    const timer = window.setInterval(
+      () => setStatus(getReleaseStatus()),
+      60000,
+    );
+    return () => window.clearInterval(timer);
+  }, []);
+
+  return (
+    <div className="mt-6 border-t border-foreground/10 pt-5">
+      <div className="grid gap-2 sm:grid-cols-3">
+        {releaseClues.map((clue, index) => (
+          <div
+            key={clue}
+            className={cn(
+              "min-h-20 border border-foreground/10 bg-[#f5efe6]/50 px-4 py-4",
+              index === 1 && "bg-[#e7edf2]/55",
+              index === 2 && "bg-[#f4d4dd]/45",
+            )}
+          >
+            <p className="font-reenie text-3xl leading-none text-foreground/75">
+              {clue}
+            </p>
+          </div>
+        ))}
+      </div>
+      <div className="mt-3 flex flex-col gap-3 border border-foreground/10 bg-background/35 px-4 py-3 text-foreground sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <p className="text-[11px] font-bold uppercase tracking-[0.18em] text-foreground/45">
+            Sneakin Drinks Into Bars
+          </p>
+          <p className="mt-1 text-lg font-semibold leading-tight">{status}</p>
+        </div>
+        <div className="flex flex-wrap gap-2">
+          <Link
+            href="/artwork/sneakin-drinks"
+            className="rounded-full bg-foreground px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-background transition hover:bg-foreground/85"
+          >
+            Artwork
+          </Link>
+          <Link
+            href="/forum/new?title=Sneakin%20Drinks%20release%20week&content=Favourite%20line%2C%20night-out%20memory%2C%20or%20false%20alarm."
+            className="rounded-full bg-background/80 px-4 py-2 text-xs font-bold uppercase tracking-[0.14em] text-foreground/70 transition hover:text-accent"
+          >
+            Notes
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}
 
 const AudioPreview = ({ song }: { song: Song }) => {
   if (!song.previewUrl) return null;
@@ -394,7 +470,12 @@ const AudioPreview = ({ song }: { song: Song }) => {
           {song.title}
         </p>
       </div>
-      <audio className="h-10 w-full" controls preload="none" src={song.previewUrl}>
+      <audio
+        className="h-10 w-full"
+        controls
+        preload="none"
+        src={song.previewUrl}
+      >
         <a href={song.previewUrl}>Play preview</a>
       </audio>
     </div>
@@ -656,9 +737,7 @@ const SongDrawer = ({
 
                         <div className="scrollbar-thin scrollbar-track-zinc-900 scrollbar-thumb-zinc-700 max-h-[35vh] overflow-y-auto rounded-lg bg-zinc-900/50 p-3 font-mono text-sm leading-relaxed tracking-wide text-zinc-300 sm:max-h-[40vh] sm:p-4">
                           <div className="whitespace-pre-wrap text-left">
-                            {renderTextWithEmbeds(
-                              formatText(getLyrics()),
-                            )}
+                            {renderTextWithEmbeds(formatText(getLyrics()))}
                           </div>
                         </div>
                       </div>
@@ -671,9 +750,7 @@ const SongDrawer = ({
                         </h3>
                         <div className="scrollbar-thin scrollbar-track-zinc-900 scrollbar-thumb-zinc-700 max-h-[25vh] overflow-y-auto rounded-lg bg-zinc-900/50 p-3 font-mono text-sm leading-relaxed text-zinc-400 sm:max-h-[30vh] sm:p-4">
                           <div className="whitespace-pre-wrap text-left">
-                            {renderTextWithEmbeds(
-                              formatText(song.credits),
-                            )}
+                            {renderTextWithEmbeds(formatText(song.credits))}
                           </div>
                         </div>
                       </div>
@@ -764,20 +841,20 @@ const CollectableGrid: React.FC = () => {
           initial={{ opacity: 0, y: 18 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-          className="mb-10 overflow-hidden rounded-[2rem] border border-white/50 bg-white/45 p-4 shadow-2xl shadow-primary/10 backdrop-blur-xl sm:p-6 md:mb-14"
+          className="mb-10 overflow-hidden border-y border-foreground/10 bg-[#f1eadf]/55 p-4 shadow-sm shadow-foreground/5 backdrop-blur-xl sm:p-6 md:mb-14"
         >
           <div className="grid gap-6 md:grid-cols-[1.08fr_0.92fr] md:items-center">
             <div className="relative z-10 space-y-5">
-              <div className="inline-flex rounded-full border border-primary/20 bg-background/70 px-3 py-1 text-xs font-bold uppercase tracking-[0.24em] text-primary shadow-sm">
-                Latest Single
+              <div className="inline-flex border border-foreground/10 bg-background/45 px-3 py-1 text-xs font-bold uppercase tracking-[0.18em] text-foreground/55">
+                Out Thursday
               </div>
               <div>
                 <h1 className="mb-3 text-5xl leading-[0.9] tracking-[-0.05em] text-foreground sm:text-7xl md:text-8xl">
                   {featuredSong.title}
                 </h1>
-                <p className="max-w-xl text-lg font-medium leading-snug text-foreground/70 sm:text-xl">
+                <p className="font-reenie max-w-xl text-3xl leading-none text-foreground/65 sm:text-4xl">
                   {featuredSong.tagline ??
-                    "Listen, save it, then dig through the release archive."}
+                    "Listen now, then move through the archive."}
                 </p>
               </div>
               {releaseFacts(featuredSong).length > 0 && (
@@ -785,7 +862,7 @@ const CollectableGrid: React.FC = () => {
                   {releaseFacts(featuredSong).map((fact) => (
                     <div
                       key={fact.label}
-                      className="rounded-full border border-foreground/10 bg-background/60 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.16em] text-foreground/60"
+                      className="rounded-full border border-foreground/10 bg-background/45 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.14em] text-foreground/55"
                     >
                       {fact.label}:{" "}
                       <span className="text-foreground">{fact.value}</span>
@@ -807,33 +884,36 @@ const CollectableGrid: React.FC = () => {
                 <button
                   type="button"
                   onClick={() => openDrawer(featuredSong)}
-                  className="rounded-full border border-foreground/15 bg-background/70 px-5 py-3 text-sm font-bold uppercase tracking-[0.18em] text-foreground/70 transition hover:-translate-y-0.5 hover:border-accent hover:text-accent focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
+                  className="rounded-full bg-foreground px-5 py-3 text-sm font-bold uppercase tracking-[0.14em] text-background transition hover:-translate-y-0.5 hover:bg-foreground/85 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
                 >
-                  Preview
+                  {featuredSong.previewUrl ? "Preview" : "Lyrics"}
                 </button>
                 {featuredSong.links.microsite && (
                   <a
                     href={featuredSong.links.microsite}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="rounded-full border border-primary/25 bg-primary/10 px-5 py-3 text-sm font-bold uppercase tracking-[0.18em] text-primary transition hover:-translate-y-0.5 hover:border-accent hover:text-accent focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
+                    className="rounded-full bg-primary/10 px-5 py-3 text-sm font-bold uppercase tracking-[0.14em] text-primary transition hover:-translate-y-0.5 hover:text-accent focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
                   >
                     Release Site
                   </a>
                 )}
                 <Link
                   href="/forum"
-                  className="rounded-full border border-foreground/15 bg-background/70 px-5 py-3 text-sm font-bold uppercase tracking-[0.18em] text-foreground/70 transition hover:-translate-y-0.5 hover:border-accent hover:text-accent focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
+                  className="rounded-full bg-background/60 px-5 py-3 text-sm font-bold uppercase tracking-[0.14em] text-foreground/65 transition hover:-translate-y-0.5 hover:text-accent focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
                 >
-                  Forum
+                  Notes
                 </Link>
               </div>
+              {featuredSong.title === "Sneakin Drinks Into Bars" && (
+                <ReleaseWeekPanel />
+              )}
             </div>
 
             <button
               type="button"
               onClick={() => openDrawer(featuredSong)}
-              className="group relative aspect-square overflow-hidden rounded-[1.6rem] bg-black shadow-2xl shadow-accent/20 outline-none transition hover:-rotate-1 hover:scale-[1.015] focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-4"
+              className="group relative aspect-square overflow-hidden bg-black shadow-xl shadow-accent/10 outline-none transition hover:-rotate-1 hover:scale-[1.015] focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-4"
               aria-label={`Open ${featuredSong.title}`}
             >
               <BlurImage
@@ -844,7 +924,7 @@ const CollectableGrid: React.FC = () => {
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
               <div className="absolute bottom-4 left-4 right-4 text-left">
                 <p className="text-xs font-bold uppercase tracking-[0.28em] text-white/70">
-                  Featured
+                  Apr 30
                 </p>
                 <p className="mt-1 text-3xl font-bold leading-none text-white sm:text-5xl">
                   {featuredSong.title}
@@ -860,11 +940,11 @@ const CollectableGrid: React.FC = () => {
               Discography
             </p>
             <h2 className="mb-0 text-3xl leading-tight sm:text-4xl">
-              Tap a sleeve.
+              Releases
             </h2>
           </div>
           <p className="hidden max-w-xs text-right text-sm font-medium text-foreground/50 sm:block">
-            Lyrics, credits, videos, and links stay inside each release.
+            Tap artwork for credits, lyrics, videos, and links.
           </p>
         </div>
 
@@ -879,7 +959,7 @@ const CollectableGrid: React.FC = () => {
               className="group cursor-pointer text-left focus:outline-none"
               aria-label={`Open ${song.title}`}
             >
-              <div className="relative aspect-square overflow-hidden rounded-2xl border-2 border-white/40 bg-black shadow-lg shadow-primary/5 transition duration-200 ease-out group-hover:z-10 group-hover:-translate-y-1 group-hover:scale-[1.025] group-hover:border-primary group-hover:shadow-2xl group-hover:shadow-primary/20 group-hover:ring-4 group-hover:ring-primary/20 group-focus-visible:border-accent group-focus-visible:ring-4 group-focus-visible:ring-accent/25">
+              <div className="relative aspect-square overflow-hidden rounded-xl bg-black shadow-md shadow-primary/5 transition duration-200 ease-out group-hover:z-10 group-hover:-translate-y-1 group-hover:scale-[1.02] group-hover:shadow-xl group-hover:shadow-primary/15 group-focus-visible:ring-4 group-focus-visible:ring-accent/25">
                 <motion.div
                   variants={albumVariants}
                   className="relative h-full w-full"
@@ -892,7 +972,7 @@ const CollectableGrid: React.FC = () => {
                 </motion.div>
                 {/* Shine overlay */}
                 <div className="pointer-events-none absolute inset-0 z-10 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                  <div className="animate-shine absolute -left-1/3 top-0 h-full w-1/3 bg-gradient-to-r from-white/10 via-white/60 to-white/10 blur-lg" />
+                  <div className="absolute -left-1/3 top-0 h-full w-1/3 animate-shine bg-gradient-to-r from-white/10 via-white/60 to-white/10 blur-lg" />
                 </div>
                 <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-85 transition-opacity duration-200 group-hover:opacity-90" />
                 {index === 0 && (

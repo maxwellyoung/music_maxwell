@@ -3,8 +3,8 @@ import AuthForm from "~/components/auth/AuthForm";
 import BackToForumButton from "~/components/auth/BackToForumButton";
 
 export const metadata: Metadata = {
-  title: "Sign In | Maxwell Young Forum",
-  description: "Sign in to your Maxwell Young forum account.",
+  title: "Sign In | Maxwell Young",
+  description: "Sign in to your Maxwell Young account.",
 };
 
 export default function SignInPage() {

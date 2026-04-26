@@ -33,7 +33,7 @@ export type ForumTopic = {
 
 function ForumTopicSkeleton() {
   return (
-    <div className="animate-pulse rounded-2xl border-2 border-primary/10 bg-muted/30 p-6 shadow">
+    <div className="animate-pulse rounded-xl bg-muted/30 p-6">
       <div className="mb-4 h-6 w-2/3 rounded bg-muted-foreground/20" />
       <div className="mb-2 h-4 w-1/3 rounded bg-muted-foreground/10" />
       <div className="mb-6 h-4 w-full rounded bg-muted-foreground/10" />
@@ -99,13 +99,13 @@ export default function ForumTopicsInfinite({
 
   return (
     <section>
-      <h2 className="mb-8 text-2xl font-bold tracking-tight text-primary">
-        All Topics
+      <h2 className="mb-5 text-sm font-bold uppercase tracking-[0.18em] text-primary">
+        Threads
       </h2>
-      <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+      <div className="grid grid-cols-1 gap-4">
         {topics.length === 0 && (
-          <div className="col-span-full text-center text-muted-foreground">
-            No topics yet. Be the first to start a discussion!
+          <div className="col-span-full rounded-xl bg-muted/30 p-6 text-muted-foreground">
+            No notes yet.
           </div>
         )}
         {topics.map((topic) => (
@@ -117,14 +117,13 @@ export default function ForumTopicsInfinite({
             legacyBehavior
           >
             <a className="block no-underline">
-              <Card className="relative overflow-hidden border-2 border-primary/30 bg-background/80 backdrop-blur-lg transition-all duration-200 group-hover:-translate-y-1 group-hover:shadow-xl">
+              <Card className="relative overflow-hidden border-border/60 bg-background/75 shadow-sm backdrop-blur-lg transition duration-200 group-hover:border-primary/30 group-hover:bg-background group-hover:shadow-md">
                 <CardHeader className="relative flex items-start justify-between pb-2">
                   <div>
-                    <CardTitle className="text-xl font-bold transition-colors group-hover:text-primary">
+                    <CardTitle className="text-xl font-semibold tracking-tight transition-colors group-hover:text-primary">
                       {topic.title}
                     </CardTitle>
-                    <CardDescription className="text-base">
-                      by{" "}
+                    <CardDescription className="mt-1 text-sm">
                       {topic.author?.username ? (
                         <span
                           className="cursor-pointer text-primary hover:underline"
@@ -134,7 +133,7 @@ export default function ForumTopicsInfinite({
                             router.push(`/user/${topic.author?.username}`);
                           }}
                         >
-                          {topic.author.username}
+                          @{topic.author.username}
                         </span>
                       ) : (
                         <span className="text-muted-foreground">Unknown</span>
@@ -148,19 +147,17 @@ export default function ForumTopicsInfinite({
                   )}
                 </CardHeader>
                 <CardContent>
-                  <p className="text-base leading-relaxed text-muted-foreground">
+                  <p className="text-sm leading-relaxed text-muted-foreground sm:text-base">
                     {topic.content.length > 180
                       ? topic.content.slice(0, 180) + "..."
                       : topic.content}
                   </p>
                 </CardContent>
-                <CardFooter className="flex items-center justify-between border-t bg-muted/50 px-6 py-4">
-                  <div className="flex items-center gap-4 text-sm text-muted-foreground">
+                <CardFooter className="flex items-center justify-between bg-muted/30 px-6 py-3">
+                  <div className="flex items-center gap-3 text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground">
                     <span>{topic._count.replies} replies</span>
-                    <span>•</span>
                     <span>
-                      Last updated{" "}
-                      {new Date(topic.updatedAt).toLocaleDateString()}
+                      Updated {new Date(topic.updatedAt).toLocaleDateString()}
                     </span>
                   </div>
                 </CardFooter>
@@ -179,8 +176,8 @@ export default function ForumTopicsInfinite({
           <span className="text-muted-foreground">Loading more...</span>
         )}
         {!hasMore && topics.length > 0 && (
-          <div className="animate-fade-in flex flex-col items-center gap-2 text-muted-foreground">
-            <span>You&rsquo;ve reached the end of the forum!</span>
+          <div className="animate-fade-in flex flex-col items-center gap-2 text-sm text-muted-foreground">
+            <span>End of notes.</span>
           </div>
         )}
       </div>

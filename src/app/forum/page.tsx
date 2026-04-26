@@ -7,9 +7,8 @@ import ForumTopicsInfinite, {
 } from "~/components/forum/ForumTopicsInfinite";
 
 export const metadata: Metadata = {
-  title: "Forum | Maxwell Young",
-  description:
-    "Join the discussion about Maxwell Young's music, upcoming projects, and more.",
+  title: "Notes | Maxwell Young",
+  description: "Notes and threads around Maxwell Young releases.",
 };
 
 // Use dynamic rendering for real-time forum data
@@ -59,17 +58,20 @@ export default async function ForumPage({
   }
 
   return (
-    <main className="container mx-auto px-4 py-16">
-      <div className="mb-16 text-center">
-        <h1 className="mb-4 text-5xl font-extrabold leading-tight tracking-tight">
-          Forum
+    <main className="container mx-auto px-4 py-12 sm:py-16">
+      <div className="mx-auto mb-12 max-w-4xl">
+        <p className="mb-3 text-xs font-bold uppercase tracking-[0.2em] text-primary">
+          Maxwell Young
+        </p>
+        <h1 className="mb-3 text-4xl font-bold leading-tight tracking-tight sm:text-5xl">
+          Notes
         </h1>
-        {/* <p className="mx-auto max-w-2xl text-xl text-muted-foreground">
-          Join the conversation
-        </p> */}
+        <p className="max-w-2xl text-base leading-relaxed text-muted-foreground sm:text-lg">
+          Release talk, links, questions, and stray thoughts from listeners.
+        </p>
       </div>
 
-      <div className="mx-auto max-w-4xl space-y-14">
+      <div className="mx-auto max-w-4xl space-y-10">
         {/* Search Bar */}
         <SearchTopics initialQuery={resolvedSearchParams.q} />
 
@@ -83,13 +85,13 @@ export default async function ForumPage({
         {/* Infinite Scroll Topics */}
         <ForumTopicsInfinite initialTopics={topics} total={total} />
 
-        {/* Start New Discussion Button */}
-        <div className="mt-24 text-center">
+        {/* New note button */}
+        <div className="mt-16">
           <Link
             href="/forum/new"
-            className="inline-flex items-center justify-center rounded-xl bg-primary px-8 py-4 text-lg font-semibold text-primary-foreground shadow-lg transition hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
+            className="inline-flex items-center justify-center rounded-full bg-primary px-6 py-3 text-sm font-bold uppercase tracking-[0.14em] text-primary-foreground shadow-md transition hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
           >
-            Start New Discussion
+            New Note
           </Link>
         </div>
       </div>

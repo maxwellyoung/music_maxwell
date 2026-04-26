@@ -16,12 +16,49 @@ export type Song = {
   videoLink?: string;
   previewUrl?: string;
   releaseDate?: string;
+  releaseDateLabel?: string;
   duration?: string;
   releaseType?: string;
   tagline?: string;
 };
 
 const songs: Song[] = [
+  {
+    title: "Sneakin Drinks Into Bars",
+    artist: "Maxwell Young",
+    artwork: "/artworks/SneakinDrinksIntoBars.jpg",
+    links: {},
+    releaseDate: "April 30, 2026",
+    releaseDateLabel: "Thursday",
+    releaseType: "Single",
+    tagline: "bar lights / field smoke / highlights / out thursday",
+    lyrics: {
+      "Sneakin Drinks Into Bars": `sneakin drinks into bars
+sensing it'll fall apart
+we're fluent in false alarms
+we make it up as we go along
+
+from molehills we drew a map
+call off work i have your back
+these doldrums are heaven sent
+please make my calendar bare
+
+when my head's still
+the clouds move fast
+you're blood and smoke
+my mirror and my match
+you turn it up, i start to laugh
+we lose the plot, we find the thread
+
+bar lights
+field smoke
+highlights
+you know i love it`,
+    },
+    credits: `Releases April 30, 2026
+    Sneakin Drinks Into Bars - Single
+    Artwork: sneakin-base`,
+  },
   {
     title: "Flying",
     artist: "Maxwell Young",
@@ -38,8 +75,7 @@ const songs: Song[] = [
     releaseDate: "April 4, 2026",
     duration: "1:52",
     releaseType: "Single",
-    tagline:
-      "A compact new Maxwell Young single, direct from the current release cycle.",
+    tagline: "New single. Short, bright, and built to loop.",
     credits: `Released April 4, 2026
     Flying - Single
     1:52`,

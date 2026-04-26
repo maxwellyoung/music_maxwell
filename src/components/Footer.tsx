@@ -46,11 +46,11 @@ const Footer = () => {
           <Link
             href="/forum"
             className="group relative text-muted-foreground transition-colors hover:text-accent focus:text-accent"
-            aria-label="Forum"
+            aria-label="Notes"
           >
             <MessageCircle className="h-6 w-6" />
             <span className="pointer-events-none absolute -top-8 left-1/2 z-20 -translate-x-1/2 whitespace-nowrap rounded bg-black/80 px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100 group-focus:opacity-100">
-              Forum
+              Notes
             </span>
           </Link>
         </div>

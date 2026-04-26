@@ -11,8 +11,8 @@ import RepliesList from "~/components/forum/RepliesList";
 import TopicActions from "~/components/forum/TopicActions";
 
 export const metadata: Metadata = {
-  title: "Topic | Maxwell Young Forum",
-  description: "Join the discussion about Maxwell Young's music and art.",
+  title: "Note | Maxwell Young",
+  description: "A note around Maxwell Young's music and art.",
 };
 
 export const revalidate = 60; // Revalidate this page every 60 seconds for forum best practices
@@ -64,7 +64,7 @@ export default async function TopicPage({
               variant="outline"
               className="px-5 py-2 text-base font-semibold"
             >
-              ← Back to Forum
+              ← Back to Notes
             </Button>
           </Link>
         </div>

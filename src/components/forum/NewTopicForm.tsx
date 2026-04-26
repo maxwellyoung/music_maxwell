@@ -26,12 +26,18 @@ interface TopicResponse {
 const MAX_TITLE_LENGTH = 200;
 const MAX_CONTENT_LENGTH = 10000;
 
-export function NewTopicForm() {
+export function NewTopicForm({
+  initialTitle = "",
+  initialContent = "",
+}: {
+  initialTitle?: string;
+  initialContent?: string;
+}) {
   const router = useRouter();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
+  const [title, setTitle] = useState(initialTitle);
+  const [content, setContent] = useState(initialContent);
 
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -63,8 +69,8 @@ export function NewTopicForm() {
 
       const data = (await response.json()) as TopicResponse;
       toast({
-        title: "Topic created",
-        description: "Your discussion has been posted successfully.",
+        title: "Note posted",
+        description: "Your note is live.",
       });
       router.push(`/forum/${data.id}`);
     } catch (error) {
@@ -88,11 +94,10 @@ export function NewTopicForm() {
       <Card className="w-full max-w-2xl border border-border/50 bg-background/60 backdrop-blur-sm">
         <CardHeader className="space-y-1 pb-6">
           <CardTitle className="text-2xl font-bold tracking-tight">
-            Start a New Discussion
+            New Note
           </CardTitle>
           <CardDescription>
-            Share your thoughts, ask a question, or start a conversation with
-            the community.
+            Share a link, question, release thought, or loose note.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -139,7 +144,7 @@ export function NewTopicForm() {
               <Textarea
                 id="content"
                 name="content"
-                placeholder="Share the details of your discussion..."
+                placeholder="Write the note..."
                 required
                 disabled={isLoading}
                 value={content}
@@ -175,10 +180,10 @@ export function NewTopicForm() {
                 {isLoading ? (
                   <>
                     <span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-                    Creating...
+                    Posting...
                   </>
                 ) : (
-                  "Create Topic"
+                  "Post Note"
                 )}
               </Button>
             </div>

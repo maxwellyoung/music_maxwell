@@ -21,7 +21,7 @@ export default function Navbar() {
           <button
             onClick={() => void router.push(isForum ? "/" : "/forum")}
             className="flex h-12 w-12 items-center justify-center rounded-full p-2 transition hover:bg-accent/10 "
-            aria-label={isForum ? "Go to Discography" : "Go to Forum"}
+            aria-label={isForum ? "Go to Discography" : "Go to Notes"}
           >
             {isForum ? (
               // Speech Bubble SVG - Optimized for navbar
@@ -125,7 +125,7 @@ export default function Navbar() {
                       href="/forum"
                       className="block rounded px-4 py-2 hover:bg-accent/10"
                     >
-                      Forum
+                      Notes
                     </Link>
                   </DropdownMenu.Item>
                   <DropdownMenu.Item asChild>
@@ -133,7 +133,7 @@ export default function Navbar() {
                       href="/forum/new"
                       className="block rounded px-4 py-2 hover:bg-accent/10"
                     >
-                      New Topic
+                      New Note
                     </Link>
                   </DropdownMenu.Item>
                   <DropdownMenu.Item asChild>
@@ -170,7 +170,7 @@ export default function Navbar() {
                       href="/forum"
                       className="block rounded px-4 py-2 hover:bg-muted focus:bg-muted focus:outline-none"
                     >
-                      Forum
+                      Notes
                     </Link>
                   </DropdownMenu.Item>
                   <DropdownMenu.Item asChild>
@@ -201,7 +201,7 @@ export default function Navbar() {
                 <Link
                   href="/forum/new"
                   className="flex h-10 w-10 items-center justify-center rounded-md transition hover:bg-accent/10"
-                  aria-label="New Topic"
+                  aria-label="New Note"
                 >
                   <svg
                     width="964"

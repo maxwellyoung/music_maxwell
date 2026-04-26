@@ -5,18 +5,20 @@ import { Toaster } from "~/components/ui/toaster";
 import Footer from "~/components/Footer";
 import Navbar from "../components/Navbar";
 
-const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? "https://www.maxwellyoung.info";
+const appUrl =
+  process.env.NEXT_PUBLIC_APP_URL ?? "https://www.maxwellyoung.info";
 
 export const metadata: Metadata = {
   metadataBase: new URL(appUrl),
   title: "Maxwell Young",
-  description: "Alternative pop artist.",
+  description:
+    "Maxwell Young music, release notes, videos, lyrics, and archive.",
   openGraph: {
-    images: ["/ss.webp"],
+    images: ["/artworks/SneakinDrinksIntoBars.jpg"],
   },
   twitter: {
     card: "summary_large_image",
-    images: ["/ss.webp"],
+    images: ["/artworks/SneakinDrinksIntoBars.jpg"],
   },
 };
 

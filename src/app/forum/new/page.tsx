@@ -4,11 +4,17 @@ import { NewTopicForm } from "~/components/forum/NewTopicForm";
 import { Button } from "~/components/ui/button";
 
 export const metadata: Metadata = {
-  title: "New Topic | Maxwell Young Forum",
-  description: "Start a new discussion in the Maxwell Young forum.",
+  title: "New Note | Maxwell Young",
+  description: "Post a note around Maxwell Young releases.",
 };
 
-export default function NewTopicPage() {
+export default async function NewTopicPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ title?: string; content?: string }>;
+}) {
+  const resolvedSearchParams = await searchParams;
+
   return (
     <main className="container mx-auto px-4 py-12 sm:px-6 md:px-8">
       <div className="mx-auto max-w-2xl">
@@ -18,11 +24,14 @@ export default function NewTopicPage() {
               variant="outline"
               className="px-5 py-2 text-base font-semibold"
             >
-              ← Back to Forum
+              ← Back to Notes
             </Button>
           </Link>
         </div>
-        <NewTopicForm />
+        <NewTopicForm
+          initialTitle={resolvedSearchParams.title}
+          initialContent={resolvedSearchParams.content}
+        />
       </div>
     </main>
   );

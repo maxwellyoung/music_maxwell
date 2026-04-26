@@ -70,7 +70,7 @@ export default function UserProfilePage() {
               variant="outline"
               className="px-5 py-2 text-base font-semibold"
             >
-              ← Back to Forum
+              ← Back to Notes
             </Button>
           </Link>
         </div>
@@ -88,7 +88,7 @@ export default function UserProfilePage() {
               variant="outline"
               className="px-5 py-2 text-base font-semibold"
             >
-              ← Back to Forum
+              ← Back to Notes
             </Button>
           </Link>
         </div>

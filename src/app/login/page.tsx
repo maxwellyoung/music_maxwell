@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import AuthForm from "~/components/auth/AuthForm";
 
 export const metadata: Metadata = {
-  title: "Login | Maxwell Young Forum",
-  description: "Login to your Maxwell Young forum account.",
+  title: "Login | Maxwell Young",
+  description: "Login to your Maxwell Young account.",
 };
 
 export default function LoginPage() {
