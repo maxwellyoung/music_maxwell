@@ -1,13 +1,33 @@
 # Music Maxwell
 
-A platform for music enthusiasts built with Next.js, Prisma, and NextAuth.js.
+Public release page and music surface for Maxwell Young.
+
+The app is built as a full product surface rather than a static link page: release pages, media assets, auth/database foundations, and a modern Next.js UI stack.
+
+## What it demonstrates
+
+- Next.js app structure for a real personal/music product.
+- Prisma and auth-ready backend foundations.
+- Public release/media presentation.
+- Stronger product packaging than a generic artist link page.
+- A design-engineering bridge between music, identity, and web product work.
+
+## Tech stack
+
+- Next.js
+- TypeScript
+- Prisma
+- NextAuth
+- Tailwind CSS
+- Radix UI
+- React Three Fiber / Drei
 
 ## Getting Started
 
 ### 1. Clone the repository
 
 ```bash
-git clone https://github.com/yourusername/music_maxwell.git
+git clone https://github.com/maxwellyoung/music_maxwell.git
 cd music_maxwell
 ```
 
