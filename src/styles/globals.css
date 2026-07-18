@@ -4,15 +4,15 @@
 
 @layer base {
   :root {
-    --background: 220 28% 97%; /* Soft Gray (Pantone 7541 C) */
-    --foreground: 220 100% 6%; /* Rich Black (Pantone Black 6 C) */
-    --primary: 210 100% 60%; /* Electric Blue (Pantone 2727 C) #2D9CFF */
+    --background: 41 24% 91%;
+    --foreground: 225 23% 8%;
+    --primary: 230 82% 57%;
     --primary-foreground: 0 0% 100%;
-    --accent: 320 80% 60%; /* Hot Pink (Pantone 226 C) #E93CAC */
+    --accent: 344 96% 68%;
     --accent-foreground: 0 0% 100%;
-    --highlight: 24 100% 50%; /* Vivid Orange (Pantone 1655 C) #FF5B00 */
+    --highlight: 344 96% 68%;
     --highlight-foreground: 0 0% 100%;
-    --secondary: 80 80% 60%; /* Lime Green (Pantone 2290 C) #A8E600 */
+    --secondary: 71 90% 67%;
     --secondary-foreground: 220 100% 6%;
     --muted: 220 28% 92%;
     --muted-foreground: 220 12% 42%;
@@ -67,15 +67,11 @@
 
   body {
     @apply min-h-screen font-sans antialiased;
-    background: linear-gradient(
-        120deg,
-        hsl(var(--primary) / 0.08) 0%,
-        hsl(var(--accent) / 0.08) 100%
-      ),
-      hsl(var(--background));
+    position: relative;
+    background: hsl(var(--background));
     color: hsl(var(--foreground));
-    font-size: 18px;
-    line-height: 1.7;
+    font-size: 17px;
+    line-height: 1.6;
     letter-spacing: -0.01em;
   }
 
@@ -102,10 +98,6 @@
   h3 {
     font-size: 1.4rem;
     margin-bottom: 0.75rem;
-  }
-
-  .container {
-    @apply mx-auto max-w-3xl px-6;
   }
 
   .card {
@@ -138,6 +130,18 @@
   * {
     @apply border-border;
   }
+}
+
+body::before {
+  position: fixed;
+  z-index: 20;
+  inset: 0;
+  pointer-events: none;
+  content: "";
+  background-image: url("/grain.jpg");
+  background-size: 720px auto;
+  opacity: 0.025;
+  mix-blend-mode: multiply;
 }
 
 .font-reenie {
@@ -187,6 +191,10 @@ body {
   margin: 0;
   padding: 0;
   overflow-x: hidden;
+}
+
+html {
+  position: relative;
 }
 
 :root {

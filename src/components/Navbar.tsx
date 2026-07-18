@@ -12,14 +12,21 @@ export default function Navbar() {
   const router = useRouter();
   const { data: session } = useSession();
   const isForum = pathname.startsWith("/forum");
+  const isHome = pathname === "/";
 
   return (
-    <header className="sticky top-0 z-30 mx-auto my-6 w-[95%] max-w-5xl rounded-2xl border border-border/70 bg-background/80 shadow-lg backdrop-blur-lg">
-      <nav className="container flex h-16 items-center justify-between">
+    <header
+      className={
+        isHome
+          ? "absolute inset-x-0 top-0 z-30 text-white"
+          : "sticky top-0 z-30 border-b border-foreground/15 bg-background/90 text-foreground backdrop-blur-xl"
+      }
+    >
+      <nav className="mx-auto flex h-20 w-full max-w-[1440px] items-center justify-between px-5 sm:h-24 sm:px-8 lg:px-12">
         <div className="flex flex-1 items-center">
           <button
             onClick={() => void router.push(isForum ? "/" : "/forum")}
-            className="group flex h-11 w-11 items-center justify-center rounded-full text-foreground/65 transition hover:bg-accent/10 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50"
+            className="group flex min-h-11 items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] opacity-70 transition hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-current"
             aria-label={isForum ? "Go to releases" : "Go to notes"}
             title={isForum ? "Releases" : "Notes"}
           >
@@ -29,7 +36,7 @@ export default function Navbar() {
                 alt=""
                 width={254}
                 height={352}
-                className="h-7 w-7 object-contain opacity-75 transition group-hover:opacity-100"
+                className={`h-5 w-5 object-contain transition ${isHome ? "invert" : ""}`}
                 aria-hidden="true"
               />
             ) : (
@@ -38,10 +45,13 @@ export default function Navbar() {
                 alt=""
                 width={286}
                 height={375}
-                className="h-7 w-7 object-contain opacity-75 transition group-hover:opacity-100"
+                className={`h-5 w-5 object-contain transition ${isHome ? "invert" : ""}`}
                 aria-hidden="true"
               />
             )}
+            <span className="hidden sm:inline">
+              {isForum ? "Releases" : "Notes"}
+            </span>
           </button>
         </div>
 
@@ -56,11 +66,11 @@ export default function Navbar() {
             width={176}
             height={44}
             priority
-            className="h-9 w-auto"
+            className={`h-9 w-36 sm:h-11 sm:w-44 ${isHome ? "invert" : ""}`}
           />
         </Link>
 
-        <div className="flex flex-1 items-center justify-end gap-4 text-sm font-semibold uppercase tracking-[0.14em] text-muted-foreground">
+        <div className="flex flex-1 items-center justify-end gap-4 text-sm font-semibold uppercase tracking-[0.14em]">
           <AnimatePresence mode="wait" initial={false}>
             {session ? (
               <AlertDialog.Root key="logout">
@@ -70,7 +80,7 @@ export default function Navbar() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -6 }}
                     transition={{ duration: 0.18 }}
-                    className="group flex h-11 w-11 items-center justify-center rounded-full transition hover:bg-destructive/10 hover:text-destructive focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-destructive/50"
+                    className="group flex h-11 w-11 items-center justify-center opacity-70 transition hover:text-destructive hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-current"
                     aria-label="Log out"
                     title="Log out"
                   >
@@ -79,7 +89,7 @@ export default function Navbar() {
                       alt=""
                       width={556}
                       height={807}
-                      className="h-7 w-7 object-contain opacity-75 transition group-hover:opacity-100"
+                      className={`h-6 w-6 object-contain transition ${isHome ? "invert" : ""}`}
                       aria-hidden="true"
                     />
                   </motion.button>
@@ -122,7 +132,7 @@ export default function Navbar() {
                 >
                   <Link
                     href="/login"
-                    className="group flex h-11 w-11 items-center justify-center rounded-full transition hover:bg-accent/10 hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50"
+                    className="group flex h-11 w-11 items-center justify-center opacity-70 transition hover:text-accent hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-current"
                     aria-label="Log in"
                     title="Log in"
                   >
@@ -131,7 +141,7 @@ export default function Navbar() {
                       alt=""
                       width={288}
                       height={286}
-                      className="h-6 w-6 object-contain opacity-75 transition group-hover:opacity-100"
+                      className="h-6 w-6 object-contain transition"
                       aria-hidden="true"
                     />
                   </Link>

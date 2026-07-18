@@ -26,14 +26,6 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "./ui/carousel";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "./ui/card";
-import { Separator } from "./ui/separator";
 import songs from "./songsData";
 import { cn } from "~/lib/utils";
 import { XIcon } from "lucide-react";
@@ -220,27 +212,27 @@ const PressPhotoCarousel = () => {
         loop: true,
       }}
       setApi={setApi}
-      className="mx-auto w-full max-w-sm md:max-w-md lg:max-w-lg"
+      className="mx-auto w-full"
     >
-      <CarouselContent className="rounded-lg">
+      <CarouselContent>
         {photos.map((photo, index) => (
           <CarouselItem key={photo.src} className="basis-full">
             <motion.div
               initial={{ scale: 0.95, opacity: 0.5 }}
               animate={{ scale: 1, opacity: 1 }}
               transition={{ duration: 0.3, ease: "easeOut" }}
-              className="overflow-hidden rounded-lg"
+              className="overflow-hidden"
             >
               <div className="group relative aspect-[3/4] w-full">
                 <Image
                   src={photo.src}
                   alt={photo.alt}
                   fill
-                  className="rounded-lg object-cover transition duration-300 ease-out will-change-transform"
+                  className="object-cover transition duration-500 ease-out will-change-transform"
                   sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
                   priority={index === 0}
                 />
-                <div className="absolute inset-0 rounded-lg ring-1 ring-white/10" />
+                <div className="absolute inset-0 ring-1 ring-inset ring-foreground/15" />
               </div>
             </motion.div>
           </CarouselItem>
@@ -252,7 +244,7 @@ const PressPhotoCarousel = () => {
             vibrate(2);
             api?.scrollPrev();
           }}
-          className="bg-neutral-900/80 text-white backdrop-blur-sm transition hover:bg-neutral-800/80"
+          className="border-foreground/20 bg-foreground text-background transition hover:bg-accent"
         />
         <div className="flex gap-1">
           {Array.from({ length: count }).map((_, index) => (
@@ -264,7 +256,9 @@ const PressPhotoCarousel = () => {
               }}
               className={cn(
                 "h-1.5 rounded-full transition-all",
-                index === current ? "w-6 bg-white" : "w-1.5 bg-white/20",
+                index === current
+                  ? "w-6 bg-foreground"
+                  : "w-1.5 bg-foreground/20",
               )}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
@@ -276,7 +270,7 @@ const PressPhotoCarousel = () => {
             vibrate(2);
             api?.scrollNext();
           }}
-          className="bg-neutral-900/80 text-white backdrop-blur-sm transition hover:bg-neutral-800/80"
+          className="border-foreground/20 bg-foreground text-background transition hover:bg-accent"
         />
       </div>
     </Carousel>
@@ -292,28 +286,6 @@ const vibrate = (pattern: number | number[]) => {
       // Optional haptics should never block the interaction.
     }
   }
-};
-
-const contentVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: {
-    opacity: 1,
-    y: 0,
-    transition: {
-      type: "tween",
-      duration: 0.3,
-      ease: "easeOut",
-      delay: 0.1,
-    },
-  },
-  exit: {
-    opacity: 0,
-    y: 10,
-    transition: {
-      duration: 0.2,
-      ease: "easeIn",
-    },
-  },
 };
 
 const linkClassNames =
@@ -543,15 +515,6 @@ const SongDrawer = ({
     );
   }, [song]);
 
-  const fadeUp = {
-    hidden: { opacity: 0, y: 20 },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: { ease: "easeOut", duration: 0.3 },
-    },
-  };
-
   // Format lyrics to ensure consistent indentation
   const formatText = (text: string | undefined) => {
     if (!text) return "";
@@ -576,18 +539,8 @@ const SongDrawer = ({
         }
       }}
     >
-      <DrawerContent className="pb-safe fixed inset-x-0 bottom-0 mt-24 h-[85vh] rounded-t-[10px] bg-black/95">
-        <motion.div
-          initial={{ y: "100%" }}
-          animate={{ y: 0 }}
-          exit={{ y: "100%" }}
-          transition={{
-            type: "tween",
-            duration: 0.4,
-            ease: [0.4, 0.0, 0.2, 1],
-          }}
-          className="flex h-full flex-col"
-        >
+      <DrawerContent className="pb-safe fixed inset-x-0 bottom-0 z-[60] mt-24 h-[85vh] rounded-t-[10px] bg-black/95">
+        <div className="flex h-full flex-col">
           <div className="mx-auto mt-2 h-1.5 w-12 rounded-full bg-white/10" />
           <div className="sticky top-0 z-10 bg-black/80 px-4 pb-4 pt-3 backdrop-blur-xl sm:px-6">
             <DrawerHeader>
@@ -610,37 +563,17 @@ const SongDrawer = ({
             </DrawerHeader>
           </div>
 
-          <motion.div
-            variants={contentVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            className="flex-1 overflow-y-auto overflow-x-hidden overscroll-contain px-4 pb-8 sm:px-6"
-          >
+          <div className="flex-1 overflow-y-auto overflow-x-hidden overscroll-contain px-4 pb-8 sm:px-6">
             <div className="mx-auto w-full max-w-6xl">
               <div className="mt-4 grid grid-cols-1 gap-6 sm:mt-6 md:grid-cols-2 md:gap-8">
-                <motion.div
-                  initial={{ scale: 0.95, opacity: 0 }}
-                  animate={{ scale: 1, opacity: 1 }}
-                  transition={{
-                    type: "spring",
-                    stiffness: 150,
-                    damping: 20,
-                  }}
-                  className="w-full md:sticky md:top-6 md:self-start"
-                >
+                <div className="w-full md:sticky md:top-6 md:self-start">
                   <div className="relative aspect-square w-full overflow-hidden rounded-xl shadow-lg">
                     <BlurImage src={song.artwork} alt={song.title} />
                     <div className="absolute inset-0 rounded-xl ring-1 ring-white/10" />
                   </div>
-                </motion.div>
+                </div>
 
-                <motion.div
-                  variants={fadeUp}
-                  initial="hidden"
-                  animate="visible"
-                  className="flex flex-col space-y-4 sm:space-y-6"
-                >
+                <div className="flex flex-col space-y-4 sm:space-y-6">
                   <div className="space-y-3">
                     {song.tagline && (
                       <p className="text-base font-medium leading-relaxed text-white/75">
@@ -756,11 +689,11 @@ const SongDrawer = ({
                       </div>
                     )}
                   </div>
-                </motion.div>
+                </div>
               </div>
             </div>
-          </motion.div>
-        </motion.div>
+          </div>
+        </div>
       </DrawerContent>
     </Drawer>
   );
@@ -786,18 +719,6 @@ const CollectableGrid: React.FC<CollectableGridProps> = ({
     initial: { opacity: 0.95 },
     hover: {
       opacity: 1,
-      transition: {
-        duration: 0.2,
-        ease: "easeOut",
-      },
-    },
-  };
-
-  const titleVariants = {
-    initial: { opacity: 1, y: 0 },
-    hover: {
-      opacity: 1,
-      y: 0,
       transition: {
         duration: 0.2,
         ease: "easeOut",
@@ -945,117 +866,137 @@ const CollectableGrid: React.FC<CollectableGridProps> = ({
           </motion.section>
         )}
 
-        <div className="mb-4 flex items-end justify-between gap-4">
-          <div>
-            <p className="text-xs font-bold uppercase tracking-[0.24em] text-accent">
-              Discography
+        <section id="archive" className="scroll-mt-8">
+          <div className="mb-8 grid gap-5 border-b border-foreground/25 pb-6 sm:grid-cols-[1fr_auto] sm:items-end md:mb-12">
+            <div>
+              <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.26em] text-accent">
+                01 · Discography
+              </p>
+              <h2 className="mb-0 text-5xl leading-[0.82] tracking-[-0.055em] sm:text-7xl md:text-8xl">
+                The archive
+              </h2>
+            </div>
+            <p className="max-w-sm text-sm leading-relaxed text-foreground/58 sm:text-right">
+              Songs, scraps, credits and videos. Open any cover to go further.
             </p>
-            <h2 className="mb-0 text-3xl leading-tight sm:text-4xl">Archive</h2>
           </div>
-          <p className="hidden max-w-xs text-right text-sm font-medium text-foreground/50 sm:block">
-            Tap artwork for credits, lyrics, videos, and links.
-          </p>
-        </div>
 
-        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 sm:gap-6 md:grid-cols-3 lg:grid-cols-4">
-          {gridSongs.map((song, index) => (
-            <motion.button
-              key={song.title}
-              type="button"
-              initial="initial"
-              whileHover="hover"
-              onClick={() => openDrawer(song)}
-              className="group cursor-pointer text-left focus:outline-none"
-              aria-label={`Open ${song.title}`}
-            >
-              <div className="relative aspect-square overflow-hidden rounded-xl bg-black shadow-md shadow-primary/5 transition duration-200 ease-out group-hover:z-10 group-hover:-translate-y-1 group-hover:scale-[1.02] group-hover:shadow-xl group-hover:shadow-primary/15 group-focus-visible:ring-4 group-focus-visible:ring-accent/25">
-                <motion.div
-                  variants={albumVariants}
-                  className="relative h-full w-full"
-                >
-                  <BlurImage
-                    src={song.artwork}
-                    alt={song.title}
-                    className="transition-all duration-300 group-hover:scale-110"
-                  />
-                </motion.div>
-                {/* Shine overlay */}
-                <div className="pointer-events-none absolute inset-0 z-10 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
-                  <div className="absolute -left-1/3 top-0 h-full w-1/3 animate-shine bg-gradient-to-r from-white/10 via-white/60 to-white/10 blur-lg" />
-                </div>
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent opacity-85 transition-opacity duration-200 group-hover:opacity-90" />
-                {!hideFeaturedInGrid && index === 0 && (
-                  <div className="absolute left-3 top-3 z-20 rounded-full bg-primary px-3 py-1 text-[10px] font-bold uppercase tracking-[0.18em] text-primary-foreground shadow-lg">
-                    Latest
-                  </div>
+          <div className="grid grid-cols-2 gap-x-3 gap-y-8 sm:gap-x-5 sm:gap-y-11 lg:grid-cols-4">
+            {gridSongs.map((song, index) => (
+              <motion.button
+                key={song.title}
+                type="button"
+                initial={{ opacity: 0, y: 18 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, amount: 0.1 }}
+                transition={{
+                  duration: 0.42,
+                  delay: Math.min(index * 0.035, 0.22),
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+                onClick={() => openDrawer(song)}
+                className={cn(
+                  "group cursor-pointer text-left focus:outline-none",
+                  index === 0 && "col-span-2 lg:col-span-2 lg:row-span-2",
                 )}
-                <motion.div
-                  className="absolute inset-x-0 bottom-0 p-4"
-                  variants={titleVariants}
-                >
-                  <h2 className="text-lg font-bold text-white drop-shadow-md">
-                    {song.title}
-                  </h2>
-                  <p className="text-xs text-white/80">{song.artist}</p>
-                </motion.div>
-              </div>
-            </motion.button>
-          ))}
-        </div>
+                aria-label={`Open ${song.title}`}
+              >
+                <div className="relative aspect-square overflow-hidden bg-black transition duration-500 ease-out group-hover:-rotate-[0.6deg] group-hover:scale-[1.01] group-focus-visible:ring-4 group-focus-visible:ring-accent">
+                  <motion.div
+                    variants={albumVariants}
+                    initial="initial"
+                    whileHover="hover"
+                    className="relative h-full w-full"
+                  >
+                    <BlurImage
+                      src={song.artwork}
+                      alt={song.title}
+                      className="transition-transform duration-700 group-hover:scale-[1.035]"
+                    />
+                  </motion.div>
+                  <div className="absolute inset-0 ring-1 ring-inset ring-black/15" />
+                  <span className="absolute right-3 top-3 grid h-8 w-8 translate-y-2 place-items-center rounded-full bg-[#d9f85c] text-[10px] font-bold text-foreground opacity-0 transition duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+                    ↗
+                  </span>
+                </div>
+                <div className="mt-3 flex gap-3 border-t border-foreground/20 pt-2 sm:mt-4">
+                  <span className="text-[10px] font-bold tracking-[0.16em] text-foreground/38">
+                    {String(index + (hideFeaturedInGrid ? 2 : 1)).padStart(
+                      2,
+                      "0",
+                    )}
+                  </span>
+                  <div>
+                    <h3
+                      className={cn(
+                        "mb-0 text-base leading-[1.05] tracking-[-0.035em] sm:text-xl",
+                        index === 0 && "text-2xl sm:text-4xl",
+                      )}
+                    >
+                      {song.title}
+                    </h3>
+                    <p className="mt-1 text-[10px] font-bold uppercase tracking-[0.14em] text-foreground/43 sm:text-xs">
+                      {song.releaseType ?? "Release"}
+                      {song.releaseDate ? ` · ${song.releaseDate}` : ""}
+                    </p>
+                  </div>
+                </div>
+              </motion.button>
+            ))}
+          </div>
+        </section>
 
-        <div className="mt-16 flex flex-col gap-12 md:flex-row md:items-start md:gap-12">
-          <div className="w-full md:w-1/2">
+        <section className="mt-24 grid gap-10 border-t border-foreground/25 pt-7 md:mt-36 md:grid-cols-12 md:gap-8">
+          <div className="md:col-span-2">
+            <p className="text-[11px] font-bold uppercase tracking-[0.26em] text-accent">
+              02 · Maxwell
+            </p>
+          </div>
+          <div className="md:col-span-5">
             <PressPhotoCarousel />
           </div>
-          <Separator orientation="vertical" className="mx-4 hidden md:block" />
-          <div className="w-full md:w-1/2">
-            {/* About Section readability improved */}
-            <section className="my-0">
-              <Card className="border-none bg-black/70 shadow-xl backdrop-blur-md">
-                <CardHeader className="space-y-3">
-                  <CardTitle>
-                    <Image
-                      src="/icons/maxwellyoung.svg"
-                      alt="Maxwell Young Logo"
-                      width={160}
-                      height={75}
-                      style={{ filter: "invert(1) brightness(2)" }}
-                      className="ml-0"
-                      priority
-                    />
-                  </CardTitle>
-                  <CardDescription className="text-base font-medium tracking-wide text-white/90">
-                    Pop because it&apos;s for people. Alternative because it has
-                    to be new.
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <p className="leading-relaxed tracking-wide text-white/90">
-                    Maxwell Young is a New Zealand artist making
-                    emotionally-driven alt-pop that&apos;s both personal and
-                    unpredictable. He started violin at three, learned
-                    production in his teens, and unexpectedly landed early
-                    internet traction when his beats appeared in Casey
-                    Neistat&apos;s vlogs. Since then, he&apos;s opened for The
-                    Internet and Snail Mail, with cosigns from The 1975, Phoebe
-                    Bridgers, and Brockhampton.
-                  </p>
-                  <p className="leading-relaxed tracking-wide text-white/90">
-                    His 2022 EP <em className="text-white">Birthday Girl</em>{" "}
-                    marked a shift—toward sharper textures, emotional
-                    maximalism, and songwriting that feels like recollection
-                    more than storytelling.{" "}
-                    <em className="text-white">In My 20s</em> (2025) picks up
-                    that thread: a record about spirals, near-misses, and
-                    becoming who you are while already being someone else. The
-                    songs are immediate, catchy, and just off enough to stick
-                    with you.
-                  </p>
-                </CardContent>
-              </Card>
-            </section>
+          <div className="flex flex-col justify-between md:col-span-5 md:pl-6">
+            <div>
+              <p className="font-reenie mb-8 text-4xl leading-[0.9] text-foreground/65 sm:text-5xl">
+                Pop because it&apos;s for people. Alternative because it has to
+                be new.
+              </p>
+              <div className="max-w-xl space-y-5 text-base leading-relaxed text-foreground/68 sm:text-lg">
+                <p>
+                  Maxwell Young is a New Zealand artist making emotionally
+                  driven alt-pop that feels personal, immediate and slightly
+                  unpredictable.
+                </p>
+                <p>
+                  He started violin at three, learned production in his teens,
+                  and later opened for The Internet and Snail Mail. The songs
+                  move between sharp pop instinct and recollection: bright
+                  enough to catch, strange enough to stay.
+                </p>
+              </div>
+            </div>
+            <p className="mt-10 border-t border-foreground/20 pt-3 text-[10px] font-bold uppercase tracking-[0.2em] text-foreground/40">
+              Wellington / Tāmaki Makaurau / wherever the song goes
+            </p>
           </div>
-        </div>
+        </section>
+
+        <section className="mt-24 bg-accent px-5 py-12 text-foreground sm:px-8 sm:py-16 md:mt-36 md:grid md:grid-cols-[1fr_auto] md:items-end md:gap-12 lg:px-12">
+          <div>
+            <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.26em]">
+              03 · Notes
+            </p>
+            <h2 className="mb-0 max-w-4xl text-5xl leading-[0.84] tracking-[-0.055em] sm:text-7xl md:text-8xl">
+              Leave something behind.
+            </h2>
+          </div>
+          <Link
+            href="/forum"
+            className="mt-8 inline-block border-b border-foreground pb-1 text-xs font-bold uppercase tracking-[0.2em] transition hover:border-background hover:text-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground md:mt-0"
+          >
+            Read the notes ↗
+          </Link>
+        </section>
 
         {selectedSong && (
           <SongDrawer song={selectedSong} open={isOpen} onClose={closeDrawer} />
