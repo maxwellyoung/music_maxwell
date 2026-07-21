@@ -7,6 +7,9 @@
     "build": "prisma generate && next build",
     "dev": "next dev",
     "lint": "ESLINT_USE_FLAT_CONFIG=false eslint src tailwind.config.ts --ext .ts,.tsx,.js",
+    "test": "node --experimental-strip-types --test src/app/quiz/quiz-engine.test.ts",
+    "typecheck": "tsc --noEmit",
+    "audit:quiz": "node --experimental-strip-types scripts/audit-quiz.ts",
     "start": "next start"
   },
   "dependencies": {
