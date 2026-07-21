@@ -58,10 +58,10 @@ export default function HomeHero() {
           transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
           className="relative z-10"
         >
-          <p className="font-mono text-[10px] font-bold uppercase tracking-[0.28em] text-[#b7c8eb] sm:text-xs">
+          <p className="font-pixel-dot text-[10px] uppercase tracking-[0.16em] text-[#b7c8eb] sm:text-xs">
             Maxwell Young / new single / 24.07.26
           </p>
-          <h1 className="mb-0 mt-3 text-[clamp(5.8rem,16vw,14rem)] font-bold leading-[0.72] tracking-[-0.085em] text-[#f5f8ff]">
+          <h1 className="font-pixel-line mb-0 mt-3 text-[clamp(5.8rem,16vw,14rem)] leading-[0.72] tracking-[-0.055em] text-[#f5f8ff]">
             1kiss
           </h1>
         </motion.div>
@@ -72,7 +72,7 @@ export default function HomeHero() {
           transition={{ delay: 0.25, duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
           className="relative z-10 mt-auto grid gap-7 pt-[48vh] sm:max-w-[38%] sm:pt-0"
         >
-          <p className="max-w-[13ch] text-4xl font-bold uppercase leading-[0.84] tracking-[-0.055em] sm:text-5xl lg:text-6xl">
+          <p className="font-pixel-line max-w-[13ch] text-4xl uppercase leading-[0.84] tracking-[-0.025em] sm:text-5xl lg:text-6xl">
             your hips
             <br />
             our lips
@@ -82,7 +82,7 @@ export default function HomeHero() {
           <div className="flex flex-wrap items-center gap-5">
             <Link
               href="/1kiss"
-              className="group inline-flex min-h-12 items-center gap-3 border-b border-[#f5f8ff] pb-1 text-xs font-bold uppercase tracking-[0.18em] transition hover:border-[#32d8ff] hover:text-[#32d8ff] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+              className="font-pixel-dot group inline-flex min-h-12 items-center gap-3 border-b border-[#f5f8ff] pb-1 text-xs uppercase tracking-[0.12em] transition hover:border-[#32d8ff] hover:text-[#32d8ff] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
             >
               Enter the release
               <ArrowDownRight
@@ -90,7 +90,7 @@ export default function HomeHero() {
                 aria-hidden="true"
               />
             </Link>
-            <span className="bg-[#d8ff30] px-3 py-2 font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-[#07090d]">
+            <span className="font-pixel-dot bg-[#d8ff30] px-3 py-2 text-[10px] uppercase tracking-[0.12em] text-[#07090d]">
               out Friday
             </span>
           </div>

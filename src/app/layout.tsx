@@ -1,4 +1,5 @@
 import "~/styles/globals.css";
+import { GeistPixelCircle, GeistPixelLine } from "geist/font/pixel";
 import { type Metadata } from "next";
 import { SessionProvider } from "~/components/providers/SessionProvider";
 import { Toaster } from "~/components/ui/toaster";
@@ -28,7 +29,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
+    <html
+      lang="en"
+      className={`${GeistPixelLine.variable} ${GeistPixelCircle.variable}`}
+    >
       <head>
         <link rel="icon" href="/icons/favicon.ico" />
         <link

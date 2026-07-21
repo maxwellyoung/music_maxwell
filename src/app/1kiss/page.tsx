@@ -25,7 +25,7 @@ const creditLines = song.credits?.split("\n") ?? [];
 
 export default function OneKissPage() {
   return (
-    <main className="min-h-screen bg-[#05070c] text-[#f5f8ff]">
+    <main className="one-kiss-brand min-h-screen bg-[#05070c] text-[#f5f8ff]">
       <section className="relative isolate overflow-hidden border-b border-white/15 px-5 pb-16 pt-28 sm:px-8 lg:px-12">
         <Image
           src="/1kiss/signal-bloom-blue.png"
@@ -39,13 +39,13 @@ export default function OneKissPage() {
 
         <div className="mx-auto grid max-w-[1440px] gap-10 lg:grid-cols-[0.88fr_1.12fr] lg:items-end">
           <div className="order-2 lg:order-1">
-            <p className="font-mono text-[11px] font-bold uppercase tracking-[0.28em] text-[#b7c8eb]">
+            <p className="font-pixel-dot text-[11px] uppercase tracking-[0.16em] text-[#b7c8eb]">
               Maxwell Young / Ninetynine Records / 24.07.26
             </p>
-            <h1 className="mb-0 mt-4 text-[clamp(6rem,16vw,13rem)] font-bold leading-[0.72] tracking-[-0.085em] text-[#f5f8ff]">
+            <h1 className="font-pixel-line mb-0 mt-4 text-[clamp(6rem,16vw,13rem)] leading-[0.72] tracking-[-0.055em] text-[#f5f8ff]">
               1kiss
             </h1>
-            <p className="mt-9 max-w-[12ch] text-4xl font-bold uppercase leading-[0.84] tracking-[-0.055em] sm:text-6xl">
+            <p className="font-pixel-line mt-9 max-w-[12ch] text-4xl uppercase leading-[0.84] tracking-[-0.025em] sm:text-6xl">
               your hips
               <br />
               our lips
@@ -53,14 +53,14 @@ export default function OneKissPage() {
               one kiss
             </p>
             <div className="mt-10 flex flex-wrap items-center gap-4">
-              <span className="bg-[#d8ff30] px-5 py-3 font-mono text-xs font-bold uppercase tracking-[0.2em] text-[#07090d]">
+              <span className="font-pixel-dot bg-[#d8ff30] px-5 py-3 text-xs uppercase tracking-[0.12em] text-[#07090d]">
                 out Friday
               </span>
               <a
                 href={song.links.spotify}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="border-b border-white pb-1 text-xs font-bold uppercase tracking-[0.18em] transition hover:border-[#32d8ff] hover:text-[#32d8ff]"
+                className="font-pixel-dot border-b border-white pb-1 text-xs uppercase tracking-[0.12em] transition hover:border-[#32d8ff] hover:text-[#32d8ff]"
               >
                 Follow on Spotify ↗
               </a>
@@ -86,17 +86,17 @@ export default function OneKissPage() {
       <section className="border-b border-white/15 bg-[#eef4ff] text-[#07090d]">
         <div className="mx-auto grid max-w-[1440px] gap-12 px-5 py-16 sm:px-8 lg:grid-cols-[0.34fr_0.66fr] lg:px-12">
           <div>
-            <p className="font-mono text-xs font-bold uppercase tracking-[0.24em]">
+            <p className="font-pixel-dot text-xs uppercase tracking-[0.14em]">
               The record
             </p>
             <div className="mt-5 h-2 w-24 bg-[#ff40aa]" />
           </div>
           <div>
-            <p className="max-w-4xl text-3xl font-bold leading-[0.96] tracking-[-0.045em] sm:text-5xl">
+            <p className="font-pixel-line max-w-4xl text-3xl leading-[0.96] tracking-[-0.02em] sm:text-5xl">
               Bright, hyper-tuned Pop / Alt R&amp;B with club-cut vocal chops, a
               bouncy 136 BPM pulse, and a hook built to replay.
             </p>
-            <div className="mt-10 grid gap-4 border-y border-black/15 py-6 font-mono text-xs font-bold uppercase tracking-[0.18em] sm:grid-cols-3">
+            <div className="font-pixel-dot mt-10 grid gap-4 border-y border-black/15 py-6 text-xs uppercase tracking-[0.12em] sm:grid-cols-3">
               <span>02:03</span>
               <span>136 BPM</span>
               <span>F# / clean</span>
@@ -108,7 +108,7 @@ export default function OneKissPage() {
       <section className="border-b border-white/15">
         <div className="mx-auto grid max-w-[1440px] gap-12 px-5 py-16 sm:px-8 lg:grid-cols-[0.34fr_0.66fr] lg:px-12">
           <div>
-            <p className="font-mono text-xs font-bold uppercase tracking-[0.24em] text-[#32d8ff]">
+            <p className="font-pixel-dot text-xs uppercase tracking-[0.14em] text-[#32d8ff]">
               Lyrics
             </p>
           </div>
@@ -127,7 +127,7 @@ export default function OneKissPage() {
 
       <section className="bg-[#d8ff30] text-[#07090d]">
         <div className="mx-auto grid max-w-[1440px] gap-12 px-5 py-14 sm:px-8 lg:grid-cols-[0.34fr_0.66fr] lg:px-12">
-          <p className="font-mono text-xs font-bold uppercase tracking-[0.24em]">
+          <p className="font-pixel-dot text-xs uppercase tracking-[0.14em]">
             Credits
           </p>
           <div className="grid gap-3 text-lg font-bold sm:grid-cols-2">
@@ -137,7 +137,7 @@ export default function OneKissPage() {
           </div>
           <Link
             href="/"
-            className="w-fit border-b border-black pb-1 font-mono text-xs font-bold uppercase tracking-[0.18em]"
+            className="font-pixel-dot w-fit border-b border-black pb-1 text-xs uppercase tracking-[0.12em]"
           >
             Back to the archive ↙
           </Link>

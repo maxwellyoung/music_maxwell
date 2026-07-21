@@ -148,6 +148,16 @@ body::before {
   font-family: "ReenieBeanie", sans-serif;
 }
 
+.font-pixel-line {
+  font-family: var(--font-geist-pixel-line), "Geist Pixel", monospace;
+  font-weight: 500;
+}
+
+.font-pixel-dot {
+  font-family: var(--font-geist-pixel-circle), "Geist Pixel", monospace;
+  font-weight: 500;
+}
+
 .release-rail {
   scrollbar-width: none;
 }
