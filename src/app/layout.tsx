@@ -14,11 +14,11 @@ export const metadata: Metadata = {
   description:
     "Maxwell Young music, release notes, videos, lyrics, and archive.",
   openGraph: {
-    images: ["/artworks/SneakinDrinksIntoBars.jpg"],
+    images: ["/1kiss/key-art-feed.png"],
   },
   twitter: {
     card: "summary_large_image",
-    images: ["/artworks/SneakinDrinksIntoBars.jpg"],
+    images: ["/1kiss/key-art-feed.png"],
   },
 };
 

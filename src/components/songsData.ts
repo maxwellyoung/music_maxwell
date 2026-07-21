@@ -24,6 +24,80 @@ export type Song = {
 
 const songs: Song[] = [
   {
+    title: "1kiss",
+    artist: "Maxwell Young",
+    artwork: "/artworks/1kiss.jpg",
+    links: {
+      spotify: "https://open.spotify.com/artist/5HONdRTLNvBjlD2LirKp0q",
+    },
+    releaseDate: "July 24, 2026",
+    releaseDateLabel: "Friday",
+    duration: "2:03",
+    releaseType: "Single",
+    tagline: "your hips / our lips / one kiss",
+    lyrics: {
+      "1kiss": `(dignity)
+(dignity is an important quality everyone should have)
+
+i'm on the way down
+it's like this midas
+your hips our lips
+one kiss
+i couldn't wait
+now it's priceless
+smiling stunned since miley
+one kiss
+
+(louder)
+
+worried will i learn from that
+will it make my days go days go bad
+make another dream fall flat
+makes me wanna turn time back
+worrying that love won't last
+every step ahead i fall back
+every road i take fades black
+every road i take
+
+i'm on the way down
+it's like this midas
+your hips our lips
+one kiss
+i couldn't wait
+now it's priceless
+smiling stunned since miley
+one kiss
+
+(i said louder)
+
+God you look good tonight
+you know what i say say say
+you know i gotta replay play
+i know that i sound insane
+you know that i still aint right
+you know that i roll the dice
+you know that im over it
+you know that what it was
+i know i can't do that for ya
+i know i can't do that uh
+i know i can't do that
+
+my way out
+i wish they would turn it up
+turning my head real crazy
+girl you'll all there was
+shooting me down with daggers
+so i will cross my heart`,
+    },
+    credits: `Written by Maxwell Young
+Produced by Maxwell Young, Struan Finley, Eddie Johnston
+Mixed by Eddie Johnston
+Performed by Maxwell Young
+Published by Copyright Control
+Ninetynine Records
+© ℗ 2026 Maxwell Young`,
+  },
+  {
     title: "Sneakin Drinks Into Bars",
     artist: "Maxwell Young",
     artwork: "/artworks/SneakinDrinksIntoBars.jpg",
