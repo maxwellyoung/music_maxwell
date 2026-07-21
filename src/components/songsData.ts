@@ -51,7 +51,7 @@ one kiss
 (louder)
 
 worried will i learn from that
-will it make my days go days go bad
+will it make my days go bad
 make another dream fall flat
 makes me wanna turn time back
 worrying that love won't last
@@ -76,18 +76,17 @@ you know i gotta replay play
 i know that i sound insane
 you know that i still aint right
 you know that i roll the dice
-you know that im over it
+you know that im over that
 you know that what it was
 i know i can't do that for ya
 i know i can't do that uh
-i know i can't do that
-
-my way out
+i know i can't find my way out
 i wish they would turn it up
 turning my head real crazy
 girl you'll all there was
 shooting me down with daggers
-so i will cross my heart`,
+so i will cross my heart
+yeah`,
     },
     credits: `Written by Maxwell Young
 Produced by Maxwell Young, Struan Finley, Eddie Johnston
