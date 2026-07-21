@@ -1,18 +1,10 @@
 "use client";
 
 import { useSession } from "next-auth/react";
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardContent,
-  CardFooter,
-} from "~/components/ui/card";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import ConfirmModal from "./ConfirmModal";
 import { useToast } from "~/components/ui/use-toast";
-import React from "react";
 import { Trash, Flag } from "phosphor-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -98,7 +90,10 @@ function renderRichContent(text: string) {
         else if (minMatch[3]) videoId = minMatch[3]; // youtu.be/...
         if (videoId) {
           parts.push(
-            <div key={minIndex + "yt"} className="my-4">
+            <div
+              key={minIndex + "yt"}
+              className="my-5 overflow-hidden rounded-xl bg-black"
+            >
               <iframe
                 width="100%"
                 height="315"
@@ -114,13 +109,17 @@ function renderRichContent(text: string) {
       } else if (minType === 1) {
         // SoundCloud
         parts.push(
-          <div key={minIndex + "sc"} className="my-4">
+          <div
+            key={minIndex + "sc"}
+            className="my-5 overflow-hidden rounded-xl bg-white"
+          >
             <iframe
               width="100%"
               height="166"
               scrolling="no"
               frameBorder="no"
               allow="autoplay"
+              title="SoundCloud player"
               src={`https://w.soundcloud.com/player/?url=${encodeURIComponent(url)}&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true`}
             />
           </div>,
@@ -131,7 +130,10 @@ function renderRichContent(text: string) {
         const id = minMatch[2];
         if (type && id) {
           parts.push(
-            <div key={minIndex + "sp"} className="my-4">
+            <div
+              key={minIndex + "sp"}
+              className="my-5 overflow-hidden rounded-xl"
+            >
               <iframe
                 src={`https://open.spotify.com/embed/${type}/${id}`}
                 width="100%"
@@ -153,7 +155,7 @@ function renderRichContent(text: string) {
             href={url || "#"}
             target="_blank"
             rel="noopener noreferrer"
-            className="break-all text-primary underline"
+            className="break-all text-[#8ea6ff] underline decoration-white/25 underline-offset-4"
           >
             {url}
           </a>,
@@ -279,13 +281,21 @@ export default function RepliesList({
         message="Are you sure you want to delete this reply?"
       />
       {reportOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-          <div className="w-full max-w-sm rounded-xl bg-background p-8 shadow-2xl">
-            <div className="mb-4 text-lg font-semibold text-foreground">
-              Report Reply
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="report-reply-title"
+        >
+          <div className="w-[calc(100%-2rem)] max-w-sm bg-[#f2ede4] p-8 text-[#11100f] shadow-2xl">
+            <div
+              id="report-reply-title"
+              className="font-pixel-line mb-4 text-2xl"
+            >
+              report reply.
             </div>
             <textarea
-              className="mb-4 w-full rounded border border-input bg-muted px-3 py-2 text-base text-foreground"
+              className="mb-4 w-full rounded-none border border-black/20 bg-transparent px-3 py-2 text-base text-[#11100f]"
               rows={3}
               placeholder="Reason for reporting (required)"
               value={reportReason}
@@ -294,14 +304,14 @@ export default function RepliesList({
             />
             <div className="flex justify-end gap-4">
               <button
-                className="rounded-lg border border-input bg-muted px-4 py-2 font-medium text-muted-foreground hover:bg-muted/80"
+                className="border border-black/20 px-4 py-2 font-medium hover:bg-black/5"
                 onClick={cancelReport}
                 disabled={reportLoading}
               >
                 Cancel
               </button>
               <button
-                className="rounded-lg bg-yellow-600 px-4 py-2 font-semibold text-white shadow hover:bg-yellow-700"
+                className="bg-[#11100f] px-4 py-2 font-semibold text-white hover:bg-black/80"
                 onClick={submitReport}
                 disabled={reportLoading || !reportReason.trim()}
               >
@@ -311,23 +321,36 @@ export default function RepliesList({
           </div>
         </div>
       )}
-      {replies.map((reply) => (
-        <Card
+      {replies.length === 0 && (
+        <div className="border-b border-white/20 py-12">
+          <p className="font-pixel-line text-2xl leading-none text-white/65">
+            no echoes yet.
+          </p>
+          <p className="mt-3 text-sm text-white/40">
+            There is room for the first response.
+          </p>
+        </div>
+      )}
+      {replies.map((reply, index) => (
+        <article
           key={reply.id}
-          className="group overflow-hidden border bg-background/80 backdrop-blur-lg transition-all duration-200 hover:-translate-y-1 hover:shadow-lg"
+          className="group grid gap-5 border-b border-white/20 py-8 sm:grid-cols-[3.5rem_1fr] sm:gap-8 sm:py-10"
         >
-          <CardHeader className="pb-2">
-            <div className="flex items-center justify-between">
-              <CardTitle className="flex items-center gap-2 text-lg font-semibold transition-colors group-hover:text-primary">
+          <div className="font-pixel-dot text-sm leading-none text-[#8ea6ff]">
+            {String(index + 1).padStart(2, "0")}
+          </div>
+          <div>
+            <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
+              <div className="font-pixel-dot flex items-center gap-2 text-[11px] uppercase tracking-[0.1em]">
                 {reply.author?.username ? (
                   <Link
                     href={`/user/${reply.author.username}`}
-                    className="text-primary hover:underline"
+                    className="text-white transition hover:text-[#8ea6ff]"
                   >
-                    {reply.author.username}
+                    @{reply.author.username}
                   </Link>
                 ) : (
-                  <span className="text-muted-foreground">Unknown</span>
+                  <span className="text-white/45">Unknown</span>
                 )}
                 {reply.author?.role === "admin" && (
                   <Image
@@ -336,44 +359,48 @@ export default function RepliesList({
                     title="Admin"
                     width={20}
                     height={20}
-                    className="ml-1 inline-block"
+                    className="ml-1 inline-block invert"
                   />
                 )}
-              </CardTitle>
-              <span className="text-sm text-muted-foreground">
-                {new Date(reply.createdAt).toLocaleDateString()}
+              </div>
+              <span className="font-pixel-dot text-[11px] uppercase tracking-[0.1em] text-white/35">
+                {new Date(reply.createdAt).toLocaleDateString("en-NZ", {
+                  day: "numeric",
+                  month: "short",
+                  year: "numeric",
+                })}
               </span>
             </div>
-          </CardHeader>
-          <CardContent>
-            <div className="text-base leading-relaxed text-muted-foreground">
+            <div className="text-white/72 whitespace-pre-wrap text-lg leading-relaxed">
               {renderRichContent(reply.content)}
             </div>
-          </CardContent>
-          <CardFooter className="flex gap-4">
-            {(userRole === "admin" || userId === reply.authorId) && (
+            <div className="mt-6 flex gap-3">
+              {(userRole === "admin" || userId === reply.authorId) && (
+                <button
+                  className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 text-white/35 transition-colors hover:border-red-400 hover:text-red-400"
+                  onClick={() => handleDelete(reply.id)}
+                  disabled={deletingId === reply.id}
+                  title="Delete"
+                  aria-label="Delete reply"
+                >
+                  {deletingId === reply.id ? (
+                    <span className="text-xs">Deleting...</span>
+                  ) : (
+                    <Trash size={18} weight="regular" />
+                  )}
+                </button>
+              )}
               <button
-                className="p-1 text-red-400 transition-colors hover:text-red-600"
-                onClick={() => handleDelete(reply.id)}
-                disabled={deletingId === reply.id}
-                title="Delete"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 text-white/35 transition-colors hover:border-[#8ea6ff] hover:text-[#8ea6ff]"
+                onClick={() => handleReport(reply.id)}
+                title="Report"
+                aria-label="Report reply"
               >
-                {deletingId === reply.id ? (
-                  <span className="text-xs">Deleting...</span>
-                ) : (
-                  <Trash size={18} weight="regular" />
-                )}
+                <Flag size={18} weight="regular" />
               </button>
-            )}
-            <button
-              className="p-1 text-yellow-700 transition-colors hover:text-yellow-600"
-              onClick={() => handleReport(reply.id)}
-              title="Report"
-            >
-              <Flag size={18} weight="regular" />
-            </button>
-          </CardFooter>
-        </Card>
+            </div>
+          </div>
+        </article>
       ))}
     </div>
   );

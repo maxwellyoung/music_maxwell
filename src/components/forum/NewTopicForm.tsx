@@ -1,30 +1,18 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "~/components/ui/card";
-import { Button } from "~/components/ui/button";
-import { Input } from "~/components/ui/input";
-import { Textarea } from "~/components/ui/textarea";
+import { ArrowUpRight, LockKeyhole } from "lucide-react";
 import { useToast } from "~/components/ui/use-toast";
 
 interface TopicResponse {
   id: string;
-  title: string;
-  content: string;
-  createdAt: string;
-  updatedAt: string;
-  authorId: string;
 }
 
 const MAX_TITLE_LENGTH = 200;
 const MAX_CONTENT_LENGTH = 10000;
+const DRAFT_KEY = "maxwell-notes-draft";
 
 export function NewTopicForm({
   initialTitle = "",
@@ -35,12 +23,37 @@ export function NewTopicForm({
 }) {
   const router = useRouter();
   const { toast } = useToast();
+  const { data: session, status } = useSession();
   const [isLoading, setIsLoading] = useState(false);
   const [title, setTitle] = useState(initialTitle);
   const [content, setContent] = useState(initialContent);
 
+  useEffect(() => {
+    if (initialTitle || initialContent) return;
+
+    try {
+      const draft = window.sessionStorage.getItem(DRAFT_KEY);
+      if (!draft) return;
+      const parsed = JSON.parse(draft) as { title?: string; content?: string };
+      setTitle(parsed.title ?? "");
+      setContent(parsed.content ?? "");
+    } catch {
+      window.sessionStorage.removeItem(DRAFT_KEY);
+    }
+  }, [initialContent, initialTitle]);
+
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+
+    if (!session) {
+      window.sessionStorage.setItem(
+        DRAFT_KEY,
+        JSON.stringify({ title, content }),
+      );
+      await signIn("google", { callbackUrl: "/forum/new" });
+      return;
+    }
+
     setIsLoading(true);
 
     try {
@@ -53,12 +66,12 @@ export function NewTopicForm({
       });
 
       if (!response.ok) {
-        let errorMsg = "Failed to create topic. Please try again.";
+        let errorMsg = "Failed to pin this note. Please try again.";
         if (response.status === 400) {
           try {
             const data = await response.json();
             if (data.error?.toLowerCase().includes("inappropriate")) {
-              errorMsg = "Your topic contains inappropriate language.";
+              errorMsg = "This note contains language the wall cannot accept.";
             } else {
               errorMsg = data.error ?? errorMsg;
             }
@@ -68,18 +81,19 @@ export function NewTopicForm({
       }
 
       const data = (await response.json()) as TopicResponse;
+      window.sessionStorage.removeItem(DRAFT_KEY);
       toast({
-        title: "Note posted",
-        description: "It is on the wall.",
+        title: "Pinned to the wall",
+        description: "Your note is live.",
       });
       router.push(`/forum/${data.id}`);
     } catch (error) {
       toast({
-        title: "Error",
+        title: "Could not pin note",
         description:
           error instanceof Error
             ? error.message
-            : "Failed to create topic. Please try again.",
+            : "Failed to create note. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -88,108 +102,139 @@ export function NewTopicForm({
   }
 
   const isValid = title.trim().length > 0 && content.trim().length > 0;
+  const previewTitle = title.trim() || "your line goes here";
+  const previewContent = content.trim() || "something almost said...";
 
   return (
-    <div className="flex min-h-[70vh] items-center justify-center px-4 py-8">
-      <Card className="w-full max-w-2xl border border-border/50 bg-background/60 backdrop-blur-sm">
-        <CardHeader className="space-y-1 pb-6">
-          <CardTitle className="text-2xl font-bold tracking-tight">
-            Leave One
-          </CardTitle>
-          <CardDescription>
-            a line / a false alarm / something almost said
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={onSubmit} className="space-y-6">
-            <div className="space-y-2">
+    <div className="grid gap-12 lg:grid-cols-[0.58fr_0.42fr] lg:gap-16">
+      <div>
+        <div className="mb-10">
+          <p className="font-pixel-dot text-xs uppercase tracking-[0.12em] text-primary">
+            New fragment
+          </p>
+          <h1 className="font-pixel-line mb-3 mt-3 text-4xl leading-[0.9] sm:text-6xl">
+            leave one<span className="font-pixel-dot text-primary">.</span>
+          </h1>
+          <p className="max-w-lg text-base leading-relaxed text-foreground/55 sm:text-lg">
+            A heading and whatever you want to leave behind.
+          </p>
+        </div>
+
+        <form onSubmit={onSubmit} className="space-y-8">
+          <div>
+            <div className="mb-2 flex items-end justify-between gap-4">
               <label
                 htmlFor="title"
-                className="text-sm font-medium leading-none"
+                className="font-pixel-dot text-[11px] uppercase tracking-[0.1em]"
               >
-                Line
+                Heading
               </label>
-              <Input
-                id="title"
-                name="title"
-                placeholder="bar lights / field smoke / highlights"
-                required
-                disabled={isLoading}
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                maxLength={MAX_TITLE_LENGTH}
-                className="h-11"
-                aria-describedby="title-count"
-              />
-              <div className="flex justify-end" id="title-count">
-                <span
-                  className={`text-xs ${
-                    title.length > MAX_TITLE_LENGTH * 0.9
-                      ? "text-destructive"
-                      : "text-muted-foreground"
-                  }`}
-                >
-                  {title.length} / {MAX_TITLE_LENGTH}
-                </span>
-              </div>
+              <span
+                id="title-count"
+                className={`text-xs ${
+                  title.length > MAX_TITLE_LENGTH * 0.9
+                    ? "text-destructive"
+                    : "text-foreground/35"
+                }`}
+              >
+                {title.length} / {MAX_TITLE_LENGTH}
+              </span>
             </div>
+            <input
+              id="title"
+              name="title"
+              placeholder="bar lights / field smoke / highlights"
+              required
+              disabled={isLoading}
+              value={title}
+              onChange={(event) => setTitle(event.target.value)}
+              maxLength={MAX_TITLE_LENGTH}
+              className="h-16 w-full rounded-none border-0 border-b-2 border-foreground bg-transparent px-0 text-2xl shadow-none placeholder:text-foreground/20 focus:border-primary focus:ring-0"
+              aria-describedby="title-count"
+            />
+          </div>
 
-            <div className="space-y-2">
+          <div>
+            <div className="mb-2 flex items-end justify-between gap-4">
               <label
                 htmlFor="content"
-                className="text-sm font-medium leading-none"
+                className="font-pixel-dot text-[11px] uppercase tracking-[0.1em]"
               >
                 Note
               </label>
-              <Textarea
-                id="content"
-                name="content"
-                placeholder="leave it here..."
-                required
-                disabled={isLoading}
-                value={content}
-                onChange={(e) => setContent(e.target.value)}
-                maxLength={MAX_CONTENT_LENGTH}
-                className="min-h-[200px] resize-y"
-                aria-describedby="content-count"
-              />
-              <div className="flex justify-end" id="content-count">
-                <span
-                  className={`text-xs ${
-                    content.length > MAX_CONTENT_LENGTH * 0.9
-                      ? "text-destructive"
-                      : "text-muted-foreground"
-                  }`}
-                >
-                  {content.length.toLocaleString()} /{" "}
-                  {MAX_CONTENT_LENGTH.toLocaleString()}
-                </span>
-              </div>
-            </div>
-
-            <div className="flex flex-col-reverse gap-3 pt-2 sm:flex-row sm:justify-end">
-              <Button
-                type="button"
-                variant="outline"
-                onClick={() => router.back()}
-                disabled={isLoading}
+              <span
+                id="content-count"
+                className={`text-xs ${
+                  content.length > MAX_CONTENT_LENGTH * 0.9
+                    ? "text-destructive"
+                    : "text-foreground/35"
+                }`}
               >
-                Cancel
-              </Button>
-              <Button type="submit" disabled={isLoading || !isValid}>
-                {isLoading ? (
-                  <>
-                    <span className="mr-2 h-4 w-4 animate-spin rounded-full border-2 border-current border-t-transparent" />
-                    Leaving...
-                  </>
-                ) : (
-                  "Leave Note"
-                )}
-              </Button>
+                {content.length.toLocaleString()} /{" "}
+                {MAX_CONTENT_LENGTH.toLocaleString()}
+              </span>
             </div>
-          </form>
-        </CardContent>
-      </Card>
+            <textarea
+              id="content"
+              name="content"
+              placeholder="leave it here..."
+              required
+              disabled={isLoading}
+              value={content}
+              onChange={(event) => setContent(event.target.value)}
+              maxLength={MAX_CONTENT_LENGTH}
+              className="min-h-[260px] w-full resize-y rounded-none border border-foreground/25 bg-white/25 px-5 py-4 text-lg leading-relaxed shadow-none placeholder:text-foreground/20 focus:border-primary focus:ring-primary"
+              aria-describedby="content-count"
+            />
+          </div>
+
+          {!session && status !== "loading" && (
+            <div className="flex gap-3 border-l-2 border-primary bg-primary/5 px-4 py-3 text-sm leading-relaxed text-foreground/65">
+              <LockKeyhole className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+              Your draft will wait here while Google signs you in.
+            </div>
+          )}
+
+          <div className="flex flex-col-reverse gap-3 border-t border-foreground/15 pt-6 sm:flex-row sm:items-center sm:justify-between">
+            <button
+              type="button"
+              onClick={() => router.back()}
+              disabled={isLoading}
+              className="font-pixel-dot min-h-11 text-left text-[11px] uppercase tracking-[0.1em] text-foreground/45 transition hover:text-foreground"
+            >
+              Keep it to myself
+            </button>
+            <button
+              type="submit"
+              disabled={isLoading || !isValid || status === "loading"}
+              className="font-pixel-dot group inline-flex min-h-12 items-center justify-center gap-3 border border-foreground bg-foreground px-6 text-[11px] uppercase tracking-[0.1em] text-background transition hover:border-primary hover:bg-primary disabled:cursor-not-allowed disabled:opacity-35"
+            >
+              {isLoading
+                ? "Pinning..."
+                : session
+                  ? "Pin to the wall"
+                  : "Sign in & pin"}
+              {!isLoading && (
+                <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
+              )}
+            </button>
+          </div>
+        </form>
+      </div>
+
+      <aside className="lg:sticky lg:top-32 lg:self-start">
+        <div className="relative mx-auto max-w-md border border-foreground/20 bg-white/45 px-7 pb-10 pt-8 shadow-[7px_9px_0_rgba(49,87,236,0.12)] sm:px-9 sm:pb-14">
+          <p className="font-pixel-dot mb-8 text-[10px] uppercase tracking-[0.1em] text-foreground/40">
+            a note from you
+          </p>
+          <h2 className="font-pixel-line mb-5 break-words text-3xl leading-[0.94] text-foreground sm:text-4xl">
+            {previewTitle}
+          </h2>
+          <p className="whitespace-pre-wrap break-words text-lg leading-relaxed text-foreground/60">
+            {previewContent}
+          </p>
+        </div>
+      </aside>
     </div>
   );
 }

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { NewTopicForm } from "~/components/forum/NewTopicForm";
-import { Button } from "~/components/ui/button";
+import { ArrowLeft } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "New Note | Maxwell Young",
@@ -16,18 +16,15 @@ export default async function NewTopicPage({
   const resolvedSearchParams = await searchParams;
 
   return (
-    <main className="container mx-auto px-4 py-12 sm:px-6 md:px-8">
-      <div className="mx-auto max-w-2xl">
-        <div className="mb-6">
-          <Link href="/forum" passHref legacyBehavior>
-            <Button
-              variant="outline"
-              className="px-5 py-2 text-base font-semibold"
-            >
-              ← Back to Notes
-            </Button>
-          </Link>
-        </div>
+    <main className="notes-canvas min-h-screen px-5 py-8 sm:px-8 sm:py-12 lg:px-12">
+      <div className="mx-auto max-w-[1280px]">
+        <Link
+          href="/forum"
+          className="font-pixel-dot group mb-12 inline-flex min-h-11 items-center gap-2 text-[11px] uppercase tracking-[0.1em] text-foreground/50 transition hover:text-primary"
+        >
+          <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
+          Back to the wall
+        </Link>
         <NewTopicForm
           initialTitle={resolvedSearchParams.title}
           initialContent={resolvedSearchParams.content}

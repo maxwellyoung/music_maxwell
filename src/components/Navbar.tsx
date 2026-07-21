@@ -57,7 +57,7 @@ export default function Navbar() {
 
         <Link
           href="/"
-          className="flex items-center justify-center transition-opacity hover:opacity-75 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50"
+          className="flex items-center justify-center transition-opacity hover:opacity-75 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/50"
           aria-label="Maxwell Young home"
         >
           <Image
@@ -132,7 +132,7 @@ export default function Navbar() {
                 >
                   <Link
                     href="/login"
-                    className="group flex h-11 w-11 items-center justify-center opacity-70 transition hover:text-accent hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-current"
+                    className="group flex h-11 w-11 items-center justify-center opacity-70 transition hover:text-primary hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-current"
                     aria-label="Log in"
                     title="Log in"
                   >

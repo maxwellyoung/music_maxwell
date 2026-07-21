@@ -9,21 +9,10 @@ import {
   deleteTopicSchema,
   listTopicsSchema,
 } from "~/lib/validations";
+import { getReleaseWallWhere } from "~/lib/forum";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
-
-const releaseWallWhere = {
-  OR: [
-    { createdAt: { gte: new Date("2026-04-01T00:00:00.000Z") } },
-    { title: { contains: "sneakin", mode: "insensitive" as const } },
-    { content: { contains: "sneakin", mode: "insensitive" as const } },
-    { title: { contains: "bar lights", mode: "insensitive" as const } },
-    { content: { contains: "bar lights", mode: "insensitive" as const } },
-    { title: { contains: "false alarm", mode: "insensitive" as const } },
-    { content: { contains: "false alarm", mode: "insensitive" as const } },
-  ],
-};
 
 export async function POST(request: Request) {
   const session = await getServerSession(authOptions);
@@ -142,6 +131,7 @@ export async function DELETE(request: Request) {
 
 export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
+  const query = searchParams.get("q")?.slice(0, 100);
   const parseResult = listTopicsSchema.safeParse({
     skip: searchParams.get("skip") ?? undefined,
     take: searchParams.get("take") ?? undefined,
@@ -153,11 +143,12 @@ export async function GET(request: Request) {
     );
   }
   const { skip, take } = parseResult.data;
+  const where = getReleaseWallWhere(query);
 
   try {
     const [topics, total] = await Promise.all([
       prisma.topic.findMany({
-        where: releaseWallWhere,
+        where,
         skip,
         take,
         orderBy: { createdAt: "desc" },
@@ -166,7 +157,7 @@ export async function GET(request: Request) {
           _count: { select: { replies: true } },
         },
       }),
-      prisma.topic.count({ where: releaseWallWhere }),
+      prisma.topic.count({ where }),
     ]);
 
     return NextResponse.json({ topics, total });

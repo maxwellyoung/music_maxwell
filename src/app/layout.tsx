@@ -1,5 +1,6 @@
 import "~/styles/globals.css";
 import { GeistPixelCircle, GeistPixelLine } from "geist/font/pixel";
+import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
 import { SessionProvider } from "~/components/providers/SessionProvider";
 import { Toaster } from "~/components/ui/toaster";
@@ -31,7 +32,7 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${GeistPixelLine.variable} ${GeistPixelCircle.variable}`}
+      className={`${GeistSans.variable} ${GeistPixelLine.variable} ${GeistPixelCircle.variable}`}
     >
       <head>
         <link rel="icon" href="/icons/favicon.ico" />
