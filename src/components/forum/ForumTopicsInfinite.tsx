@@ -104,13 +104,13 @@ export default function ForumTopicsInfinite({
         {topics.length === 0 && (
           <div className="border-t border-foreground/15 py-16">
             <p className="font-pixel-line text-2xl leading-none text-foreground/65 sm:text-3xl">
-              {query ? "no notes matched." : "nothing here yet."}
+              {query ? "No notes matched." : "No notes yet."}
             </p>
-            <p className="mt-3 max-w-md text-sm text-foreground/45">
-              {query
-                ? "Try a shorter word or username."
-                : "You can pin the first note."}
-            </p>
+            {query && (
+              <p className="mt-3 max-w-md text-sm text-foreground/45">
+                Try a shorter word or username.
+              </p>
+            )}
           </div>
         )}
         {topics.map((topic, index) => (

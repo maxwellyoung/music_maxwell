@@ -1,16 +1,33 @@
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
 import Image from "next/image";
-import Link from "next/link";
+import JsonLd from "~/components/JsonLd";
+import ReleaseMoment from "~/components/ReleaseMoment";
+import ReleaseLyrics from "~/components/ReleaseLyrics";
+import ReleaseNavigation from "~/components/ReleaseNavigation";
+import ReleaseRoomShell from "~/components/ReleaseRoomShell";
 import songs from "~/components/songsData";
 
+const CampaignReel = dynamic(() => import("~/components/CampaignReel"));
+
 export const metadata: Metadata = {
-  title: "1kiss | Maxwell Young",
+  title: "1kiss — lyrics, artwork, credits, and short films | Maxwell Young",
   description:
-    "1kiss by Maxwell Young. Bright, glossy Pop / Alt R&B. Out Friday, July 24.",
+    "1kiss by Maxwell Young: an electric pop and alt-R&B single released July 24, 2026, with lyrics, credits, artwork, and four short films.",
+  alternates: { canonical: "/1kiss" },
   openGraph: {
+    type: "music.song",
     title: "1kiss | Maxwell Young",
     description: "your hips / our lips / one kiss",
-    images: ["/1kiss/key-art-feed.png"],
+    url: "/1kiss",
+    images: [
+      {
+        url: "/1kiss/key-art-feed.png",
+        width: 1080,
+        height: 1350,
+        alt: "1kiss by Maxwell Young",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
@@ -19,13 +36,42 @@ export const metadata: Metadata = {
 };
 
 const song = songs.find((item) => item.title === "1kiss")!;
+const spotifyUrl = song.links.spotify!;
 const lyric = song.lyrics?.["1kiss"] ?? "";
 const lyricBlocks = lyric.split("\n\n");
 const creditLines = song.credits?.split("\n") ?? [];
 
 export default function OneKissPage() {
   return (
-    <main className="one-kiss-brand min-h-screen bg-[#05070c] text-[#f5f8ff]">
+    <ReleaseRoomShell
+      title={song.title}
+      className="one-kiss-brand !bg-[#05070c] !text-[#f5f8ff]"
+    >
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "MusicRecording",
+          "@id": "https://www.maxwellyoung.info/1kiss#recording",
+          name: "1kiss",
+          url: "https://www.maxwellyoung.info/1kiss",
+          image: "https://www.maxwellyoung.info/artworks/1kiss.jpg",
+          datePublished: "2026-07-24",
+          duration: "PT2M3S",
+          genre: ["Pop", "Alternative R&B"],
+          byArtist: {
+            "@type": "Person",
+            "@id": "https://www.maxwellyoung.info/#artist",
+            name: "Maxwell Young",
+          },
+          sameAs: spotifyUrl,
+          inAlbum: {
+            "@type": "MusicAlbum",
+            name: "1kiss",
+            albumReleaseType: "SingleRelease",
+          },
+        }}
+      />
+
       <section className="border-b border-white/15 px-5 pb-16 pt-28 sm:px-8 lg:px-12">
         <div className="mx-auto grid max-w-[1120px] gap-10 lg:grid-cols-[0.78fr_1.22fr] lg:items-end">
           <div className="order-2 lg:order-1">
@@ -42,15 +88,8 @@ export default function OneKissPage() {
               <br />
               one kiss
             </p>
-            <div className="mt-10 flex items-center">
-              <a
-                href={song.links.spotify}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-pixel-dot border-b border-white pb-1 text-xs uppercase tracking-[0.1em] transition hover:border-[#8ea6ff] hover:text-[#8ea6ff]"
-              >
-                Follow on Spotify ↗
-              </a>
+            <div className="mt-10">
+              <ReleaseMoment spotifyUrl={spotifyUrl} />
             </div>
           </div>
 
@@ -71,15 +110,13 @@ export default function OneKissPage() {
 
       <section className="border-b border-white/15 bg-[#f2ede4] text-[#07090d]">
         <div className="mx-auto grid max-w-[1120px] gap-8 px-5 py-14 sm:px-8 lg:grid-cols-[0.28fr_0.72fr] lg:px-12">
-          <div>
-            <p className="font-pixel-dot text-xs uppercase tracking-[0.14em]">
-              The record
-            </p>
-          </div>
+          <p className="font-pixel-dot text-xs uppercase tracking-[0.14em]">
+            The record
+          </p>
           <div>
             <p className="font-pixel-line max-w-4xl text-2xl leading-[1.02] sm:text-3xl">
-              Bright, hyper-tuned Pop / Alt R&amp;B with club-cut vocal chops, a
-              bouncy 136 BPM pulse, and a hook built to replay.
+              Bright, hyper-tuned pop and alt-R&amp;B with club-cut vocal chops,
+              a bouncy 136 BPM pulse, and a hook built to replay.
             </p>
             <div className="font-pixel-dot mt-8 grid gap-4 border-y border-black/15 py-5 text-[11px] uppercase tracking-[0.1em] sm:grid-cols-3">
               <span>02:03</span>
@@ -90,23 +127,32 @@ export default function OneKissPage() {
         </div>
       </section>
 
+      <section className="border-b border-white/15 bg-[#0b0e17]">
+        <div className="mx-auto max-w-[1120px] px-5 py-14 sm:px-8 lg:px-12">
+          <div className="mb-10 grid gap-3 border-t border-white/20 pt-5 md:grid-cols-[0.28fr_0.72fr]">
+            <p className="font-pixel-dot text-xs uppercase tracking-[0.14em] text-[#8ea6ff]">
+              18 seconds
+            </p>
+            <div>
+              <h2 className="font-pixel-line mb-0 max-w-[12ch] text-4xl uppercase leading-[0.9] text-[#f5f8ff] sm:text-5xl">
+                pick a feeling
+              </h2>
+              <p className="mt-4 max-w-lg text-sm leading-relaxed text-white/60">
+                Choose a way in, or scramble it. Each signal lasts 18 seconds
+                and stays quiet until you press play.
+              </p>
+            </div>
+          </div>
+          <CampaignReel />
+        </div>
+      </section>
+
       <section className="border-b border-white/15">
         <div className="mx-auto grid max-w-[1120px] gap-8 px-5 py-14 sm:px-8 lg:grid-cols-[0.28fr_0.72fr] lg:px-12">
-          <div>
-            <p className="font-pixel-dot text-xs uppercase tracking-[0.1em] text-[#8ea6ff]">
-              Lyrics
-            </p>
-          </div>
-          <div className="grid gap-x-10 gap-y-8 sm:grid-cols-2">
-            {lyricBlocks.map((block) => (
-              <p
-                key={block}
-                className="text-white/82 whitespace-pre-line text-lg font-semibold leading-relaxed"
-              >
-                {block}
-              </p>
-            ))}
-          </div>
+          <p className="font-pixel-dot text-xs uppercase tracking-[0.1em] text-[#8ea6ff]">
+            Lyrics
+          </p>
+          <ReleaseLyrics blocks={lyricBlocks} tone="dark" />
         </div>
       </section>
 
@@ -120,14 +166,12 @@ export default function OneKissPage() {
               <p key={line}>{line}</p>
             ))}
           </div>
-          <Link
-            href="/"
-            className="font-pixel-dot w-fit border-b border-black pb-1 text-xs uppercase tracking-[0.1em] lg:col-start-2"
-          >
-            Back to the archive ↙
-          </Link>
+          <ReleaseNavigation
+            currentTitle={song.title}
+            className="lg:col-start-2"
+          />
         </div>
       </section>
-    </main>
+    </ReleaseRoomShell>
   );
 }

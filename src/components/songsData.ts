@@ -10,6 +10,8 @@ export type Song = {
     smartLink?: string;
     tidal?: string;
     pandora?: string;
+    soundCloud?: string;
+    bandcamp?: string;
   };
   lyrics?: Record<string, string>;
   credits?: string;
@@ -20,6 +22,8 @@ export type Song = {
   duration?: string;
   releaseType?: string;
   tagline?: string;
+  releasePath?: string;
+  details?: Array<{ label: string; value: string }>;
 };
 
 const songs: Song[] = [
@@ -28,13 +32,21 @@ const songs: Song[] = [
     artist: "Maxwell Young",
     artwork: "/artworks/1kiss.jpg",
     links: {
-      spotify: "https://open.spotify.com/artist/5HONdRTLNvBjlD2LirKp0q",
+      spotify: "https://open.spotify.com/album/6wfYz79P1goRvwJxX6dI7n",
     },
     releaseDate: "July 24, 2026",
     releaseDateLabel: "Friday",
     duration: "2:03",
     releaseType: "Single",
     tagline: "your hips / our lips / one kiss",
+    releasePath: "/1kiss",
+    details: [
+      { label: "Tempo", value: "136 BPM" },
+      { label: "Key", value: "F#" },
+      { label: "Production", value: "Struan Finley, Eddie Johnston" },
+      { label: "Mix", value: "Eddie Johnston" },
+    ],
+    previewUrl: "/1kiss/1kiss-hook.m4a",
     lyrics: {
       "1kiss": `(dignity)
 (dignity is an important quality everyone should have)
@@ -100,11 +112,23 @@ Ninetynine Records
     title: "Sneakin Drinks Into Bars",
     artist: "Maxwell Young",
     artwork: "/artworks/SneakinDrinksIntoBars.jpg",
-    links: {},
+    links: {
+      spotify: "https://open.spotify.com/album/4mCRgLb8kH89BwEz9TJgFn",
+      appleMusic:
+        "https://music.apple.com/us/album/sneakin-drinks-into-bars/1891343737?i=1891343738",
+      youtube: "https://www.youtube.com/watch?v=3g0o8DgmZvk",
+      smartLink: "https://song.link/us/i/1891343738",
+      tidal: "https://listen.tidal.com/track/513831051",
+      pandora: "https://www.pandora.com/TR:201021494",
+    },
     releaseDate: "April 30, 2026",
     releaseDateLabel: "Thursday",
+    duration: "2:22",
     releaseType: "Single",
-    tagline: "bar lights / field smoke / highlights / out thursday",
+    tagline: "bar lights / field smoke / highlights",
+    releasePath: "/sneakin",
+    previewUrl:
+      "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/3a/e2/79/3ae279a5-1016-1804-1729-f4905275faaf/mzaf_18029532613621274581.plus.aac.p.m4a",
     lyrics: {
       "Sneakin Drinks Into Bars": `sneakin drinks into bars
 sensing it'll fall apart
@@ -137,8 +161,10 @@ you know i love it`,
     artist: "Maxwell Young",
     artwork: "/artworks/Flying.jpg",
     links: {
+      spotify: "https://open.spotify.com/album/2P3O6kGxGFaok9pimEy2cZ",
       appleMusic:
         "https://music.apple.com/us/album/flying/1879773855?i=1879773856",
+      youtube: "https://www.youtube.com/watch?v=R15_NSjNEes",
       smartLink: "https://song.link/us/i/1879773856",
       tidal: "https://listen.tidal.com/track/501878604",
       pandora: "https://www.pandora.com/TR:194654849",
@@ -149,6 +175,7 @@ you know i love it`,
     duration: "1:52",
     releaseType: "Single",
     tagline: "New single. Short, bright, and built to loop.",
+    releasePath: "/flying",
     credits: `Released April 4, 2026
     Flying - Single
     1:52`,
@@ -158,13 +185,57 @@ you know i love it`,
     artist: "Maxwell Young",
     artwork: "/artworks/wintour.webp",
     links: {
-      spotify:
-        "https://open.spotify.com/track/0HVhxu3jp6TkLbqN8fi8Fl?si=96c74e819fc74d44s",
+      spotify: "https://open.spotify.com/track/0HVhxu3jp6TkLbqN8fi8Fl",
       appleMusic:
         "https://music.apple.com/nz/album/wintour/1802842596?i=1802842597",
       youtube: "https://www.youtube.com/watch?v=gHFMkPDehuI",
-      microsite: "https://wintour.maxwellyoung.info/",
+      smartLink: "https://song.link/nz/i/1802842597",
+      tidal: "https://listen.tidal.com/track/424628564",
+      pandora: "https://www.pandora.com/TR:154215661",
     },
+    releaseDate: "April 25, 2025",
+    duration: "1:19",
+    releaseType: "Single",
+    releasePath: "/wintour",
+    details: [
+      { label: "Production", value: "Eddie Johnston" },
+      { label: "Artwork", value: "Elijah Broughton" },
+    ],
+    lyrics: {
+      Wintour: `yea im on anna wintour diet
+plus that shit straight from her privates
+i told u before no crying
+i'll take care of you girl
+
+i walk towards the college
+not rich, so im back at college
+still unbutton the collar
+the label says its top dollar
+and i
+
+girl i just hopped out the way
+and u know why i say that
+girl i just hopped up to you you you
+girl i just hopped out the way way
+i feel like britney spears caus i'm always misunderstood
+take me lucky, take me toxic
+let me jump inside ur pool
+
+i'm on demon, there's no reason why i'm acting such a fool
+gets outrageous on occasion
+i make anybody cool
+
+fuck a slut shame, fuck the gossip
+clean ur shit, shut up and mop it
+there's one thing i'm never stopping
+find myself a worthy option
+run these streets
+i run ur mind
+i tell why, i never lie
+i don't know why u make it feel like that`,
+    },
+    previewUrl:
+      "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/1b/e8/c4/1be8c4b6-2892-ac13-0ce8-478f3a564b8e/mzaf_4067427662252438402.plus.aac.p.m4a",
     credits: `Produced by Maxwell Young & Eddie Johnston
     Artwork by Elijah Broughton`,
     videoLink: "https://www.youtube.com/watch?v=CVpatk_f0tg",
@@ -174,12 +245,24 @@ you know i love it`,
     artist: "Maxwell Young & Thom Haha",
     artwork: "/artworks/TurnItUp.webp",
     links: {
-      spotify: "https://open.spotify.com/track/6J2Kd1FCDTwY5cn0cUCSd3",
+      spotify: "https://open.spotify.com/album/0UIKSfLQNdEyeEiQzQ912Z",
       appleMusic:
-        "https://music.apple.com/nz/album/turn-it-up-single/1730777023",
-      youtube: "https://www.youtube.com/watch?v=wMEr3mcuD7Q",
-      microsite: "https://www.wherehaveyoubeen.blog/",
+        "https://music.apple.com/nz/album/turn-it-up-single/1801225424",
+      youtube: "https://www.youtube.com/watch?v=YzKTnAIGqvg",
+      soundCloud: "https://soundcloud.com/maxwell_young/turn-it-up",
+      microsite: "https://turn-it-up.vercel.app/",
     },
+    releaseDate: "April 4, 2025",
+    duration: "2:17",
+    releaseType: "Single",
+    releasePath: "/turn-it-up",
+    previewUrl:
+      "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/f3/66/49/f36649c5-c8be-156f-3846-ada73a678d74/mzaf_15276852306355963567.plus.aac.p.m4a",
+    details: [
+      { label: "Collaboration", value: "Thom Haha" },
+      { label: "Film", value: "Tom Shackleton" },
+      { label: "Image", value: "MiniDV" },
+    ],
     lyrics: {
       "Turn It Up": `We were staying up  
 No I had enough  
@@ -224,13 +307,19 @@ All the girls with me wanna fuck it n turn up`,
     artist: "Maxwell Young",
     artwork: "/artworks/Freewheelin.webp",
     links: {
-      spotify:
-        "https://open.spotify.com/track/0h3h7w0j3g3k2k3j2j1j0j0j0j0j0j0j0j0j0j0",
+      spotify: "https://open.spotify.com/album/6vSUqTo5igEvTe7SnFmGXU",
       appleMusic:
-        "https://music.apple.com/nz/album/freewheelin-single/1713764743",
-      youtube:
-        "https://www.youtube.com/watch?v=Q-cp7oA-gwI&pp=ygUYaSBqdXN0IHdhbm5hIGZseSBtYXh3ZWxs",
+        "https://music.apple.com/us/album/freewheelin/1776013453?i=1776013455",
+      youtube: "https://www.youtube.com/watch?v=KYIs2B03fuY",
+      smartLink: "https://song.link/us/i/1776013455",
+      tidal: "https://listen.tidal.com/track/395497680",
+      pandora: "https://www.pandora.com/TR:123787788",
     },
+    releaseDate: "June 7, 2024",
+    duration: "1:52",
+    releaseType: "Single",
+    previewUrl:
+      "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/a9/b5/01/a9b501bf-0d4b-633f-5429-6da20395163e/mzaf_6314341374266041642.plus.aac.p.m4a",
     lyrics: {
       "Freewheelin'": `Laying back with you
 I wanna do it all the time now
@@ -279,13 +368,19 @@ You know I'm saying`,
     artist: "Maxwell Young",
     artwork: "/artworks/IJustWannaFly.webp",
     links: {
-      spotify:
-        "https://open.spotify.com/track/7yBIX3tGrBzYOYFpVw7KhQ?si=5fe8124622c74381",
+      spotify: "https://open.spotify.com/track/7yBIX3tGrBzYOYFpVw7KhQ",
       appleMusic:
-        "https://music.apple.com/nz/album/i-just-wanna-fly-single/1713764743",
-      youtube:
-        "https://www.youtube.com/watch?v=Q-cp7oA-gwI&pp=ygUYaSBqdXN0IHdhbm5hIGZseSBtYXh3ZWxs",
+        "https://music.apple.com/us/album/i-just-wanna-fly/1713764743?i=1713764744",
+      youtube: "https://www.youtube.com/watch?v=Q-cp7oA-gwI",
+      smartLink: "https://song.link/us/i/1713764744",
+      tidal: "https://listen.tidal.com/track/324490016",
+      pandora: "https://www.pandora.com/TR:108096241",
     },
+    releaseDate: "November 17, 2023",
+    duration: "1:38",
+    releaseType: "Single",
+    previewUrl:
+      "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview116/v4/3e/9c/f0/3e9cf07e-96dd-bdea-11ea-51436a19c5d2/mzaf_3173747365233227402.plus.aac.p.m4a",
     lyrics: {
       "I Just Wanna Fly": `We've both been here before
   Each time left me alone
@@ -333,12 +428,19 @@ You know I'm saying`,
     artist: "Maxwell Young",
     artwork: "/artworks/Hopeless.webp",
     links: {
-      spotify:
-        "https://open.spotify.com/track/3uFLa70uqobRBUp0fJWCET?si=b5b728d5793d4a71",
-      appleMusic: "https://music.apple.com/nz/album/hopeless-single/1709517721",
-      youtube:
-        "https://www.youtube.com/watch?v=joqiWu97IXk&pp=ygUWaG9wZWxlc3MgbWF4d2VsbCB5b3VuZw%3D%3D",
+      spotify: "https://open.spotify.com/track/3uFLa70uqobRBUp0fJWCET",
+      appleMusic:
+        "https://music.apple.com/us/album/hopeless/1709517721?i=1709517725",
+      youtube: "https://www.youtube.com/watch?v=joqiWu97IXk",
+      smartLink: "https://song.link/us/i/1709517725",
+      tidal: "https://listen.tidal.com/track/318933213",
+      pandora: "https://www.pandora.com/TR:105843492",
     },
+    releaseDate: "October 20, 2023",
+    duration: "1:50",
+    releaseType: "Single",
+    previewUrl:
+      "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview126/v4/8d/e4/d7/8de4d752-1519-d565-9a27-a5cc3982b75c/mzaf_13756937912135469560.plus.aac.p.m4a",
     lyrics: {
       Hopeless: `We were so close
       Know it's been over a year
@@ -389,10 +491,19 @@ You know I'm saying`,
     artist: "Maxwell Young",
     artwork: "/artworks/CallUrName.webp",
     links: {
-      spotify: "https://open.spotify.com/track/3",
-      appleMusic: "https://music.apple.com/track/3",
-      youtube: "https://youtube.com/track/3",
+      spotify: "https://open.spotify.com/album/2CYXsvJQoWiM4KLEC5odf9",
+      appleMusic:
+        "https://music.apple.com/us/album/call-ur-name-go-ahead-single/1707409990",
+      youtube: "https://www.youtube.com/watch?v=8xyT0yHmvXg",
+      smartLink: "https://album.link/us/i/1707409990",
+      tidal: "https://listen.tidal.com/album/316302000",
+      pandora: "https://www.pandora.com/AL:27273490",
     },
+    releaseDate: "October 6, 2023",
+    duration: "4:17",
+    releaseType: "Double single",
+    previewUrl:
+      "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview116/v4/d3/da/be/d3dabedc-d792-25a6-9e1f-967715e14a6c/mzaf_6177786969676094496.plus.aac.p.m4a",
     lyrics: {
       "Call Ur Name": `[Verse 1]
         Guess what
@@ -510,13 +621,19 @@ You know I'm saying`,
     artist: "Maxwell Young",
     artwork: "/artworks/BirthdayGirl.webp",
     links: {
-      spotify:
-        "https://open.spotify.com/album/59B9dUKtmzo3X2GOXyzRbo?si=f6a7c98354ea403a",
+      spotify: "https://open.spotify.com/album/59B9dUKtmzo3X2GOXyzRbo",
       appleMusic:
         "https://music.apple.com/nz/album/birthday-girl-ep/1640587731",
       youtube:
         "https://www.youtube.com/playlist?list=PLUUI0ZZx_T8cOu1MOU3QsjbcRaPXXQwqS",
+      smartLink: "https://album.link/nz/i/1640587731",
+      tidal: "https://listen.tidal.com/album/244006951",
+      pandora: "https://www.pandora.com/AL:17613369",
+      bandcamp: "https://maxwellyoung.bandcamp.com/album/birthday-girl",
     },
+    releaseDate: "September 9, 2022",
+    duration: "16 minutes",
+    releaseType: "EP",
     lyrics: {
       "My Lovely Liar":
         "I'm wishing it were twilight\nYou look fine china\nLook up at faded skylines\nOh, who's my lovely liar?\nOh, who's my lovely liar?\n\nI'm breaking in and\nYou don't got the wings\nIf I dared for it\nAnd I can't handle it\nAnd I tried so much\nYou're all that I had\nAnd now it's too much\nOh baby it's still\nAnd I've been drowning for some time\nOh for some time\n\nSit beside each other\nSee the colours of us\nThere is not another\nTouch and feelings erupt\n\nSing praises to summer skies\nHumidity has run us tired\nTurquoise and the movie bright\nOcean swings and sinks my kite\nBetter ways to lend a hand\nThis candlestick signified shame\nShadowboxed the birthday girl\nPonytails apart, uncurled",
@@ -537,11 +654,17 @@ You know I'm saying`,
     artist: "Maxwell Young",
     artwork: "/artworks/CherryPie.webp",
     links: {
-      spotify: "https://spotify.link",
-      appleMusic: "https://apple.link",
-      youtube:
-        "https://www.youtube.com/watch?v=HwndSiUB6u8&pp=ygUSbm8gNSBtYXh3ZWxsIHlvdW5n",
+      appleMusic:
+        "https://music.apple.com/us/album/cherry-pie-lose-u-too-single/1567069504",
+      youtube: "https://www.youtube.com/watch?v=HwndSiUB6u8",
+      smartLink: "https://album.link/us/i/1567069504",
+      tidal: "https://listen.tidal.com/album/183761792",
+      pandora: "https://www.pandora.com/AL:9283896",
+      bandcamp: "https://maxwellyoung.bandcamp.com/album/cherry-pie-lose-u-too",
     },
+    releaseDate: "May 28, 2021",
+    duration: "5 minutes",
+    releaseType: "Double single",
     lyrics: {
       "Cherry Pie": `[Intro]
   I feel right
@@ -648,13 +771,20 @@ You know I'm saying`,
     artist: "Maxwell Young",
     artwork: "/artworks/Videostar.webp",
     links: {
-      spotify:
-        "https://open.spotify.com/album/5l0XJRyLOJo6Wg1Ukr6RsP?si=c64256d576a14a46",
+      spotify: "https://open.spotify.com/album/5l0XJRyLOJo6Wg1Ukr6RsP",
       appleMusic:
         "https://music.apple.com/us/album/videostar-cleopatra-single/1550140029",
-      youtube:
-        "https://www.youtube.com/watch?v=NPYnIg-fKTg&pp=ygUXY2xlb3BhdHJhIG1heHdlbGwgeW91bmc%3D",
+      youtube: "https://www.youtube.com/watch?v=NPYnIg-fKTg",
+      smartLink: "https://album.link/us/i/1550140029",
+      tidal: "https://listen.tidal.com/album/170512287",
+      pandora: "https://www.pandora.com/AL:7953895",
+      bandcamp: "https://maxwellyoung.bandcamp.com/album/videostar-cleopatra",
     },
+    releaseDate: "February 5, 2021",
+    duration: "5:49",
+    releaseType: "Double single",
+    previewUrl:
+      "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/43/2b/90/432b9089-cacc-1193-4c17-7ca6e84c9471/mzaf_2854893502213579383.plus.aac.p.m4a",
     lyrics: {
       Videostar: `[Intro]
         Videostar
@@ -786,12 +916,15 @@ You know I'm saying`,
     artist: "Maxwell Young",
     artwork: "/artworks/Dread.webp",
     links: {
-      spotify:
-        "https://open.spotify.com/track/4fcuc4RJCp2aogsSsNJDFg?si=2439c01879eb40b4",
+      spotify: "https://open.spotify.com/track/4fcuc4RJCp2aogsSsNJDFg",
       appleMusic: "https://music.apple.com/nz/album/dread-single/1524674904",
-      youtube:
-        "https://www.youtube.com/watch?v=LybW6oYjbRI&pp=ygUTZHJlYWQgbWF4d2VsbCB5b3VuZw%3D%3D",
+      youtube: "https://www.youtube.com/watch?v=LybW6oYjbRI",
+      smartLink: "https://album.link/nz/i/1524674904",
+      pandora: "https://www.pandora.com/AL:6160025",
     },
+    releaseDate: "August 21, 2020",
+    duration: "2 minutes",
+    releaseType: "Single",
     lyrics: {
       "Dread!": `As far as I see in the low light
       As far as I see ideas
@@ -860,13 +993,17 @@ You know I'm saying`,
     artist: "Maxwell Young",
     artwork: "/artworks/DontWasteYourTime.webp",
     links: {
-      spotify:
-        "https://open.spotify.com/track/5qWa7n31Zjh0tcEvtERuZA?si=24bfc78a23634103",
+      spotify: "https://open.spotify.com/track/5qWa7n31Zjh0tcEvtERuZA",
       appleMusic:
         "https://music.apple.com/us/song/dont-waste-your-time/1506799138",
-      youtube:
-        "https://www.youtube.com/watch?v=Ix96hzEV8Nw&pp=ygUcZG9udCB3YXN0ZSB5b3VyIHRpbWUgbWF4d2VsbA%3D%3D",
+      youtube: "https://www.youtube.com/watch?v=Ix96hzEV8Nw",
+      smartLink: "https://song.link/us/i/1506799138",
+      tidal: "https://listen.tidal.com/track/136746746",
+      pandora: "https://www.pandora.com/TR:30423928",
     },
+    releaseDate: "April 24, 2020",
+    duration: "2 minutes",
+    releaseType: "Single",
     lyrics: {
       "Don't Waste Your Time": `Always unimpressed
       And I was always too passive
@@ -933,12 +1070,15 @@ You know I'm saying`,
     artist: "Maxwell Young",
     artwork: "/artworks/No5.webp",
     links: {
-      spotify:
-        "https://open.spotify.com/track/0Qxq1Nf297aBK1k8E9py5P?si=9bf7179b859b493c",
+      spotify: "https://open.spotify.com/track/0Qxq1Nf297aBK1k8E9py5P",
       appleMusic: "https://music.apple.com/nz/album/no-5-single/1484081346",
-      youtube:
-        "https://www.youtube.com/watch?v=pnlLplATAUU&pp=ygUSbm8gNSBtYXh3ZWxsIHlvdW5n",
+      youtube: "https://www.youtube.com/watch?v=pnlLplATAUU",
+      smartLink: "https://album.link/nz/i/1484081346",
+      pandora: "https://www.pandora.com/AL:3701164",
     },
+    releaseDate: "2019",
+    duration: "3:57",
+    releaseType: "Single",
     lyrics: {
       "No. 5": `Try catch me chasing sleep
         I'll tell you openly
@@ -1038,13 +1178,18 @@ You know I'm saying`,
     artist: "Maxwell Young",
     artwork: "/artworks/OnlyRomantics.webp",
     links: {
-      spotify:
-        "https://open.spotify.com/album/3x3tbBAQoCxTHKWMZeVIdZ?si=otfnk5hwSQ-kAlTwxwtrvA",
+      spotify: "https://open.spotify.com/album/3x3tbBAQoCxTHKWMZeVIdZ",
       appleMusic:
         "https://music.apple.com/us/album/only-romantics-ep/1462528934",
       youtube:
         "https://www.youtube.com/playlist?list=PLUUI0ZZx_T8cGcP8Ewu9yzZnK-hezT_F5",
+      smartLink: "https://album.link/us/i/1462528934",
+      tidal: "https://listen.tidal.com/album/108805370",
+      bandcamp: "https://maxwellyoung.bandcamp.com/album/only-romantics",
     },
+    releaseDate: "May 15, 2019",
+    duration: "15 minutes",
+    releaseType: "EP",
     lyrics: {
       Princess: `Princess
 How you soften voices
@@ -1314,12 +1459,15 @@ Been here forevermore`,
     artist: "Maxwell Young",
     artwork: "/artworks/Daydreamer.webp",
     links: {
-      spotify:
-        "https://open.spotify.com/album/1TNWD3no292fUChXiTqxsX?si=pOooW-_wTOm6TDVNHMf1kw",
+      spotify: "https://open.spotify.com/album/1TNWD3no292fUChXiTqxsX",
       appleMusic: "https://music.apple.com/nz/album/daydreamer/1417117886",
       youtube:
         "https://www.youtube.com/playlist?list=PLUUI0ZZx_T8f--xayoxSRsF77weAjMopb",
+      smartLink: "https://album.link/nz/i/1417117886",
+      tidal: "https://listen.tidal.com/album/92539503",
     },
+    releaseDate: "January 11, 2018",
+    releaseType: "Album",
     lyrics: {
       "1999": `1999 was the year that I arrived
 Same year I met you

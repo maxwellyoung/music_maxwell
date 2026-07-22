@@ -7,13 +7,13 @@ import {
   CardContent,
   CardDescription,
   CardHeader,
-  CardTitle,
 } from "~/components/ui/card";
 import { signIn } from "next-auth/react";
 import { Button } from "~/components/ui/button";
 import { useToast } from "~/components/ui/use-toast";
 // @ts-expect-error: No types for detect-inapp
 import InApp from "detect-inapp";
+import Link from "next/link";
 
 export default function AuthForm() {
   const [isLoading, setIsLoading] = useState(false);
@@ -53,9 +53,9 @@ export default function AuthForm() {
     >
       <Card className="w-full max-w-md border border-border/50 bg-background/60 backdrop-blur-sm">
         <CardHeader className="space-y-1 text-center">
-          <CardTitle className="text-2xl font-bold tracking-tight">
+          <h1 className="mb-0 text-2xl font-bold tracking-tight">
             Welcome Back
-          </CardTitle>
+          </h1>
           <CardDescription>
             Sign in with your Google account to join the conversation.
           </CardDescription>
@@ -86,6 +86,9 @@ export default function AuthForm() {
             >
               Remember me for 30 days
             </label>
+            <span id="remember-me-description" className="sr-only">
+              Keep this browser signed in for up to 30 days.
+            </span>
           </div>
 
           <Button
@@ -125,7 +128,11 @@ export default function AuthForm() {
           </Button>
 
           <p className="text-center text-xs text-muted-foreground">
-            By signing in, you agree to our terms of service and privacy policy.
+            By signing in, you agree to the site&apos;s{" "}
+            <Link href="/privacy" className="underline underline-offset-2">
+              privacy policy
+            </Link>
+            .
           </p>
         </CardContent>
       </Card>

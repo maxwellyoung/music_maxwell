@@ -6,6 +6,8 @@ import { ArrowLeft } from "lucide-react";
 export const metadata: Metadata = {
   title: "New Note | Maxwell Young",
   description: "Post a note around Maxwell Young releases.",
+  alternates: { canonical: "/forum/new" },
+  robots: { index: false, follow: false },
 };
 
 export default async function NewTopicPage({

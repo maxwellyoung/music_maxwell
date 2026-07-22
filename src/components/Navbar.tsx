@@ -61,12 +61,12 @@ export default function Navbar() {
           aria-label="Maxwell Young home"
         >
           <Image
-            src="/icons/maxwellyoung2.svg"
+            src="/icons/maxwellyoung2.png"
             alt="Maxwell Young"
-            width={176}
-            height={44}
+            width={1024}
+            height={483}
             priority
-            className={`h-9 w-36 sm:h-11 sm:w-44 ${isHome ? "invert" : ""}`}
+            className={`h-9 w-auto sm:h-11 ${isHome ? "invert" : ""}`}
           />
         </Link>
 

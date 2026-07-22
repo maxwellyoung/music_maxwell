@@ -54,8 +54,11 @@ const Footer = () => {
             </span>
           </Link>
         </div>
-        <div className="text-xs font-bold uppercase tracking-[0.18em] text-white/40">
-          © {new Date().getFullYear()} Maxwell Young · New Zealand
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs font-bold uppercase tracking-[0.18em] text-white/40">
+          <span>© {new Date().getFullYear()} Maxwell Young · New Zealand</span>
+          <Link href="/privacy" className="transition hover:text-white focus:text-white">
+            Privacy
+          </Link>
         </div>
       </div>
     </footer>
