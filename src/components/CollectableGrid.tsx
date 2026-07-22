@@ -24,7 +24,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "./ui/carousel";
-import songs, { type Song } from "./songsData";
+import songs, { type Song } from "~/data/releases";
 import { cn } from "~/lib/utils";
 import { ChevronDown, XIcon } from "lucide-react";
 import { trackSiteEvent } from "~/lib/analytics";
@@ -346,11 +346,7 @@ const releaseFacts = (song: Song) =>
 
 const releaseYear = (song: Song) => song.releaseDate?.match(/\d{4}$/)?.[0];
 
-const releaseAnchor = (song: Song) =>
-  `release-${song.title
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/^-|-$/g, "")}`;
+const releaseAnchor = (song: Song) => `release-${song.slug}`;
 type SheetPalette = {
   paper: string;
   ink: string;
@@ -360,13 +356,13 @@ type SheetPalette = {
 };
 
 const sheetPalettes: Record<string, SheetPalette> = {
-  "Sneakin Drinks Into Bars": {
+  "sneakin-drinks-into-bars": {
     paper: "#f2ede4",
     ink: "#171411",
     accent: "#c43762",
     wash: "#eadfce",
   },
-  "Videostar / Cleopatra": {
+  "videostar-cleopatra": {
     paper: "#101015",
     ink: "#f6f0ea",
     accent: "#ef60c8",
@@ -374,25 +370,21 @@ const sheetPalettes: Record<string, SheetPalette> = {
   },
 };
 
-const fallbackPalettes: SheetPalette[] = [
-  { paper: "#f2ede4", ink: "#171411", accent: "#3157ec", wash: "#e3ddd3" },
-  { paper: "#e8ebdf", ink: "#151812", accent: "#6c45b8", wash: "#d8dccd" },
-  { paper: "#eee4dc", ink: "#1a1512", accent: "#bc4b2d", wash: "#dfd2c8" },
-];
+const neutralSheetPalette: SheetPalette = {
+  paper: "#f2ede4",
+  ink: "#171411",
+  accent: "#3157ec",
+  wash: "#e3ddd3",
+};
 
 const getSheetPalette = (song: Song) => {
-  const position = Math.max(
-    0,
-    songs.findIndex((item) => item.title === song.title),
-  );
-  const world = releaseWorldFor(song.title);
+  const world = releaseWorldFor(song.slug);
   return (
     (world
       ? { ...world.material, texture: world.material.texture }
       : undefined) ??
-    sheetPalettes[song.title] ??
-    fallbackPalettes[position % fallbackPalettes.length] ??
-    fallbackPalettes[0]!
+    sheetPalettes[song.slug] ??
+    neutralSheetPalette
   );
 };
 
@@ -726,7 +718,7 @@ const SongSheet = ({
   };
 
   const palette = getSheetPalette(song);
-  const sheetNumber = songs.findIndex((item) => item.title === song.title) + 1;
+  const sheetNumber = songs.findIndex((item) => item.slug === song.slug) + 1;
 
   return (
     <Dialog
@@ -873,7 +865,9 @@ const SongSheet = ({
                       }
                       className="inline-flex min-h-12 items-center border-b border-current text-sm font-bold transition hover:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sheet-accent)]"
                     >
-                      enter the release room ↗
+                      {song.world
+                        ? "enter the release room ↗"
+                        : "open full artefact ↗"}
                     </Link>
                   )}
                 </div>
@@ -1122,10 +1116,6 @@ const CollectableGrid: React.FC<CollectableGridProps> = ({
                     <h1 className="mb-3 text-5xl leading-[0.9] tracking-[-0.05em] text-foreground sm:text-7xl md:text-8xl">
                       {featuredSong.title}
                     </h1>
-                    <p className="font-reenie max-w-xl text-3xl leading-none text-foreground/65 sm:text-4xl">
-                      {featuredSong.tagline ??
-                        "Listen now, then move through the archive."}
-                    </p>
                   </div>
                   {releaseFacts(featuredSong).length > 0 && (
                     <div className="flex flex-wrap gap-2">
@@ -1168,12 +1158,6 @@ const CollectableGrid: React.FC<CollectableGridProps> = ({
                         Release Site
                       </a>
                     )}
-                    <Link
-                      href="/forum"
-                      className="rounded-full bg-background/60 px-5 py-3 text-sm font-bold uppercase tracking-[0.14em] text-foreground/65 transition hover:-translate-y-0.5 hover:text-accent focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2"
-                    >
-                      Notes
-                    </Link>
                   </div>
                 </div>
 
@@ -1183,13 +1167,13 @@ const CollectableGrid: React.FC<CollectableGridProps> = ({
                   onPointerEnter={() => setAtmosphereSong(featuredSong)}
                   onPointerLeave={() =>
                     setAtmosphereSong((current) =>
-                      current?.title === featuredSong.title ? null : current,
+                      current?.slug === featuredSong.slug ? null : current,
                     )
                   }
                   onFocus={() => setAtmosphereSong(featuredSong)}
                   onBlur={() =>
                     setAtmosphereSong((current) =>
-                      current?.title === featuredSong.title ? null : current,
+                      current?.slug === featuredSong.slug ? null : current,
                     )
                   }
                   className="group relative aspect-square overflow-hidden bg-black shadow-xl shadow-accent/10 outline-none transition hover:-rotate-1 hover:scale-[1.015] focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-4"
@@ -1336,7 +1320,7 @@ const CollectableGrid: React.FC<CollectableGridProps> = ({
               <AnimatePresence initial={false} mode="popLayout">
                 {visibleSongs.map((song, index) => {
                   const archiveIndex = gridSongs.findIndex(
-                    (release) => release.title === song.title,
+                    (release) => release.slug === song.slug,
                   );
                   const isFiltered = activeYear !== "all";
                   const isSolo = isFiltered && visibleSongs.length === 1;
@@ -1361,13 +1345,13 @@ const CollectableGrid: React.FC<CollectableGridProps> = ({
                       onPointerEnter={() => setAtmosphereSong(song)}
                       onPointerLeave={() =>
                         setAtmosphereSong((current) =>
-                          current?.title === song.title ? null : current,
+                          current?.slug === song.slug ? null : current,
                         )
                       }
                       onFocus={() => setAtmosphereSong(song)}
                       onBlur={() =>
                         setAtmosphereSong((current) =>
-                          current?.title === song.title ? null : current,
+                          current?.slug === song.slug ? null : current,
                         )
                       }
                       className={cn(
@@ -1413,7 +1397,7 @@ const CollectableGrid: React.FC<CollectableGridProps> = ({
                           />
                         </motion.div>
                         <div className="absolute inset-0 ring-1 ring-inset ring-black/15" />
-                        {song.releasePath ? (
+                        {song.world && song.releasePath ? (
                           <span className="absolute bottom-3 right-3 border-t border-white/55 bg-black/70 px-2 py-1 text-[9px] font-bold uppercase tracking-[0.14em] text-white backdrop-blur-sm">
                             world ↗
                           </span>
@@ -1488,7 +1472,7 @@ const CollectableGrid: React.FC<CollectableGridProps> = ({
           {selectedSong &&
             (() => {
               const selectedIndex = songs.findIndex(
-                (song) => song.title === selectedSong.title,
+                (song) => song.slug === selectedSong.slug,
               );
               return (
                 <SongSheet

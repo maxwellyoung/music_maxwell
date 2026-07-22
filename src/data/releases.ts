@@ -1,4 +1,5 @@
 export type Song = {
+  slug: string;
   title: string;
   artist: string;
   artwork: string;
@@ -21,13 +22,40 @@ export type Song = {
   releaseDateLabel?: string;
   duration?: string;
   releaseType?: string;
-  tagline?: string;
   releasePath?: string;
+  world?: "signal" | "editorial" | "cart-grid";
   details?: Array<{ label: string; value: string }>;
 };
 
+export type StreamingService =
+  | "spotify"
+  | "appleMusic"
+  | "youtube"
+  | "tidal"
+  | "pandora";
+
+export type StreamingAvailabilityStatus =
+  | "available"
+  | "scheduled"
+  | "unavailable"
+  | "unverified";
+
+export const coreStreamingServices = [
+  "spotify",
+  "appleMusic",
+  "youtube",
+  "tidal",
+  "pandora",
+] as const satisfies readonly StreamingService[];
+
+export const streamingLinkAudit = {
+  verifiedAt: "2026-07-22",
+  source: "Songlink/Odesli cross-platform catalogue and canonical artist links",
+} as const;
+
 const songs: Song[] = [
   {
+    slug: "1kiss",
     title: "1kiss",
     artist: "Maxwell Young",
     artwork: "/artworks/1kiss.jpg",
@@ -38,13 +66,15 @@ const songs: Song[] = [
     releaseDateLabel: "Friday",
     duration: "2:03",
     releaseType: "Single",
-    tagline: "your hips / our lips / one kiss",
     releasePath: "/1kiss",
+    world: "signal",
     details: [
       { label: "Tempo", value: "136 BPM" },
       { label: "Key", value: "F#" },
       { label: "Production", value: "Struan Finley, Eddie Johnston" },
       { label: "Mix", value: "Eddie Johnston" },
+      { label: "Content", value: "Clean" },
+      { label: "Label", value: "Ninetynine Records" },
     ],
     previewUrl: "/1kiss/1kiss-hook.m4a",
     lyrics: {
@@ -109,6 +139,7 @@ Ninetynine Records
 © ℗ 2026 Maxwell Young`,
   },
   {
+    slug: "sneakin-drinks-into-bars",
     title: "Sneakin Drinks Into Bars",
     artist: "Maxwell Young",
     artwork: "/artworks/SneakinDrinksIntoBars.jpg",
@@ -125,7 +156,6 @@ Ninetynine Records
     releaseDateLabel: "Thursday",
     duration: "2:22",
     releaseType: "Single",
-    tagline: "bar lights / field smoke / highlights",
     releasePath: "/sneakin",
     previewUrl:
       "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/3a/e2/79/3ae279a5-1016-1804-1729-f4905275faaf/mzaf_18029532613621274581.plus.aac.p.m4a",
@@ -152,11 +182,9 @@ field smoke
 highlights
 you know i love it`,
     },
-    credits: `Releases April 30, 2026
-    Sneakin Drinks Into Bars - Single
-    Artwork: sneakin-base`,
   },
   {
+    slug: "flying",
     title: "Flying",
     artist: "Maxwell Young",
     artwork: "/artworks/Flying.jpg",
@@ -174,13 +202,9 @@ you know i love it`,
     releaseDate: "April 4, 2026",
     duration: "1:52",
     releaseType: "Single",
-    tagline: "New single. Short, bright, and built to loop.",
-    releasePath: "/flying",
-    credits: `Released April 4, 2026
-    Flying - Single
-    1:52`,
   },
   {
+    slug: "wintour",
     title: "Wintour",
     artist: "Maxwell Young",
     artwork: "/artworks/wintour.webp",
@@ -197,6 +221,7 @@ you know i love it`,
     duration: "1:19",
     releaseType: "Single",
     releasePath: "/wintour",
+    world: "editorial",
     details: [
       { label: "Production", value: "Eddie Johnston" },
       { label: "Artwork", value: "Elijah Broughton" },
@@ -241,6 +266,7 @@ i don't know why u make it feel like that`,
     videoLink: "https://www.youtube.com/watch?v=CVpatk_f0tg",
   },
   {
+    slug: "turn-it-up",
     title: "Turn It Up",
     artist: "Maxwell Young & Thom Haha",
     artwork: "/artworks/TurnItUp.webp",
@@ -251,11 +277,13 @@ i don't know why u make it feel like that`,
       youtube: "https://www.youtube.com/watch?v=YzKTnAIGqvg",
       soundCloud: "https://soundcloud.com/maxwell_young/turn-it-up",
       microsite: "https://turn-it-up.vercel.app/",
+      pandora: "https://www.pandora.com/AL:45758653",
     },
     releaseDate: "April 4, 2025",
     duration: "2:17",
     releaseType: "Single",
     releasePath: "/turn-it-up",
+    world: "cart-grid",
     previewUrl:
       "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/f3/66/49/f36649c5-c8be-156f-3846-ada73a678d74/mzaf_15276852306355963567.plus.aac.p.m4a",
     details: [
@@ -303,6 +331,7 @@ All the girls with me wanna fuck it n turn up`,
     videoLink: "https://www.youtube.com/watch?v=YzKTnAIGqvg&feature=youtu.be",
   },
   {
+    slug: "freewheelin",
     title: "Freewheelin'",
     artist: "Maxwell Young",
     artwork: "/artworks/Freewheelin.webp",
@@ -318,6 +347,7 @@ All the girls with me wanna fuck it n turn up`,
     releaseDate: "June 7, 2024",
     duration: "1:52",
     releaseType: "Single",
+    releasePath: "/flying",
     previewUrl:
       "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/a9/b5/01/a9b501bf-0d4b-633f-5429-6da20395163e/mzaf_6314341374266041642.plus.aac.p.m4a",
     lyrics: {
@@ -364,6 +394,7 @@ You know I'm saying`,
     videoLink: "https://www.youtube.com/watch?v=KYIs2B03fuY",
   },
   {
+    slug: "i-just-wanna-fly",
     title: "I Just Wanna Fly",
     artist: "Maxwell Young",
     artwork: "/artworks/IJustWannaFly.webp",
@@ -424,6 +455,7 @@ You know I'm saying`,
     videoLink: "https://www.youtube.com/watch?v=Q-cp7oA-gwI",
   },
   {
+    slug: "hopeless",
     title: "Hopeless",
     artist: "Maxwell Young",
     artwork: "/artworks/Hopeless.webp",
@@ -487,6 +519,7 @@ You know I'm saying`,
     Artwork by Millie Dow`,
   },
   {
+    slug: "call-ur-name-go-ahead",
     title: "Call Ur Name / Go Ahead",
     artist: "Maxwell Young",
     artwork: "/artworks/CallUrName.webp",
@@ -617,6 +650,7 @@ You know I'm saying`,
     videoLink: "https://www.youtube.com/watch?v=8xyT0yHmvXg",
   },
   {
+    slug: "birthday-girl",
     title: "Birthday Girl",
     artist: "Maxwell Young",
     artwork: "/artworks/BirthdayGirl.webp",
@@ -650,6 +684,7 @@ You know I'm saying`,
       "Produced by Maxwell Young & Eddie Johnston\n'Floodlight' & 'Believe' co-produced by Josh Naley\nPiano on 'Did You Have to Grow?' by Solomon Gutteridge\nMastered by Ike Zwanikken\nArtwork by Tom Shackleton",
   },
   {
+    slug: "cherry-pie-lose-u-too",
     title: "Cherry Pie / Lose U Too",
     artist: "Maxwell Young",
     artwork: "/artworks/CherryPie.webp",
@@ -767,6 +802,7 @@ You know I'm saying`,
   },
 
   {
+    slug: "videostar-cleopatra",
     title: "Videostar / Cleopatra",
     artist: "Maxwell Young",
     artwork: "/artworks/Videostar.webp",
@@ -912,6 +948,7 @@ You know I'm saying`,
     videoLink: "https://www.youtube.com/watch?v=NPYnIg-fKTg",
   },
   {
+    slug: "dread",
     title: "Dread!",
     artist: "Maxwell Young",
     artwork: "/artworks/Dread.webp",
@@ -989,6 +1026,7 @@ You know I'm saying`,
     videoLink: "https://www.youtube.com/watch?v=LybW6oYjbRI",
   },
   {
+    slug: "dont-waste-your-time",
     title: "Don't Waste Your Time",
     artist: "Maxwell Young",
     artwork: "/artworks/DontWasteYourTime.webp",
@@ -1066,6 +1104,7 @@ You know I'm saying`,
     videoLink: "https://www.youtube.com/watch?v=Ix96hzEV8Nw",
   },
   {
+    slug: "no-5",
     title: "No. 5",
     artist: "Maxwell Young",
     artwork: "/artworks/No5.webp",
@@ -1174,6 +1213,7 @@ You know I'm saying`,
     videoLink: "https://www.youtube.com/watch?v=pnlLplATAUU",
   },
   {
+    slug: "only-romantics",
     title: "Only Romantics",
     artist: "Maxwell Young",
     artwork: "/artworks/OnlyRomantics.webp",
@@ -1455,6 +1495,7 @@ Been here forevermore`,
     Saxophone on 'Forevermore' by Theo Hertzig`,
   },
   {
+    slug: "daydreamer",
     title: "Daydreamer",
     artist: "Maxwell Young",
     artwork: "/artworks/Daydreamer.webp",
@@ -1979,9 +2020,80 @@ Just stay with me a while`,
     
     Additional Vocals on 'Evergreen' by Eddie "Lontalius" Johnston
     Additional Production on 'Evergreen' by Aidan "Instupendo" Peterson
-    Additional Vocals on 'No Social Butterfly by Ambré
+    Additional Vocals on 'No Social Butterfly' by Ambré
     'Midnight' featuring Claire "Clairo" Cottrill`,
   },
 ];
 
 export default songs;
+
+export const releaseBySlug = Object.fromEntries(
+  songs.map((release) => [release.slug, release]),
+) as Record<string, Song>;
+
+export const getReleaseBySlug = (slug: string) => releaseBySlug[slug];
+
+export const releaseRooms = songs.filter((release) => release.world);
+
+const linkExceptions: Record<
+  string,
+  Partial<Record<StreamingService, Exclude<StreamingAvailabilityStatus, "available">>>
+> = {
+  "1kiss": {
+    appleMusic: "scheduled",
+    youtube: "scheduled",
+    tidal: "scheduled",
+    pandora: "scheduled",
+  },
+  "turn-it-up": { tidal: "unavailable" },
+  "cherry-pie-lose-u-too": { spotify: "unavailable" },
+  dread: { tidal: "unavailable" },
+  "no-5": { tidal: "unavailable" },
+  "only-romantics": { pandora: "unavailable" },
+  daydreamer: { pandora: "unavailable" },
+};
+
+export const getStreamingAvailability = (
+  release: Song,
+  service: StreamingService,
+): {
+  status: StreamingAvailabilityStatus;
+  href?: string;
+  verifiedAt: string;
+  source: string;
+} => ({
+  status: release.links[service]
+    ? "available"
+    : (linkExceptions[release.slug]?.[service] ?? "unverified"),
+  href: release.links[service],
+  ...streamingLinkAudit,
+});
+
+export const validateReleaseCatalogue = (): string[] => {
+  const issues: string[] = [];
+  const slugs = new Set<string>();
+
+  for (const release of songs) {
+    if (!release.slug) issues.push(`${release.title}: missing slug`);
+    if (slugs.has(release.slug)) issues.push(`${release.title}: duplicate slug`);
+    slugs.add(release.slug);
+
+    if (!release.title.trim()) issues.push(`${release.slug}: missing title`);
+    if (!release.artist.trim()) issues.push(`${release.slug}: missing artist`);
+    if (!release.artwork.startsWith("/")) {
+      issues.push(`${release.slug}: artwork must be a public path`);
+    }
+
+    for (const [service, href] of Object.entries(release.links)) {
+      if (href && !href.startsWith("https://")) {
+        issues.push(`${release.slug}: ${service} must use https`);
+      }
+    }
+
+    if (release.world && !release.releasePath) {
+      issues.push(`${release.slug}: release world is missing its path`);
+    }
+  }
+
+  return issues;
+};

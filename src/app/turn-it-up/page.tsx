@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import JsonLd from "~/components/JsonLd";
@@ -7,32 +6,18 @@ import ReleaseLyrics from "~/components/ReleaseLyrics";
 import ReleaseNavigation from "~/components/ReleaseNavigation";
 import ReleaseRoomShell from "~/components/ReleaseRoomShell";
 import TrackedLink from "~/components/TrackedLink";
-import songs from "~/components/songsData";
+import { getReleaseBySlug } from "~/data/releases";
+import { createReleaseMetadata } from "~/lib/releaseMetadata";
 
 const TurnItUpCartGame = dynamic(() => import("~/components/TurnItUpCartGame"));
 
-export const metadata: Metadata = {
+const song = getReleaseBySlug("turn-it-up")!;
+
+export const metadata = createReleaseMetadata(song, {
   title: "Turn It Up — Maxwell Young & Thom Haha",
   description:
     "Turn It Up by Maxwell Young and Thom Haha, released April 4, 2025. Music, official film, lyrics, credits, and cart game.",
-  alternates: { canonical: "/turn-it-up" },
-  openGraph: {
-    type: "music.song",
-    title: "Turn It Up | Maxwell Young & Thom Haha",
-    url: "/turn-it-up",
-    images: [
-      {
-        url: "/artworks/TurnItUp.webp",
-        width: 1200,
-        height: 1200,
-        alt: "Turn It Up artwork",
-      },
-    ],
-  },
-  twitter: { card: "summary_large_image", images: ["/artworks/TurnItUp.webp"] },
-};
-
-const song = songs.find((item) => item.title === "Turn It Up")!;
+});
 const lyricBlocks = (song.lyrics?.[song.title] ?? "").split("\n\n");
 const creditLines = song.credits?.split("\n").map((line) => line.trim()) ?? [];
 
@@ -45,7 +30,7 @@ const links = [
 
 export default function TurnItUpPage() {
   return (
-    <ReleaseRoomShell title={song.title}>
+    <ReleaseRoomShell slug={song.slug}>
       <JsonLd
         data={{
           "@context": "https://schema.org",
@@ -207,7 +192,7 @@ export default function TurnItUpPage() {
             </TrackedLink>
           </div>
           <ReleaseNavigation
-            currentTitle={song.title}
+            currentSlug={song.slug}
             className="lg:col-start-2"
           />
         </div>

@@ -4,34 +4,10 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { RefreshCw, Play, X } from "lucide-react";
 import Image from "next/image";
 import { useRef, useState } from "react";
+import { oneKissPublicMedia } from "~/data/releaseMedia";
 import { trackSiteEvent } from "~/lib/analytics";
 
-const films = [
-  {
-    id: "01_hook",
-    label: "the hook",
-    line: "your hips / our lips / one kiss",
-    stem: "01-hook-designed-18s-9x16",
-  },
-  {
-    id: "02_worry",
-    label: "the worry",
-    line: "every step ahead / i fall back",
-    stem: "02-worry-designed-18s-9x16",
-  },
-  {
-    id: "03_beauty",
-    label: "the beauty",
-    line: "god you look good tonight",
-    stem: "03-beauty-designed-18s-9x16",
-  },
-  {
-    id: "04_out_now",
-    label: "the release",
-    line: "turning my head real crazy",
-    stem: "04-out-now-designed-18s-9x16",
-  },
-] as const;
+const films = oneKissPublicMedia.films;
 
 export default function CampaignReel() {
   const [selectedIndex, setSelectedIndex] = useState(0);

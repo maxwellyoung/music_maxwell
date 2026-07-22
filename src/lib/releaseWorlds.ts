@@ -14,13 +14,11 @@ export type ReleaseMaterial = {
 };
 
 export type ReleaseWorld = {
-  href: string;
   material: ReleaseMaterial;
 };
 
 export const releaseWorlds: Record<string, ReleaseWorld> = {
   "1kiss": {
-    href: "/1kiss",
     material: {
       paper: "#0b0e17",
       ink: "#f5f8ff",
@@ -29,28 +27,7 @@ export const releaseWorlds: Record<string, ReleaseWorld> = {
       texture: "signal",
     },
   },
-  "Sneakin Drinks Into Bars": {
-    href: "/sneakin",
-    material: {
-      paper: "#f2ede4",
-      ink: "#171411",
-      accent: "#c43762",
-      wash: "#eadfce",
-      texture: "field-note",
-    },
-  },
-  Flying: {
-    href: "/flying",
-    material: {
-      paper: "#dce9f2",
-      ink: "#102230",
-      accent: "#315b76",
-      wash: "#cbdde9",
-      texture: "air",
-    },
-  },
-  Wintour: {
-    href: "/wintour",
+  wintour: {
     material: {
       paper: "#efede6",
       ink: "#111111",
@@ -59,8 +36,7 @@ export const releaseWorlds: Record<string, ReleaseWorld> = {
       texture: "editorial",
     },
   },
-  "Turn It Up": {
-    href: "/turn-it-up",
+  "turn-it-up": {
     material: {
       paper: "#f4f5ef",
       ink: "#152018",
@@ -71,4 +47,4 @@ export const releaseWorlds: Record<string, ReleaseWorld> = {
   },
 };
 
-export const releaseWorldFor = (title: string) => releaseWorlds[title];
+export const releaseWorldFor = (slug: string) => releaseWorlds[slug];

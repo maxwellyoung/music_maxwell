@@ -1,23 +1,16 @@
 import Link from "next/link";
+import { releaseRooms } from "~/data/releases";
 import { cn } from "~/lib/utils";
 
-const releaseRooms = [
-  { title: "1kiss", href: "/1kiss" },
-  { title: "Sneakin Drinks Into Bars", href: "/sneakin" },
-  { title: "Flying", href: "/flying" },
-  { title: "Wintour", href: "/wintour" },
-  { title: "Turn It Up", href: "/turn-it-up" },
-];
-
 export default function ReleaseNavigation({
-  currentTitle,
+  currentSlug,
   className,
 }: {
-  currentTitle: string;
+  currentSlug: string;
   className?: string;
 }) {
   const currentIndex = releaseRooms.findIndex(
-    (release) => release.title === currentTitle,
+    (release) => release.slug === currentSlug,
   );
   const newer = currentIndex > 0 ? releaseRooms[currentIndex - 1] : undefined;
   const older =
@@ -36,7 +29,7 @@ export default function ReleaseNavigation({
       <div className="border-current/20 flex min-h-20 items-center border-r py-3 pr-4">
         {newer && (
           <Link
-            href={newer.href}
+            href={newer.releasePath!}
             className="group text-sm font-bold leading-tight transition hover:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-current"
           >
             <span className="block text-xs font-medium opacity-45">
@@ -55,7 +48,7 @@ export default function ReleaseNavigation({
       <div className="sm:border-current/20 flex min-h-20 items-center justify-end py-3 pl-4 text-right sm:border-l">
         {older && (
           <Link
-            href={older.href}
+            href={older.releasePath!}
             className="group text-sm font-bold leading-tight transition hover:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-current"
           >
             <span className="block text-xs font-medium opacity-45">

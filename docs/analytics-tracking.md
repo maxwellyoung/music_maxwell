@@ -11,6 +11,8 @@ The site uses Vercel Web Analytics for anonymous page views and a deliberately s
 | `streaming_destination_clicked` | Visitor leaves for a listening destination | `release`, `service`, `location`, optional `state` | Which paths convert attention into listening? |
 | `campaign_film_opened` | Visitor deliberately opens a campaign film | `release`, `film_id` | Which campaign idea earns a view? |
 | `campaign_film_completed` | Campaign film reaches its end | `release`, `film_id` | Which film holds through 18 seconds? |
+| `film_opened` | Visitor opens an official release film | `release`, `location` | Which release rooms send attention to film? |
+| `release_site_opened` | Visitor opens an external release microsite | `release`, `location` | Does a distinct release world earn a visit? |
 
 Implementation rules:
 

@@ -3,15 +3,15 @@ import { cn } from "~/lib/utils";
 import { releaseWorldFor } from "~/lib/releaseWorlds";
 
 export default function ReleaseRoomShell({
-  title,
+  slug,
   children,
   className,
 }: {
-  title: string;
+  slug: string;
   children: ReactNode;
   className?: string;
 }) {
-  const world = releaseWorldFor(title);
+  const world = releaseWorldFor(slug);
 
   if (!world) {
     return <main className={cn("min-h-screen", className)}>{children}</main>;

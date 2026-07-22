@@ -5,11 +5,10 @@ import { AnimatePresence, motion } from "framer-motion";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
 
 export default function Navbar() {
   const pathname = usePathname();
-  const router = useRouter();
   const { data: session } = useSession();
   const isForum = pathname.startsWith("/forum");
   const isHome = pathname === "/";
@@ -24,35 +23,22 @@ export default function Navbar() {
     >
       <nav className="mx-auto flex h-20 w-full max-w-[1440px] items-center justify-between px-5 sm:h-24 sm:px-8 lg:px-12">
         <div className="flex flex-1 items-center">
-          <button
-            onClick={() => void router.push(isForum ? "/" : "/forum")}
+          <Link
+            href="/#archive"
             className="group flex min-h-11 items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] opacity-70 transition hover:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-current"
-            aria-label={isForum ? "Go to releases" : "Go to notes"}
-            title={isForum ? "Releases" : "Notes"}
+            aria-label="Go to release archive"
+            title="Archive"
           >
-            {isForum ? (
-              <Image
-                src="/icons/musicnote.svg"
-                alt=""
-                width={254}
-                height={352}
-                className={`h-5 w-5 object-contain transition ${isHome ? "invert" : ""}`}
-                aria-hidden="true"
-              />
-            ) : (
-              <Image
-                src="/icons/speech-bubble.svg"
-                alt=""
-                width={286}
-                height={375}
-                className={`h-5 w-5 object-contain transition ${isHome ? "invert" : ""}`}
-                aria-hidden="true"
-              />
-            )}
-            <span className="hidden sm:inline">
-              {isForum ? "Releases" : "Notes"}
-            </span>
-          </button>
+            <Image
+              src="/icons/musicnote.svg"
+              alt=""
+              width={254}
+              height={352}
+              className={`h-5 w-5 object-contain transition ${isHome ? "invert" : ""}`}
+              aria-hidden="true"
+            />
+            <span className="hidden sm:inline">Archive</span>
+          </Link>
         </div>
 
         <Link

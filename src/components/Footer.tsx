@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Instagram, Twitter, Youtube, MessageCircle } from "lucide-react";
+import { Instagram, Twitter, Youtube } from "lucide-react";
 
 const Footer = () => {
   return (
@@ -41,16 +41,6 @@ const Footer = () => {
 
             <span className="pointer-events-none absolute -top-8 left-1/2 z-20 -translate-x-1/2 whitespace-nowrap rounded bg-black/80 px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100 group-focus:opacity-100">
               YouTube
-            </span>
-          </Link>
-          <Link
-            href="/forum"
-            className="group relative text-white/55 transition-colors hover:text-[#ff8eaa] focus:text-[#ff8eaa]"
-            aria-label="Notes"
-          >
-            <MessageCircle className="h-6 w-6" />
-            <span className="pointer-events-none absolute -top-8 left-1/2 z-20 -translate-x-1/2 whitespace-nowrap rounded bg-black/80 px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100 group-focus:opacity-100">
-              Notes
             </span>
           </Link>
         </div>

@@ -1,27 +1,35 @@
 # Status
 
-Last updated: 2026-04-28
+Last updated: 2026-07-22
 
 ## Current State
 
-- Music Maxwell is registered as a sensitive public music-site lane.
-- Current git worktree is clean at the time this status file was added.
+- Music Maxwell remains the sensitive public music-site lane.
+- The deployed implementation was recovered onto `codex/music-site-consolidation-20260722` before consolidation work began.
+- The public model is archive → artefact sheet → optional release world.
+- Only 1kiss, Wintour, and Turn It Up are declared release worlds.
+- Listener Notes remains available by direct route but is not promoted globally while empty.
 
 ## Next Useful Move
 
-- Run `pnpm lint` before public-site edits.
-- Confirm current Vercel/env linkage before deployment or production claims.
+- Keep Video Lab and other downstream tools on the versioned `/releases/manifest.json` boundary.
+- Reconcile the separate dirty `preview` checkout only after this branch is safely pushed.
 
 ## Blockers / Risks
 
+- A second dirty checkout still contains an alternative implementation and must not be overwritten casually.
 - Env recovery history means secrets should be treated carefully and rotated before production use if stale.
 - Public music pages must not leak unreleased release planning.
 
 ## Verification
 
-- `pnpm lint` passed on 2026-04-28 with the existing ESLintRC deprecation warning.
+- `pnpm release:check` passes on Node 24.14.0: 5 catalogue/manifest tests, TypeScript, ESLint, and the optimized Next.js build.
+- Production-mode local requests return 200 for `/`, `/1kiss`, `/turn-it-up`, `/wintour`, `/releases/manifest.json`, and `/sitemap.xml`.
+- Browser QA covers the archive year filters, the Videostar/Cleopatra lyrics selector, 1kiss film playback, the Turn It Up cart run, the Wintour crop comparator, and mobile archive/sheet layouts.
+- The manifest contains 17 stable public release records and four approved 1kiss film derivatives.
 
 ## Notes For Codex
 
 - Read `AGENTS.md` first.
 - Use Liner for release truth; use this repo for the public site implementation.
+- One production site, one clean branch, one typed release registry; never deploy from a dirty worktree.

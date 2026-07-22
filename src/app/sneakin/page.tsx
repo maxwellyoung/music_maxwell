@@ -1,45 +1,24 @@
-import type { Metadata } from "next";
 import Image from "next/image";
 import JsonLd from "~/components/JsonLd";
 import ReleaseLyrics from "~/components/ReleaseLyrics";
 import ReleaseNavigation from "~/components/ReleaseNavigation";
 import ReleaseRoomShell from "~/components/ReleaseRoomShell";
 import TrackedLink from "~/components/TrackedLink";
-import songs from "~/components/songsData";
+import { getReleaseBySlug } from "~/data/releases";
+import { createReleaseMetadata } from "~/lib/releaseMetadata";
 
-export const metadata: Metadata = {
-  title: "Sneakin Drinks Into Bars | Maxwell Young",
+const song = getReleaseBySlug("sneakin-drinks-into-bars")!;
+
+export const metadata = createReleaseMetadata(song, {
   description:
-    "Sneakin Drinks Into Bars by Maxwell Young, released April 30, 2026. Artwork, lyrics, and credits.",
-  alternates: { canonical: "/sneakin" },
-  openGraph: {
-    type: "music.song",
-    title: "Sneakin Drinks Into Bars | Maxwell Young",
-    description: "bar lights / field smoke / highlights",
-    url: "/sneakin",
-    images: [
-      {
-        url: "/artworks/SneakinDrinksIntoBars.jpg",
-        width: 1200,
-        height: 1200,
-        alt: "Sneakin Drinks Into Bars artwork",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    images: ["/artworks/SneakinDrinksIntoBars.jpg"],
-  },
-};
-
-const song = songs.find((item) => item.title === "Sneakin Drinks Into Bars")!;
+    "Sneakin Drinks Into Bars by Maxwell Young, released April 30, 2026. Artwork, lyrics, and listening links.",
+});
 const lyricBlocks = (song.lyrics?.[song.title] ?? "").split("\n\n");
-const creditLines = song.credits?.split("\n") ?? [];
 
 export default function SneakinPage() {
   return (
     <ReleaseRoomShell
-      title={song.title}
+      slug={song.slug}
       className="!bg-[#f2ede4] !text-[#141210]"
     >
       <JsonLd
@@ -69,9 +48,6 @@ export default function SneakinPage() {
             <h1 className="font-pixel-line mt-5 max-w-[10ch] text-[clamp(4.4rem,10vw,8.5rem)] leading-[0.77] tracking-[-0.045em]">
               Sneakin Drinks Into Bars
             </h1>
-            <p className="font-reenie mt-9 max-w-[16ch] text-4xl leading-[0.9] text-[#c43762] sm:text-5xl">
-              bar lights / field smoke / highlights
-            </p>
             <TrackedLink
               href={song.links.appleMusic!}
               target="_blank"
@@ -108,31 +84,6 @@ export default function SneakinPage() {
         </div>
       </section>
 
-      <section className="border-b border-black/20 bg-[#151719] text-[#f6f0e6]">
-        <div className="mx-auto grid max-w-[1180px] gap-8 px-5 py-14 sm:px-8 lg:grid-cols-[0.26fr_0.74fr] lg:px-12">
-          <p className="font-pixel-dot text-[10px] uppercase tracking-[0.15em] text-[#ef789b]">
-            Field notes
-          </p>
-          <div className="grid gap-px bg-white/15 sm:grid-cols-3">
-            {["call off work", "mirror and my match", "find the thread"].map(
-              (line, index) => (
-                <div
-                  key={line}
-                  className="min-h-40 bg-[#151719] p-5 sm:min-h-52"
-                >
-                  <span className="font-pixel-dot text-[10px] text-white/35">
-                    0{index + 1}
-                  </span>
-                  <p className="font-reenie mt-12 text-4xl leading-[0.88] text-white/80">
-                    {line}
-                  </p>
-                </div>
-              ),
-            )}
-          </div>
-        </div>
-      </section>
-
       <section className="border-b border-black/20">
         <div className="mx-auto grid max-w-[1180px] gap-8 px-5 py-14 sm:px-8 lg:grid-cols-[0.26fr_0.74fr] lg:px-12">
           <p className="font-pixel-dot text-[10px] uppercase tracking-[0.15em] text-[#c43762]">
@@ -144,16 +95,8 @@ export default function SneakinPage() {
 
       <section>
         <div className="mx-auto grid max-w-[1180px] gap-8 px-5 py-14 sm:px-8 lg:grid-cols-[0.26fr_0.74fr] lg:px-12">
-          <p className="font-pixel-dot text-[10px] uppercase tracking-[0.15em]">
-            Credits
-          </p>
-          <div className="grid gap-3 text-lg font-bold">
-            {creditLines.map((line) => (
-              <p key={line}>{line.trim()}</p>
-            ))}
-          </div>
           <ReleaseNavigation
-            currentTitle={song.title}
+            currentSlug={song.slug}
             className="lg:col-start-2"
           />
         </div>

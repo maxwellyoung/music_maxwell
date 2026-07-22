@@ -1,41 +1,24 @@
-import type { Metadata } from "next";
 import Image from "next/image";
 import JsonLd from "~/components/JsonLd";
 import ReleaseAudio from "~/components/ReleaseAudio";
 import ReleaseNavigation from "~/components/ReleaseNavigation";
 import ReleaseRoomShell from "~/components/ReleaseRoomShell";
 import TrackedLink from "~/components/TrackedLink";
-import songs from "~/components/songsData";
+import { getReleaseBySlug } from "~/data/releases";
+import { createReleaseMetadata } from "~/lib/releaseMetadata";
 
-export const metadata: Metadata = {
-  title: "Flying | Maxwell Young",
+const song = getReleaseBySlug("flying")!;
+
+export const metadata = createReleaseMetadata(song, {
   description:
     "Flying by Maxwell Young, released April 4, 2026. Listen, view the artwork, and read the release details.",
-  alternates: { canonical: "/flying" },
-  openGraph: {
-    type: "music.song",
-    title: "Flying | Maxwell Young",
-    description: "Flying by Maxwell Young — 01:52, released April 4, 2026.",
-    url: "/flying",
-    images: [
-      {
-        url: "/artworks/Flying.jpg",
-        width: 1200,
-        height: 1200,
-        alt: "Flying artwork",
-      },
-    ],
-  },
-  twitter: { card: "summary_large_image", images: ["/artworks/Flying.jpg"] },
-};
-
-const song = songs.find((item) => item.title === "Flying")!;
+});
 const smartLink = song.links.smartLink!;
 
 export default function FlyingPage() {
   return (
     <ReleaseRoomShell
-      title={song.title}
+      slug={song.slug}
       className="!bg-[#dce9f2] !text-[#102230]"
     >
       <JsonLd
@@ -127,16 +110,8 @@ export default function FlyingPage() {
 
       <section className="px-5 py-14 sm:px-8 lg:px-12">
         <div className="mx-auto grid max-w-[1160px] gap-8 lg:grid-cols-[0.28fr_0.72fr]">
-          <p className="font-pixel-dot text-[10px] uppercase tracking-[0.15em] text-[#315b76]">
-            Credits
-          </p>
-          <div className="space-y-2 text-lg font-bold">
-            <p>Maxwell Young — Flying</p>
-            <p>Released April 4, 2026</p>
-            <p>Single · 1:52</p>
-          </div>
           <ReleaseNavigation
-            currentTitle={song.title}
+            currentSlug={song.slug}
             className="lg:col-start-2"
           />
         </div>

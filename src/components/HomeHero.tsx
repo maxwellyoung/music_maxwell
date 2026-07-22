@@ -13,18 +13,25 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { trackSiteEvent } from "~/lib/analytics";
 
-const lyricCues = [
-  { at: 0, line: "i'm on the way down" },
-  { at: 2.3, line: "it's like this midas" },
-  { at: 4.5, line: "your hips / our lips" },
-  { at: 6.6, line: "one kiss" },
-  { at: 8.3, line: "i couldn't wait" },
-  { at: 10.4, line: "now it's priceless" },
-  { at: 12.4, line: "smiling stunned since miley" },
-  { at: 15.2, line: "one kiss" },
-] as const;
+type HomeHeroProps = {
+  release: {
+    slug: string;
+    title: string;
+    artist: string;
+    releaseDate?: string;
+    releasePath: string;
+  };
+  presentation: {
+    background: string;
+    still: string;
+    excerpt: string;
+    excerptSeconds: number;
+    standbyLine: string;
+    cues: readonly { at: number; line: string }[];
+  };
+};
 
-export default function HomeHero() {
+export default function HomeHero({ release, presentation }: HomeHeroProps) {
   const heroRef = useRef<HTMLElement>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
   const reduceMotion = useReducedMotion();
@@ -32,6 +39,7 @@ export default function HomeHero() {
   const [progress, setProgress] = useState(0);
   const [cueIndex, setCueIndex] = useState(2);
   const excerptStarted = useRef(false);
+  const excerptCompleted = useRef(false);
   const { scrollYProgress } = useScroll({
     target: heroRef,
     offset: ["start start", "end start"],
@@ -56,7 +64,7 @@ export default function HomeHero() {
         if (!excerptStarted.current) {
           excerptStarted.current = true;
           trackSiteEvent("audio_excerpt_started", {
-            release: "1kiss",
+            release: release.slug,
             location: "home_hero",
           });
         }
@@ -72,9 +80,11 @@ export default function HomeHero() {
   const syncPlayback = () => {
     const audio = audioRef.current;
     if (!audio) return;
-    const duration = Number.isFinite(audio.duration) ? audio.duration : 18;
+    const duration = Number.isFinite(audio.duration)
+      ? audio.duration
+      : presentation.excerptSeconds;
     setProgress(Math.min(audio.currentTime / duration, 1));
-    const nextCue = lyricCues.reduce(
+    const nextCue = presentation.cues.reduce(
       (latest, cue, index) => (cue.at <= audio.currentTime ? index : latest),
       0,
     );
@@ -88,7 +98,7 @@ export default function HomeHero() {
       className="relative isolate min-h-svh overflow-hidden bg-[#05070c] text-[#f5f8ff]"
     >
       <Image
-        src="/1kiss/signal-bloom-blue.webp"
+        src={presentation.background}
         alt=""
         fill
         priority
@@ -115,8 +125,8 @@ export default function HomeHero() {
           }
         >
           <Image
-            src="/1kiss/still-hook.jpg"
-            alt="Maxwell Young performing 1kiss"
+            src={presentation.still}
+            alt={`${release.artist} performing ${release.title}`}
             fill
             priority
             sizes="(min-width: 640px) 58vw, 100vw"
@@ -142,10 +152,10 @@ export default function HomeHero() {
           className="relative z-10"
         >
           <p className="font-pixel-dot text-[10px] uppercase tracking-[0.16em] text-[#b7c8eb] sm:text-xs">
-            Maxwell Young / 24.07.26
+            {release.artist} / {release.releaseDate}
           </p>
           <h1 className="font-pixel-line mb-0 mt-3 text-[clamp(5.5rem,14vw,11rem)] leading-[0.74] tracking-[-0.05em] text-[#f5f8ff]">
-            1kiss
+            {release.title}
           </h1>
         </motion.div>
 
@@ -158,7 +168,11 @@ export default function HomeHero() {
           <div className="min-h-[6.5rem] sm:min-h-[7.5rem]" aria-hidden="true">
             <AnimatePresence mode="wait" initial={false}>
               <motion.p
-                key={isPlaying ? lyricCues[cueIndex]?.line : "your hips / our lips / one kiss"}
+                key={
+                  isPlaying
+                    ? presentation.cues[cueIndex]?.line
+                    : presentation.standbyLine
+                }
                 initial={{ opacity: 0, y: 12 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -8 }}
@@ -166,12 +180,14 @@ export default function HomeHero() {
                 className="font-pixel-line max-w-[15ch] text-3xl uppercase leading-[0.88] sm:text-4xl lg:text-5xl"
               >
                 {isPlaying
-                  ? lyricCues[cueIndex]?.line
-                  : "your hips / our lips / one kiss"}
+                  ? presentation.cues[cueIndex]?.line
+                  : presentation.standbyLine}
               </motion.p>
             </AnimatePresence>
           </div>
-          <p className="sr-only">An 18-second excerpt from 1kiss.</p>
+          <p className="sr-only">
+            An {presentation.excerptSeconds}-second excerpt from {release.title}.
+          </p>
           <div className="grid max-w-sm gap-4">
             <button
               type="button"
@@ -183,7 +199,12 @@ export default function HomeHero() {
                 {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="ml-0.5 h-4 w-4" />}
               </span>
               <span>{isPlaying ? "pause the hook" : "hear 18 seconds"}</span>
-              <span className="ml-auto tabular-nums text-white/55">00:{String(Math.round(progress * 18)).padStart(2, "0")}</span>
+              <span className="ml-auto tabular-nums text-white/55">
+                00:
+                {String(
+                  Math.round(progress * presentation.excerptSeconds),
+                ).padStart(2, "0")}
+              </span>
             </button>
             <div className="h-px overflow-hidden bg-white/20" aria-hidden="true">
               <div
@@ -192,16 +213,16 @@ export default function HomeHero() {
               />
             </div>
             <Link
-              href="/1kiss"
+              href={release.releasePath}
               onClick={() =>
                 trackSiteEvent("release_entered", {
-                  release: "1kiss",
+                  release: release.slug,
                   location: "home_hero",
                 })
               }
               className="font-pixel-dot group inline-flex min-h-12 items-center gap-3 border-b border-[#f5f8ff] pb-1 text-xs uppercase tracking-[0.1em] transition hover:border-[#8ea6ff] hover:text-[#8ea6ff] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
             >
-              enter 1kiss
+              enter {release.title}
               <ArrowDownRight
                 className="h-5 w-5 transition-transform group-hover:translate-x-1 group-hover:translate-y-1"
                 aria-hidden="true"
@@ -212,16 +233,19 @@ export default function HomeHero() {
       </motion.div>
       <audio
         ref={audioRef}
-        src="/1kiss/1kiss-hook.m4a"
+        src={presentation.excerpt}
         preload="metadata"
         onTimeUpdate={syncPlayback}
         onPause={() => setIsPlaying(false)}
         onPlay={() => setIsPlaying(true)}
         onEnded={() => {
-          trackSiteEvent("audio_excerpt_completed", {
-            release: "1kiss",
-            location: "home_hero",
-          });
+          if (!excerptCompleted.current) {
+            excerptCompleted.current = true;
+            trackSiteEvent("audio_excerpt_completed", {
+              release: release.slug,
+              location: "home_hero",
+            });
+          }
           setIsPlaying(false);
           setProgress(0);
           setCueIndex(2);

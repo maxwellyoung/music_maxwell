@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import JsonLd from "~/components/JsonLd";
@@ -6,36 +5,18 @@ import ReleaseMoment from "~/components/ReleaseMoment";
 import ReleaseLyrics from "~/components/ReleaseLyrics";
 import ReleaseNavigation from "~/components/ReleaseNavigation";
 import ReleaseRoomShell from "~/components/ReleaseRoomShell";
-import songs from "~/components/songsData";
+import { getReleaseBySlug } from "~/data/releases";
+import { createReleaseMetadata } from "~/lib/releaseMetadata";
 
 const CampaignReel = dynamic(() => import("~/components/CampaignReel"));
 
-export const metadata: Metadata = {
-  title: "1kiss — lyrics, artwork, credits, and short films | Maxwell Young",
-  description:
-    "1kiss by Maxwell Young: an electric pop and alt-R&B single released July 24, 2026, with lyrics, credits, artwork, and four short films.",
-  alternates: { canonical: "/1kiss" },
-  openGraph: {
-    type: "music.song",
-    title: "1kiss | Maxwell Young",
-    description: "your hips / our lips / one kiss",
-    url: "/1kiss",
-    images: [
-      {
-        url: "/1kiss/key-art-feed.png",
-        width: 1080,
-        height: 1350,
-        alt: "1kiss by Maxwell Young",
-      },
-    ],
-  },
-  twitter: {
-    card: "summary_large_image",
-    images: ["/1kiss/key-art-feed.png"],
-  },
-};
+const song = getReleaseBySlug("1kiss")!;
 
-const song = songs.find((item) => item.title === "1kiss")!;
+export const metadata = createReleaseMetadata(song, {
+  title: "1kiss | Maxwell Young",
+  description:
+    "1kiss by Maxwell Young, released July 24, 2026. Lyrics, credits, artwork, and four short films.",
+});
 const spotifyUrl = song.links.spotify!;
 const lyric = song.lyrics?.["1kiss"] ?? "";
 const lyricBlocks = lyric.split("\n\n");
@@ -44,7 +25,7 @@ const creditLines = song.credits?.split("\n") ?? [];
 export default function OneKissPage() {
   return (
     <ReleaseRoomShell
-      title={song.title}
+      slug={song.slug}
       className="one-kiss-brand !bg-[#05070c] !text-[#f5f8ff]"
     >
       <JsonLd
@@ -111,17 +92,16 @@ export default function OneKissPage() {
       <section className="border-b border-white/15 bg-[#f2ede4] text-[#07090d]">
         <div className="mx-auto grid max-w-[1120px] gap-8 px-5 py-14 sm:px-8 lg:grid-cols-[0.28fr_0.72fr] lg:px-12">
           <p className="font-pixel-dot text-xs uppercase tracking-[0.14em]">
-            The record
+            Details
           </p>
           <div>
-            <p className="font-pixel-line max-w-4xl text-2xl leading-[1.02] sm:text-3xl">
-              Bright, hyper-tuned pop and alt-R&amp;B with club-cut vocal chops,
-              a bouncy 136 BPM pulse, and a hook built to replay.
-            </p>
-            <div className="font-pixel-dot mt-8 grid gap-4 border-y border-black/15 py-5 text-[11px] uppercase tracking-[0.1em] sm:grid-cols-3">
+            <div className="font-pixel-dot grid gap-4 border-y border-black/15 py-5 text-[11px] uppercase tracking-[0.1em] sm:grid-cols-3">
+              <span>Single</span>
               <span>02:03</span>
               <span>136 BPM</span>
-              <span>F# / clean</span>
+              <span>F#</span>
+              <span>Clean</span>
+              <span>Ninetynine Records</span>
             </div>
           </div>
         </div>
@@ -167,7 +147,7 @@ export default function OneKissPage() {
             ))}
           </div>
           <ReleaseNavigation
-            currentTitle={song.title}
+            currentSlug={song.slug}
             className="lg:col-start-2"
           />
         </div>

@@ -1,4 +1,3 @@
-import type { Metadata } from "next";
 import Image from "next/image";
 import JsonLd from "~/components/JsonLd";
 import ReleaseAudio from "~/components/ReleaseAudio";
@@ -7,30 +6,16 @@ import ReleaseNavigation from "~/components/ReleaseNavigation";
 import ReleaseRoomShell from "~/components/ReleaseRoomShell";
 import TrackedLink from "~/components/TrackedLink";
 import WintourCoverCut from "~/components/WintourCoverCut";
-import songs from "~/components/songsData";
+import { getReleaseBySlug } from "~/data/releases";
+import { createReleaseMetadata } from "~/lib/releaseMetadata";
 
-export const metadata: Metadata = {
+const song = getReleaseBySlug("wintour")!;
+
+export const metadata = createReleaseMetadata(song, {
   title: "Wintour — Maxwell Young",
   description:
     "Wintour by Maxwell Young, released April 25, 2025. Artwork, film, credits, and listening links.",
-  alternates: { canonical: "/wintour" },
-  openGraph: {
-    type: "music.song",
-    title: "Wintour | Maxwell Young",
-    url: "/wintour",
-    images: [
-      {
-        url: "/artworks/wintour.webp",
-        width: 1200,
-        height: 1200,
-        alt: "Wintour artwork",
-      },
-    ],
-  },
-  twitter: { card: "summary_large_image", images: ["/artworks/wintour.webp"] },
-};
-
-const song = songs.find((item) => item.title === "Wintour")!;
+});
 const lyricBlocks = (song.lyrics?.[song.title] ?? "").split("\n\n");
 const links = [
   ["Spotify", song.links.spotify],
@@ -41,7 +26,7 @@ const links = [
 
 export default function WintourPage() {
   return (
-    <ReleaseRoomShell title={song.title}>
+    <ReleaseRoomShell slug={song.slug}>
       <JsonLd
         data={{
           "@context": "https://schema.org",
@@ -188,7 +173,7 @@ export default function WintourPage() {
             <p>Artwork by Elijah Broughton</p>
           </div>
           <ReleaseNavigation
-            currentTitle={song.title}
+            currentSlug={song.slug}
             className="lg:col-start-2"
           />
         </div>

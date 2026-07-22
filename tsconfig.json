@@ -4,6 +4,7 @@
     "esModuleInterop": true,
     "skipLibCheck": true,
     "target": "es2022",
+    "allowImportingTsExtensions": true,
     "allowJs": false,
     "resolveJsonModule": true,
     "moduleDetection": "force",
