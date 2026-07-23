@@ -2,11 +2,12 @@ import { oneKissReleaseMedia } from "../data/releaseMedia.ts";
 import releases, {
   coreStreamingServices,
   getStreamingAvailability,
+  getStreamingDestinations,
 } from "../data/releases.ts";
 
 export const createPublicReleaseManifest = () => ({
   schemaVersion: 1 as const,
-  catalogueVersion: "2026-07-23",
+  catalogueVersion: "2026-07-24",
   releases: releases.map((release) => {
     const isOneKiss = release.slug === "1kiss";
 
@@ -33,6 +34,7 @@ export const createPublicReleaseManifest = () => ({
           getStreamingAvailability(release, service),
         ]),
       ),
+      streamingDestinations: getStreamingDestinations(release),
       media: {
         audioMasterSha256: isOneKiss
           ? oneKissReleaseMedia.audioMaster.sha256

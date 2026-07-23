@@ -5,7 +5,7 @@ import ReleaseLyrics from "~/components/ReleaseLyrics";
 import ReleaseNavigation from "~/components/ReleaseNavigation";
 import ReleaseRoomShell from "~/components/ReleaseRoomShell";
 import { oneKissReleaseMedia } from "~/data/releaseMedia";
-import { getReleaseBySlug } from "~/data/releases";
+import { getReleaseBySlug, getStreamingDestinations } from "~/data/releases";
 import { createReleaseMetadata } from "~/lib/releaseMetadata";
 
 const song = getReleaseBySlug("1kiss")!;
@@ -15,7 +15,7 @@ export const metadata = createReleaseMetadata(song, {
   description:
     "1kiss by Maxwell Young, released July 24, 2026. Lyrics, credits, artwork, and listening links.",
 });
-const spotifyUrl = song.links.spotify!;
+const streamingDestinations = getStreamingDestinations(song);
 const lyric = song.lyrics?.["1kiss"] ?? "";
 const lyricBlocks = lyric.split("\n\n");
 const creditLines = song.credits?.split("\n") ?? [];
@@ -42,7 +42,7 @@ export default function OneKissPage() {
             "@id": "https://www.maxwellyoung.info/#artist",
             name: "Maxwell Young",
           },
-          sameAs: spotifyUrl,
+          sameAs: streamingDestinations.map(({ href }) => href),
           inAlbum: {
             "@type": "MusicAlbum",
             name: "1kiss",
@@ -78,7 +78,7 @@ export default function OneKissPage() {
               ))}
             </div>
             <div className="mt-12 border-t border-black/15 pt-8">
-              <ReleaseMoment spotifyUrl={spotifyUrl} />
+              <ReleaseMoment links={song.links} />
             </div>
           </div>
           <ReleaseNavigation

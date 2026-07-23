@@ -24,7 +24,7 @@ import {
   CarouselNext,
   CarouselPrevious,
 } from "./ui/carousel";
-import songs, { type Song } from "~/data/releases";
+import songs, { getStreamingDestinations, type Song } from "~/data/releases";
 import { cn } from "~/lib/utils";
 import { ChevronDown, XIcon } from "lucide-react";
 import { trackSiteEvent } from "~/lib/analytics";
@@ -69,9 +69,7 @@ const BlurImage = ({
       quality={75}
       className={cn(
         "object-cover transition-[opacity,transform] duration-300 ease-out",
-        isLoading
-          ? "scale-[1.015] opacity-70"
-          : "scale-100 opacity-100",
+        isLoading ? "scale-[1.015] opacity-70" : "scale-100 opacity-100",
         className,
       )}
       onLoad={() => setLoading(false)}
@@ -153,9 +151,7 @@ const YouTubeThumbnail = ({
         quality={75}
         className={cn(
           "object-cover transition-[opacity,transform] duration-300 ease-out",
-          isLoading
-            ? "scale-[1.015] opacity-70"
-            : "scale-100 opacity-100",
+          isLoading ? "scale-[1.015] opacity-70" : "scale-100 opacity-100",
         )}
         onLoad={() => setLoading(false)}
         placeholder="blur"
@@ -276,56 +272,12 @@ const streamingLinks = (song: Song): StreamingLink[] =>
           className: "",
         }
       : null,
-    song.links.spotify
-      ? {
-          label: "Spotify",
-          href: song.links.spotify,
-          className: "",
-        }
-      : null,
-    song.links.appleMusic
-      ? {
-          label: "Apple Music",
-          shortLabel: "Apple",
-          href: song.links.appleMusic,
-          className: "",
-        }
-      : null,
-    song.links.youtube
-      ? {
-          label: "YouTube",
-          href: song.links.youtube,
-          className: "",
-        }
-      : null,
-    song.links.tidal
-      ? {
-          label: "Tidal",
-          href: song.links.tidal,
-          className: "",
-        }
-      : null,
-    song.links.pandora
-      ? {
-          label: "Pandora",
-          href: song.links.pandora,
-          className: "",
-        }
-      : null,
-    song.links.soundCloud
-      ? {
-          label: "SoundCloud",
-          href: song.links.soundCloud,
-          className: "",
-        }
-      : null,
-    song.links.bandcamp
-      ? {
-          label: "Bandcamp",
-          href: song.links.bandcamp,
-          className: "",
-        }
-      : null,
+    ...getStreamingDestinations(song).map((destination) => ({
+      label: destination.label,
+      shortLabel: destination.shortLabel,
+      href: destination.href,
+      className: "",
+    })),
     song.links.microsite
       ? {
           label: "Release Site",

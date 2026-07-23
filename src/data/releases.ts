@@ -7,9 +7,11 @@ export type Song = {
     spotify?: string;
     appleMusic?: string;
     youtube?: string;
+    youtubeMusic?: string;
     microsite?: string;
     smartLink?: string;
     tidal?: string;
+    deezer?: string;
     pandora?: string;
     soundCloud?: string;
     bandcamp?: string;
@@ -50,9 +52,89 @@ export const coreStreamingServices = [
 ] as const satisfies readonly StreamingService[];
 
 export const streamingLinkAudit = {
-  verifiedAt: "2026-07-22",
-  source: "Songlink/Odesli cross-platform catalogue and canonical artist links",
+  verifiedAt: "2026-07-24",
+  source:
+    "Official DSP pages and APIs, cross-checked with Songlink/Odesli catalogue mappings",
 } as const;
+
+export type StreamingDestination = {
+  service: string;
+  label: string;
+  shortLabel?: string;
+  href: string;
+};
+
+export const getStreamingDestinations = (
+  release: Pick<Song, "links">,
+): StreamingDestination[] =>
+  [
+    release.links.spotify
+      ? {
+          service: "spotify",
+          label: "Spotify",
+          href: release.links.spotify,
+        }
+      : null,
+    release.links.appleMusic
+      ? {
+          service: "apple_music",
+          label: "Apple Music",
+          shortLabel: "Apple",
+          href: release.links.appleMusic,
+        }
+      : null,
+    release.links.youtubeMusic
+      ? {
+          service: "youtube_music",
+          label: "YouTube Music",
+          shortLabel: "YouTube",
+          href: release.links.youtubeMusic,
+        }
+      : release.links.youtube
+        ? {
+            service: "youtube",
+            label: "YouTube",
+            href: release.links.youtube,
+          }
+        : null,
+    release.links.tidal
+      ? {
+          service: "tidal",
+          label: "TIDAL",
+          href: release.links.tidal,
+        }
+      : null,
+    release.links.deezer
+      ? {
+          service: "deezer",
+          label: "Deezer",
+          href: release.links.deezer,
+        }
+      : null,
+    release.links.pandora
+      ? {
+          service: "pandora",
+          label: "Pandora",
+          href: release.links.pandora,
+        }
+      : null,
+    release.links.soundCloud
+      ? {
+          service: "soundcloud",
+          label: "SoundCloud",
+          href: release.links.soundCloud,
+        }
+      : null,
+    release.links.bandcamp
+      ? {
+          service: "bandcamp",
+          label: "Bandcamp",
+          href: release.links.bandcamp,
+        }
+      : null,
+  ].filter(
+    (destination): destination is StreamingDestination => destination !== null,
+  );
 
 const songs: Song[] = [
   {
@@ -62,6 +144,12 @@ const songs: Song[] = [
     artwork: "/artworks/1kiss.jpg",
     links: {
       spotify: "https://open.spotify.com/album/6wfYz79P1goRvwJxX6dI7n",
+      appleMusic:
+        "https://music.apple.com/nz/album/1kiss/6783834681?i=6783834682",
+      youtube: "https://www.youtube.com/watch?v=nyYu3LQ9b50",
+      youtubeMusic: "https://music.youtube.com/watch?v=nyYu3LQ9b50",
+      tidal: "https://tidal.com/track/536251647",
+      deezer: "https://www.deezer.com/track/4110752161",
     },
     releaseDate: "July 24, 2026",
     releaseDateLabel: "Friday",
@@ -2086,9 +2174,6 @@ const linkExceptions: Record<
   >
 > = {
   "1kiss": {
-    appleMusic: "scheduled",
-    youtube: "scheduled",
-    tidal: "scheduled",
     pandora: "scheduled",
   },
   "turn-it-up": { tidal: "unavailable" },

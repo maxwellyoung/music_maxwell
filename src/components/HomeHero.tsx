@@ -12,6 +12,7 @@ import {
 import OneKissBlakeField from "~/components/OneKissBlakeField";
 import OneKissHeroVisual from "~/components/OneKissHeroVisual";
 import ReleaseMoment from "~/components/ReleaseMoment";
+import type { Song } from "~/data/releases";
 import { findTimedLyrics } from "~/data/timedLyrics";
 import { trackSiteEvent } from "~/lib/analytics";
 import { getTimedLyricFrame } from "~/lib/timedLyrics";
@@ -24,7 +25,7 @@ type HomeHeroProps = {
     artist: string;
     releaseDate?: string;
     releasePath: string;
-    spotifyUrl: string;
+    links: Song["links"];
   };
   presentation: {
     excerpt: string;
@@ -214,7 +215,7 @@ export default function HomeHero({ release, presentation }: HomeHeroProps) {
             .
           </p>
           <div className="grid max-w-sm gap-4">
-            <ReleaseMoment spotifyUrl={release.spotifyUrl} compact />
+            <ReleaseMoment links={release.links} compact />
             <button
               type="button"
               onClick={() => void togglePlayback()}

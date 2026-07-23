@@ -18,6 +18,7 @@ import releases, {
   coreStreamingServices,
   getReleaseBySlug,
   getStreamingAvailability,
+  getStreamingDestinations,
   releaseRooms,
   validateReleaseCatalogue,
 } from "./releases.ts";
@@ -49,6 +50,54 @@ test("core streaming omissions are explicit rather than silent", () => {
   assert.deepEqual(unverified, []);
   assert.equal(
     getStreamingAvailability(getReleaseBySlug("1kiss")!, "appleMusic").status,
+    "available",
+  );
+});
+
+test("1kiss exposes only exact verified streaming destinations", () => {
+  const release = getReleaseBySlug("1kiss")!;
+
+  assert.deepEqual(
+    getStreamingDestinations(release).map(({ service, label, href }) => ({
+      service,
+      label,
+      href,
+    })),
+    [
+      {
+        service: "spotify",
+        label: "Spotify",
+        href: "https://open.spotify.com/album/6wfYz79P1goRvwJxX6dI7n",
+      },
+      {
+        service: "apple_music",
+        label: "Apple Music",
+        href: "https://music.apple.com/nz/album/1kiss/6783834681?i=6783834682",
+      },
+      {
+        service: "youtube_music",
+        label: "YouTube Music",
+        href: "https://music.youtube.com/watch?v=nyYu3LQ9b50",
+      },
+      {
+        service: "tidal",
+        label: "TIDAL",
+        href: "https://tidal.com/track/536251647",
+      },
+      {
+        service: "deezer",
+        label: "Deezer",
+        href: "https://www.deezer.com/track/4110752161",
+      },
+    ],
+  );
+  assert.equal(
+    getStreamingAvailability(release, "youtube").status,
+    "available",
+  );
+  assert.equal(getStreamingAvailability(release, "tidal").status, "available");
+  assert.equal(
+    getStreamingAvailability(release, "pandora").status,
     "scheduled",
   );
 });
@@ -74,6 +123,10 @@ test("the downstream manifest exposes only stable public release data", () => {
   assert.equal(oneKiss.publication.lyrics, "public");
   assert.equal(oneKiss.publication.films, "none");
   assert.equal(oneKiss.media.films.length, 0);
+  assert.deepEqual(
+    oneKiss.streamingDestinations.map(({ service }) => service),
+    ["spotify", "apple_music", "youtube_music", "tidal", "deezer"],
+  );
   assert.equal(
     oneKiss.media.audioMasterSha256,
     "ad136da37bf6ba9ecfd7dd2603ed807355fcbbdfdfe1456c00aabfb15951efde",
