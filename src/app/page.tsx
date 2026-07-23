@@ -26,6 +26,7 @@ export default function Home() {
           artist: featuredRelease.artist,
           releaseDate: featuredRelease.releaseDate,
           releasePath: featuredRelease.releasePath!,
+          spotifyUrl: featuredRelease.links.spotify!,
         }}
         presentation={siteConfig.featuredHero}
       />

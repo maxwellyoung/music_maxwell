@@ -2,12 +2,11 @@
 
 import { useEffect, useState } from "react";
 import { trackSiteEvent } from "~/lib/analytics";
-
-const RELEASE_AT = new Date("2026-07-23T23:00:00+12:00").getTime();
-
-function isReleased() {
-  return Date.now() >= RELEASE_AT;
-}
+import {
+  getReleasePhase,
+  ONE_KISS_RELEASE_DATE,
+  type ReleasePhase,
+} from "~/lib/releasePhase";
 
 type ReleaseMomentProps = {
   spotifyUrl: string;
@@ -18,40 +17,23 @@ export default function ReleaseMoment({
   spotifyUrl,
   compact = false,
 }: ReleaseMomentProps) {
-  const [released, setReleased] = useState(false);
+  const [phase, setPhase] = useState<ReleasePhase>("upcoming");
 
   useEffect(() => {
-    const refresh = () => setReleased(isReleased());
+    const refresh = () =>
+      setPhase(getReleasePhase(ONE_KISS_RELEASE_DATE, new Date()));
     refresh();
-    const timeout = window.setInterval(refresh, 30000);
+    const timeout = window.setInterval(refresh, 60000);
     return () => window.clearInterval(timeout);
   }, []);
 
-  if (!released) {
-    return (
-      <div className={compact ? "flex items-center gap-3" : "grid gap-3"}>
-        <span className="font-pixel-dot text-[10px] uppercase tracking-[0.12em] text-[#b7c8eb]">
-          lands Thu 11pm NZST
-        </span>
-        <a
-          href={spotifyUrl}
-          target="_blank"
-          rel="noopener noreferrer"
-          onClick={() =>
-            trackSiteEvent("streaming_destination_clicked", {
-              release: "1kiss",
-              service: "spotify",
-              location: compact ? "home" : "release_room",
-              state: "pre_release",
-            })
-          }
-          className="font-pixel-dot w-fit border-b border-current pb-1 text-xs uppercase tracking-[0.1em] transition hover:text-[#8ea6ff] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-current"
-        >
-          open on Spotify ↗
-        </a>
-      </div>
-    );
-  }
+  const status =
+    phase === "upcoming"
+      ? "July 24"
+      : phase === "release_day"
+        ? "out today"
+        : "out now";
+  const action = phase === "upcoming" ? "open on Spotify" : "listen on Spotify";
 
   return (
     <a
@@ -63,12 +45,25 @@ export default function ReleaseMoment({
           release: "1kiss",
           service: "spotify",
           location: compact ? "home" : "release_room",
-          state: "out_now",
+          state: phase,
         })
       }
-      className="font-pixel-dot inline-flex min-h-12 w-fit items-center border border-current px-5 text-xs uppercase tracking-[0.1em] transition hover:border-[#8ea6ff] hover:text-[#8ea6ff] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-current"
+      className={
+        compact
+          ? "font-pixel-dot group flex min-h-12 w-full items-center gap-3 border border-[#f5f8ff] bg-[#f5f8ff] px-4 text-xs uppercase tracking-[0.1em] text-[#05070c] transition hover:border-[#8ea6ff] hover:bg-[#8ea6ff] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+          : "font-pixel-dot inline-flex min-h-12 w-fit items-center border border-current px-5 text-xs uppercase tracking-[0.1em] transition hover:border-[#8ea6ff] hover:text-[#8ea6ff] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-current"
+      }
+      aria-label={`${status} — ${action}`}
     >
-      out now — listen on Spotify ↗
+      <span aria-live="polite">{status}</span>
+      <span aria-hidden="true">—</span>
+      <span>{action}</span>
+      <span
+        className={compact ? "ml-auto transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" : "ml-2"}
+        aria-hidden="true"
+      >
+        ↗
+      </span>
     </a>
   );
 }

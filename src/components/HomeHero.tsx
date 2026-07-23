@@ -11,6 +11,7 @@ import Link from "next/link";
 import { type CSSProperties, useEffect, useRef, useState } from "react";
 import OneKissBlakeField from "~/components/OneKissBlakeField";
 import OneKissHeroVisual from "~/components/OneKissHeroVisual";
+import ReleaseMoment from "~/components/ReleaseMoment";
 import { findTimedLyrics } from "~/data/timedLyrics";
 import { trackSiteEvent } from "~/lib/analytics";
 import { getTimedLyricFrame } from "~/lib/timedLyrics";
@@ -22,6 +23,7 @@ type HomeHeroProps = {
     artist: string;
     releaseDate?: string;
     releasePath: string;
+    spotifyUrl: string;
   };
   presentation: {
     excerpt: string;
@@ -162,7 +164,7 @@ export default function HomeHero({ release, presentation }: HomeHeroProps) {
           initial={{ opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.25, duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-          className="relative z-10 mt-auto grid gap-7 pt-[48vh] sm:max-w-[38%] sm:pt-0"
+          className="relative z-10 mt-auto grid gap-5 pt-[48vh] sm:max-w-[38%] sm:pt-0"
         >
           <div className="min-h-[6.5rem] sm:min-h-[7.5rem]" aria-hidden="true">
             <motion.p
@@ -207,6 +209,7 @@ export default function HomeHero({ release, presentation }: HomeHeroProps) {
             .
           </p>
           <div className="grid max-w-sm gap-4">
+            <ReleaseMoment spotifyUrl={release.spotifyUrl} compact />
             <button
               type="button"
               onClick={() => void togglePlayback()}
