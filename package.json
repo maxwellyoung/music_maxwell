@@ -7,10 +7,11 @@
     "build": "prisma generate && next build",
     "dev": "next dev",
     "lint": "ESLINT_USE_FLAT_CONFIG=false eslint src tailwind.config.ts --ext .ts,.tsx,.js",
-    "release:check": "pnpm test && pnpm typecheck && pnpm lint && pnpm build",
-    "test": "node --test --experimental-strip-types src/data/releases.test.ts",
+    "release:check": "pnpm test && pnpm audit:quiz && pnpm typecheck && pnpm lint && pnpm build",
+    "test": "node --experimental-strip-types --test src/data/releases.test.ts src/app/quiz/quiz-engine.test.ts",
     "typecheck": "tsc --noEmit",
     "verify:clean": "node scripts/verify-clean.mjs",
+    "audit:quiz": "node --experimental-strip-types scripts/audit-quiz.ts",
     "start": "next start"
   },
   "dependencies": {
