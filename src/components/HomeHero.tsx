@@ -2,6 +2,7 @@
 
 import {
   motion,
+  useInView,
   useReducedMotion,
   useScroll,
   useTransform,
@@ -24,7 +25,7 @@ type HomeHeroProps = {
     releasePath: string;
   };
   presentation: {
-    still: string;
+    stills: readonly [string, ...string[]];
     excerpt: string;
     excerptSeconds: number;
     standbyLine: string;
@@ -37,9 +38,11 @@ export default function HomeHero({ release, presentation }: HomeHeroProps) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const animationFrame = useRef(0);
   const reduceMotion = useReducedMotion();
+  const isHeroInView = useInView(heroRef, { amount: 0.25 });
   const [isPlaying, setIsPlaying] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
+  const [portraitIndex, setPortraitIndex] = useState(0);
   const excerptStarted = useRef(false);
   const excerptCompleted = useRef(false);
   const { scrollYProgress } = useScroll({
@@ -59,6 +62,13 @@ export default function HomeHero({ release, presentation }: HomeHeroProps) {
     : undefined;
   const duration = timedLyrics?.duration ?? presentation.excerptSeconds;
   const progress = Math.min(currentTime / duration, 1);
+  const portraitSegmentSeconds =
+    presentation.excerptSeconds / presentation.stills.length;
+  const syncedPortraitIndex = Math.min(
+    Math.floor(currentTime / portraitSegmentSeconds),
+    presentation.stills.length - 1,
+  );
+  const activePortraitIndex = isPlaying ? syncedPortraitIndex : portraitIndex;
   const cueIndex = presentation.cues.reduce(
     (latest, cue, index) => (cue.at <= currentTime ? index : latest),
     0,
@@ -71,6 +81,24 @@ export default function HomeHero({ release, presentation }: HomeHeroProps) {
     const audio = audioRef.current;
     return () => audio?.pause();
   }, []);
+
+  useEffect(() => {
+    if (
+      reduceMotion ||
+      hasStarted ||
+      !isHeroInView ||
+      presentation.stills.length < 2
+    ) {
+      return;
+    }
+
+    const interval = window.setInterval(() => {
+      if (document.visibilityState !== "visible") return;
+      setPortraitIndex((current) => (current + 1) % presentation.stills.length);
+    }, 6800);
+
+    return () => window.clearInterval(interval);
+  }, [hasStarted, isHeroInView, presentation.stills.length, reduceMotion]);
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -93,6 +121,12 @@ export default function HomeHero({ release, presentation }: HomeHeroProps) {
 
     if (audio.paused) {
       try {
+        setPortraitIndex(
+          Math.min(
+            Math.floor(audio.currentTime / portraitSegmentSeconds),
+            presentation.stills.length - 1,
+          ),
+        );
         await audio.play();
         setIsPlaying(true);
         setHasStarted(true);
@@ -133,6 +167,8 @@ export default function HomeHero({ release, presentation }: HomeHeroProps) {
       <motion.div
         className="absolute inset-x-0 top-[31%] h-[38vh] overflow-hidden border-y border-white/20 sm:left-[42%] sm:right-0 sm:top-[20%] sm:h-[57vh] sm:border"
         style={{ y: frameY }}
+        role="img"
+        aria-label={`${release.artist} performing ${release.title}`}
       >
         <motion.div
           className="absolute inset-0"
@@ -147,14 +183,29 @@ export default function HomeHero({ release, presentation }: HomeHeroProps) {
               : { duration: 0.2 }
           }
         >
-          <Image
-            src={presentation.still}
-            alt={`${release.artist} performing ${release.title}`}
-            fill
-            priority
-            sizes="(min-width: 640px) 58vw, 100vw"
-            className="object-cover object-center"
-          />
+          {presentation.stills.map((still, index) => (
+            <motion.div
+              aria-hidden={index !== activePortraitIndex}
+              className="absolute inset-0"
+              initial={false}
+              animate={{ opacity: index === activePortraitIndex ? 1 : 0 }}
+              key={still}
+              transition={{
+                duration: reduceMotion ? 0.01 : 0.9,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+            >
+              <Image
+                src={still}
+                alt=""
+                fill
+                loading={index === 0 ? "eager" : "lazy"}
+                priority={index === 0}
+                sizes="(min-width: 640px) 58vw, 100vw"
+                className="object-cover object-center"
+              />
+            </motion.div>
+          ))}
           <motion.div
             aria-hidden="true"
             className="absolute inset-x-0 top-[58%] h-px bg-[#8ea6ff] mix-blend-screen"
@@ -291,6 +342,14 @@ export default function HomeHero({ release, presentation }: HomeHeroProps) {
         onPause={(event) => {
           setIsPlaying(false);
           setCurrentTime(event.currentTarget.currentTime);
+          setPortraitIndex(
+            Math.min(
+              Math.floor(
+                event.currentTarget.currentTime / portraitSegmentSeconds,
+              ),
+              presentation.stills.length - 1,
+            ),
+          );
         }}
         onPlay={() => setIsPlaying(true)}
         onEnded={() => {
@@ -304,6 +363,7 @@ export default function HomeHero({ release, presentation }: HomeHeroProps) {
           setIsPlaying(false);
           setCurrentTime(0);
           setHasStarted(false);
+          setPortraitIndex(0);
         }}
       />
     </section>
