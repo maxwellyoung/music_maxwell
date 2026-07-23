@@ -1,15 +1,6 @@
-export type TimedLyricWord = {
-  text: string;
-  start: number;
-  end: number;
-};
+import type { TimedLyricLine } from "../lib/timedLyrics.ts";
 
-export type TimedLyricLine = {
-  text: string;
-  start: number;
-  end: number;
-  words: readonly TimedLyricWord[];
-};
+export { wordProgress } from "../lib/timedLyrics.ts";
 
 export const oneKissHookDuration = 18;
 
@@ -92,15 +83,5 @@ export function lyricLineAt(
   time: number,
   lines: readonly TimedLyricLine[] = oneKissTimedHook,
 ) {
-  return lines.findIndex((line, index) => {
-    const next = lines[index + 1];
-    const holdUntil = next?.start ?? line.end;
-    return time >= line.start && time < holdUntil;
-  });
-}
-
-export function wordProgress(time: number, word: TimedLyricWord) {
-  if (time <= word.start) return 0;
-  if (time >= word.end) return 1;
-  return (time - word.start) / Math.max(word.end - word.start, 0.01);
+  return lines.findIndex((line) => time >= line.start && time <= line.end);
 }

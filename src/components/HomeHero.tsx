@@ -1,7 +1,6 @@
 "use client";
 
 import {
-  AnimatePresence,
   motion,
   useReducedMotion,
   useScroll,
@@ -10,8 +9,10 @@ import {
 import { ArrowDownRight, Pause, Play } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { type CSSProperties, useEffect, useRef, useState } from "react";
+import { findTimedLyrics } from "~/data/timedLyrics";
 import { trackSiteEvent } from "~/lib/analytics";
+import { getTimedLyricFrame } from "~/lib/timedLyrics";
 
 type HomeHeroProps = {
   release: {
@@ -36,7 +37,9 @@ export default function HomeHero({ release, presentation }: HomeHeroProps) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const reduceMotion = useReducedMotion();
   const [isPlaying, setIsPlaying] = useState(false);
+  const [hasStarted, setHasStarted] = useState(false);
   const [progress, setProgress] = useState(0);
+  const [currentTime, setCurrentTime] = useState(0);
   const [cueIndex, setCueIndex] = useState(2);
   const excerptStarted = useRef(false);
   const excerptCompleted = useRef(false);
@@ -47,6 +50,17 @@ export default function HomeHero({ release, presentation }: HomeHeroProps) {
   const frameY = useTransform(scrollYProgress, [0, 1], ["0%", "10%"]);
   const copyY = useTransform(scrollYProgress, [0, 1], ["0%", "18%"]);
   const copyOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+  const timedLyrics = findTimedLyrics({
+    slug: release.slug,
+    previewUrl: presentation.excerpt,
+    lyricVersion: release.title,
+  });
+  const timedFrame = timedLyrics
+    ? getTimedLyricFrame(timedLyrics.lines, currentTime)
+    : undefined;
+  const visibleLine = timedLyrics
+    ? timedFrame?.active?.text
+    : presentation.cues[cueIndex]?.line;
 
   useEffect(() => {
     const audio = audioRef.current;
@@ -61,6 +75,7 @@ export default function HomeHero({ release, presentation }: HomeHeroProps) {
       try {
         await audio.play();
         setIsPlaying(true);
+        setHasStarted(true);
         if (!excerptStarted.current) {
           excerptStarted.current = true;
           trackSiteEvent("audio_excerpt_started", {
@@ -84,6 +99,7 @@ export default function HomeHero({ release, presentation }: HomeHeroProps) {
       ? audio.duration
       : presentation.excerptSeconds;
     setProgress(Math.min(audio.currentTime / duration, 1));
+    setCurrentTime(audio.currentTime);
     const nextCue = presentation.cues.reduce(
       (latest, cue, index) => (cue.at <= audio.currentTime ? index : latest),
       0,
@@ -166,27 +182,46 @@ export default function HomeHero({ release, presentation }: HomeHeroProps) {
           className="relative z-10 mt-auto grid gap-7 pt-[48vh] sm:max-w-[38%] sm:pt-0"
         >
           <div className="min-h-[6.5rem] sm:min-h-[7.5rem]" aria-hidden="true">
-            <AnimatePresence mode="wait" initial={false}>
-              <motion.p
-                key={
-                  isPlaying
-                    ? presentation.cues[cueIndex]?.line
-                    : presentation.standbyLine
-                }
-                initial={{ opacity: 0, y: 12 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -8 }}
-                transition={{ duration: reduceMotion ? 0.01 : 0.2 }}
-                className="font-pixel-line max-w-[15ch] text-3xl uppercase leading-[0.88] sm:text-4xl lg:text-5xl"
-              >
-                {isPlaying
-                  ? presentation.cues[cueIndex]?.line
-                  : presentation.standbyLine}
-              </motion.p>
-            </AnimatePresence>
+            <motion.p
+              initial={{ opacity: 0, y: 12 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: reduceMotion ? 0.01 : 0.2 }}
+              className="font-pixel-line max-w-[15ch] text-3xl uppercase leading-[0.88] sm:text-4xl lg:text-5xl"
+            >
+              {hasStarted && timedFrame?.active ? (
+                <span aria-hidden="true">
+                  {timedFrame.words.map((word) => {
+                    const wordStyle = {
+                      width: `${word.progress * 100}%`,
+                    } as CSSProperties;
+
+                    return (
+                      <span
+                        className="relative mr-[0.22em] inline-block text-white/25"
+                        key={`${word.text}-${word.start}`}
+                      >
+                        {word.text}
+                        <span
+                          className="absolute inset-y-0 left-0 overflow-hidden whitespace-nowrap text-[#f5f8ff]"
+                          style={wordStyle}
+                        >
+                          {word.text}
+                        </span>
+                      </span>
+                    );
+                  })}
+                  <span className="sr-only">{timedFrame.active.text}</span>
+                </span>
+              ) : hasStarted ? (
+                visibleLine
+              ) : (
+                presentation.standbyLine
+              )}
+            </motion.p>
           </div>
           <p className="sr-only">
-            An {presentation.excerptSeconds}-second excerpt from {release.title}.
+            An {presentation.excerptSeconds}-second excerpt from {release.title}
+            .
           </p>
           <div className="grid max-w-sm gap-4">
             <button
@@ -195,8 +230,15 @@ export default function HomeHero({ release, presentation }: HomeHeroProps) {
               aria-pressed={isPlaying}
               className="font-pixel-dot group flex min-h-12 w-full items-center gap-3 border-y border-white/25 py-3 text-left text-xs uppercase tracking-[0.1em] transition hover:border-[#8ea6ff] hover:text-[#8ea6ff] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
             >
-              <span className="grid h-8 w-8 place-items-center border border-current" aria-hidden="true">
-                {isPlaying ? <Pause className="h-4 w-4" /> : <Play className="ml-0.5 h-4 w-4" />}
+              <span
+                className="grid h-8 w-8 place-items-center border border-current"
+                aria-hidden="true"
+              >
+                {isPlaying ? (
+                  <Pause className="h-4 w-4" />
+                ) : (
+                  <Play className="ml-0.5 h-4 w-4" />
+                )}
               </span>
               <span>{isPlaying ? "pause the hook" : "hear 18 seconds"}</span>
               <span className="ml-auto tabular-nums text-white/55">
@@ -206,7 +248,10 @@ export default function HomeHero({ release, presentation }: HomeHeroProps) {
                 ).padStart(2, "0")}
               </span>
             </button>
-            <div className="h-px overflow-hidden bg-white/20" aria-hidden="true">
+            <div
+              className="h-px overflow-hidden bg-white/20"
+              aria-hidden="true"
+            >
               <div
                 className="h-full bg-[#8ea6ff] transition-[width] duration-100"
                 style={{ width: `${progress * 100}%` }}
@@ -248,6 +293,8 @@ export default function HomeHero({ release, presentation }: HomeHeroProps) {
           }
           setIsPlaying(false);
           setProgress(0);
+          setCurrentTime(0);
+          setHasStarted(false);
           setCueIndex(2);
         }}
       />

@@ -8,6 +8,12 @@ import {
   oneKissTimedHook,
   wordProgress,
 } from "./oneKissExperience.ts";
+import timedLyrics, {
+  findTimedLyrics,
+  timedLyricsStaticAudit,
+  validateTimedLyricsRecord,
+} from "./timedLyrics.ts";
+import { getTimedLyricFrame } from "../lib/timedLyrics.ts";
 import releases, {
   coreStreamingServices,
   getReleaseBySlug,
@@ -78,7 +84,7 @@ test("the downstream manifest exposes only stable public release data", () => {
 test("the 1kiss excerpt resolves lyric lines and word fills from real cue time", () => {
   assert.equal(lyricLineAt(0), 0);
   assert.equal(lyricLineAt(3.4), 1);
-  assert.equal(lyricLineAt(4), 1);
+  assert.equal(lyricLineAt(4), -1);
   assert.equal(lyricLineAt(11.3), 6);
   assert.equal(lyricLineAt(13), -1);
 
@@ -86,4 +92,55 @@ test("the 1kiss excerpt resolves lyric lines and word fills from real cue time",
   assert.equal(wordProgress(1, midas), 0);
   assert.equal(wordProgress(2.1, midas), 1);
   assert.ok(wordProgress(1.6, midas) > 0);
+});
+
+test("a timed lyric frame exposes previous, active, and next lines", () => {
+  const frame = getTimedLyricFrame(oneKissTimedHook, 5.6);
+
+  assert.equal(frame.previous?.text, "one kiss");
+  assert.equal(frame.active?.text, "i couldn’t wait");
+  assert.equal(frame.next?.text, "now it’s priceless");
+  assert.deepEqual(
+    frame.words.map((word) => word.state),
+    ["complete", "active", "pending"],
+  );
+});
+
+test("timed lyrics are enabled only for the exact aligned preview and lyric version", () => {
+  assert.equal(
+    findTimedLyrics({
+      slug: "1kiss",
+      previewUrl: "/1kiss/1kiss-hook.m4a",
+      lyricVersion: "1kiss",
+    })?.lines.length,
+    7,
+  );
+  assert.equal(
+    findTimedLyrics({
+      slug: "1kiss",
+      previewUrl: "/1kiss/another-cut.m4a",
+      lyricVersion: "1kiss",
+    }),
+    undefined,
+  );
+});
+
+test("every enabled timeline stays within its exact preview boundary", () => {
+  assert.deepEqual(
+    timedLyrics.flatMap((record) => validateTimedLyricsRecord(record)),
+    [],
+  );
+});
+
+test("every lyric-bearing preview is explicitly timed or intentionally static", () => {
+  const eligible = releases
+    .filter((release) => release.previewUrl && release.lyrics)
+    .map((release) => release.slug)
+    .sort();
+  const decided = [
+    ...timedLyrics.map((record) => record.slug),
+    ...timedLyricsStaticAudit.map((record) => record.slug),
+  ].sort();
+
+  assert.deepEqual(decided, eligible);
 });

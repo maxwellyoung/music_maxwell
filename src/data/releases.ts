@@ -18,6 +18,7 @@ export type Song = {
   credits?: string;
   videoLink?: string;
   previewUrl?: string;
+  previewLyricVersion?: string;
   releaseDate?: string;
   releaseDateLabel?: string;
   duration?: string;
@@ -578,6 +579,7 @@ You know I'm saying`,
     releaseType: "Double single",
     previewUrl:
       "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview116/v4/d3/da/be/d3dabedc-d792-25a6-9e1f-967715e14a6c/mzaf_6177786969676094496.plus.aac.p.m4a",
+    previewLyricVersion: "Call Ur Name",
     lyrics: {
       "Call Ur Name": `[Verse 1]
         Guess what
@@ -862,6 +864,7 @@ You know I'm saying`,
     releaseType: "Double single",
     previewUrl:
       "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/43/2b/90/432b9089-cacc-1193-4c17-7ca6e84c9471/mzaf_2854893502213579383.plus.aac.p.m4a",
+    previewLyricVersion: "Videostar",
     lyrics: {
       Videostar: `[Intro]
         Videostar
@@ -2078,7 +2081,9 @@ export const releaseRooms = songs.filter((release) => release.world);
 
 const linkExceptions: Record<
   string,
-  Partial<Record<StreamingService, Exclude<StreamingAvailabilityStatus, "available">>>
+  Partial<
+    Record<StreamingService, Exclude<StreamingAvailabilityStatus, "available">>
+  >
 > = {
   "1kiss": {
     appleMusic: "scheduled",
@@ -2105,7 +2110,7 @@ export const getStreamingAvailability = (
 } => ({
   status: release.links[service]
     ? "available"
-    : (linkExceptions[release.slug]?.[service] ?? "unverified"),
+    : linkExceptions[release.slug]?.[service] ?? "unverified",
   href: release.links[service],
   ...streamingLinkAudit,
 });
@@ -2116,7 +2121,8 @@ export const validateReleaseCatalogue = (): string[] => {
 
   for (const release of songs) {
     if (!release.slug) issues.push(`${release.title}: missing slug`);
-    if (slugs.has(release.slug)) issues.push(`${release.title}: duplicate slug`);
+    if (slugs.has(release.slug))
+      issues.push(`${release.title}: duplicate slug`);
     slugs.add(release.slug);
 
     if (!release.title.trim()) issues.push(`${release.slug}: missing title`);

@@ -29,6 +29,8 @@ import { cn } from "~/lib/utils";
 import { ChevronDown, XIcon } from "lucide-react";
 import { trackSiteEvent } from "~/lib/analytics";
 import { releaseWorldFor, type ReleaseMaterialName } from "~/lib/releaseWorlds";
+import { findTimedLyrics } from "~/data/timedLyrics";
+import TimedLyricsPlayer from "./TimedLyricsPlayer";
 
 type StreamingLink = {
   label: string;
@@ -719,6 +721,14 @@ const SongSheet = ({
 
   const palette = getSheetPalette(song);
   const sheetNumber = songs.findIndex((item) => item.slug === song.slug) + 1;
+  const timedLyrics = findTimedLyrics({
+    slug: song.slug,
+    previewUrl: song.previewUrl,
+    lyricVersion: selectedVersion,
+  });
+  const previewMatchesSelectedLyrics =
+    !song.previewLyricVersion || song.previewLyricVersion === selectedVersion;
+  const timedLyricsId = `timed-lyrics-${song.slug}`;
 
   return (
     <Dialog
@@ -839,21 +849,30 @@ const SongSheet = ({
                 )}
 
                 <div className="mt-8 flex flex-wrap items-center gap-x-7 gap-y-4">
-                  {song.previewUrl && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        trackSiteEvent("audio_excerpt_started", {
-                          release: song.title,
-                          location: "archive_sheet",
-                        });
-                        onPreview(song);
-                      }}
-                      className="inline-flex min-h-12 items-center gap-3 border border-current px-5 text-sm font-bold transition hover:bg-[var(--sheet-ink)] hover:text-[var(--sheet-paper)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sheet-accent)]"
-                    >
-                      <span aria-hidden="true">▶</span> play excerpt
-                    </button>
-                  )}
+                  {song.previewUrl &&
+                    previewMatchesSelectedLyrics &&
+                    (timedLyrics ? (
+                      <a
+                        href={`#${timedLyricsId}`}
+                        className="inline-flex min-h-12 items-center gap-3 border border-current px-5 text-sm font-bold transition hover:bg-[var(--sheet-ink)] hover:text-[var(--sheet-paper)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sheet-accent)]"
+                      >
+                        <span aria-hidden="true">↓</span> hear with lyrics
+                      </a>
+                    ) : (
+                      <button
+                        type="button"
+                        onClick={() => {
+                          trackSiteEvent("audio_excerpt_started", {
+                            release: song.title,
+                            location: "archive_sheet",
+                          });
+                          onPreview(song);
+                        }}
+                        className="inline-flex min-h-12 items-center gap-3 border border-current px-5 text-sm font-bold transition hover:bg-[var(--sheet-ink)] hover:text-[var(--sheet-paper)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sheet-accent)]"
+                      >
+                        <span aria-hidden="true">▶</span> play excerpt
+                      </button>
+                    ))}
                   {song.releasePath && (
                     <Link
                       href={song.releasePath}
@@ -918,6 +937,14 @@ const SongSheet = ({
                             marked.
                           </p>
                         )}
+                        {!previewMatchesSelectedLyrics &&
+                          song.previewLyricVersion && (
+                            <p className="mt-2 text-xs font-medium opacity-50">
+                              The available excerpt is for{" "}
+                              {song.previewLyricVersion}; these lyrics remain
+                              static.
+                            </p>
+                          )}
                       </div>
                       {Object.keys(song.lyrics).length > 1 && (
                         <div className="relative w-full sm:w-64">
@@ -950,6 +977,15 @@ const SongSheet = ({
                         </div>
                       )}
                     </div>
+                    {timedLyrics && (
+                      <div className="mb-10">
+                        <TimedLyricsPlayer
+                          id={timedLyricsId}
+                          record={timedLyrics}
+                          release={selectedVersion}
+                        />
+                      </div>
+                    )}
                     <div className="border-current/15 opacity-78 whitespace-pre-wrap border-y py-7 text-[1.05rem] font-medium leading-[1.75] sm:columns-2 sm:gap-12">
                       {renderTextWithEmbeds(formatText(getLyrics()))}
                     </div>
