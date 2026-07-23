@@ -202,6 +202,47 @@ you know i love it`,
     releaseDate: "April 4, 2026",
     duration: "1:52",
     releaseType: "Single",
+    lyrics: {
+      Flying: `girl you're the number one i really wanna know
+one glass of red while getting dressed
+and then we'd go
+you know i really wanna say it but i won't
+you get me shy
+so i just left you with a note
+whenever you pop up in front put down my phone
+can't keep my eyes off you
+i wish we were alone
+rather than at this matinee for reasons i don’t know
+were walking out the door but then they played your song
+
+sometimes
+i like to picture
+just you and me
+flying, flying
+
+you know i fall you again
+and then again
+all the places i keep you inside my head
+i gotta talk to you
+you’ll never lose my ear
+sunset on the veranda
+hands run through my hair
+
+again and again
+one more baby
+again and again
+one more baby girl
+
+you, you, you, you, you
+
+sometimes
+i like to picture
+just you and me
+flying, flying`,
+    },
+    credits: `Written by Maxwell Young
+Produced by Maxwell Young & Eddie Johnston
+Artwork by Maxwell Young`,
   },
   {
     slug: "wintour",
