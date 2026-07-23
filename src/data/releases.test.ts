@@ -3,6 +3,11 @@ import test from "node:test";
 
 import { createReleaseMetadata } from "../lib/releaseMetadata.ts";
 import { createPublicReleaseManifest } from "../lib/releaseManifest.ts";
+import {
+  lyricLineAt,
+  oneKissTimedHook,
+  wordProgress,
+} from "./oneKissExperience.ts";
 import releases, {
   coreStreamingServices,
   getReleaseBySlug,
@@ -37,8 +42,7 @@ test("core streaming omissions are explicit rather than silent", () => {
 
   assert.deepEqual(unverified, []);
   assert.equal(
-    getStreamingAvailability(getReleaseBySlug("1kiss")!, "appleMusic")
-      .status,
+    getStreamingAvailability(getReleaseBySlug("1kiss")!, "appleMusic").status,
     "scheduled",
   );
 });
@@ -69,4 +73,17 @@ test("the downstream manifest exposes only stable public release data", () => {
     "ad136da37bf6ba9ecfd7dd2603ed807355fcbbdfdfe1456c00aabfb15951efde",
   );
   assert.equal(JSON.stringify(manifest).includes("/Users/"), false);
+});
+
+test("the 1kiss excerpt resolves lyric lines and word fills from real cue time", () => {
+  assert.equal(lyricLineAt(0), 0);
+  assert.equal(lyricLineAt(3.4), 1);
+  assert.equal(lyricLineAt(4), 1);
+  assert.equal(lyricLineAt(11.3), 6);
+  assert.equal(lyricLineAt(13), -1);
+
+  const midas = oneKissTimedHook[0].words[3];
+  assert.equal(wordProgress(1, midas), 0);
+  assert.equal(wordProgress(2.1, midas), 1);
+  assert.ok(wordProgress(1.6, midas) > 0);
 });
