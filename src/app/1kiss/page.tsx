@@ -1,4 +1,3 @@
-import dynamic from "next/dynamic";
 import Image from "next/image";
 import JsonLd from "~/components/JsonLd";
 import ReleaseMoment from "~/components/ReleaseMoment";
@@ -8,14 +7,12 @@ import ReleaseRoomShell from "~/components/ReleaseRoomShell";
 import { getReleaseBySlug } from "~/data/releases";
 import { createReleaseMetadata } from "~/lib/releaseMetadata";
 
-const CampaignReel = dynamic(() => import("~/components/CampaignReel"));
-
 const song = getReleaseBySlug("1kiss")!;
 
 export const metadata = createReleaseMetadata(song, {
   title: "1kiss | Maxwell Young",
   description:
-    "1kiss by Maxwell Young, released July 24, 2026. Lyrics, credits, artwork, and four short films.",
+    "1kiss by Maxwell Young, released July 24, 2026. Lyrics, credits, artwork, and listening links.",
 });
 const spotifyUrl = song.links.spotify!;
 const lyric = song.lyrics?.["1kiss"] ?? "";
@@ -104,26 +101,6 @@ export default function OneKissPage() {
               <span>Ninetynine Records</span>
             </div>
           </div>
-        </div>
-      </section>
-
-      <section className="border-b border-white/15 bg-[#0b0e17]">
-        <div className="mx-auto max-w-[1120px] px-5 py-14 sm:px-8 lg:px-12">
-          <div className="mb-10 grid gap-3 border-t border-white/20 pt-5 md:grid-cols-[0.28fr_0.72fr]">
-            <p className="font-pixel-dot text-xs uppercase tracking-[0.14em] text-[#8ea6ff]">
-              18 seconds
-            </p>
-            <div>
-              <h2 className="font-pixel-line mb-0 max-w-[12ch] text-4xl uppercase leading-[0.9] text-[#f5f8ff] sm:text-5xl">
-                pick a feeling
-              </h2>
-              <p className="mt-4 max-w-lg text-sm leading-relaxed text-white/60">
-                Choose a way in, or scramble it. Each signal lasts 18 seconds
-                and stays quiet until you press play.
-              </p>
-            </div>
-          </div>
-          <CampaignReel />
         </div>
       </section>
 

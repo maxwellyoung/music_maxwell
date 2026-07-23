@@ -1,6 +1,6 @@
 # Status
 
-Last updated: 2026-07-22
+Last updated: 2026-07-23
 
 ## Current State
 
@@ -26,7 +26,7 @@ Last updated: 2026-07-22
 - `pnpm release:check` passes on Node 24.14.0: 5 catalogue/manifest tests, TypeScript, ESLint, and the optimized Next.js build.
 - Production-mode local requests return 200 for `/`, `/1kiss`, `/turn-it-up`, `/wintour`, `/releases/manifest.json`, and `/sitemap.xml`.
 - Browser QA covers the archive year filters, the Videostar/Cleopatra lyrics selector, 1kiss film playback, the Turn It Up cart run, the Wintour crop comparator, and mobile archive/sheet layouts.
-- The manifest contains 17 stable public release records and four approved 1kiss film derivatives.
+- The manifest contains 17 stable public release records. The 1kiss social-film derivatives remain archived but are no longer exposed in its release room or manifest.
 
 ## Notes For Codex
 

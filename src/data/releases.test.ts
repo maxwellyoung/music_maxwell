@@ -62,7 +62,8 @@ test("the downstream manifest exposes only stable public release data", () => {
   assert.equal(manifest.releases.length, 17);
   assert.equal(oneKiss.slug, "1kiss");
   assert.equal(oneKiss.publication.lyrics, "public");
-  assert.equal(oneKiss.media.films.length, 4);
+  assert.equal(oneKiss.publication.films, "none");
+  assert.equal(oneKiss.media.films.length, 0);
   assert.equal(
     oneKiss.media.audioMasterSha256,
     "ad136da37bf6ba9ecfd7dd2603ed807355fcbbdfdfe1456c00aabfb15951efde",

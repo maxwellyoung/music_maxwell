@@ -1,6 +1,6 @@
 # 1kiss public evidence and publication decision
 
-**Reviewed:** 22 July 2026
+**Reviewed:** 23 July 2026
 
 ## Factual evidence
 
@@ -21,11 +21,10 @@ The approved WAV container measures 124.316563 seconds. That source-file duratio
 The following material is intentionally public in the 1kiss release room:
 
 - the full approved lyrics;
-- the four existing designed 18-second vertical films;
 - the 18-second homepage excerpt;
 - release artwork, factual credits, and delivery metadata.
 
-The four films were already part of the public production implementation before consolidation. They remain useful as distinct campaign artefacts and all contain audio rebuilt from the approved `1kiss (eddie v5).wav` master.
+The four designed vertical films were removed from the release room and public manifest on 23 July. They remain recoverable campaign exports, but they are not part of the lasting song artefact and are no longer linked from the public experience.
 
 This decision does **not** publish the full WAV master, stems, the unreleased full-length video source, private campaign planning, contact lists, budgets, or unapproved press drafts.
 

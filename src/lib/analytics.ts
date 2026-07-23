@@ -8,8 +8,6 @@ export type SiteEvent =
   | "release_entered"
   | "archive_item_opened"
   | "streaming_destination_clicked"
-  | "campaign_film_opened"
-  | "campaign_film_completed"
   | "film_opened"
   | "release_site_opened";
 
