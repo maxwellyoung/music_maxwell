@@ -1,0 +1,80 @@
+.visual {
+  opacity: 0.84;
+  transform: translate3d(0, 0, 0) scale(1);
+  transition: opacity 180ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.visualActive {
+  animation: one-kiss-visual-pulse 2.5s cubic-bezier(0.77, 0, 0.175, 1)
+    infinite;
+}
+
+.chromatic {
+  opacity: 0;
+  transform: translate3d(0, 0, 0);
+  transition: opacity 180ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.chromaticActive {
+  animation: one-kiss-chromatic-pulse 1.35s
+    cubic-bezier(0.77, 0, 0.175, 1) infinite;
+}
+
+.scanRunner {
+  opacity: 0;
+  transition: opacity 160ms cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.scanRunnerActive {
+  opacity: 1;
+  will-change: transform;
+}
+
+@keyframes one-kiss-visual-pulse {
+  0% {
+    opacity: 0.8;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  35% {
+    opacity: 0.92;
+    transform: translate3d(3px, 0, 0) scale(1.016);
+  }
+  68% {
+    opacity: 0.84;
+    transform: translate3d(-2px, 0, 0) scale(1.006);
+  }
+  100% {
+    opacity: 0.8;
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+}
+
+@keyframes one-kiss-chromatic-pulse {
+  0% {
+    opacity: 0.08;
+    transform: translate3d(0, 0, 0);
+  }
+  45% {
+    opacity: 0.24;
+    transform: translate3d(6px, 0, 0);
+  }
+  75% {
+    opacity: 0.12;
+    transform: translate3d(-3px, 0, 0);
+  }
+  100% {
+    opacity: 0.08;
+    transform: translate3d(0, 0, 0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .visualActive,
+  .chromaticActive {
+    animation: none;
+  }
+
+  .scanRunnerActive {
+    will-change: auto;
+  }
+}

@@ -1,20 +1,21 @@
 "use client";
 
-import {
-  motion,
-  useReducedMotion,
-  useScroll,
-  useTransform,
-} from "framer-motion";
 import { ArrowDownRight, Pause, Play } from "lucide-react";
 import Link from "next/link";
-import { type CSSProperties, useEffect, useRef, useState } from "react";
+import {
+  type CSSProperties,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import OneKissBlakeField from "~/components/OneKissBlakeField";
 import OneKissHeroVisual from "~/components/OneKissHeroVisual";
 import ReleaseMoment from "~/components/ReleaseMoment";
 import { findTimedLyrics } from "~/data/timedLyrics";
 import { trackSiteEvent } from "~/lib/analytics";
 import { getTimedLyricFrame } from "~/lib/timedLyrics";
+import styles from "./HomeHero.module.css";
 
 type HomeHeroProps = {
   release: {
@@ -37,24 +38,23 @@ export default function HomeHero({ release, presentation }: HomeHeroProps) {
   const heroRef = useRef<HTMLElement>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
   const animationFrame = useRef(0);
-  const reduceMotion = useReducedMotion();
+  const lastPlaybackPaint = useRef(0);
+  const [reduceMotion, setReduceMotion] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isHeroVisible, setIsHeroVisible] = useState(true);
   const [hasStarted, setHasStarted] = useState(false);
   const [currentTime, setCurrentTime] = useState(0);
   const excerptStarted = useRef(false);
   const excerptCompleted = useRef(false);
-  const { scrollYProgress } = useScroll({
-    target: heroRef,
-    offset: ["start start", "end start"],
-  });
-  const frameY = useTransform(scrollYProgress, [0, 1], ["0%", "10%"]);
-  const copyY = useTransform(scrollYProgress, [0, 1], ["0%", "18%"]);
-  const copyOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
-  const timedLyrics = findTimedLyrics({
-    slug: release.slug,
-    previewUrl: presentation.excerpt,
-    lyricVersion: release.title,
-  });
+  const timedLyrics = useMemo(
+    () =>
+      findTimedLyrics({
+        slug: release.slug,
+        previewUrl: presentation.excerpt,
+        lyricVersion: release.title,
+      }),
+    [presentation.excerpt, release.slug, release.title],
+  );
   const timedFrame = timedLyrics
     ? getTimedLyricFrame(timedLyrics.lines, currentTime)
     : undefined;
@@ -74,19 +74,43 @@ export default function HomeHero({ release, presentation }: HomeHeroProps) {
   }, []);
 
   useEffect(() => {
+    const media = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const update = () => setReduceMotion(media.matches);
+    update();
+    media.addEventListener("change", update);
+    return () => media.removeEventListener("change", update);
+  }, []);
+
+  useEffect(() => {
+    const hero = heroRef.current;
+    if (!hero) return;
+
+    const observer = new IntersectionObserver(([entry]) => {
+      setIsHeroVisible(Boolean(entry?.isIntersecting));
+    });
+    observer.observe(hero);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
     const audio = audioRef.current;
-    if (!audio || !isPlaying) return;
+    if (!audio || !isPlaying || !isHeroVisible) return;
 
     const update = () => {
-      setCurrentTime(audio.currentTime);
+      const now = performance.now();
+      if (now - lastPlaybackPaint.current >= 1000 / 30) {
+        lastPlaybackPaint.current = now;
+        setCurrentTime(audio.currentTime);
+      }
       if (!audio.paused && !audio.ended) {
         animationFrame.current = window.requestAnimationFrame(update);
       }
     };
 
+    lastPlaybackPaint.current = 0;
     animationFrame.current = window.requestAnimationFrame(update);
     return () => window.cancelAnimationFrame(animationFrame.current);
-  }, [isPlaying]);
+  }, [isHeroVisible, isPlaying]);
 
   const togglePlayback = async () => {
     const audio = audioRef.current;
@@ -126,53 +150,34 @@ export default function HomeHero({ release, presentation }: HomeHeroProps) {
       className="relative isolate min-h-svh overflow-hidden bg-[#05070c] text-[#f5f8ff]"
     >
       <OneKissBlakeField
-        active={isPlaying}
+        active={isPlaying && isHeroVisible}
         reduceMotion={Boolean(reduceMotion)}
       />
       <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,7,12,.9)_0%,rgba(5,7,12,.52)_48%,rgba(5,7,12,.1)_100%)]" />
 
-      <motion.div
-        className="absolute -inset-x-[2%] top-[25%] h-[44vh] sm:left-[35%] sm:right-[-4%] sm:top-[7%] sm:h-[78vh]"
-        style={{ y: frameY }}
-      >
+      <div className="absolute -inset-x-[2%] top-[25%] h-[44vh] sm:left-[35%] sm:right-[-4%] sm:top-[7%] sm:h-[78vh]">
         <OneKissHeroVisual
-          active={isPlaying}
+          active={isPlaying && isHeroVisible}
           progress={progress}
           reduceMotion={Boolean(reduceMotion)}
         />
-      </motion.div>
+      </div>
 
-      <motion.div
-        className="relative mx-auto flex min-h-svh w-full max-w-[1440px] flex-col justify-between px-5 pb-7 pt-24 sm:px-8 sm:pb-10 sm:pt-28 lg:px-12"
-        style={{ y: copyY, opacity: copyOpacity }}
-      >
-        <motion.div
-          initial={{ opacity: 0, y: 18 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-          className="relative z-10"
-        >
+      <div className="relative mx-auto flex min-h-svh w-full max-w-[1440px] flex-col justify-between px-5 pb-7 pt-24 sm:px-8 sm:pb-10 sm:pt-28 lg:px-12">
+        <div className={`${styles.titleEntrance} relative z-10`}>
           <p className="font-pixel-dot text-[10px] uppercase tracking-[0.16em] text-[#b7c8eb] sm:text-xs">
             {release.artist} / {release.releaseDate}
           </p>
           <h1 className="font-pixel-line mb-0 mt-3 text-[clamp(5.5rem,14vw,11rem)] leading-[0.74] tracking-[-0.05em] text-[#f5f8ff]">
             {release.title}
           </h1>
-        </motion.div>
+        </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.25, duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
-          className="relative z-10 mt-auto grid gap-5 pt-[48vh] sm:max-w-[38%] sm:pt-0"
+        <div
+          className={`${styles.controlsEntrance} relative z-10 mt-auto grid gap-5 pt-[48vh] sm:max-w-[38%] sm:pt-0`}
         >
           <div className="min-h-[6.5rem] sm:min-h-[7.5rem]" aria-hidden="true">
-            <motion.p
-              initial={{ opacity: 0, y: 12 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: reduceMotion ? 0.01 : 0.2 }}
-              className="font-pixel-line max-w-[15ch] text-3xl uppercase leading-[0.88] sm:text-4xl lg:text-5xl"
-            >
+            <p className="font-pixel-line max-w-[15ch] text-3xl uppercase leading-[0.88] sm:text-4xl lg:text-5xl">
               {hasStarted && timedFrame?.active ? (
                 <span aria-hidden="true">
                   {timedFrame.words.map((word) => {
@@ -202,7 +207,7 @@ export default function HomeHero({ release, presentation }: HomeHeroProps) {
               ) : (
                 presentation.standbyLine
               )}
-            </motion.p>
+            </p>
           </div>
           <p className="sr-only">
             An {presentation.excerptSeconds}-second excerpt from {release.title}
@@ -260,8 +265,8 @@ export default function HomeHero({ release, presentation }: HomeHeroProps) {
               />
             </Link>
           </div>
-        </motion.div>
-      </motion.div>
+        </div>
+      </div>
       <audio
         ref={audioRef}
         src={presentation.excerpt}

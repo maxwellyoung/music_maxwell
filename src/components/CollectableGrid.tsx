@@ -66,12 +66,12 @@ const BlurImage = ({
       alt={alt}
       fill
       sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
-      quality={85}
+      quality={75}
       className={cn(
-        "object-cover duration-700 ease-in-out",
+        "object-cover transition-[opacity,transform] duration-300 ease-out",
         isLoading
-          ? "scale-105 blur-2xl grayscale"
-          : "scale-100 blur-0 grayscale-0",
+          ? "scale-[1.015] opacity-70"
+          : "scale-100 opacity-100",
         className,
       )}
       onLoad={() => setLoading(false)}
@@ -150,12 +150,12 @@ const YouTubeThumbnail = ({
         alt={alt}
         fill
         sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-        quality={85}
+        quality={75}
         className={cn(
-          "object-cover duration-700 ease-in-out",
+          "object-cover transition-[opacity,transform] duration-300 ease-out",
           isLoading
-            ? "scale-105 blur-2xl grayscale"
-            : "scale-100 blur-0 grayscale-0",
+            ? "scale-[1.015] opacity-70"
+            : "scale-100 opacity-100",
         )}
         onLoad={() => setLoading(false)}
         placeholder="blur"
@@ -206,7 +206,7 @@ const PressPhotoCarousel = () => {
                   src={photo.src}
                   alt={photo.alt}
                   fill
-                  className="object-cover transition duration-500 ease-out will-change-transform"
+                  className="object-cover"
                   sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
                   loading="lazy"
                 />
@@ -233,7 +233,7 @@ const PressPhotoCarousel = () => {
                 api?.scrollTo(index);
               }}
               className={cn(
-                "h-1.5 rounded-full transition-all",
+                "h-1.5 rounded-full transition-colors",
                 index === current
                   ? "w-6 bg-foreground"
                   : "w-1.5 bg-foreground/20",
@@ -751,7 +751,7 @@ const SongSheet = ({
           {palette.texture && (
             <div className="release-material-layer" aria-hidden="true" />
           )}
-          <header className="border-current/20 bg-[color:var(--sheet-paper)]/95 sticky top-0 z-30 border-b backdrop-blur-md">
+          <header className="border-current/20 sticky top-0 z-30 border-b bg-[color:var(--sheet-paper)]">
             <div className="mx-auto grid min-h-16 max-w-[1280px] grid-cols-[1fr_auto] items-center gap-4 px-4 sm:min-h-20 sm:grid-cols-[1fr_auto_1fr] sm:px-8 lg:px-12">
               <div className="flex min-w-0 items-baseline gap-3">
                 <span className="text-xs font-semibold tabular-nums opacity-45">
@@ -1141,7 +1141,7 @@ const CollectableGrid: React.FC<CollectableGridProps> = ({
               initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-              className="mb-10 overflow-hidden border-y border-foreground/10 bg-[#f1eadf]/55 p-4 shadow-sm shadow-foreground/5 backdrop-blur-xl sm:p-6 md:mb-14"
+              className="mb-10 overflow-hidden border-y border-foreground/10 bg-[#f1eadf]/90 p-4 shadow-sm shadow-foreground/5 sm:p-6 md:mb-14"
             >
               <div className="grid gap-6 md:grid-cols-[1.08fr_0.92fr] md:items-center">
                 <div className="relative z-10 space-y-5">
@@ -1275,10 +1275,10 @@ const CollectableGrid: React.FC<CollectableGridProps> = ({
               </AnimatePresence>
               {activePreview && (
                 <div
-                  className="absolute top-1/2 h-[28rem] w-[28rem] rounded-full blur-3xl will-change-transform"
+                  className="absolute top-1/2 h-[28rem] w-[28rem] rounded-full will-change-transform"
                   style={{
                     left: "calc(var(--audio-progress, 0) * 100%)",
-                    backgroundColor: archivePalette.accent,
+                    background: `radial-gradient(circle, ${archivePalette.accent} 0%, transparent 70%)`,
                     opacity: "calc(0.035 + var(--audio-energy, 0) * 0.17)",
                     transform:
                       "translate(-50%, -50%) scale(calc(0.82 + var(--audio-energy, 0) * 0.32))",
@@ -1434,7 +1434,7 @@ const CollectableGrid: React.FC<CollectableGridProps> = ({
                         </motion.div>
                         <div className="absolute inset-0 ring-1 ring-inset ring-black/15" />
                         {song.world && song.releasePath ? (
-                          <span className="absolute bottom-3 right-3 border-t border-white/55 bg-black/70 px-2 py-1 text-[9px] font-bold uppercase tracking-[0.14em] text-white backdrop-blur-sm">
+                          <span className="absolute bottom-3 right-3 border-t border-white/55 bg-black/80 px-2 py-1 text-[9px] font-bold uppercase tracking-[0.14em] text-white">
                             world ↗
                           </span>
                         ) : (

@@ -1,7 +1,7 @@
 "use client";
 
-import { motion } from "framer-motion";
 import Image from "next/image";
+import styles from "./OneKissHeroVisual.module.css";
 
 type OneKissHeroVisualProps = {
   active: boolean;
@@ -22,23 +22,8 @@ export default function OneKissHeroVisual({
   const canMove = active && !reduceMotion;
 
   return (
-    <motion.div
-      className="absolute inset-0 overflow-hidden"
-      initial={false}
-      animate={
-        canMove
-          ? {
-              opacity: [0.8, 0.92, 0.84],
-              scale: [1, 1.016, 1.006, 1],
-              x: [0, 3, -2, 0],
-            }
-          : { opacity: 0.84, scale: 1, x: 0 }
-      }
-      transition={
-        canMove
-          ? { duration: 2.5, repeat: Infinity, ease: "easeInOut" }
-          : { duration: 0.24, ease: "easeOut" }
-      }
+    <div
+      className={`${styles.visual} ${canMove ? styles.visualActive : ""} absolute inset-0 overflow-hidden`}
       style={{
         maskImage: horizontalFeather,
         WebkitMaskImage: horizontalFeather,
@@ -59,38 +44,15 @@ export default function OneKissHeroVisual({
           fill
           priority
           sizes="(min-width: 640px) 64vw, 104vw"
-          className="object-cover opacity-[.32]"
+          className="object-cover opacity-[.58] mix-blend-screen"
           style={{
-            filter: "contrast(1.1) saturate(1.18)",
-            objectPosition: "50% 48%",
-          }}
-        />
-        <Image
-          src="/artworks/1kiss.jpg"
-          alt=""
-          fill
-          priority
-          sizes="(min-width: 640px) 64vw, 104vw"
-          className="object-cover opacity-[.52] mix-blend-screen"
-          style={{
-            filter: "contrast(1.02) saturate(1.1)",
+            filter: "contrast(1.06) saturate(1.14)",
             objectPosition: "50% 48%",
           }}
         />
 
-        <motion.div
-          className="absolute inset-0 mix-blend-screen"
-          initial={false}
-          animate={
-            canMove
-              ? { opacity: [0.08, 0.24, 0.12], x: [0, 6, -3, 0] }
-              : { opacity: 0, x: 0 }
-          }
-          transition={
-            canMove
-              ? { duration: 1.35, repeat: Infinity, ease: "easeInOut" }
-              : { duration: 0.18 }
-          }
+        <div
+          className={`${styles.chromatic} ${canMove ? styles.chromaticActive : ""} absolute inset-0 mix-blend-screen`}
           aria-hidden="true"
         >
           <Image
@@ -104,26 +66,31 @@ export default function OneKissHeroVisual({
               objectPosition: "50% 48%",
             }}
           />
-        </motion.div>
+        </div>
 
-        <motion.div
-          className="pointer-events-none absolute inset-x-[6%] h-20 -translate-y-1/2 bg-[linear-gradient(180deg,transparent,rgba(255,255,255,.12),transparent)] mix-blend-screen"
-          initial={false}
-          animate={{ opacity: canMove ? 1 : 0 }}
-          transition={{ duration: reduceMotion ? 0.01 : 0.16 }}
-          style={{ top: `${4 + progress * 92}%` }}
+        <div
+          className="pointer-events-none absolute inset-x-[6%] top-[4%] h-[92%]"
           aria-hidden="true"
         >
-          <div className="absolute inset-x-0 top-1/2 h-px bg-white/80 shadow-[0_0_16px_rgba(255,255,255,.72)]" />
-          <div className="absolute inset-x-[9%] top-[calc(50%+5px)] h-px bg-[#8ea6ff]/60" />
-          <div className="absolute inset-x-[16%] top-[calc(50%-5px)] h-px bg-[#ff8eae]/45" />
-        </motion.div>
+          <div
+            className={`${styles.scanRunner} ${canMove ? styles.scanRunnerActive : ""} absolute inset-0`}
+            style={{
+              transform: `translate3d(0, ${progress * 100}%, 0)`,
+            }}
+          >
+            <div className="absolute inset-x-0 top-0 h-20 -translate-y-1/2 bg-[linear-gradient(180deg,transparent,rgba(255,255,255,.12),transparent)] mix-blend-screen">
+              <div className="absolute inset-x-0 top-1/2 h-px bg-white/80 shadow-[0_0_16px_rgba(255,255,255,.72)]" />
+              <div className="absolute inset-x-[9%] top-[calc(50%+5px)] h-px bg-[#8ea6ff]/60" />
+              <div className="absolute inset-x-[16%] top-[calc(50%-5px)] h-px bg-[#ff8eae]/45" />
+            </div>
+          </div>
+        </div>
 
         <div
           className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_38%_28%,rgba(255,255,255,.16),transparent_34%),linear-gradient(120deg,rgba(142,166,255,.07),transparent_42%,rgba(255,142,174,.07))] mix-blend-screen"
           aria-hidden="true"
         />
       </div>
-    </motion.div>
+    </div>
   );
 }

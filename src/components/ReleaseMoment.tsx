@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { memo, useEffect, useState } from "react";
 import { trackSiteEvent } from "~/lib/analytics";
 import {
   getReleasePhase,
@@ -13,7 +13,7 @@ type ReleaseMomentProps = {
   compact?: boolean;
 };
 
-export default function ReleaseMoment({
+function ReleaseMoment({
   spotifyUrl,
   compact = false,
 }: ReleaseMomentProps) {
@@ -67,3 +67,5 @@ export default function ReleaseMoment({
     </a>
   );
 }
+
+export default memo(ReleaseMoment);

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { memo, useEffect, useRef } from "react";
 
 type OneKissBlakeFieldProps = {
   active: boolean;
@@ -167,25 +167,30 @@ function compileShader(
   return shader;
 }
 
-export default function OneKissBlakeField({
+function OneKissBlakeField({
   active,
   reduceMotion,
 }: OneKissBlakeFieldProps) {
+  const containerRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const activeRef = useRef(active);
   const reduceMotionRef = useRef(reduceMotion);
+  const requestDrawRef = useRef<() => void>(() => undefined);
 
   useEffect(() => {
     activeRef.current = active;
+    requestDrawRef.current();
   }, [active]);
 
   useEffect(() => {
     reduceMotionRef.current = reduceMotion;
+    requestDrawRef.current();
   }, [reduceMotion]);
 
   useEffect(() => {
+    const container = containerRef.current;
     const canvas = canvasRef.current;
-    if (!canvas) return;
+    if (!container || !canvas) return;
 
     const gl = canvas.getContext("webgl", {
       alpha: false,
@@ -234,12 +239,16 @@ export default function OneKissBlakeField({
     let pointerY = 0.5;
     let targetPointerX = 0.5;
     let targetPointerY = 0.5;
+    let isVisible = true;
+    let resizePending = true;
+    let drawTimer = 0;
     const startedAt = performance.now();
 
     const resize = () => {
       const ratio = Math.min(window.devicePixelRatio || 1, 1.35);
-      const width = Math.max(1, Math.round(canvas.clientWidth * ratio));
-      const height = Math.max(1, Math.round(canvas.clientHeight * ratio));
+      const bounds = canvas.getBoundingClientRect();
+      const width = Math.max(1, Math.round(bounds.width * ratio));
+      const height = Math.max(1, Math.round(bounds.height * ratio));
       if (canvas.width !== width || canvas.height !== height) {
         canvas.width = width;
         canvas.height = height;
@@ -248,12 +257,28 @@ export default function OneKissBlakeField({
     };
 
     const updatePointer = (event: PointerEvent) => {
+      if (!isVisible) return;
       targetPointerX = event.clientX / window.innerWidth;
       targetPointerY = 1 - event.clientY / window.innerHeight;
     };
 
+    const scheduleDraw = (immediate = false) => {
+      if (frame || drawTimer || !isVisible || document.hidden) return;
+      const delay = immediate ? 0 : activeRef.current ? 1000 / 60 : 1000 / 30;
+      drawTimer = window.setTimeout(() => {
+        drawTimer = 0;
+        frame = window.requestAnimationFrame(draw);
+      }, delay);
+    };
+
     const draw = (now: number) => {
-      resize();
+      frame = 0;
+      if (!isVisible || document.hidden) return;
+
+      if (resizePending) {
+        resize();
+        resizePending = false;
+      }
       energyValue += ((activeRef.current ? 1 : 0) - energyValue) * 0.035;
       pointerX += (targetPointerX - pointerX) * 0.025;
       pointerY += (targetPointerY - pointerY) * 0.025;
@@ -268,15 +293,60 @@ export default function OneKissBlakeField({
       gl.uniform2f(pointer, pointerX, pointerY);
       gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
 
-      frame = window.requestAnimationFrame(draw);
+      if (!reduceMotionRef.current) scheduleDraw();
     };
 
-    window.addEventListener("pointermove", updatePointer, { passive: true });
-    frame = window.requestAnimationFrame(draw);
+    const onVisibilityChange = () => {
+      if (document.hidden) {
+        window.cancelAnimationFrame(frame);
+        window.clearTimeout(drawTimer);
+        frame = 0;
+        drawTimer = 0;
+      } else {
+        resizePending = true;
+        scheduleDraw(true);
+      }
+    };
+
+    const intersectionObserver = new IntersectionObserver(([entry]) => {
+      isVisible = Boolean(entry?.isIntersecting);
+      if (isVisible) {
+        resizePending = true;
+        scheduleDraw(true);
+      } else {
+        window.cancelAnimationFrame(frame);
+        window.clearTimeout(drawTimer);
+        frame = 0;
+        drawTimer = 0;
+      }
+    });
+    const resizeObserver = new ResizeObserver(() => {
+      resizePending = true;
+      scheduleDraw();
+    });
+    const hasFinePointer = window.matchMedia(
+      "(hover: hover) and (pointer: fine)",
+    ).matches;
+
+    intersectionObserver.observe(container);
+    resizeObserver.observe(canvas);
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    if (hasFinePointer) {
+      window.addEventListener("pointermove", updatePointer, { passive: true });
+    }
+    requestDrawRef.current = scheduleDraw;
+    scheduleDraw(true);
 
     return () => {
       window.cancelAnimationFrame(frame);
-      window.removeEventListener("pointermove", updatePointer);
+      window.clearTimeout(drawTimer);
+      intersectionObserver.disconnect();
+      resizeObserver.disconnect();
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+      if (hasFinePointer) {
+        window.removeEventListener("pointermove", updatePointer);
+      }
+      requestDrawRef.current = () => undefined;
       if (buffer) gl.deleteBuffer(buffer);
       gl.deleteProgram(program);
     };
@@ -284,6 +354,7 @@ export default function OneKissBlakeField({
 
   return (
     <div
+      ref={containerRef}
       aria-hidden="true"
       className="absolute inset-0 overflow-hidden bg-[#05070c]"
     >
@@ -329,3 +400,5 @@ export default function OneKissBlakeField({
     </div>
   );
 }
+
+export default memo(OneKissBlakeField);
