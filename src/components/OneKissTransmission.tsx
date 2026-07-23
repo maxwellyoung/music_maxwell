@@ -2,14 +2,19 @@
 
 import { Pause, Play } from "lucide-react";
 import Image from "next/image";
-import { type CSSProperties, type MouseEvent, useRef, useState } from "react";
 import {
-  lyricLineAt,
+  type CSSProperties,
+  type MouseEvent,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
+import {
   oneKissHookDuration,
   oneKissTimedHook,
-  wordProgress,
 } from "~/data/oneKissExperience";
 import { trackSiteEvent } from "~/lib/analytics";
+import { getTimedLyricFrame, type TimedLyricLine } from "~/lib/timedLyrics";
 import styles from "./OneKissTransmission.module.css";
 
 type OneKissTransmissionProps = {
@@ -28,13 +33,28 @@ export default function OneKissTransmission({
   masterSha256,
 }: OneKissTransmissionProps) {
   const audioRef = useRef<HTMLAudioElement>(null);
+  const animationFrame = useRef(0);
   const started = useRef(false);
   const completed = useRef(false);
   const [currentTime, setCurrentTime] = useState(0);
   const [playing, setPlaying] = useState(false);
   const progress = Math.min(currentTime / oneKissHookDuration, 1);
-  const lineIndex = lyricLineAt(currentTime);
-  const activeLine = lineIndex >= 0 ? oneKissTimedHook[lineIndex] : undefined;
+  const lyricFrame = getTimedLyricFrame(oneKissTimedHook, currentTime);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio || !playing) return;
+
+    const update = () => {
+      setCurrentTime(audio.currentTime);
+      if (!audio.paused && !audio.ended) {
+        animationFrame.current = window.requestAnimationFrame(update);
+      }
+    };
+
+    animationFrame.current = window.requestAnimationFrame(update);
+    return () => window.cancelAnimationFrame(animationFrame.current);
+  }, [playing]);
 
   const togglePlayback = async () => {
     const audio = audioRef.current;
@@ -75,6 +95,28 @@ export default function OneKissTransmission({
     "--signal-progress": `${progress * 100}%`,
   } as CSSProperties;
 
+  const seekTo = (time: number) => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    audio.currentTime = Math.min(Math.max(time, 0), oneKissHookDuration);
+    setCurrentTime(audio.currentTime);
+  };
+
+  const lyricContext = (
+    line: TimedLyricLine | undefined,
+    tone: "previous" | "next",
+  ) => (
+    <button
+      type="button"
+      className={`${styles.lyricContext} ${styles[tone]} font-pixel-line`}
+      onClick={() => line && seekTo(line.start)}
+      disabled={!line}
+      aria-label={line ? `Seek to ${line.text}` : undefined}
+    >
+      {line?.text ?? "\u00a0"}
+    </button>
+  );
+
   return (
     <>
       <section
@@ -104,37 +146,60 @@ export default function OneKissTransmission({
           </header>
 
           <div className={styles.console}>
-            <div className={styles.lyricWindow} aria-live="polite">
-              <p className="font-pixel-dot mb-4 text-[10px] uppercase tracking-[0.14em] text-[#8ea6ff]">
+            <div className={styles.lyricWindow}>
+              <p className="font-pixel-dot text-[10px] uppercase tracking-[0.14em] text-[#8ea6ff]">
                 {playing ? (
                   <span className={styles.live}>live lyric</span>
+                ) : lyricFrame.active ? (
+                  "lyric timeline"
                 ) : (
-                  "18 second transmission"
+                  "instrumental"
                 )}
               </p>
-              <p className={`${styles.lyricLine} font-pixel-line`}>
-                {activeLine?.words.map((word) => {
-                  const fill = activeLine
-                    ? wordProgress(currentTime, word) * 100
-                    : 0;
-                  const wordStyle = {
-                    "--word-progress": `${fill}%`,
-                  } as CSSProperties;
-
-                  return (
-                    <span
-                      className={styles.word}
-                      style={wordStyle}
-                      key={`${word.text}-${word.start}`}
-                    >
-                      {word.text}
-                      <span className={styles.wordFill} aria-hidden="true">
-                        {word.text}
-                      </span>
-                    </span>
-                  );
-                })}
+              <p className="sr-only" aria-live="polite">
+                {lyricFrame.active?.text ?? "Instrumental"}
               </p>
+              <div className={styles.lyricRail}>
+                {lyricContext(lyricFrame.previous, "previous")}
+                <button
+                  type="button"
+                  className={`${styles.lyricLine} ${
+                    lyricFrame.active && lyricFrame.active.text.length > 20
+                      ? styles.longLine
+                      : ""
+                  } font-pixel-line`}
+                  onClick={() =>
+                    lyricFrame.active && seekTo(lyricFrame.active.start)
+                  }
+                  disabled={!lyricFrame.active}
+                  aria-label={
+                    lyricFrame.active
+                      ? `Replay ${lyricFrame.active.text}`
+                      : "Instrumental"
+                  }
+                >
+                  <span aria-hidden="true">
+                    {lyricFrame.words.map((word) => {
+                      const wordStyle = {
+                        "--word-progress": `${word.progress * 100}%`,
+                      } as CSSProperties;
+
+                      return (
+                        <span
+                          className={styles.word}
+                          style={wordStyle}
+                          key={`${word.text}-${word.start}`}
+                        >
+                          {word.text}
+                          <span className={styles.wordFill}>{word.text}</span>
+                        </span>
+                      );
+                    })}
+                  </span>
+                  <span className="sr-only">{lyricFrame.active?.text}</span>
+                </button>
+                {lyricContext(lyricFrame.next, "next")}
+              </div>
             </div>
 
             <div className={styles.transport}>
@@ -184,10 +249,7 @@ export default function OneKissTransmission({
                 }}
               >
                 <div className={styles.rulerTrack}>
-                  <div
-                    className={styles.rulerFill}
-                    style={{ width: `${progress * 100}%` }}
-                  />
+                  <div className={styles.rulerFill} />
                 </div>
                 <div
                   className={`${styles.ticks} font-pixel-dot text-[9px] tracking-[0.12em]`}
@@ -207,13 +269,17 @@ export default function OneKissTransmission({
           ref={audioRef}
           src={excerptUrl}
           preload="metadata"
-          onTimeUpdate={(event) =>
-            setCurrentTime(event.currentTarget.currentTime)
-          }
+          onTimeUpdate={(event) => {
+            if (!playing) setCurrentTime(event.currentTarget.currentTime);
+          }}
           onPlay={() => setPlaying(true)}
-          onPause={() => setPlaying(false)}
-          onEnded={() => {
+          onPause={(event) => {
             setPlaying(false);
+            setCurrentTime(event.currentTarget.currentTime);
+          }}
+          onEnded={(event) => {
+            setPlaying(false);
+            setCurrentTime(event.currentTarget.duration || oneKissHookDuration);
             if (!completed.current) {
               completed.current = true;
               trackSiteEvent("audio_excerpt_completed", {

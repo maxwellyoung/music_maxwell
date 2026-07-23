@@ -31,14 +31,15 @@
   z-index: 2;
   top: 0;
   bottom: 0;
-  left: var(--signal-progress);
-  width: 1px;
-  background: #d8ff00;
+  left: 0;
+  width: 100%;
+  border-right: 1px solid #d8ff00;
   box-shadow:
     -18px 0 48px rgb(142 166 255 / 0.4),
     16px 0 64px rgb(255 43 134 / 0.28);
   opacity: 0.8;
-  transition: left 100ms linear;
+  transform: translate3d(calc(var(--signal-progress) - 100%), 0, 0);
+  will-change: transform;
 }
 
 .frame {
@@ -125,21 +126,71 @@
 .console {
   display: grid;
   width: min(100%, 74rem);
-  grid-template-columns: minmax(12rem, 0.62fr) minmax(18rem, 1.38fr);
-  align-items: end;
-  gap: clamp(1.5rem, 5vw, 5rem);
+  grid-template-columns: 1fr;
+  gap: clamp(1rem, 2vw, 1.5rem);
 }
 
 .lyricWindow {
-  min-height: 11rem;
+  min-width: 0;
   text-wrap: balance;
 }
 
+.lyricRail {
+  display: grid;
+  min-height: 10.75rem;
+  grid-template-rows: 1.35rem minmax(6.5rem, auto) 1.35rem;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.65rem;
+}
+
+.lyricContext {
+  overflow: hidden;
+  width: 100%;
+  color: rgb(245 248 255 / 0.38);
+  font-size: clamp(0.8rem, 1.4vw, 1.05rem);
+  line-height: 1;
+  text-align: left;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition:
+    color 160ms ease,
+    transform 160ms ease;
+}
+
+.lyricContext:not(:disabled) {
+  cursor: pointer;
+}
+
+.lyricContext:not(:disabled):hover {
+  color: rgb(245 248 255 / 0.7);
+  transform: translateX(0.2rem);
+}
+
+.lyricContext:focus-visible,
+.lyricLine:focus-visible {
+  outline: 1px solid #d8ff00;
+  outline-offset: 0.25rem;
+}
+
+.previous {
+  color: rgb(245 248 255 / 0.38);
+}
+
+.next {
+  color: rgb(245 248 255 / 0.18);
+}
+
 .lyricLine {
+  min-width: 0;
+  width: 100%;
   margin: 0;
-  font-size: clamp(2.5rem, 6vw, 6rem);
-  line-height: 0.82;
+  color: rgb(245 248 255 / 0.24);
+  font-size: clamp(2.6rem, 5.2vw, 4.8rem);
+  line-height: 0.88;
   letter-spacing: -0.04em;
+  text-align: left;
   text-transform: uppercase;
 }
 
@@ -154,9 +205,10 @@
   position: absolute;
   inset: 0;
   overflow: hidden;
-  width: var(--word-progress);
+  clip-path: inset(0 calc(100% - var(--word-progress)) 0 0);
   color: #f5f8ff;
   white-space: nowrap;
+  will-change: clip-path;
 }
 
 .transport {
@@ -200,8 +252,11 @@
 }
 
 .rulerFill {
+  width: 100%;
   height: 100%;
   background: #8ea6ff;
+  clip-path: inset(0 calc(100% - var(--signal-progress)) 0 0);
+  will-change: clip-path;
 }
 
 .ticks {
@@ -277,7 +332,7 @@
 
 @media (max-width: 760px) {
   .stage {
-    min-height: max(44rem, calc(100svh - 5rem));
+    min-height: max(50rem, calc(100svh - 5rem));
   }
 
   .frame {
@@ -289,24 +344,24 @@
   }
 
   .chrome {
-    min-height: max(44rem, calc(100svh - 5rem));
+    min-height: max(50rem, calc(100svh - 5rem));
   }
 
   .title {
     font-size: clamp(6rem, 34vw, 10rem);
   }
 
-  .console {
-    grid-template-columns: 1fr;
-    gap: 1rem;
-  }
-
-  .lyricWindow {
-    min-height: 7rem;
+  .lyricRail {
+    min-height: 9rem;
+    grid-template-rows: 1.1rem minmax(5.6rem, auto) 1.1rem;
   }
 
   .lyricLine {
-    font-size: clamp(2.45rem, 12vw, 4.25rem);
+    font-size: clamp(2.35rem, 10.5vw, 3.75rem);
+  }
+
+  .longLine {
+    font-size: clamp(1.95rem, 6.1vw, 2.65rem);
   }
 
   .packet {
@@ -341,5 +396,17 @@
   .dataCell:nth-child(even) {
     padding-left: 1rem;
     border-left: 1px solid rgb(255 255 255 / 0.2);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .frame img,
+  .backdrop,
+  .lyricContext {
+    transition: none;
+  }
+
+  .playing .frame img {
+    transform: none;
   }
 }
