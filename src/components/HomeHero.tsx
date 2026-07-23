@@ -26,6 +26,8 @@ type HomeHeroProps = {
   };
   presentation: {
     stills: readonly [string, ...string[]];
+    imagePosition?: string;
+    imageFilter?: string;
     excerpt: string;
     excerptSeconds: number;
     standbyLine: string;
@@ -203,6 +205,10 @@ export default function HomeHero({ release, presentation }: HomeHeroProps) {
                 priority={index === 0}
                 sizes="(min-width: 640px) 58vw, 100vw"
                 className="object-cover object-center"
+                style={{
+                  filter: presentation.imageFilter,
+                  objectPosition: presentation.imagePosition,
+                }}
               />
             </motion.div>
           ))}
