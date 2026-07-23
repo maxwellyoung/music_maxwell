@@ -1,7 +1,7 @@
 export const siteConfig = {
   featuredReleaseSlug: "1kiss",
   featuredHero: {
-    background: "/1kiss/signal-bloom-blue.webp",
+    background: "/1kiss/signal-field-v2.webp",
     still: "/1kiss/still-hook.jpg",
     excerpt: "/1kiss/1kiss-hook.m4a",
     excerptSeconds: 18,
