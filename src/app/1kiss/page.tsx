@@ -52,6 +52,7 @@ export default function OneKissPage() {
       />
 
       <OneKissTransmission
+        artworkUrl={song.artwork}
         excerptUrl={song.previewUrl!}
         masterSha256={oneKissReleaseMedia.audioMaster.sha256}
       />

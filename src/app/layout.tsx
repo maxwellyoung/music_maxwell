@@ -23,11 +23,11 @@ export const metadata: Metadata = {
   openGraph: {
     siteName: "Maxwell Young",
     type: "website",
-    images: ["/1kiss/key-art-feed.png"],
+    images: ["/artworks/1kiss.jpg"],
   },
   twitter: {
     card: "summary_large_image",
-    images: ["/1kiss/key-art-feed.png"],
+    images: ["/artworks/1kiss.jpg"],
   },
 };
 

@@ -13,6 +13,7 @@ import { trackSiteEvent } from "~/lib/analytics";
 import styles from "./OneKissTransmission.module.css";
 
 type OneKissTransmissionProps = {
+  artworkUrl: string;
   excerptUrl: string;
   masterSha256: string;
 };
@@ -22,6 +23,7 @@ function formatTime(seconds: number) {
 }
 
 export default function OneKissTransmission({
+  artworkUrl,
   excerptUrl,
   masterSha256,
 }: OneKissTransmissionProps) {
@@ -242,12 +244,12 @@ export default function OneKissTransmission({
         <div className={styles.packetBody}>
           <article className={styles.artifact}>
             <p className="font-pixel-dot text-[10px] uppercase tracking-[0.16em] text-[#8ea6ff]">
-              A / 01 / key art
+              A / 01 / cover artwork
             </p>
             <div className={styles.artwork}>
               <Image
-                src="/1kiss/key-art-feed.png"
-                alt="1kiss key art featuring Maxwell Young"
+                src={artworkUrl}
+                alt="1kiss cover artwork"
                 fill
                 sizes="(min-width: 760px) 54vw, 100vw"
                 className="object-cover"
