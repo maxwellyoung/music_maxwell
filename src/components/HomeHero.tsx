@@ -35,12 +35,11 @@ type HomeHeroProps = {
 export default function HomeHero({ release, presentation }: HomeHeroProps) {
   const heroRef = useRef<HTMLElement>(null);
   const audioRef = useRef<HTMLAudioElement>(null);
+  const animationFrame = useRef(0);
   const reduceMotion = useReducedMotion();
   const [isPlaying, setIsPlaying] = useState(false);
   const [hasStarted, setHasStarted] = useState(false);
-  const [progress, setProgress] = useState(0);
   const [currentTime, setCurrentTime] = useState(0);
-  const [cueIndex, setCueIndex] = useState(2);
   const excerptStarted = useRef(false);
   const excerptCompleted = useRef(false);
   const { scrollYProgress } = useScroll({
@@ -58,6 +57,12 @@ export default function HomeHero({ release, presentation }: HomeHeroProps) {
   const timedFrame = timedLyrics
     ? getTimedLyricFrame(timedLyrics.lines, currentTime)
     : undefined;
+  const duration = timedLyrics?.duration ?? presentation.excerptSeconds;
+  const progress = Math.min(currentTime / duration, 1);
+  const cueIndex = presentation.cues.reduce(
+    (latest, cue, index) => (cue.at <= currentTime ? index : latest),
+    0,
+  );
   const visibleLine = timedLyrics
     ? timedFrame?.active?.text
     : presentation.cues[cueIndex]?.line;
@@ -66,6 +71,21 @@ export default function HomeHero({ release, presentation }: HomeHeroProps) {
     const audio = audioRef.current;
     return () => audio?.pause();
   }, []);
+
+  useEffect(() => {
+    const audio = audioRef.current;
+    if (!audio || !isPlaying) return;
+
+    const update = () => {
+      setCurrentTime(audio.currentTime);
+      if (!audio.paused && !audio.ended) {
+        animationFrame.current = window.requestAnimationFrame(update);
+      }
+    };
+
+    animationFrame.current = window.requestAnimationFrame(update);
+    return () => window.cancelAnimationFrame(animationFrame.current);
+  }, [isPlaying]);
 
   const togglePlayback = async () => {
     const audio = audioRef.current;
@@ -94,17 +114,8 @@ export default function HomeHero({ release, presentation }: HomeHeroProps) {
 
   const syncPlayback = () => {
     const audio = audioRef.current;
-    if (!audio) return;
-    const duration = Number.isFinite(audio.duration)
-      ? audio.duration
-      : presentation.excerptSeconds;
-    setProgress(Math.min(audio.currentTime / duration, 1));
+    if (!audio || isPlaying) return;
     setCurrentTime(audio.currentTime);
-    const nextCue = presentation.cues.reduce(
-      (latest, cue, index) => (cue.at <= audio.currentTime ? index : latest),
-      0,
-    );
-    setCueIndex(Math.max(0, nextCue));
   };
 
   return (
@@ -192,7 +203,7 @@ export default function HomeHero({ release, presentation }: HomeHeroProps) {
                 <span aria-hidden="true">
                   {timedFrame.words.map((word) => {
                     const wordStyle = {
-                      width: `${word.progress * 100}%`,
+                      clipPath: `inset(0 ${100 - word.progress * 100}% 0 0)`,
                     } as CSSProperties;
 
                     return (
@@ -202,7 +213,7 @@ export default function HomeHero({ release, presentation }: HomeHeroProps) {
                       >
                         {word.text}
                         <span
-                          className="absolute inset-y-0 left-0 overflow-hidden whitespace-nowrap text-[#f5f8ff]"
+                          className="absolute inset-0 overflow-hidden whitespace-nowrap text-[#f5f8ff] will-change-[clip-path]"
                           style={wordStyle}
                         >
                           {word.text}
@@ -253,8 +264,8 @@ export default function HomeHero({ release, presentation }: HomeHeroProps) {
               aria-hidden="true"
             >
               <div
-                className="h-full bg-[#8ea6ff] transition-[width] duration-100"
-                style={{ width: `${progress * 100}%` }}
+                className="h-full origin-left bg-[#8ea6ff] will-change-transform"
+                style={{ transform: `scaleX(${progress})` }}
               />
             </div>
             <Link
@@ -281,7 +292,10 @@ export default function HomeHero({ release, presentation }: HomeHeroProps) {
         src={presentation.excerpt}
         preload="metadata"
         onTimeUpdate={syncPlayback}
-        onPause={() => setIsPlaying(false)}
+        onPause={(event) => {
+          setIsPlaying(false);
+          setCurrentTime(event.currentTarget.currentTime);
+        }}
         onPlay={() => setIsPlaying(true)}
         onEnded={() => {
           if (!excerptCompleted.current) {
@@ -292,10 +306,8 @@ export default function HomeHero({ release, presentation }: HomeHeroProps) {
             });
           }
           setIsPlaying(false);
-          setProgress(0);
           setCurrentTime(0);
           setHasStarted(false);
-          setCueIndex(2);
         }}
       />
     </section>
