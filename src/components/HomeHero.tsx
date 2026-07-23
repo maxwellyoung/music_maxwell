@@ -10,6 +10,7 @@ import { ArrowDownRight, Pause, Play } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { type CSSProperties, useEffect, useRef, useState } from "react";
+import OneKissBlakeField from "~/components/OneKissBlakeField";
 import { findTimedLyrics } from "~/data/timedLyrics";
 import { trackSiteEvent } from "~/lib/analytics";
 import { getTimedLyricFrame } from "~/lib/timedLyrics";
@@ -23,7 +24,6 @@ type HomeHeroProps = {
     releasePath: string;
   };
   presentation: {
-    background: string;
     still: string;
     excerpt: string;
     excerptSeconds: number;
@@ -124,33 +124,10 @@ export default function HomeHero({ release, presentation }: HomeHeroProps) {
       ref={heroRef}
       className="relative isolate min-h-svh overflow-hidden bg-[#05070c] text-[#f5f8ff]"
     >
-      <motion.div
-        aria-hidden="true"
-        className="absolute inset-0"
-        animate={
-          isPlaying && !reduceMotion
-            ? {
-                x: ["0%", "-0.65%", "0%"],
-                y: ["0%", "0.45%", "0%"],
-                scale: [1, 1.025, 1],
-              }
-            : { x: "0%", y: "0%", scale: 1 }
-        }
-        transition={
-          isPlaying && !reduceMotion
-            ? { duration: 8, repeat: Infinity, ease: "easeInOut" }
-            : { duration: 0.8, ease: [0.22, 1, 0.36, 1] }
-        }
-      >
-        <Image
-          src={presentation.background}
-          alt=""
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover opacity-80 saturate-[1.08]"
-        />
-      </motion.div>
+      <OneKissBlakeField
+        active={isPlaying}
+        reduceMotion={Boolean(reduceMotion)}
+      />
       <div className="absolute inset-0 bg-[linear-gradient(90deg,rgba(5,7,12,.9)_0%,rgba(5,7,12,.52)_48%,rgba(5,7,12,.1)_100%)]" />
 
       <motion.div

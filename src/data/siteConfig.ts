@@ -1,8 +1,7 @@
 export const siteConfig = {
   featuredReleaseSlug: "1kiss",
   featuredHero: {
-    background: "/1kiss/signal-field-v2.webp",
-    still: "/1kiss/still-hook.jpg",
+    still: "/1kiss/still-beauty.jpg",
     excerpt: "/1kiss/1kiss-hook.m4a",
     excerptSeconds: 18,
     standbyLine: "your hips / our lips / one kiss",
