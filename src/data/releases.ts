@@ -223,7 +223,6 @@ yeah`,
 Produced by Maxwell Young, Struan Finley, Eddie Johnston
 Mixed by Eddie Johnston
 Performed by Maxwell Young
-Published by Copyright Control
 Ninetynine Records
 © ℗ 2026 Maxwell Young`,
   },
