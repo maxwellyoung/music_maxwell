@@ -12,9 +12,14 @@ import {
 type ReleaseMomentProps = {
   links: Song["links"];
   compact?: boolean;
+  location?: "home" | "release_room";
 };
 
-function ReleaseMoment({ links, compact = false }: ReleaseMomentProps) {
+function ReleaseMoment({
+  links,
+  compact = false,
+  location,
+}: ReleaseMomentProps) {
   const [phase, setPhase] = useState<ReleasePhase>("upcoming");
   const destinations = getStreamingDestinations({ links });
 
@@ -32,7 +37,7 @@ function ReleaseMoment({ links, compact = false }: ReleaseMomentProps) {
       : phase === "release_day"
         ? "out today"
         : "out now";
-  const action = phase === "upcoming" ? "open the release" : "choose a service";
+  const action = phase === "upcoming" ? "open the release" : "listen now";
 
   return (
     <div
@@ -65,7 +70,7 @@ function ReleaseMoment({ links, compact = false }: ReleaseMomentProps) {
               trackSiteEvent("streaming_destination_clicked", {
                 release: "1kiss",
                 service: destination.service,
-                location: compact ? "home" : "release_room",
+                location: location ?? (compact ? "home" : "release_room"),
                 state: phase,
               })
             }

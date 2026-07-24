@@ -93,7 +93,16 @@
   flex-direction: column;
   justify-content: space-between;
   padding: clamp(6.5rem, 10vw, 8.5rem) clamp(1.25rem, 4vw, 4rem)
-    clamp(1.5rem, 4vw, 3.5rem);
+    clamp(8rem, 13vw, 10rem);
+}
+
+.listenDock {
+  position: absolute;
+  z-index: 5;
+  right: clamp(1.25rem, 4vw, 4rem);
+  bottom: clamp(1.5rem, 3vw, 2.5rem);
+  left: clamp(1.25rem, 4vw, 4rem);
+  width: min(calc(100% - clamp(2.5rem, 8vw, 8rem)), 74rem);
 }
 
 .mast {
@@ -345,6 +354,11 @@
 
   .chrome {
     min-height: max(50rem, calc(100svh - 5rem));
+    padding-bottom: 9.5rem;
+  }
+
+  .listenDock {
+    bottom: 1.25rem;
   }
 
   .title {

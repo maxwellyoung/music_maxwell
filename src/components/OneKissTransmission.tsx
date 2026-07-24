@@ -13,14 +13,17 @@ import {
   oneKissHookDuration,
   oneKissTimedHook,
 } from "~/data/oneKissExperience";
+import type { Song } from "~/data/releases";
 import { trackSiteEvent } from "~/lib/analytics";
 import { getTimedLyricFrame, type TimedLyricLine } from "~/lib/timedLyrics";
 import styles from "./OneKissTransmission.module.css";
+import ReleaseMoment from "./ReleaseMoment";
 
 type OneKissTransmissionProps = {
   artworkUrl: string;
   excerptUrl: string;
   masterSha256: string;
+  links: Song["links"];
 };
 
 function formatTime(seconds: number) {
@@ -31,6 +34,7 @@ export default function OneKissTransmission({
   artworkUrl,
   excerptUrl,
   masterSha256,
+  links,
 }: OneKissTransmissionProps) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const animationFrame = useRef(0);
@@ -263,6 +267,10 @@ export default function OneKissTransmission({
               </div>
             </div>
           </div>
+        </div>
+
+        <div className={styles.listenDock}>
+          <ReleaseMoment links={links} compact location="release_room" />
         </div>
 
         <audio

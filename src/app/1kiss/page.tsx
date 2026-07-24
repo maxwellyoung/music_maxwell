@@ -55,6 +55,7 @@ export default function OneKissPage() {
         artworkUrl={song.artwork}
         excerptUrl={song.previewUrl!}
         masterSha256={oneKissReleaseMedia.audioMaster.sha256}
+        links={song.links}
       />
 
       <section className="border-b border-white/15">
