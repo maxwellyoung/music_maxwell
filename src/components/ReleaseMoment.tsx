@@ -12,12 +12,14 @@ import {
 type ReleaseMomentProps = {
   links: Song["links"];
   compact?: boolean;
+  gateway?: boolean;
   location?: "home" | "release_room";
 };
 
 function ReleaseMoment({
   links,
   compact = false,
+  gateway = false,
   location,
 }: ReleaseMomentProps) {
   const [phase, setPhase] = useState<ReleasePhase>("upcoming");
@@ -38,6 +40,64 @@ function ReleaseMoment({
         ? "out today"
         : "out now";
   const action = phase === "upcoming" ? "open the release" : "listen now";
+  const primaryDestination =
+    destinations.find(({ service }) => service === "spotify") ??
+    destinations[0];
+  const secondaryDestinations = destinations.filter(
+    ({ service }) => service !== primaryDestination?.service,
+  );
+  const clickLocation = location ?? (compact ? "home" : "release_room");
+  const trackDestination = (service: string) =>
+    trackSiteEvent("streaming_destination_clicked", {
+      release: "1kiss",
+      service,
+      location: clickLocation,
+      state: phase,
+    });
+
+  if (gateway && primaryDestination) {
+    return (
+      <div
+        className="font-pixel-dot w-full border border-[#f5f8ff] bg-[#f5f8ff] text-[#05070c]"
+      >
+        <a
+          href={primaryDestination.href}
+          target="_blank"
+          rel="noopener noreferrer"
+          onClick={() => trackDestination(primaryDestination.service)}
+          className="group flex min-h-[4.75rem] items-center justify-between gap-6 px-5 text-sm uppercase tracking-[0.07em] transition-transform duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#526dca] active:scale-[0.985]"
+          aria-label={`Listen to 1kiss on ${primaryDestination.label}`}
+        >
+          <span>Listen to 1kiss on {primaryDestination.label}</span>
+          <span
+            className="text-base transition-transform duration-150 ease-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+            aria-hidden="true"
+          >
+            ↗
+          </span>
+        </a>
+
+        <nav
+          className="flex min-h-12 flex-wrap items-center gap-x-4 border-t border-[#05070c]/20 px-5 py-2"
+          aria-label="Listen on another service"
+        >
+          {secondaryDestinations.map((destination) => (
+            <a
+              key={destination.service}
+              href={destination.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={() => trackDestination(destination.service)}
+              className="text-[#05070c]/62 inline-flex min-h-8 items-center border-b border-transparent text-[0.62rem] uppercase tracking-[0.06em] transition-colors duration-150 ease-out hover:border-[#05070c]/35 hover:text-[#05070c] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#526dca]"
+              aria-label={`Listen on ${destination.label}`}
+            >
+              {destination.shortLabel ?? destination.label}
+            </a>
+          ))}
+        </nav>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -66,14 +126,7 @@ function ReleaseMoment({
             href={destination.href}
             target="_blank"
             rel="noopener noreferrer"
-            onClick={() =>
-              trackSiteEvent("streaming_destination_clicked", {
-                release: "1kiss",
-                service: destination.service,
-                location: location ?? (compact ? "home" : "release_room"),
-                state: phase,
-              })
-            }
+            onClick={() => trackDestination(destination.service)}
             className={
               compact
                 ? "group mr-4 inline-flex min-h-9 items-center gap-1.5 border-b border-[#05070c]/35 text-[0.68rem] uppercase tracking-[0.08em] transition hover:border-[#526dca] hover:text-[#526dca] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#526dca]"

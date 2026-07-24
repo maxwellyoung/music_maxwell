@@ -270,7 +270,7 @@ export default function OneKissTransmission({
         </div>
 
         <div className={styles.listenDock}>
-          <ReleaseMoment links={links} compact location="release_room" />
+          <ReleaseMoment links={links} gateway location="release_room" />
         </div>
 
         <audio

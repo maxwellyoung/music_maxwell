@@ -102,7 +102,7 @@
   right: clamp(1.25rem, 4vw, 4rem);
   bottom: clamp(1.5rem, 3vw, 2.5rem);
   left: clamp(1.25rem, 4vw, 4rem);
-  width: min(calc(100% - clamp(2.5rem, 8vw, 8rem)), 74rem);
+  width: min(calc(100% - clamp(2.5rem, 8vw, 8rem)), 30rem);
 }
 
 .mast {
