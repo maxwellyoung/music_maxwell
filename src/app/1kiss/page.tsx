@@ -11,9 +11,9 @@ import { createReleaseMetadata } from "~/lib/releaseMetadata";
 const song = getReleaseBySlug("1kiss")!;
 
 export const metadata = createReleaseMetadata(song, {
-  title: "1kiss | Maxwell Young",
+  title: "1kiss by Maxwell Young — Listen Now",
   description:
-    "1kiss by Maxwell Young, released July 24, 2026. Lyrics, credits, artwork, and listening links.",
+    "Listen to 1kiss by Maxwell Young on Spotify, Apple Music, YouTube Music, TIDAL and Deezer. Explore the artwork, credits and complete lyrics.",
 });
 const streamingDestinations = getStreamingDestinations(song);
 const lyric = song.lyrics?.["1kiss"] ?? "";

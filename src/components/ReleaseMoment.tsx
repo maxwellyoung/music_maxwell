@@ -56,10 +56,10 @@ function ReleaseMoment({
     });
 
   if (gateway && primaryDestination) {
+    const gatewayStatus = phase === "upcoming" ? "24 jul" : "out now";
+
     return (
-      <div
-        className="font-pixel-dot w-full border border-[#f5f8ff] bg-[#f5f8ff] text-[#05070c]"
-      >
+      <div className="font-pixel-dot w-full border border-[#f5f8ff] bg-[#f5f8ff] text-[#05070c]">
         <a
           href={primaryDestination.href}
           target="_blank"
@@ -68,7 +68,12 @@ function ReleaseMoment({
           className="group flex min-h-[4.75rem] items-center justify-between gap-6 px-5 text-sm uppercase tracking-[0.07em] transition-transform duration-150 ease-out focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-[#526dca] active:scale-[0.985]"
           aria-label={`Listen to 1kiss on ${primaryDestination.label}`}
         >
-          <span>Listen to 1kiss on {primaryDestination.label}</span>
+          <span className="flex flex-col gap-1.5">
+            <span className="text-[0.56rem] tracking-[0.14em] text-[#05070c]/50">
+              {gatewayStatus}
+            </span>
+            <span>Listen to 1kiss on {primaryDestination.label}</span>
+          </span>
           <span
             className="text-base transition-transform duration-150 ease-out group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
             aria-hidden="true"
@@ -89,9 +94,8 @@ function ReleaseMoment({
               rel="noopener noreferrer"
               onClick={() => trackDestination(destination.service)}
               className="text-[#05070c]/62 inline-flex min-h-8 items-center border-b border-transparent text-[0.62rem] uppercase tracking-[0.06em] transition-colors duration-150 ease-out hover:border-[#05070c]/35 hover:text-[#05070c] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#526dca]"
-              aria-label={`Listen on ${destination.label}`}
             >
-              {destination.shortLabel ?? destination.label}
+              {destination.label}
             </a>
           ))}
         </nav>
@@ -134,10 +138,7 @@ function ReleaseMoment({
             }
             aria-label={`Listen on ${destination.label}`}
           >
-            <span className="sm:hidden">
-              {destination.shortLabel ?? destination.label}
-            </span>
-            <span className="hidden sm:inline">{destination.label}</span>
+            <span>{destination.label}</span>
             <span
               className="transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
               aria-hidden="true"

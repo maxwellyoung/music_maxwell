@@ -109,17 +109,29 @@ export default function OneKissTransmission({
   const lyricContext = (
     line: TimedLyricLine | undefined,
     tone: "previous" | "next",
-  ) => (
-    <button
-      type="button"
-      className={`${styles.lyricContext} ${styles[tone]} font-pixel-line`}
-      onClick={() => line && seekTo(line.start)}
-      disabled={!line}
-      aria-label={line ? `Seek to ${line.text}` : undefined}
-    >
-      {line?.text ?? "\u00a0"}
-    </button>
-  );
+  ) => {
+    if (!line) {
+      return (
+        <span
+          aria-hidden="true"
+          className={`${styles.lyricContext} ${styles[tone]} font-pixel-line`}
+        >
+          {"\u00a0"}
+        </span>
+      );
+    }
+
+    return (
+      <button
+        type="button"
+        className={`${styles.lyricContext} ${styles[tone]} font-pixel-line`}
+        onClick={() => seekTo(line.start)}
+        aria-label={`Seek to ${line.text}`}
+      >
+        {line.text}
+      </button>
+    );
+  };
 
   return (
     <>
@@ -131,7 +143,7 @@ export default function OneKissTransmission({
         <div className={styles.backdrop} aria-hidden="true" />
         <div className={styles.frame} aria-hidden="true">
           <Image
-            src="/1kiss/still-hook.jpg"
+            src="/1kiss/still-film-close-smile.jpg"
             alt=""
             fill
             priority
@@ -222,7 +234,9 @@ export default function OneKissTransmission({
                     <Play className="ml-0.5 h-4 w-4" />
                   )}
                 </span>
-                <span>{playing ? "pause signal" : "open signal"}</span>
+                <span>
+                  {playing ? "pause preview" : "play 18-second preview"}
+                </span>
                 <span className="tabular-nums text-white/55">
                   {formatTime(currentTime)} / 00:18
                 </span>
