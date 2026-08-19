@@ -7,7 +7,10 @@ import { z } from "zod";
 // Forum schemas
 export const createTopicSchema = z.object({
   title: z.string().min(1, "Title is required").max(200, "Title too long"),
-  content: z.string().min(1, "Content is required").max(10000, "Content too long"),
+  content: z
+    .string()
+    .min(1, "Content is required")
+    .max(10000, "Content too long"),
 });
 
 export const listTopicsSchema = z.object({
@@ -20,7 +23,10 @@ export const deleteTopicSchema = z.object({
 });
 
 export const createReplySchema = z.object({
-  content: z.string().min(1, "Content is required").max(5000, "Content too long"),
+  content: z
+    .string()
+    .min(1, "Content is required")
+    .max(5000, "Content too long"),
   topicId: z.string().min(1, "Topic ID is required"),
 });
 
@@ -46,7 +52,10 @@ export const forgotPasswordSchema = z.object({
 });
 
 export const resetPasswordSchema = z.object({
-  token: z.string().min(80, "Invalid reset token").max(160, "Invalid reset token"),
+  token: z
+    .string()
+    .min(80, "Invalid reset token")
+    .max(160, "Invalid reset token"),
   password: z
     .string()
     .min(8, "Password must be at least 8 characters")
@@ -60,8 +69,34 @@ export const setUsernameSchema = z.object({
     .max(20, "Username must be at most 20 characters")
     .regex(
       /^[a-zA-Z0-9_-]+$/,
-      "Username can only contain letters, numbers, underscores, and hyphens"
+      "Username can only contain letters, numbers, underscores, and hyphens",
     ),
+});
+
+const optionalProfileUrl = z
+  .string()
+  .trim()
+  .max(300, "Link is too long")
+  .refine(
+    (value) => {
+      if (!value) return true;
+      try {
+        const url = new URL(value);
+        return url.protocol === "https:" || url.protocol === "http:";
+      } catch {
+        return false;
+      }
+    },
+    { message: "Use a full http or https URL" },
+  );
+
+export const updateProfileSchema = z.object({
+  bio: z.string().trim().max(320, "Bio must be 320 characters or less"),
+  socialLinks: z.object({
+    twitter: optionalProfileUrl,
+    instagram: optionalProfileUrl,
+    website: optionalProfileUrl,
+  }),
 });
 
 // Demo schemas
@@ -74,7 +109,10 @@ export const createDemoSchema = z.object({
 
 export const createDemoCommentSchema = z.object({
   author: z.string().min(1).max(80).optional(),
-  content: z.string().min(1, "Content is required").max(2000, "Comment too long"),
+  content: z
+    .string()
+    .min(1, "Content is required")
+    .max(2000, "Comment too long"),
 });
 
 // Report schema
@@ -93,6 +131,7 @@ export type ChangePasswordInput = z.infer<typeof changePasswordSchema>;
 export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;
 export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;
 export type SetUsernameInput = z.infer<typeof setUsernameSchema>;
+export type UpdateProfileInput = z.infer<typeof updateProfileSchema>;
 export type CreateDemoInput = z.infer<typeof createDemoSchema>;
 export type CreateDemoCommentInput = z.infer<typeof createDemoCommentSchema>;
 export type CreateReportInput = z.infer<typeof createReportSchema>;

@@ -1,178 +1,221 @@
-"use client";
-
-import { useEffect, useState } from "react";
-import { useParams } from "next/navigation";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
-import { Button } from "~/components/ui/button";
-import { Separator } from "~/components/ui/separator";
-import { motion } from "framer-motion";
 import Link from "next/link";
+import {
+  ArrowLeft,
+  ArrowUpRight,
+  Instagram,
+  Link2,
+  Twitter,
+} from "lucide-react";
+import { getReleaseWallWhere } from "~/lib/forum";
+import { prisma } from "~/lib/prisma";
 
-interface UserProfile {
-  username: string;
-  displayName: string;
-  bio: string;
-  socialLinks: {
-    twitter: string;
-    instagram: string;
-    website: string;
-  };
+export const dynamic = "force-dynamic";
+
+type SocialLinks = {
+  twitter?: string;
+  instagram?: string;
+  website?: string;
+};
+
+function safeLinks(value: unknown): SocialLinks {
+  if (!value || typeof value !== "object" || Array.isArray(value)) return {};
+
+  const links = value as Record<string, unknown>;
+  return Object.fromEntries(
+    ["twitter", "instagram", "website"].flatMap((key) => {
+      const raw = links[key];
+      if (typeof raw !== "string") return [];
+      try {
+        const url = new URL(raw);
+        return url.protocol === "https:" || url.protocol === "http:"
+          ? [[key, raw]]
+          : [];
+      } catch {
+        return [];
+      }
+    }),
+  );
 }
 
-export default function UserProfilePage() {
-  const params = useParams();
-  const [profile, setProfile] = useState<UserProfile | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+export default async function UserProfilePage({
+  params,
+}: {
+  params: Promise<{ username: string }>;
+}) {
+  const { username } = await params;
+  const profile = await prisma.user.findUnique({
+    where: { username },
+    select: {
+      username: true,
+      name: true,
+      bio: true,
+      socialLinks: true,
+      topics: {
+        where: getReleaseWallWhere(),
+        orderBy: { createdAt: "desc" },
+        take: 5,
+        select: {
+          id: true,
+          title: true,
+          content: true,
+          createdAt: true,
+          _count: { select: { replies: true } },
+        },
+      },
+    },
+  });
 
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const res = await fetch(`/api/user/${String(params.username)}`);
-        if (!res.ok) throw new Error("Failed to fetch profile");
-        const data = (await res.json()) as UserProfile;
-        setProfile(data);
-      } catch (error) {
-        console.error("Error fetching profile:", error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    void fetchProfile();
-  }, [params.username]);
-
-  if (isLoading) {
+  if (!profile?.username) {
     return (
-      <main className="container mx-auto px-4 py-16">
-        <div className="mx-auto max-w-2xl">
-          <div className="animate-pulse space-y-4">
-            <div className="h-8 w-48 rounded bg-muted" />
-            <div className="h-4 w-32 rounded bg-muted" />
-            <Separator />
-            <div className="h-64 rounded-lg bg-muted" />
-          </div>
-        </div>
-      </main>
-    );
-  }
-
-  if (!profile) {
-    return (
-      <main className="container mx-auto px-4 py-16">
-        <div className="mx-auto max-w-2xl text-center">
-          <h1 className="mb-4 text-4xl font-bold">User Not Found</h1>
-          <p className="mb-8 text-lg text-muted-foreground">
-            The user you&apos;re looking for doesn&apos;t exist or has been
-            removed.
-          </p>
-          <Link href="/forum" passHref legacyBehavior>
-            <Button
-              variant="outline"
-              className="px-5 py-2 text-base font-semibold"
-            >
-              ← Back to Notes
-            </Button>
+      <main className="notes-canvas flex min-h-[70vh] items-center px-5 py-16 text-center">
+        <div className="mx-auto max-w-xl">
+          <p className="font-reenie text-5xl text-primary">no one here</p>
+          <h1 className="mt-4 text-4xl">That person is not on the wall.</h1>
+          <Link
+            href="/forum"
+            className="mt-8 inline-flex border-b-2 border-foreground pb-1 text-xs font-bold uppercase tracking-[0.18em]"
+          >
+            Back to Notes
           </Link>
         </div>
       </main>
     );
   }
+
+  const links = safeLinks(profile.socialLinks);
+  const displayName = profile.name || profile.username;
+  const initial = displayName.slice(0, 1).toUpperCase();
 
   return (
-    <main className="container mx-auto px-4 py-16">
-      <div className="mx-auto max-w-2xl space-y-8">
-        {/* Back Button */}
-        <div className="mb-6">
-          <Link href="/forum" passHref legacyBehavior>
-            <Button
-              variant="outline"
-              className="px-5 py-2 text-base font-semibold"
-            >
-              ← Back to Notes
-            </Button>
-          </Link>
-        </div>
-
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4 }}
-        >
-          <h1 className="mb-2 text-4xl font-bold tracking-tight">
-            {profile.displayName || profile.username}
-          </h1>
-          <p className="text-lg text-muted-foreground">@{profile.username}</p>
-        </motion.div>
-
-        <Separator />
-
-        {/* Profile Information */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.4, delay: 0.1 }}
-        >
-          <Card className="bg-background">
-            <CardHeader>
-              <CardTitle>About</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <p className="whitespace-pre-wrap text-base">
-                {profile.bio || "No bio yet."}
-              </p>
-            </CardContent>
-          </Card>
-        </motion.div>
-
-        {/* Social Links */}
-        {(profile.socialLinks?.twitter ||
-          profile.socialLinks?.instagram ||
-          profile.socialLinks?.website) && (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4, delay: 0.2 }}
+    <main className="notes-canvas min-h-screen">
+      <section className="bg-[#11100f] px-5 pb-16 pt-8 text-white sm:px-8 sm:pb-20 lg:px-12">
+        <div className="mx-auto max-w-[1280px]">
+          <Link
+            href="/forum"
+            className="group mb-16 inline-flex min-h-11 items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-white/45 transition hover:text-white"
           >
-            <Card className="bg-background">
-              <CardHeader>
-                <CardTitle>Social Links</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-2">
-                {profile.socialLinks?.twitter && (
+            <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
+            The wall
+          </Link>
+
+          <div className="grid gap-10 md:grid-cols-[0.32fr_0.68fr] md:items-end">
+            <div
+              className="flex aspect-square max-w-[280px] items-center justify-center rounded-full bg-[#3157ec] text-[10rem] font-bold leading-none text-white"
+              aria-hidden="true"
+            >
+              {initial}
+            </div>
+            <div>
+              <p className="mb-4 text-xs font-bold uppercase tracking-[0.22em] text-white/45">
+                Notes contributor
+              </p>
+              <h1 className="mb-3 break-words text-5xl leading-[0.9] tracking-[-0.055em] text-white sm:text-7xl lg:text-8xl">
+                {displayName}
+              </h1>
+              <p className="font-reenie text-4xl leading-none text-white/45">
+                @{profile.username}
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="px-5 py-14 sm:px-8 sm:py-20 lg:px-12">
+        <div className="mx-auto grid max-w-[1280px] gap-14 lg:grid-cols-[0.32fr_0.68fr] lg:gap-20">
+          <aside>
+            <p className="mb-4 text-xs font-bold uppercase tracking-[0.2em] text-foreground/40">
+              About
+            </p>
+            <p className="text-foreground/72 whitespace-pre-wrap text-xl leading-relaxed">
+              {profile.bio || "No bio yet. Just fragments on the wall."}
+            </p>
+            {Object.keys(links).length > 0 && (
+              <div className="mt-8 flex flex-wrap gap-3">
+                {links.instagram && (
                   <a
-                    href={profile.socialLinks.twitter}
+                    href={links.instagram}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="block text-primary hover:underline"
+                    className="flex h-11 w-11 items-center justify-center rounded-full border border-foreground/20 transition hover:border-accent hover:bg-accent hover:text-white"
+                    aria-label="Instagram"
                   >
-                    Twitter
+                    <Instagram className="h-4 w-4" />
                   </a>
                 )}
-                {profile.socialLinks?.instagram && (
+                {links.twitter && (
                   <a
-                    href={profile.socialLinks.instagram}
+                    href={links.twitter}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="block text-primary hover:underline"
+                    className="flex h-11 w-11 items-center justify-center rounded-full border border-foreground/20 transition hover:border-primary hover:bg-primary hover:text-white"
+                    aria-label="Twitter"
                   >
-                    Instagram
+                    <Twitter className="h-4 w-4" />
                   </a>
                 )}
-                {profile.socialLinks?.website && (
+                {links.website && (
                   <a
-                    href={profile.socialLinks.website}
+                    href={links.website}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="block text-primary hover:underline"
+                    className="flex h-11 w-11 items-center justify-center rounded-full border border-foreground/20 transition hover:border-foreground hover:bg-foreground hover:text-background"
+                    aria-label="Website"
                   >
-                    Website
+                    <Link2 className="h-4 w-4" />
                   </a>
                 )}
-              </CardContent>
-            </Card>
-          </motion.div>
-        )}
-      </div>
+              </div>
+            )}
+          </aside>
+
+          <div>
+            <div className="mb-5 flex items-end justify-between gap-4">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary">
+                  On the wall
+                </p>
+                <h2 className="mb-0 mt-2 text-4xl tracking-tight">
+                  Recent fragments
+                </h2>
+              </div>
+              <span className="font-reenie text-3xl text-foreground/40">
+                {profile.topics.length} pinned
+              </span>
+            </div>
+            <div className="border-b border-foreground/15">
+              {profile.topics.length === 0 && (
+                <p className="font-reenie border-t border-foreground/15 py-10 text-3xl text-foreground/45">
+                  nothing pinned yet
+                </p>
+              )}
+              {profile.topics.map((topic) => (
+                <Link
+                  key={topic.id}
+                  href={`/forum/${topic.id}`}
+                  className="group grid gap-4 border-t border-foreground/15 py-7 sm:grid-cols-[1fr_auto] sm:items-start"
+                >
+                  <div>
+                    <h3 className="mb-2 text-2xl transition group-hover:text-primary">
+                      {topic.title}
+                    </h3>
+                    <p className="line-clamp-2 text-sm leading-relaxed text-foreground/55">
+                      {topic.content}
+                    </p>
+                    <p className="mt-3 text-[10px] font-bold uppercase tracking-[0.16em] text-foreground/35">
+                      {topic.createdAt.toLocaleDateString("en-NZ", {
+                        day: "numeric",
+                        month: "short",
+                      })}{" "}
+                      · {topic._count.replies} echoes
+                    </p>
+                  </div>
+                  <ArrowUpRight className="h-5 w-5 transition group-hover:-translate-y-1 group-hover:translate-x-1 group-hover:text-primary" />
+                </Link>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
     </main>
   );
 }
