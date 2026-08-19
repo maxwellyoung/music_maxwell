@@ -5,7 +5,7 @@ import { notFound } from "next/navigation";
 import MinimalExcerpt from "~/components/MinimalExcerpt";
 import releases, { getReleaseBySlug } from "~/data/releases";
 
-type Props = { params: { slug: string } };
+type Props = { params: Promise<{ slug: string }> };
 
 const year = (date?: string) => date?.match(/\d{4}$/)?.[0] ?? "";
 
@@ -25,8 +25,8 @@ export function generateStaticParams() {
   return releases.map((release) => ({ slug: release.slug }));
 }
 
-export function generateMetadata({ params }: Props): Metadata {
-  const release = getReleaseBySlug(params.slug);
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const release = getReleaseBySlug((await params).slug);
   if (!release) return {};
   return {
     title: `${release.title} | Maxwell Young`,
@@ -37,8 +37,8 @@ export function generateMetadata({ params }: Props): Metadata {
   };
 }
 
-export default function MinimalReleasePage({ params }: Props) {
-  const release = getReleaseBySlug(params.slug);
+export default async function MinimalReleasePage({ params }: Props) {
+  const release = getReleaseBySlug((await params).slug);
   if (!release) notFound();
 
   const index = releases.findIndex((r) => r.slug === release.slug);

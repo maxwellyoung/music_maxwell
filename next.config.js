@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unsafe-return */
 import { dirname } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -63,21 +62,13 @@ const nextConfig = {
       },
     ];
   },
-  // Add experimental features for better build handling
   experimental: {
     serverActions: {
       bodySizeLimit: "2mb",
     },
   },
-  // Ensure Node.js built-ins like 'crypto' are not bundled during build
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-return
-  webpack: (config, { isServer: _isServer, ..._rest }) => {
-    config.resolve = config.resolve ?? {};
-    config.resolve.fallback = config.resolve.fallback ?? {};
-    // Tell Webpack not to polyfill 'crypto'; Node.js will provide it at runtime
-    config.resolve.fallback.crypto = false;
-    return config;
-  },
+  // Next 16 builds with Turbopack; the old webpack crypto fallback is obsolete.
+  turbopack: {},
 };
 
 // Always validate environment variables during build
@@ -85,13 +76,4 @@ if (!process.env.SKIP_ENV_VALIDATION) {
   await import("./src/env.js");
 }
 
-// Remove require and use dynamic import for ESM compatibility
-// const withBundleAnalyzer = require("@next/bundle-analyzer")({
-//   enabled: process.env.ANALYZE === "true",
-// });
-
-const withBundleAnalyzer = (await import("@next/bundle-analyzer")).default({
-  enabled: process.env.ANALYZE === "true",
-});
-
-export default withBundleAnalyzer(nextConfig);
+export default nextConfig;

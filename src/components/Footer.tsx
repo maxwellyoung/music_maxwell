@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Instagram, Twitter, Youtube } from "lucide-react";
+import { InstagramIcon, TwitterIcon, YoutubeIcon } from "~/components/icons/BrandIcons";
 
 const Footer = () => {
   return (
@@ -13,7 +13,7 @@ const Footer = () => {
             className="group relative text-white/55 transition-colors hover:text-[#ff8eaa] focus:text-[#ff8eaa]"
             aria-label="Instagram"
           >
-            <Instagram className="h-6 w-6" />
+            <InstagramIcon className="h-6 w-6" />
             <span className="pointer-events-none absolute -top-8 left-1/2 z-20 -translate-x-1/2 whitespace-nowrap rounded bg-black/80 px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100 group-focus:opacity-100">
               Instagram
             </span>
@@ -25,7 +25,7 @@ const Footer = () => {
             className="group relative text-white/55 transition-colors hover:text-[#ff8eaa] focus:text-[#ff8eaa]"
             aria-label="Twitter"
           >
-            <Twitter className="h-6 w-6" />
+            <TwitterIcon className="h-6 w-6" />
             <span className="pointer-events-none absolute -top-8 left-1/2 z-20 -translate-x-1/2 whitespace-nowrap rounded bg-black/80 px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100 group-focus:opacity-100">
               Twitter
             </span>
@@ -37,7 +37,7 @@ const Footer = () => {
             className="group relative text-white/55 transition-colors hover:text-[#ff8eaa] focus:text-[#ff8eaa]"
             aria-label="YouTube"
           >
-            <Youtube className="h-6 w-6" />
+            <YoutubeIcon className="h-6 w-6" />
 
             <span className="pointer-events-none absolute -top-8 left-1/2 z-20 -translate-x-1/2 whitespace-nowrap rounded bg-black/80 px-2 py-1 text-xs text-white opacity-0 transition-opacity group-hover:opacity-100 group-focus:opacity-100">
               YouTube

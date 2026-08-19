@@ -1,5 +1,7 @@
 "use client";
 
+import type * as React from "react";
+
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
@@ -37,7 +39,7 @@ function renderRichContent(text: string) {
   // Generic URL
   const urlRegex = /https?:\/\/[\w\-._~:/?#[\]@!$&'()*+,;=%]+/g;
 
-  const parts: (string | JSX.Element)[] = [];
+  const parts: (string | React.JSX.Element)[] = [];
   const textCopy = text;
 
   // Helper to push plain text

@@ -1,11 +1,6 @@
 import Link from "next/link";
-import {
-  ArrowLeft,
-  ArrowUpRight,
-  Instagram,
-  Link2,
-  Twitter,
-} from "lucide-react";
+import { ArrowLeft, ArrowUpRight, Link2,  } from "lucide-react";
+import { InstagramIcon, TwitterIcon } from "~/components/icons/BrandIcons";
 import { getReleaseWallWhere } from "~/lib/forum";
 import { prisma } from "~/lib/prisma";
 
@@ -139,7 +134,7 @@ export default async function UserProfilePage({
                     className="flex h-11 w-11 items-center justify-center rounded-full border border-foreground/20 transition hover:border-accent hover:bg-accent hover:text-white"
                     aria-label="Instagram"
                   >
-                    <Instagram className="h-4 w-4" />
+                    <InstagramIcon className="h-4 w-4" />
                   </a>
                 )}
                 {links.twitter && (
@@ -150,7 +145,7 @@ export default async function UserProfilePage({
                     className="flex h-11 w-11 items-center justify-center rounded-full border border-foreground/20 transition hover:border-primary hover:bg-primary hover:text-white"
                     aria-label="Twitter"
                   >
-                    <Twitter className="h-4 w-4" />
+                    <TwitterIcon className="h-4 w-4" />
                   </a>
                 )}
                 {links.website && (
