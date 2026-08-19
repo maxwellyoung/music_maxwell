@@ -745,21 +745,7 @@ const CollectableGrid: React.FC<CollectableGridProps> = ({
   };
 
   return (
-    <div className="relative min-h-[90vh] w-full overflow-hidden py-8 sm:py-12">
-      {/* SVG noise overlay for artistic texture */}
-      <div className="pointer-events-none absolute inset-0 z-0 opacity-20 mix-blend-soft-light">
-        <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-          <filter id="noiseFilter">
-            <feTurbulence
-              type="fractalNoise"
-              baseFrequency="0.8"
-              numOctaves="4"
-              stitchTiles="stitch"
-            />
-          </filter>
-          <rect width="100%" height="100%" filter="url(#noiseFilter)" />
-        </svg>
-      </div>
+    <div className="relative w-full py-12 sm:py-16">
       <div className="container relative z-10 mx-auto px-2 sm:px-4 md:px-8">
         {error && error !== "NO_PRODUCTS" && (
           <div className="mb-4 rounded-lg bg-red-500/10 p-4 text-red-500">
@@ -869,7 +855,7 @@ const CollectableGrid: React.FC<CollectableGridProps> = ({
         <section id="archive" className="scroll-mt-8">
           <div className="mb-8 grid gap-5 border-b border-foreground/25 pb-6 sm:grid-cols-[1fr_auto] sm:items-end md:mb-12">
             <div>
-              <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.26em] text-accent">
+              <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.26em] text-foreground/45">
                 01 · Discography
               </p>
               <h2 className="mb-0 text-5xl leading-[0.82] tracking-[-0.055em] sm:text-7xl md:text-8xl">
@@ -901,7 +887,7 @@ const CollectableGrid: React.FC<CollectableGridProps> = ({
                 )}
                 aria-label={`Open ${song.title}`}
               >
-                <div className="relative aspect-square overflow-hidden bg-black transition duration-500 ease-out group-hover:-rotate-[0.6deg] group-hover:scale-[1.01] group-focus-visible:ring-4 group-focus-visible:ring-accent">
+                <div className="relative aspect-square overflow-hidden bg-black group-focus-visible:ring-2 group-focus-visible:ring-foreground group-focus-visible:ring-offset-4 group-focus-visible:ring-offset-background">
                   <motion.div
                     variants={albumVariants}
                     initial="initial"
@@ -911,13 +897,10 @@ const CollectableGrid: React.FC<CollectableGridProps> = ({
                     <BlurImage
                       src={song.artwork}
                       alt={song.title}
-                      className="transition-transform duration-700 group-hover:scale-[1.035]"
+                      className="transition-transform duration-700 ease-out group-hover:scale-[1.03]"
                     />
                   </motion.div>
-                  <div className="absolute inset-0 ring-1 ring-inset ring-black/15" />
-                  <span className="absolute right-3 top-3 grid h-8 w-8 translate-y-2 place-items-center rounded-full bg-[#d9f85c] text-[10px] font-bold text-foreground opacity-0 transition duration-300 group-hover:translate-y-0 group-hover:opacity-100">
-                    ↗
-                  </span>
+                  <div className="absolute inset-0 ring-1 ring-inset ring-black/10" />
                 </div>
                 <div className="mt-3 flex gap-3 border-t border-foreground/20 pt-2 sm:mt-4">
                   <span className="text-[10px] font-bold tracking-[0.16em] text-foreground/38">
@@ -948,7 +931,7 @@ const CollectableGrid: React.FC<CollectableGridProps> = ({
 
         <section className="mt-24 grid gap-10 border-t border-foreground/25 pt-7 md:mt-36 md:grid-cols-12 md:gap-8">
           <div className="md:col-span-2">
-            <p className="text-[11px] font-bold uppercase tracking-[0.26em] text-accent">
+            <p className="text-[11px] font-bold uppercase tracking-[0.26em] text-foreground/45">
               02 · Maxwell
             </p>
           </div>
@@ -981,21 +964,23 @@ const CollectableGrid: React.FC<CollectableGridProps> = ({
           </div>
         </section>
 
-        <section className="mt-24 bg-accent px-5 py-12 text-foreground sm:px-8 sm:py-16 md:mt-36 md:grid md:grid-cols-[1fr_auto] md:items-end md:gap-12 lg:px-12">
-          <div>
-            <p className="mb-3 text-[11px] font-bold uppercase tracking-[0.26em]">
+        <section className="mt-24 grid gap-6 border-t border-foreground/25 pt-7 md:mt-36 md:grid-cols-12 md:gap-8">
+          <div className="md:col-span-2">
+            <p className="text-[11px] font-bold uppercase tracking-[0.26em] text-foreground/45">
               03 · Notes
             </p>
-            <h2 className="mb-0 max-w-4xl text-5xl leading-[0.84] tracking-[-0.055em] sm:text-7xl md:text-8xl">
+          </div>
+          <div className="flex flex-col gap-8 md:col-span-10 md:flex-row md:items-end md:justify-between">
+            <h2 className="mb-0 max-w-4xl text-5xl leading-[0.84] tracking-[-0.055em] sm:text-6xl lg:text-7xl">
               Leave something behind.
             </h2>
+            <Link
+              href="/forum"
+              className="inline-block w-fit shrink-0 border-b border-foreground pb-1 text-xs font-bold uppercase tracking-[0.2em] transition hover:border-accent hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground"
+            >
+              Read the notes ↗
+            </Link>
           </div>
-          <Link
-            href="/forum"
-            className="mt-8 inline-block border-b border-foreground pb-1 text-xs font-bold uppercase tracking-[0.2em] transition hover:border-background hover:text-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground md:mt-0"
-          >
-            Read the notes ↗
-          </Link>
         </section>
 
         {selectedSong && (
