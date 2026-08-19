@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import MinimalExcerpt from "~/components/MinimalExcerpt";
 import releases, { getReleaseBySlug } from "~/data/releases";
 
 type Props = { params: { slug: string } };
@@ -110,14 +111,7 @@ export default function MinimalReleasePage({ params }: Props) {
 
         {release.previewUrl && (
           <div className="mt-8">
-            <audio
-              controls
-              preload="none"
-              src={release.previewUrl}
-              className="h-9 w-full max-w-sm"
-            >
-              <a href={release.previewUrl}>Play excerpt</a>
-            </audio>
+            <MinimalExcerpt src={release.previewUrl} />
           </div>
         )}
 
