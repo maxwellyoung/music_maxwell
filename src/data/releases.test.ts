@@ -49,7 +49,7 @@ test("core streaming omissions are explicit rather than silent", () => {
   assert.deepEqual(unverified, []);
   assert.equal(
     getStreamingAvailability(getReleaseBySlug("1kiss")!, "appleMusic").status,
-    "scheduled",
+    "available",
   );
 });
 

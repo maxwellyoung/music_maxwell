@@ -2086,8 +2086,8 @@ const linkExceptions: Record<
     Record<StreamingService, Exclude<StreamingAvailabilityStatus, "available">>
   >
 > = {
+  // Spotify and Apple Music verified live 2026-08-20 (track 0i2tUe60wPOlDLuouNqTwe / ISRC GBGLW2600573).
   "1kiss": {
-    appleMusic: "scheduled",
     youtube: "scheduled",
     tidal: "scheduled",
     pandora: "scheduled",
