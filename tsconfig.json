@@ -20,10 +20,9 @@
       "ES2022"
     ],
     "noEmit": true,
-    "allowImportingTsExtensions": true,
     "module": "ESNext",
     "moduleResolution": "Bundler",
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "plugins": [
       {
         "name": "next"
@@ -42,7 +41,8 @@
     "src/**/*.ts",
     "src/**/*.tsx",
     "tailwind.config.ts",
-    ".next/types/**/*.ts"
+    ".next/types/**/*.ts",
+    ".next/dev/types/**/*.ts"
   ],
   "exclude": [
     "node_modules",
