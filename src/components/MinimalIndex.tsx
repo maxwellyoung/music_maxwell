@@ -1,9 +1,15 @@
 "use client";
 
+import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import releases from "~/data/releases";
+
+// Loads three.js after paint, desktop only; never blocks the ledger text.
+const LedgerSkyTower = dynamic(() => import("~/components/LedgerSkyTower"), {
+  ssr: false,
+});
 
 const year = (date?: string) => date?.match(/\d{4}$/)?.[0] ?? "";
 
@@ -116,22 +122,34 @@ export default function MinimalIndex({
         </a>
       </footer>
 
-      {/* Artwork surfaces only while a row is held. */}
+      {/* Right column: the dithered Sky Tower keeps quiet residence; a
+          release's artwork fades in over it while its row is held. */}
       <div
         aria-hidden="true"
-        className={`pointer-events-none fixed right-8 top-1/2 hidden h-72 w-72 -translate-y-1/2 transition-opacity duration-200 lg:block xl:right-24 xl:h-96 xl:w-96 ${
-          activeRelease ? "opacity-100" : "opacity-0"
-        }`}
+        className="pointer-events-none fixed right-8 top-1/2 hidden h-72 w-72 -translate-y-1/2 lg:block xl:right-24 xl:h-96 xl:w-96"
       >
-        {activeRelease && (
-          <Image
-            src={activeRelease.artwork}
-            alt=""
-            fill
-            sizes="24rem"
-            className="object-cover"
-          />
-        )}
+        <div
+          className={`absolute inset-0 transition-opacity duration-500 ${
+            activeRelease ? "opacity-0" : "opacity-100"
+          }`}
+        >
+          <LedgerSkyTower />
+        </div>
+        <div
+          className={`absolute inset-0 transition-opacity duration-200 ${
+            activeRelease ? "opacity-100" : "opacity-0"
+          }`}
+        >
+          {activeRelease && (
+            <Image
+              src={activeRelease.artwork}
+              alt=""
+              fill
+              sizes="24rem"
+              className="object-cover"
+            />
+          )}
+        </div>
       </div>
     </main>
   );
