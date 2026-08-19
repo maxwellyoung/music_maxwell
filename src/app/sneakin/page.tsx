@@ -17,11 +17,12 @@ export const metadata: Metadata = {
   },
 };
 
-const lyric = songs[0]?.lyrics?.["Sneakin Drinks Into Bars"] ?? "";
+const sneakin = songs.find((song) => song.title === "Sneakin Drinks Into Bars");
+const lyric = sneakin?.lyrics?.["Sneakin Drinks Into Bars"] ?? "";
 const lyricBlocks = lyric.split("\n\n");
 
 export default function SneakinPage() {
-  const song = songs[0]!;
+  const song = sneakin!;
 
   return (
     <main className="min-h-screen">

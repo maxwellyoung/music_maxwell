@@ -1,8 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { Card, CardContent, CardHeader, CardTitle } from "~/components/ui/card";
-import { Button } from "~/components/ui/button";
+import Link from "next/link";
+import { AnimatePresence, motion } from "framer-motion";
+import { ArrowLeft, ArrowRight, RotateCcw } from "lucide-react";
 // @ts-expect-error: confetti library may not have types
 import confetti from "canvas-confetti";
 
@@ -11,58 +12,44 @@ const questions = [
     question: "What is the title of Maxwell Young's debut album?",
     options: ["Daydreamer", "Only Romantics", "Wintour", "Birthday Girl"],
     answer: 0,
-    explanation: "Maxwell Young's debut album is 'Daydreamer'.",
+    explanation: "Daydreamer is the debut album.",
   },
   {
-    question: "Which city was Maxwell Young born in?",
+    question: "Which city was Maxwell born in?",
     options: ["Auckland", "Wellington", "London", "Los Angeles"],
     answer: 1,
-    explanation: "Maxwell Young was born in Wellington, New Zealand.",
+    explanation: "Wellington, New Zealand.",
   },
   {
-    question: "Which of these is NOT a Maxwell Young song?",
+    question: "Which title does not belong in the Maxwell Young archive?",
     options: ["Freewheelin'", "Hopeless", "Videostar", "Purple Rain"],
     answer: 3,
-    explanation: "'Purple Rain' is a classic by Prince, not Maxwell Young!",
+    explanation: "Purple Rain belongs to Prince.",
   },
   {
-    question: "Which genre best describes Maxwell Young's music?",
-    options: ["Alternative Pop", "Heavy Metal", "Country", "Classical"],
+    question: "Which sound sits closest to the centre of the archive?",
+    options: ["Alternative pop", "Heavy metal", "Country", "Classical"],
     answer: 0,
-    explanation: "Maxwell Young is known for his alternative pop sound.",
+    explanation: "Alternative pop is the nearest fit.",
   },
   {
-    question:
-      "What is the name of Maxwell Young's 2023 single featuring Thom Haha?",
+    question: "Which 2023 single features Thom Haha?",
     options: ["Turn It Up", "Birthday Girl", "Daydreamer", "Hopeless"],
     answer: 0,
-    explanation: "'Turn It Up' is a 2023 single by Maxwell Young & Thom Haha.",
+    explanation: "Turn It Up is by Maxwell Young & Thom Haha.",
   },
   {
-    question: "Which of these is a recurring theme in Maxwell Young's lyrics?",
-    options: ["Love & longing", "Space travel", "Cooking", "Sports"],
+    question: "Which title comes from the 2018 album?",
+    options: ["Daydreamer", "Wintour", "Birthday Girl", "Turn It Up"],
     answer: 0,
-    explanation:
-      "Love, longing, and introspection are common themes in Maxwell's lyrics.",
+    explanation: "Daydreamer arrived in 2018.",
   },
   {
-    question:
-      "Which platform does Maxwell Young use to share behind-the-scenes and updates?",
-    options: ["Instagram", "Reddit", "MySpace", "Pinterest"],
+    question: "Where can you leave a fragment on this site?",
+    options: ["Notes", "The cart", "Artwork", "Credits"],
     answer: 0,
-    explanation:
-      "Instagram (@maxwell_young) is where Maxwell shares updates and BTS content.",
+    explanation: "The Notes wall is open for fragments and replies.",
   },
-];
-
-const funFacts = [
-  "🎤 Maxwell once played a show in a laundromat!",
-  "🌏 His music has been streamed in over 50 countries.",
-  "🎬 Maxwell directs many of his own music videos.",
-  "🎹 He started making music at age 13.",
-  "🦋 The song 'No Social Butterfly' is a fan favorite.",
-  "🎧 Maxwell loves experimenting with vintage synths.",
-  "📸 He often collaborates with visual artists for his covers.",
 ];
 
 export default function MaxwellYoungQuiz() {
@@ -70,36 +57,35 @@ export default function MaxwellYoungQuiz() {
   const [score, setScore] = useState(0);
   const [showResult, setShowResult] = useState(false);
   const [selected, setSelected] = useState<number | null>(null);
-  const [showFeedback, setShowFeedback] = useState(false);
-  const [factIdx, setFactIdx] = useState(() =>
-    Math.floor(Math.random() * funFacts.length),
-  );
 
-  const handleAnswer = (idx: number) => {
-    if (selected !== null) return; // Prevent double answer
-    setSelected(idx);
-    setShowFeedback(true);
-    if (idx === questions[current]?.answer) {
-      setScore((s) => s + 1);
+  const question = questions[current]!;
+  const progress = showResult
+    ? 100
+    : ((current + (selected === null ? 0 : 1)) / questions.length) * 100;
+
+  const handleAnswer = (index: number) => {
+    if (selected !== null) return;
+    setSelected(index);
+    if (index === question.answer) {
+      setScore((value) => value + 1);
     }
   };
 
   const handleNext = () => {
-    setSelected(null);
-    setShowFeedback(false);
-    setFactIdx(Math.floor(Math.random() * funFacts.length));
     if (current + 1 < questions.length) {
-      setCurrent((c) => c + 1);
-    } else {
-      setShowResult(true);
-      setTimeout(() => {
-        if (
-          score + (selected === questions[current]?.answer ? 1 : 0) ===
-          questions.length
-        ) {
-          confetti({ particleCount: 120, spread: 90, origin: { y: 0.6 } });
-        }
-      }, 300);
+      setCurrent((value) => value + 1);
+      setSelected(null);
+      return;
+    }
+
+    setShowResult(true);
+    if (score === questions.length) {
+      confetti({
+        particleCount: 140,
+        spread: 100,
+        origin: { y: 0.6 },
+        colors: ["#ff789a", "#d9ff5f", "#3157ec", "#ffffff"],
+      });
     }
   };
 
@@ -108,112 +94,184 @@ export default function MaxwellYoungQuiz() {
     setScore(0);
     setShowResult(false);
     setSelected(null);
-    setShowFeedback(false);
-    setFactIdx(Math.floor(Math.random() * funFacts.length));
   };
 
-  const progress = ((current + (showResult ? 1 : 0)) / questions.length) * 100;
-
   return (
-    <main className="container mx-auto px-4 py-16">
-      <div className="mx-auto max-w-xl">
-        <Card className="bg-background/80 shadow-2xl backdrop-blur-lg">
-          <CardHeader>
-            <CardTitle className="text-center text-3xl font-bold">
-              Maxwell Young Quiz
-            </CardTitle>
-            <div className="mt-4 h-2 w-full rounded bg-muted">
-              <div
-                className="h-2 rounded bg-primary transition-all"
-                style={{ width: `${progress}%` }}
-              />
+    <main className="min-h-screen bg-[#11100f] px-5 pb-16 pt-8 text-white sm:px-8 lg:px-12">
+      <div className="mx-auto max-w-[1240px]">
+        <div className="flex items-center justify-between border-b border-white/20 pb-5">
+          <Link
+            href="/"
+            className="group inline-flex min-h-11 items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-white/45 transition hover:text-white"
+          >
+            <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
+            Music
+          </Link>
+          <p className="text-xs font-bold uppercase tracking-[0.18em] text-white/35">
+            Archive test · {questions.length} questions
+          </p>
+        </div>
+
+        <div className="grid gap-8 py-8 lg:min-h-[calc(100svh-9rem)] lg:grid-cols-[0.32fr_0.68fr] lg:items-center lg:gap-20 lg:py-10">
+          <aside>
+            <p className="text-xs font-bold uppercase tracking-[0.22em] text-white/45">
+              How closely
+            </p>
+            <h1 className="mb-4 mt-3 text-5xl leading-[0.85] tracking-[-0.065em] text-white sm:text-6xl lg:mb-5 lg:mt-4 lg:text-9xl">
+              <span className="lg:block">Were</span>{" "}
+              <span className="lg:block">you</span>{" "}
+              <span className="lg:block">listening?</span>
+            </h1>
+            <p className="font-reenie text-3xl leading-none text-white/60 lg:text-4xl">
+              no peeking at the archive
+            </p>
+          </aside>
+
+          <section className="min-w-0">
+            <div className="mb-9">
+              <div className="mb-3 flex items-center justify-between text-xs font-bold uppercase tracking-[0.18em] text-white/35">
+                <span>
+                  {showResult ? "Finished" : `Question ${current + 1}`}
+                </span>
+                <span>{Math.round(progress)}%</span>
+              </div>
+              <div className="h-1 overflow-hidden bg-white/15">
+                <motion.div
+                  className="h-full bg-white"
+                  animate={{ width: `${progress}%` }}
+                  transition={{ duration: 0.35 }}
+                />
+              </div>
             </div>
-          </CardHeader>
-          <CardContent>
-            {showResult ? (
-              <div className="space-y-6 text-center">
-                <div className="text-2xl font-semibold">
-                  You scored {score} out of {questions.length}!{" "}
-                  {score === questions.length
-                    ? "🏆"
-                    : score >= questions.length - 2
-                      ? "👏"
-                      : "🎶"}
-                </div>
-                <div className="mt-2 text-lg">
-                  {score === questions.length
-                    ? "🎉 Perfect! You're a true Maxwell Young superfan!"
-                    : score >= questions.length - 2
-                      ? "Great job! You know your Maxwell Young."
-                      : "Keep listening and try again!"}
-                </div>
-                <Button onClick={handleRestart} className="mt-4">
-                  Try Again
-                </Button>
-              </div>
-            ) : (
-              <div className="space-y-6">
-                <div className="mb-4 text-lg font-medium">
-                  Question {current + 1} of {questions.length}
-                </div>
-                <div className="mb-6 text-xl font-semibold">
-                  {questions[current]?.question}
-                </div>
-                <div className="grid gap-4">
-                  {questions[current]?.options?.map((opt, idx) => (
-                    <Button
-                      key={opt}
-                      onClick={() => handleAnswer(idx)}
-                      className={`w-full text-base transition-all ${
-                        selected !== null
-                          ? idx === questions[current]?.answer
-                            ? "border-green-500 bg-green-50 text-green-900"
-                            : idx === selected
-                              ? "border-red-500 bg-red-50 text-red-900"
-                              : "opacity-60"
-                          : ""
-                      }`}
-                      variant="outline"
-                      disabled={selected !== null}
-                    >
-                      {opt}
-                    </Button>
-                  ))}
-                </div>
-                {showFeedback && selected !== null && (
-                  <div
-                    className={`mt-6 rounded-lg p-4 text-center text-lg font-medium transition-all ${
-                      selected === questions[current]?.answer
-                        ? "bg-green-100 text-green-900"
-                        : "bg-red-100 text-red-900"
-                    }`}
-                  >
-                    {selected === questions[current]?.answer
-                      ? "✅ Correct! "
-                      : "❌ Incorrect. "}
-                    {questions[current]?.explanation}
+
+            <AnimatePresence mode="wait">
+              {showResult ? (
+                <motion.div
+                  key="result"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0 }}
+                >
+                  <p className="font-reenie text-5xl leading-none text-white/80">
+                    final score
+                  </p>
+                  <div className="my-7 flex items-end gap-4">
+                    <span className="text-[9rem] font-bold leading-[0.72] tracking-[-0.09em] text-white sm:text-[13rem]">
+                      {score}
+                    </span>
+                    <span className="pb-2 text-2xl text-white/35">
+                      / {questions.length}
+                    </span>
                   </div>
-                )}
-                {showFeedback && (
-                  <>
-                    <div className="mt-4 text-center text-base italic text-muted-foreground">
-                      Fun fact: {funFacts[factIdx]}
-                    </div>
-                    <Button
-                      onClick={handleNext}
-                      className="mt-4 w-full"
-                      variant="default"
+                  <h2 className="mb-4 text-3xl text-white">
+                    {score === questions.length
+                      ? "No skips. No mistakes."
+                      : score >= questions.length - 2
+                        ? "You know your way around."
+                        : "The archive is waiting."}
+                  </h2>
+                  <p className="mb-9 max-w-xl text-lg leading-relaxed text-white/55">
+                    {score === questions.length
+                      ? "A perfect run. You can officially claim the aux."
+                      : "Take another run, or head back through the releases and collect the missing pieces."}
+                  </p>
+                  <div className="flex flex-wrap gap-3">
+                    <button
+                      type="button"
+                      onClick={handleRestart}
+                      className="inline-flex min-h-12 items-center gap-3 rounded-full bg-white px-6 text-xs font-bold uppercase tracking-[0.16em] text-black transition hover:bg-white/85"
                     >
-                      {current + 1 === questions.length
-                        ? "See Results"
-                        : "Next"}
-                    </Button>
-                  </>
-                )}
-              </div>
-            )}
-          </CardContent>
-        </Card>
+                      <RotateCcw className="h-4 w-4" />
+                      Run it back
+                    </button>
+                    <Link
+                      href="/"
+                      className="inline-flex min-h-12 items-center gap-3 rounded-full border border-white/25 px-6 text-xs font-bold uppercase tracking-[0.16em] text-white transition hover:border-white hover:text-white"
+                    >
+                      Browse music
+                      <ArrowRight className="h-4 w-4" />
+                    </Link>
+                  </div>
+                </motion.div>
+              ) : (
+                <motion.div
+                  key={current}
+                  initial={{ opacity: 0, x: 24 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -24 }}
+                  transition={{ duration: 0.25 }}
+                >
+                  <h2 className="mb-8 max-w-4xl text-4xl leading-[0.98] tracking-[-0.045em] text-white sm:text-6xl">
+                    {question.question}
+                  </h2>
+
+                  <div className="border-b border-white/20">
+                    {question.options.map((option, index) => {
+                      const isCorrect = index === question.answer;
+                      const isSelected = index === selected;
+                      const answered = selected !== null;
+
+                      return (
+                        <button
+                          key={option}
+                          type="button"
+                          onClick={() => handleAnswer(index)}
+                          disabled={answered}
+                          className={`group grid w-full grid-cols-[2.25rem_1fr_auto] items-center gap-4 border-t py-5 text-left transition sm:grid-cols-[3rem_1fr_auto] sm:py-6 ${
+                            answered && isCorrect
+                              ? "border-[#d9ff5f] text-[#d9ff5f]"
+                              : answered && isSelected
+                                ? "border-[#ff789a] text-[#ff789a]"
+                                : answered
+                                  ? "border-white/10 text-white/25"
+                                  : "border-white/20 text-white hover:border-[#3157ec] hover:text-[#8fa4ff]"
+                          }`}
+                        >
+                          <span className="font-reenie text-2xl">
+                            {String.fromCharCode(65 + index)}
+                          </span>
+                          <span className="text-xl font-semibold sm:text-2xl">
+                            {option}
+                          </span>
+                          <ArrowRight className="h-5 w-5 transition-transform group-hover:translate-x-1" />
+                        </button>
+                      );
+                    })}
+                  </div>
+
+                  {selected !== null && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="mt-8 flex flex-col gap-6 border-l-2 border-white/40 pl-5 sm:flex-row sm:items-end sm:justify-between"
+                    >
+                      <div>
+                        <p className="text-xs font-bold uppercase tracking-[0.18em] text-white/45">
+                          {selected === question.answer
+                            ? "You got it"
+                            : "Not this time"}
+                        </p>
+                        <p className="mt-2 text-lg text-white/65">
+                          {question.explanation}
+                        </p>
+                      </div>
+                      <button
+                        type="button"
+                        onClick={handleNext}
+                        className="group inline-flex min-h-12 shrink-0 items-center justify-center gap-3 rounded-full bg-white px-6 text-xs font-bold uppercase tracking-[0.16em] text-black transition hover:bg-white/85"
+                      >
+                        {current + 1 === questions.length
+                          ? "See the damage"
+                          : "Next one"}
+                        <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                      </button>
+                    </motion.div>
+                  )}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </section>
+        </div>
       </div>
     </main>
   );
