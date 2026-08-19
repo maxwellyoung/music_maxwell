@@ -59,7 +59,15 @@ export default function OneKissPage() {
                 rel="noopener noreferrer"
                 className="font-pixel-dot border-b border-white/70 pb-1 text-xs uppercase tracking-[0.12em] transition hover:border-[#ff40aa] hover:text-[#ff40aa]"
               >
-                Follow on Spotify ↗
+                Listen on Spotify ↗
+              </a>
+              <a
+                href={song.links.appleMusic}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-pixel-dot border-b border-white/40 pb-1 text-xs uppercase tracking-[0.12em] text-[#f5f8ff]/70 transition hover:border-[#ff40aa] hover:text-[#ff40aa]"
+              >
+                Apple Music ↗
               </a>
             </div>
           </div>

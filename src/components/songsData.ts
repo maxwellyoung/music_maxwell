@@ -28,7 +28,8 @@ const songs: Song[] = [
     artist: "Maxwell Young",
     artwork: "/artworks/1kiss.jpg",
     links: {
-      spotify: "https://open.spotify.com/artist/5HONdRTLNvBjlD2LirKp0q",
+      spotify: "https://open.spotify.com/track/0i2tUe60wPOlDLuouNqTwe",
+      appleMusic: "https://music.apple.com/nz/album/1kiss/6783834681?i=6783834682",
     },
     releaseDate: "July 24, 2026",
     releaseDateLabel: "Friday",
