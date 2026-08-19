@@ -1,14 +1,15 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useState, useTransition } from "react";
 import { useDebounce } from "~/hooks/useDebounce";
+import { Search, X } from "lucide-react";
 
 export function SearchTopics({ initialQuery }: { initialQuery?: string }) {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [query, setQuery] = useState(initialQuery ?? "");
-  const [isLoading, setIsLoading] = useState(false);
+  const [isPending, startTransition] = useTransition();
   const debouncedQuery = useDebounce(query, 300);
 
   const createQueryString = useCallback(
@@ -26,45 +27,46 @@ export function SearchTopics({ initialQuery }: { initialQuery?: string }) {
 
   useEffect(() => {
     if (debouncedQuery !== initialQuery) {
-      setIsLoading(true);
-      router.push(
-        `/forum${debouncedQuery ? `?${createQueryString("q", debouncedQuery)}` : ""}`,
-      );
-      // Reset loading state after navigation
-      const timeout = setTimeout(() => setIsLoading(false), 500);
-      return () => clearTimeout(timeout);
+      startTransition(() => {
+        router.push(
+          `/forum${debouncedQuery ? `?${createQueryString("q", debouncedQuery)}` : ""}`,
+        );
+      });
     }
   }, [debouncedQuery, createQueryString, router, initialQuery]);
 
   return (
-    <div className="relative mb-10">
+    <div className="relative">
+      <label
+        htmlFor="notes-search"
+        className="mb-2 block text-xs font-bold uppercase tracking-[0.16em] text-foreground/45"
+      >
+        Search words or people
+      </label>
       <input
+        id="notes-search"
         type="search"
-        placeholder="Search notes..."
+        placeholder="bar lights..."
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        className="w-full rounded-xl border border-border bg-white px-5 py-3 pl-12 text-lg shadow transition placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary/40"
+        className="h-14 w-full rounded-none border-0 border-b-2 border-foreground bg-transparent px-0 pl-8 pr-9 text-lg shadow-none placeholder:text-foreground/25 focus:border-primary focus:ring-0"
         aria-label="Search notes"
       />
-      <svg
-        className={`absolute left-4 top-3.5 h-6 w-6 text-muted-foreground transition-opacity ${
-          isLoading ? "opacity-50" : ""
+      <Search
+        className={`absolute bottom-4 left-0 h-5 w-5 transition-opacity ${
+          isPending ? "animate-pulse opacity-40" : "opacity-65"
         }`}
-        fill="none"
-        stroke="currentColor"
-        viewBox="0 0 24 24"
-      >
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={2}
-          d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-        />
-      </svg>
-      {isLoading && (
-        <div className="absolute right-4 top-3.5">
-          <div className="h-6 w-6 animate-spin rounded-full border-2 border-primary border-t-transparent" />
-        </div>
+        aria-hidden="true"
+      />
+      {query && (
+        <button
+          type="button"
+          onClick={() => setQuery("")}
+          className="absolute bottom-3 right-0 flex h-8 w-8 items-center justify-center rounded-full text-foreground/45 transition hover:bg-foreground hover:text-background"
+          aria-label="Clear search"
+        >
+          <X className="h-4 w-4" />
+        </button>
       )}
     </div>
   );

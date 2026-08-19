@@ -5,6 +5,8 @@ import { SearchTopics } from "~/components/forum/SearchTopics";
 import ForumTopicsInfinite, {
   type ForumTopic,
 } from "~/components/forum/ForumTopicsInfinite";
+import { getReleaseWallWhere } from "~/lib/forum";
+import { ArrowUpRight } from "lucide-react";
 
 export const metadata: Metadata = {
   title: "Notes | Maxwell Young",
@@ -14,29 +16,14 @@ export const metadata: Metadata = {
 // Use dynamic rendering for real-time forum data
 export const dynamic = "force-dynamic";
 
-const releaseWallWhere = {
-  OR: [
-    { createdAt: { gte: new Date("2026-04-01T00:00:00.000Z") } },
-    { title: { contains: "sneakin", mode: "insensitive" as const } },
-    { content: { contains: "sneakin", mode: "insensitive" as const } },
-    { title: { contains: "bar lights", mode: "insensitive" as const } },
-    { content: { contains: "bar lights", mode: "insensitive" as const } },
-    { title: { contains: "false alarm", mode: "insensitive" as const } },
-    { content: { contains: "false alarm", mode: "insensitive" as const } },
-  ],
-};
-
 export default async function ForumPage({
   searchParams,
 }: {
   searchParams: Promise<{ q?: string }>;
 }) {
   const resolvedSearchParams = await searchParams;
-  // Only support infinite scroll for no search query for now
-  if (resolvedSearchParams.q) {
-    // fallback to old logic for search
-    // ... existing code for search (can be refactored later)
-  }
+  const query = resolvedSearchParams.q?.slice(0, 100).trim();
+  const where = getReleaseWallWhere(query);
 
   // Fetch first page of topics and total count
   const PAGE_SIZE = 10;
@@ -47,7 +34,7 @@ export default async function ForumPage({
   try {
     const [topicsRes, totalRes] = await Promise.all([
       prisma.topic.findMany({
-        where: releaseWallWhere,
+        where,
         skip: 0,
         take: PAGE_SIZE,
         orderBy: { createdAt: "desc" },
@@ -56,7 +43,7 @@ export default async function ForumPage({
           _count: { select: { replies: true } },
         },
       }),
-      prisma.topic.count({ where: releaseWallWhere }),
+      prisma.topic.count({ where }),
     ]);
     topics = topicsRes.map((t) => ({
       ...t,
@@ -71,42 +58,91 @@ export default async function ForumPage({
   }
 
   return (
-    <main className="container mx-auto px-4 py-12 sm:py-16">
-      <div className="mx-auto mb-12 max-w-4xl">
-        <p className="mb-3 text-xs font-bold uppercase tracking-[0.2em] text-primary">
-          Wall
-        </p>
-        <h1 className="mb-3 text-4xl font-bold leading-tight tracking-tight sm:text-5xl">
-          Notes
-        </h1>
-        <p className="font-reenie max-w-2xl text-3xl leading-none text-muted-foreground sm:text-4xl">
-          leave a line / a false alarm / something you almost said
-        </p>
-      </div>
-
-      <div className="mx-auto max-w-4xl space-y-10">
-        {/* Search Bar */}
-        <SearchTopics initialQuery={resolvedSearchParams.q} />
-
-        {/* Error Message */}
-        {error && (
-          <div className="rounded-lg bg-destructive/10 p-4 text-center text-destructive">
-            {error}
+    <main className="notes-canvas min-h-screen">
+      <section className="border-b border-foreground/15 px-5 pb-14 pt-12 sm:px-8 sm:pb-20 sm:pt-16 lg:px-12">
+        <div className="mx-auto grid max-w-[1440px] gap-12 lg:grid-cols-[0.68fr_0.32fr] lg:items-end">
+          <div>
+            <div className="mb-8 flex items-center gap-3">
+              <span className="h-2.5 w-2.5 animate-pulse rounded-full bg-accent" />
+              <p className="text-xs font-bold uppercase tracking-[0.24em] text-foreground/55">
+                The wall is live · {total}{" "}
+                {query
+                  ? total === 1
+                    ? "match"
+                    : "matches"
+                  : total === 1
+                    ? "fragment"
+                    : "fragments"}
+              </p>
+            </div>
+            <h1 className="mb-0 text-[clamp(5rem,16vw,13rem)] font-bold leading-[0.72] tracking-[-0.075em]">
+              Notes
+            </h1>
           </div>
-        )}
-
-        {/* Infinite Scroll Topics */}
-        <ForumTopicsInfinite initialTopics={topics} total={total} />
-
-        <div className="mt-16">
-          <Link
-            href="/forum/new"
-            className="inline-flex items-center justify-center rounded-full bg-primary px-6 py-3 text-sm font-bold uppercase tracking-[0.14em] text-primary-foreground shadow-md transition hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/60"
-          >
-            Leave One
-          </Link>
+          <div className="lg:pb-2">
+            <p className="font-reenie max-w-md text-4xl leading-[0.9] text-foreground/70 sm:text-5xl">
+              leave a line / a false alarm / something you almost said
+            </p>
+            <Link
+              href="/forum/new"
+              className="group mt-8 inline-flex min-h-12 items-center gap-3 border-b-2 border-foreground pb-1 text-sm font-bold uppercase tracking-[0.18em] transition hover:border-accent hover:text-accent"
+            >
+              Pin something up
+              <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-1 group-hover:translate-x-1" />
+            </Link>
+          </div>
         </div>
-      </div>
+      </section>
+
+      <section className="px-5 py-12 sm:px-8 sm:py-16 lg:px-12">
+        <div className="mx-auto max-w-[1440px]">
+          <div className="grid gap-10 lg:grid-cols-[0.28fr_0.72fr] lg:gap-16">
+            <aside className="lg:sticky lg:top-32 lg:self-start">
+              <p className="mb-4 text-xs font-bold uppercase tracking-[0.2em] text-primary">
+                Find a fragment
+              </p>
+              <SearchTopics initialQuery={query} />
+              <div className="mt-8 border-t border-foreground/15 pt-5 text-sm leading-relaxed text-foreground/55">
+                Notes can hold words, links, YouTube, SoundCloud, and Spotify.
+                Sign in when you want to leave one of your own.
+              </div>
+            </aside>
+
+            <div>
+              {query && (
+                <div className="mb-8 flex items-end justify-between gap-4 border-b border-foreground/15 pb-4">
+                  <div>
+                    <p className="text-xs font-bold uppercase tracking-[0.18em] text-foreground/45">
+                      Search results
+                    </p>
+                    <h2 className="mb-0 mt-1 text-3xl tracking-tight">
+                      “{query}”
+                    </h2>
+                  </div>
+                  <Link
+                    href="/forum"
+                    className="text-xs font-bold uppercase tracking-[0.16em] text-foreground/50 hover:text-accent"
+                  >
+                    Clear
+                  </Link>
+                </div>
+              )}
+
+              {error && (
+                <div className="border-y border-destructive/30 py-5 text-destructive">
+                  {error}
+                </div>
+              )}
+
+              <ForumTopicsInfinite
+                initialTopics={topics}
+                total={total}
+                query={query}
+              />
+            </div>
+          </div>
+        </div>
+      </section>
     </main>
   );
 }

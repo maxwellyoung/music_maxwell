@@ -2,17 +2,11 @@
 
 import { useEffect, useRef, useState, useCallback } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "~/components/ui/card";
 import { useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
 import { subscribeToForumTopics } from "~/lib/pusherClient";
+import { ArrowUpRight, MessageCircle } from "lucide-react";
+import { motion } from "framer-motion";
 
 const PAGE_SIZE = 10;
 
@@ -32,11 +26,10 @@ export type ForumTopic = {
 
 function ForumTopicSkeleton() {
   return (
-    <div className="animate-pulse rounded-xl bg-muted/30 p-6">
-      <div className="mb-4 h-6 w-2/3 rounded bg-muted-foreground/20" />
-      <div className="mb-2 h-4 w-1/3 rounded bg-muted-foreground/10" />
-      <div className="mb-6 h-4 w-full rounded bg-muted-foreground/10" />
-      <div className="h-4 w-1/2 rounded bg-muted-foreground/10" />
+    <div className="animate-pulse border-t border-foreground/10 py-8">
+      <div className="mb-4 h-8 w-2/3 bg-foreground/10" />
+      <div className="mb-2 h-4 w-full bg-foreground/5" />
+      <div className="h-4 w-1/2 bg-foreground/5" />
     </div>
   );
 }
@@ -44,15 +37,16 @@ function ForumTopicSkeleton() {
 export default function ForumTopicsInfinite({
   initialTopics,
   total,
+  query,
 }: {
   initialTopics: ForumTopic[];
   total: number;
+  query?: string;
 }) {
   const [topics, setTopics] = useState<ForumTopic[]>(initialTopics);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(initialTopics.length < total);
   const loaderRef = useRef<HTMLDivElement | null>(null);
-  const router = useRouter();
   const { data: session } = useSession();
   const userRole = (session?.user as { role?: string } | undefined)?.role;
 
@@ -61,7 +55,9 @@ export default function ForumTopicsInfinite({
     setLoading(true);
     try {
       const res = await fetch(
-        `/api/forum/topics?skip=${topics.length}&take=${PAGE_SIZE}`,
+        `/api/forum/topics?skip=${topics.length}&take=${PAGE_SIZE}${
+          query ? `&q=${encodeURIComponent(query)}` : ""
+        }`,
       );
       const data: { topics: ForumTopic[]; total: number } = await res.json();
       setTopics((prev) => [...prev, ...data.topics]);
@@ -71,7 +67,12 @@ export default function ForumTopicsInfinite({
     } finally {
       setLoading(false);
     }
-  }, [loading, hasMore, topics.length]);
+  }, [loading, hasMore, topics.length, query]);
+
+  useEffect(() => {
+    setTopics(initialTopics);
+    setHasMore(initialTopics.length < total);
+  }, [initialTopics, total, query]);
 
   useEffect(() => {
     if (!loaderRef.current || !hasMore) return;
@@ -87,6 +88,8 @@ export default function ForumTopicsInfinite({
 
   // Real-time updates
   useEffect(() => {
+    if (query) return;
+
     const unsubscribe = subscribeToForumTopics((newTopic: ForumTopic) => {
       setTopics((prev) => {
         if (prev.some((t) => t.id === newTopic.id)) return prev;
@@ -94,73 +97,96 @@ export default function ForumTopicsInfinite({
       });
     });
     return unsubscribe;
-  }, []);
+  }, [query]);
 
   return (
-    <section>
-      <h2 className="mb-5 text-sm font-bold uppercase tracking-[0.18em] text-primary/70">
-        Fragments
-      </h2>
-      <div className="grid grid-cols-1 gap-4">
+    <section aria-label="Notes">
+      {!query && (
+        <div className="mb-4 flex items-center justify-between">
+          <h2 className="mb-0 text-xs font-bold uppercase tracking-[0.2em] text-foreground/45">
+            Latest fragments
+          </h2>
+          <span className="font-reenie text-2xl leading-none text-primary">
+            newest first
+          </span>
+        </div>
+      )}
+      <div className="border-b border-foreground/15">
         {topics.length === 0 && (
-          <div className="col-span-full border-y border-border/60 py-8">
-            <p className="font-reenie text-3xl leading-none text-muted-foreground">
-              nothing on the wall yet
+          <div className="border-t border-foreground/15 py-16">
+            <p className="font-reenie text-4xl leading-none text-foreground/60">
+              {query
+                ? "nothing matched that scribble"
+                : "nothing on the wall yet"}
+            </p>
+            <p className="mt-3 max-w-md text-sm text-foreground/45">
+              {query
+                ? "Try a lyric, username, or a shorter piece of the thought."
+                : "Be the first person to pin something up."}
             </p>
           </div>
         )}
-        {topics.map((topic) => (
-          <Link
+        {topics.map((topic, index) => (
+          <motion.article
             key={topic.id}
-            href={`/forum/${topic.id}`}
-            className="group"
-            passHref
-            legacyBehavior
+            initial={{ opacity: 0, y: 16 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.35, delay: Math.min(index * 0.035, 0.2) }}
+            className="group relative grid gap-5 border-t border-foreground/15 py-8 sm:grid-cols-[3.5rem_1fr_auto] sm:gap-7 sm:py-10"
           >
-            <a className="block no-underline">
-              <Card className="relative overflow-hidden border-x-0 border-b border-t-0 border-border/60 bg-transparent shadow-none transition duration-200 group-hover:border-primary/30">
-                <CardHeader className="relative flex items-start justify-between pb-2">
-                  <div>
-                    <CardTitle className="text-2xl font-semibold tracking-tight transition-colors group-hover:text-primary">
-                      {topic.title}
-                    </CardTitle>
-                    <CardDescription className="mt-1 text-sm">
-                      {topic.author?.username ? (
-                        <span
-                          className="cursor-pointer text-primary hover:underline"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            router.push(`/user/${topic.author?.username}`);
-                          }}
-                        >
-                          @{topic.author.username}
-                        </span>
-                      ) : (
-                        <span className="text-muted-foreground">anonymous</span>
-                      )}
-                    </CardDescription>
-                  </div>
-                  {userRole === "admin" && (
-                    <div className="absolute right-3 top-3 z-10">
-                      <TopicActions topicId={topic.id} />
-                    </div>
-                  )}
-                </CardHeader>
-                <CardContent>
-                  <p className="text-sm leading-relaxed text-muted-foreground sm:text-base">
-                    {topic.content.length > 180
-                      ? topic.content.slice(0, 180) + "..."
-                      : topic.content}
-                  </p>
-                </CardContent>
-                <div className="px-6 pb-4 text-xs font-medium uppercase tracking-[0.12em] text-muted-foreground">
-                  {topic._count.replies} echoes /{" "}
-                  {new Date(topic.updatedAt).toLocaleDateString()}
-                </div>
-              </Card>
-            </a>
-          </Link>
+            <div className="font-reenie text-3xl leading-none text-primary/75">
+              {String(index + 1).padStart(2, "0")}
+            </div>
+            <div className="min-w-0">
+              <Link
+                href={`/forum/${topic.id}`}
+                className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+              >
+                <h3 className="mb-3 max-w-3xl text-3xl font-semibold leading-[1.02] tracking-[-0.035em] transition-colors group-hover:text-primary sm:text-4xl">
+                  {topic.title}
+                </h3>
+                <p className="max-w-3xl whitespace-pre-line text-base leading-relaxed text-foreground/60">
+                  {topic.content.length > 240
+                    ? `${topic.content.slice(0, 240).trim()}…`
+                    : topic.content}
+                </p>
+              </Link>
+              <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs font-bold uppercase tracking-[0.14em] text-foreground/40">
+                {topic.author?.username ? (
+                  <Link
+                    href={`/user/${topic.author.username}`}
+                    className="relative z-10 transition-colors hover:text-accent"
+                  >
+                    @{topic.author.username}
+                  </Link>
+                ) : (
+                  <span>anonymous</span>
+                )}
+                <span>
+                  {new Date(topic.updatedAt).toLocaleDateString("en-NZ", {
+                    day: "numeric",
+                    month: "short",
+                    year: "numeric",
+                  })}
+                </span>
+                <span className="inline-flex items-center gap-1.5">
+                  <MessageCircle className="h-3.5 w-3.5" />
+                  {topic._count.replies}{" "}
+                  {topic._count.replies === 1 ? "echo" : "echoes"}
+                </span>
+              </div>
+            </div>
+            <div className="flex items-start gap-2">
+              <Link
+                href={`/forum/${topic.id}`}
+                className="flex h-12 w-12 items-center justify-center rounded-full border border-foreground/20 transition group-hover:-rotate-6 group-hover:border-primary group-hover:bg-primary group-hover:text-white"
+                aria-label={`Read ${topic.title}`}
+              >
+                <ArrowUpRight className="h-5 w-5" />
+              </Link>
+              {userRole === "admin" && <TopicActions topicId={topic.id} />}
+            </div>
+          </motion.article>
         ))}
         {loading &&
           hasMore &&
@@ -168,13 +194,20 @@ export default function ForumTopicsInfinite({
             <ForumTopicSkeleton key={i} />
           ))}
       </div>
-      <div ref={loaderRef} className="flex h-12 items-center justify-center">
+      <div
+        ref={loaderRef}
+        className="flex min-h-20 items-center justify-center"
+      >
         {loading && (
-          <span className="text-muted-foreground">Loading more...</span>
+          <span className="font-reenie text-2xl text-foreground/50">
+            finding more fragments...
+          </span>
         )}
         {!hasMore && topics.length > 0 && (
-          <div className="animate-fade-in flex flex-col items-center gap-2 text-sm text-muted-foreground">
-            <span>End of notes.</span>
+          <div className="flex items-center gap-3 text-xs font-bold uppercase tracking-[0.18em] text-foreground/35">
+            <span className="h-px w-8 bg-foreground/20" />
+            <span>End of the wall</span>
+            <span className="h-px w-8 bg-foreground/20" />
           </div>
         )}
       </div>

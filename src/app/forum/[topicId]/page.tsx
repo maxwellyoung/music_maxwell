@@ -1,21 +1,19 @@
 import type { Metadata } from "next";
-import { Card, CardContent } from "~/components/ui/card";
-import { Separator } from "~/components/ui/separator";
-import { prisma } from "~/lib/prisma";
 import { getServerSession } from "next-auth";
-import { authOptions } from "~/lib/auth";
 import Link from "next/link";
-import { Button } from "~/components/ui/button";
+import { ArrowLeft, MessageCircle } from "lucide-react";
 import ReplyForm from "~/components/forum/ReplyForm";
 import RepliesList from "~/components/forum/RepliesList";
 import TopicActions from "~/components/forum/TopicActions";
+import { authOptions } from "~/lib/auth";
+import { prisma } from "~/lib/prisma";
 
 export const metadata: Metadata = {
   title: "Note | Maxwell Young",
   description: "A note around Maxwell Young's music and art.",
 };
 
-export const revalidate = 60; // Revalidate this page every 60 seconds for forum best practices
+export const dynamic = "force-dynamic";
 
 export default async function TopicPage({
   params,
@@ -39,93 +37,115 @@ export default async function TopicPage({
 
   if (!topic) {
     return (
-      <main className="container mx-auto px-4 py-16">
-        <div className="mx-auto max-w-3xl text-center text-2xl text-muted-foreground">
-          Topic not found.
+      <main className="notes-canvas flex min-h-[70vh] items-center px-5 py-16">
+        <div className="mx-auto w-full max-w-3xl text-center">
+          <p className="font-reenie text-5xl text-primary">missing fragment</p>
+          <h1 className="mt-4 text-4xl">This note is no longer on the wall.</h1>
+          <Link
+            href="/forum"
+            className="mt-8 inline-flex border-b-2 border-foreground pb-1 text-sm font-bold uppercase tracking-[0.16em]"
+          >
+            Back to Notes
+          </Link>
         </div>
       </main>
     );
   }
 
-  interface UserWithRole {
-    id: string;
-    role?: string;
-  }
-  const user = session?.user as UserWithRole | undefined;
+  const user = session?.user as { id: string; role?: string } | undefined;
   const canModify = user?.id === topic.authorId || user?.role === "admin";
 
   return (
-    <main className="container mx-auto px-4 py-16">
-      <div className="mx-auto max-w-3xl space-y-14">
-        {/* Back Button */}
-        <div className="mb-6">
-          <Link href="/forum" passHref legacyBehavior>
-            <Button
-              variant="outline"
-              className="px-5 py-2 text-base font-semibold"
-            >
-              ← Back to Notes
-            </Button>
+    <main className="notes-canvas min-h-screen">
+      <div className="border-b border-foreground/15 px-5 py-5 sm:px-8 lg:px-12">
+        <div className="mx-auto flex max-w-[1440px] items-center justify-between">
+          <Link
+            href="/forum"
+            className="group inline-flex min-h-11 items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-foreground/55 transition hover:text-primary"
+          >
+            <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
+            The wall
           </Link>
-        </div>
-        {/* Topic Header */}
-        <div className="mb-10">
-          <div className="flex items-start justify-between">
-            <h1 className="mb-3 text-4xl font-extrabold leading-tight tracking-tight">
-              {topic.title}
-            </h1>
-            {canModify && <TopicActions topicId={topic.id} />}
+          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.16em] text-foreground/40">
+            <MessageCircle className="h-4 w-4" />
+            {topic.replies.length}{" "}
+            {topic.replies.length === 1 ? "echo" : "echoes"}
           </div>
-          <div className="flex items-center gap-4 text-base font-medium text-muted-foreground">
-            <span>
-              Posted by{" "}
+        </div>
+      </div>
+
+      <article className="px-5 py-12 sm:px-8 sm:py-20 lg:px-12">
+        <div className="mx-auto max-w-[1440px]">
+          <div className="grid gap-10 lg:grid-cols-[0.25fr_0.75fr] lg:gap-16">
+            <aside className="lg:pt-3">
+              <p className="mb-2 text-xs font-bold uppercase tracking-[0.18em] text-foreground/40">
+                Pinned by
+              </p>
               {topic.author?.username ? (
                 <Link
                   href={`/user/${topic.author.username}`}
-                  className="text-primary hover:underline"
+                  className="text-lg font-semibold text-primary transition hover:text-accent"
                 >
-                  {topic.author.username}
+                  @{topic.author.username}
                 </Link>
               ) : (
-                <span className="text-muted-foreground">Unknown</span>
+                <p className="text-lg text-foreground/55">anonymous</p>
               )}
-            </span>
-            <span>•</span>
-            <span>{topic.createdAt.toLocaleDateString()}</span>
+              <p className="mt-5 text-xs font-bold uppercase tracking-[0.16em] text-foreground/40">
+                {topic.createdAt.toLocaleDateString("en-NZ", {
+                  day: "2-digit",
+                  month: "long",
+                  year: "numeric",
+                })}
+              </p>
+              {canModify && (
+                <div className="mt-8">
+                  <TopicActions topicId={topic.id} />
+                </div>
+              )}
+            </aside>
+
+            <div>
+              <h1 className="mb-10 max-w-5xl text-5xl font-bold leading-[0.92] tracking-[-0.055em] sm:text-7xl lg:text-8xl">
+                {topic.title}
+              </h1>
+              <div className="max-w-3xl border-l-2 border-primary pl-6 sm:pl-10">
+                {topic.content
+                  .split("\n\n")
+                  .map((paragraph: string, index: number) => (
+                    <p
+                      key={index}
+                      className="text-foreground/78 mb-7 whitespace-pre-line text-xl leading-relaxed sm:text-2xl"
+                    >
+                      {paragraph}
+                    </p>
+                  ))}
+              </div>
+            </div>
           </div>
         </div>
+      </article>
 
-        {/* Main Topic Content */}
-        <Card className="border-2 border-primary/10 bg-background/80 shadow-lg backdrop-blur-lg">
-          <CardContent className="p-8">
-            <div className="prose max-w-none text-lg text-foreground">
-              {topic.content
-                .split("\n\n")
-                .map((paragraph: string, index: number) => (
-                  <p key={index} className="mb-6">
-                    {paragraph}
-                  </p>
-                ))}
+      <section className="bg-[#11100f] px-5 py-14 text-white sm:px-8 sm:py-20 lg:px-12">
+        <div className="mx-auto max-w-[1120px]">
+          <div className="mb-10 flex items-end justify-between gap-5 border-b border-white/20 pb-5">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.2em] text-white/45">
+                Replies
+              </p>
+              <h2 className="mb-0 mt-2 text-4xl text-white sm:text-5xl">
+                Echoes
+              </h2>
             </div>
-          </CardContent>
-        </Card>
-
-        <Separator className="my-12" />
-
-        {/* Replies Section */}
-        <section>
-          <h2 className="mb-8 text-2xl font-bold tracking-tight text-primary">
-            Replies{" "}
-            <span className="text-base font-normal text-muted-foreground">
-              ({topic.replies.length})
+            <span className="font-reenie text-3xl text-white/45">
+              {topic.replies.length || "no"}{" "}
+              {topic.replies.length === 1 ? "reply" : "replies"}
             </span>
-          </h2>
+          </div>
           <RepliesList replies={topic.replies} topicId={topic.id} />
-        </section>
-
-        {/* Reply Form (functional) */}
-        <ReplyForm topicId={topic.id} />
-      </div>
+          <ReplyForm topicId={topic.id} />
+        </div>
+      </section>
     </main>
   );
 }

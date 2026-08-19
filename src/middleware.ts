@@ -17,10 +17,5 @@ export default withAuth(
 );
 
 export const config = {
-  matcher: [
-    "/forum/new",
-    "/forum/:path*/edit",
-    "/forum/:path*/delete",
-    "/api/forum/:path*",
-  ],
+  matcher: ["/forum/:path*/edit", "/forum/:path*/delete"],
 };
