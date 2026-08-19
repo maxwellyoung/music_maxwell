@@ -7,6 +7,7 @@ import releases from "~/data/releases";
 
 const year = (date?: string) => date?.match(/\d{4}$/)?.[0] ?? "";
 
+// The ledger homepage: text-first, artwork only on intent.
 export default function MinimalIndex() {
   const [active, setActive] = useState<string | null>(null);
   const activeRelease = releases.find((r) => r.slug === active);
@@ -14,7 +15,7 @@ export default function MinimalIndex() {
   return (
     <main className="min-h-svh bg-[#fafaf7] px-6 py-16 text-[#111] sm:px-12 lg:px-20">
       <header className="max-w-xl">
-        <h1 className="text-sm font-medium">Maxwell Young</h1>
+        <h1 className="mb-0 text-sm font-medium">Maxwell Young</h1>
         <p className="mt-1 text-sm text-black/40">
           Alt-pop from Aotearoa. {releases.length} releases, 2018–2026.
         </p>
@@ -34,7 +35,7 @@ export default function MinimalIndex() {
           {releases.map((release) => (
             <li key={release.slug}>
               <Link
-                href={release.releasePath ?? "/#archive"}
+                href={`/r/${release.slug}`}
                 onMouseEnter={() => setActive(release.slug)}
                 onMouseLeave={() => setActive(null)}
                 onFocus={() => setActive(release.slug)}
@@ -52,7 +53,16 @@ export default function MinimalIndex() {
         </ol>
       </section>
 
-      <footer className="mt-16 flex max-w-2xl gap-5 text-sm text-black/40">
+      <footer className="mt-16 flex max-w-2xl flex-wrap gap-x-5 gap-y-2 text-sm text-black/40">
+        <Link href="/forum" className="transition hover:text-black">
+          Notes
+        </Link>
+        <Link href="/quiz" className="transition hover:text-black">
+          Quiz
+        </Link>
+        <Link href="/artwork" className="transition hover:text-black">
+          Artwork
+        </Link>
         <a
           href="https://open.spotify.com/artist/5HONdRTLNvBjlD2LirKp0q"
           target="_blank"
@@ -77,12 +87,9 @@ export default function MinimalIndex() {
         >
           YouTube
         </a>
-        <Link href="/forum" className="transition hover:text-black">
-          Notes
-        </Link>
       </footer>
 
-      {/* Artwork surfaces only when a row is held. */}
+      {/* Artwork surfaces only while a row is held. */}
       <div
         aria-hidden="true"
         className={`pointer-events-none fixed right-8 top-1/2 hidden h-72 w-72 -translate-y-1/2 transition-opacity duration-200 lg:block xl:right-24 xl:h-96 xl:w-96 ${

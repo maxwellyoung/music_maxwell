@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import MinimalIndex from "./MinimalIndex";
+import MinimalIndex from "~/components/MinimalIndex";
 
 export const metadata: Metadata = {
   title: "Lab A — Minimal | Maxwell Young",

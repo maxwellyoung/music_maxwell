@@ -9,6 +9,11 @@ export default function FooterGate({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  if (pathname.startsWith("/lab")) return null;
+  if (
+    pathname === "/" ||
+    pathname.startsWith("/r/") ||
+    pathname.startsWith("/lab")
+  )
+    return null;
   return <>{children}</>;
 }

@@ -17,9 +17,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       : [],
   );
 
+  const minimalReleasePages = releases
+    .filter((release) => !release.releasePath)
+    .map((release) => ({
+      url: `${origin}/r/${release.slug}`,
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+    }));
+
   return [
     { url: origin, changeFrequency: "weekly", priority: 1 },
     ...releasePages,
+    ...minimalReleasePages,
     { url: `${origin}/artwork`, changeFrequency: "monthly", priority: 0.5 },
     { url: `${origin}/quiz`, changeFrequency: "monthly", priority: 0.4 },
     { url: `${origin}/privacy`, changeFrequency: "yearly", priority: 0.2 },

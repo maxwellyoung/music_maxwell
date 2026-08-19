@@ -11,11 +11,15 @@ export default function Navbar() {
   const pathname = usePathname();
   const { data: session } = useSession();
   const isForum = pathname.startsWith("/forum");
-  const isHome = pathname === "/";
-  // /lab hosts full-page design experiments judged without site chrome.
-  const isLab = pathname.startsWith("/lab");
+  // /classic hosts the pre-minimal homepage and keeps its transparent hero nav.
+  const isHome = pathname === "/classic";
+  // The ledger surfaces (/, /r/*) and /lab experiments carry their own chrome.
+  const isChromeless =
+    pathname === "/" ||
+    pathname.startsWith("/r/") ||
+    pathname.startsWith("/lab");
 
-  if (isLab) return null;
+  if (isChromeless) return null;
 
   return (
     <header
