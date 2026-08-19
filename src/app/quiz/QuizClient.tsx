@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { questions, sources, type Question } from "./quiz-data";
 import {
   achievements,
@@ -50,6 +50,14 @@ export default function QuizClient() {
   const [bestStreakThisRun, setBestStreakThisRun] = useState(0);
   const [misses, setMisses] = useState<Miss[]>([]);
   const [kept, setKept] = useState<Kept>(loadKept);
+  const [copied, setCopied] = useState(false);
+  const advanceRef = useRef<HTMLButtonElement>(null);
+
+  // The picked option becomes disabled, which would drop keyboard focus on
+  // the body; hand it to the advance button instead.
+  useEffect(() => {
+    if (picked !== null) advanceRef.current?.focus();
+  }, [picked]);
 
   const q = run[at];
   const source = useMemo(
@@ -67,6 +75,7 @@ export default function QuizClient() {
     setRisk(false);
     setMisses([]);
     setBestStreakThisRun(0);
+    setCopied(false);
   }
 
   function choose(i: number) {
@@ -219,10 +228,14 @@ export default function QuizClient() {
             Play another mix
           </button>
           <button
-            onClick={() => navigator.clipboard.writeText(share)}
+            onClick={() => {
+              void navigator.clipboard.writeText(share);
+              setCopied(true);
+              window.setTimeout(() => setCopied(false), 2000);
+            }}
             className="rounded-full border border-foreground/20 px-5 py-3 text-sm font-bold uppercase tracking-[0.14em] transition hover:border-foreground/50"
           >
-            Copy result
+            {copied ? "Copied" : "Copy result"}
           </button>
           <button
             onClick={() => setMode(null)}
@@ -364,7 +377,7 @@ export default function QuizClient() {
                   : i === q.answer
                     ? "border-foreground bg-foreground text-background"
                     : i === picked
-                      ? "border-foreground/40 line-through decoration-current/40"
+                      ? "border-foreground/40 line-through opacity-70"
                       : "opacity-40";
               return (
                 <button
@@ -373,7 +386,7 @@ export default function QuizClient() {
                   onClick={() => choose(i)}
                   className={`flex items-baseline gap-4 border border-foreground/20 px-5 py-4 text-left text-base font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground ${state}`}
                 >
-                  <span className="text-xs font-bold text-current/40">
+                  <span className="text-xs font-bold opacity-40">
                     {String.fromCharCode(65 + i)}
                   </span>
                   {option}
@@ -395,7 +408,10 @@ export default function QuizClient() {
           )}
 
           {picked !== null && (
-            <div className="mt-7 border-t border-foreground/15 pt-5">
+            <div
+              className="mt-7 border-t border-foreground/15 pt-5"
+              role="status"
+            >
               <p className="font-reenie text-3xl">
                 {picked === q?.answer ? "That is the one." : "Needle slipped."}
               </p>
@@ -413,6 +429,7 @@ export default function QuizClient() {
                 </Link>
               )}
               <button
+                ref={advanceRef}
                 onClick={next}
                 className="mt-6 block w-full rounded-full bg-foreground px-5 py-3 text-sm font-bold uppercase tracking-[0.14em] text-background transition hover:bg-foreground/85"
               >

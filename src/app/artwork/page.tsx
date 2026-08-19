@@ -86,7 +86,7 @@ export default function ArtworkIndexPage() {
           href="/artwork/sneakin-drinks"
           className="text-xs font-bold uppercase tracking-[0.2em] text-foreground/55 transition hover:text-foreground"
         >
-          Deep dive: the Sneakin Drinks Into Bars cover ↗
+          The Sneakin Drinks Into Bars cover, up close ↗
         </Link>
       </div>
     </main>
