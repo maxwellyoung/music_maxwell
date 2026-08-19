@@ -20,6 +20,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
   return [
     { url: origin, changeFrequency: "weekly", priority: 1 },
     ...releasePages,
+    { url: `${origin}/artwork`, changeFrequency: "monthly", priority: 0.5 },
+    { url: `${origin}/quiz`, changeFrequency: "monthly", priority: 0.4 },
     { url: `${origin}/privacy`, changeFrequency: "yearly", priority: 0.2 },
   ];
 }

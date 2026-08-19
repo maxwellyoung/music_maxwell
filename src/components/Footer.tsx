@@ -46,6 +46,18 @@ const Footer = () => {
         </div>
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2 text-xs font-bold uppercase tracking-[0.18em] text-white/40">
           <span>© {new Date().getFullYear()} Maxwell Young · New Zealand</span>
+          <Link
+            href="/artwork"
+            className="transition hover:text-white focus:text-white"
+          >
+            Artwork
+          </Link>
+          <Link
+            href="/quiz"
+            className="transition hover:text-white focus:text-white"
+          >
+            Quiz
+          </Link>
           <Link href="/privacy" className="transition hover:text-white focus:text-white">
             Privacy
           </Link>

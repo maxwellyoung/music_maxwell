@@ -1,7 +1,9 @@
-export type Category = "Origins" | "Songs" | "Collaborators" | "Visuals" | "Interviews" | "Deep Cuts" | "Current Canon";
+import releases from "../../data/releases.ts";
+
+export type Category = "Origins" | "Songs" | "Collaborators" | "Visuals" | "Interviews" | "Deep Cuts" | "Current Canon" | "Covers";
 export type Difficulty = 1 | 2 | 3;
 export type Source = { id: string; title: string; url: string; type: "interview" | "public-radio" | "Bandcamp" | "official-catalog"; published: string; accessed: string; confidence: "high"; snippet: string };
-export type Question = { id: string; category: Category; difficulty: Difficulty; prompt: string; options: string[]; answer: number; explanation: string; sourceId: string };
+export type Question = { id: string; category: Category; difficulty: Difficulty; prompt: string; options: string[]; answer: number; explanation: string; sourceId: string; artwork?: string };
 
 export const sources: Source[] = [
  {id:"cdm19",title:"Interview: Maxwell Young on No. 5",url:"https://www.coupdemainmagazine.com/maxwell-young/16163",type:"interview",published:"2019-11-08",accessed:"2026-07-21",confidence:"high",snippet:"Young says he makes music every day, calls completed songs happy accidents, says writing comes first, describes visuals as an extension, cites movies as inspiration, and discusses garage, SoundCloud, Clairo, Lontalius and Instupendo."},
@@ -50,3 +52,29 @@ q("turnup","Current Canon",1,"Who shares the artist credit on Turn It Up?",["Tho
 q("wintour-art","Visuals",2,"Who is credited for the Wintour artwork?",["Elijah Broughton","Max Pirrit","Millie Dow","Ilena Shadbolt"],0,"The official release credits list Elijah Broughton.","official"),
 q("flying-time","Current Canon",2,"What duration is listed for Flying?",["1:52","2:52","3:20","0:59"],0,"The official catalog lists Flying at 1:52.","official")
 ];
+
+
+// Cover round: generated from the official release catalogue so artwork,
+// titles, and order stay in lockstep with src/data/releases.ts.
+const coverPool = releases.filter((release) => release.artwork);
+const coverQuestions: Question[] = coverPool.map((release, index) => {
+  const others = [5, 9, 13].map(
+    (offset) => coverPool[(index + offset) % coverPool.length]!.title,
+  );
+  const answer = index % 4;
+  const options = [...others];
+  options.splice(answer, 0, release.title);
+  return {
+    id: `cover-${release.slug}`,
+    category: "Covers",
+    difficulty: index < 8 ? 1 : 2,
+    prompt: "Which release wears this cover?",
+    options,
+    answer,
+    explanation: `${release.title} (${release.releaseDate ?? "release date in the archive"}) carries this artwork in the official catalogue.`,
+    sourceId: "official",
+    artwork: release.artwork,
+  };
+});
+
+questions.push(...coverQuestions);

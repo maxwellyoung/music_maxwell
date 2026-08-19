@@ -1,6 +1,6 @@
 import type { Question, Source } from "./quiz-data";
 export type Mode = "quick" | "deep" | "full";
-export const modeSize: Record<Mode, number> = { quick: 10, deep: 15, full: 35 };
+export const modeSize: Record<Mode, number> = { quick: 10, deep: 15, full: 60 };
 export function shuffle<T>(items:T[], random=Math.random){const a=[...items];for(let i=a.length-1;i>0;i--){const j=Math.floor(random()*(i+1));[a[i],a[j]]=[a[j]!,a[i]!]}return a}
 export function selectQuestions(all:Question[],mode:Mode,random=Math.random){const pool=mode==="deep"?all.filter(x=>x.difficulty>=2):all;return shuffle(pool,random).slice(0,Math.min(modeSize[mode],pool.length));}
 export type Game={score:number;streak:number;lives:number;correct:number;answered:number};
