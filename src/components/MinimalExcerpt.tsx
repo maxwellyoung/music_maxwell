@@ -42,11 +42,11 @@ export default function MinimalExcerpt({ src }: { src: string }) {
         type="button"
         onClick={toggle}
         aria-pressed={playing}
-        className="underline decoration-black/25 underline-offset-4 transition hover:decoration-black focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-black"
+        className="underline decoration-[rgb(var(--ledger-ink-rgb)/0.25)] underline-offset-4 transition hover:decoration-[var(--ledger-ink)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ledger-ink)]"
       >
         {playing ? "❚❚ pause" : "▸ play excerpt"}
       </button>
-      <span className="tabular-nums text-black/40" aria-hidden="true">
+      <span className="tabular-nums text-[rgb(var(--ledger-ink-rgb)/0.40)]" aria-hidden="true">
         {format(time)}
         {duration ? ` / ${format(duration)}` : ""}
       </span>

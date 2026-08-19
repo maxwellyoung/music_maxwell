@@ -48,15 +48,15 @@ export default function MinimalReleasePage({ params }: Props) {
   const listenLinks = streamingEntries(release);
 
   return (
-    <main className="min-h-svh bg-[#fafaf7] px-6 py-16 text-[#111] sm:px-12 lg:px-20">
+    <main className="ledger min-h-svh bg-[var(--ledger-paper)] px-6 py-16 text-[var(--ledger-ink)] sm:px-12 lg:px-20">
       <header className="flex max-w-2xl items-baseline justify-between text-sm">
         <Link
           href="/"
-          className="font-medium transition hover:text-black/50"
+          className="font-medium transition hover:text-[rgb(var(--ledger-ink-rgb)/0.50)]"
         >
           Maxwell Young
         </Link>
-        <Link href="/" className="text-black/40 transition hover:text-black">
+        <Link href="/" className="text-[rgb(var(--ledger-ink-rgb)/0.40)] transition hover:text-[var(--ledger-ink)]">
           ← index
         </Link>
       </header>
@@ -67,7 +67,7 @@ export default function MinimalReleasePage({ params }: Props) {
             <h1 className="mb-0 text-2xl font-medium tracking-[-0.01em]">
               {release.title}
             </h1>
-            <p className="mt-1 text-sm text-black/40">
+            <p className="mt-1 text-sm text-[rgb(var(--ledger-ink-rgb)/0.40)]">
               {release.releaseType?.toLowerCase() ?? "release"}
               {release.releaseDate ? ` · ${release.releaseDate}` : ""}
               {release.duration ? ` · ${release.duration}` : ""}
@@ -86,10 +86,10 @@ export default function MinimalReleasePage({ params }: Props) {
         </div>
 
         {release.details && release.details.length > 0 && (
-          <dl className="mt-8 max-w-prose text-sm leading-7 text-black/50">
+          <dl className="mt-8 max-w-prose text-sm leading-7 text-[rgb(var(--ledger-ink-rgb)/0.50)]">
             {release.details.map((detail) => (
               <div key={detail.label} className="flex gap-3">
-                <dt className="w-24 shrink-0 text-black/35">{detail.label}</dt>
+                <dt className="w-24 shrink-0 text-[rgb(var(--ledger-ink-rgb)/0.35)]">{detail.label}</dt>
                 <dd>{detail.value}</dd>
               </div>
             ))}
@@ -97,14 +97,14 @@ export default function MinimalReleasePage({ params }: Props) {
         )}
 
         {(listenLinks.length > 0 || release.releasePath) && (
-          <div className="mt-10 flex flex-wrap gap-x-5 gap-y-2 border-t border-black/10 pt-4 text-sm">
+          <div className="mt-10 flex flex-wrap gap-x-5 gap-y-2 border-t border-[rgb(var(--ledger-ink-rgb)/0.10)] pt-4 text-sm">
             {listenLinks.map(({ label, href }) => (
               <a
                 key={label}
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="underline decoration-black/25 underline-offset-4 transition hover:decoration-black"
+                className="underline decoration-[rgb(var(--ledger-ink-rgb)/0.25)] underline-offset-4 transition hover:decoration-[var(--ledger-ink)]"
               >
                 {label}
               </a>
@@ -112,7 +112,7 @@ export default function MinimalReleasePage({ params }: Props) {
             {release.releasePath && (
               <Link
                 href={release.releasePath}
-                className="text-black/40 transition hover:text-black"
+                className="text-[rgb(var(--ledger-ink-rgb)/0.40)] transition hover:text-[var(--ledger-ink)]"
               >
                 Enter the release room ↗
               </Link>
@@ -127,29 +127,29 @@ export default function MinimalReleasePage({ params }: Props) {
         )}
 
         {lyricVersions.length > 0 && (
-          <section className="mt-12 border-t border-black/10 pt-4">
+          <section className="mt-12 border-t border-[rgb(var(--ledger-ink-rgb)/0.10)] pt-4">
             {lyricVersions.map(([version, text]) => (
               <details key={version} className="group py-2">
-                <summary className="cursor-pointer list-none text-sm font-medium transition hover:text-black/50">
-                  <span className="mr-2 inline-block text-black/30 transition-transform group-open:rotate-90">
+                <summary className="cursor-pointer list-none text-sm font-medium transition hover:text-[rgb(var(--ledger-ink-rgb)/0.50)]">
+                  <span className="mr-2 inline-block text-[rgb(var(--ledger-ink-rgb)/0.30)] transition-transform group-open:rotate-90">
                     ›
                   </span>
                   {lyricVersions.length > 1 ? `Lyrics — ${version}` : "Lyrics"}
                 </summary>
-                <p className="mt-4 max-w-prose whitespace-pre-line pl-5 text-sm leading-7 text-black/70">
+                <p className="mt-4 max-w-prose whitespace-pre-line pl-5 text-sm leading-7 text-[rgb(var(--ledger-ink-rgb)/0.70)]">
                   {text}
                 </p>
               </details>
             ))}
             {release.credits && (
-              <details className="group border-t border-black/10 py-2">
-                <summary className="cursor-pointer list-none text-sm font-medium transition hover:text-black/50">
-                  <span className="mr-2 inline-block text-black/30 transition-transform group-open:rotate-90">
+              <details className="group border-t border-[rgb(var(--ledger-ink-rgb)/0.10)] py-2">
+                <summary className="cursor-pointer list-none text-sm font-medium transition hover:text-[rgb(var(--ledger-ink-rgb)/0.50)]">
+                  <span className="mr-2 inline-block text-[rgb(var(--ledger-ink-rgb)/0.30)] transition-transform group-open:rotate-90">
                     ›
                   </span>
                   Credits
                 </summary>
-                <p className="mt-4 max-w-prose whitespace-pre-line pl-5 text-sm leading-7 text-black/70">
+                <p className="mt-4 max-w-prose whitespace-pre-line pl-5 text-sm leading-7 text-[rgb(var(--ledger-ink-rgb)/0.70)]">
                   {release.credits}
                 </p>
               </details>
@@ -159,13 +159,13 @@ export default function MinimalReleasePage({ params }: Props) {
       </article>
 
       <nav
-        className="mt-16 flex max-w-2xl justify-between gap-6 border-t border-black/10 pt-4 text-sm"
+        className="mt-16 flex max-w-2xl justify-between gap-6 border-t border-[rgb(var(--ledger-ink-rgb)/0.10)] pt-4 text-sm"
         aria-label="Adjacent releases"
       >
         {prev ? (
           <Link
             href={`/r/${prev.slug}`}
-            className="text-black/40 transition hover:text-black"
+            className="text-[rgb(var(--ledger-ink-rgb)/0.40)] transition hover:text-[var(--ledger-ink)]"
           >
             ← {prev.title}
           </Link>
@@ -175,7 +175,7 @@ export default function MinimalReleasePage({ params }: Props) {
         {next ? (
           <Link
             href={`/r/${next.slug}`}
-            className="text-right text-black/40 transition hover:text-black"
+            className="text-right text-[rgb(var(--ledger-ink-rgb)/0.40)] transition hover:text-[var(--ledger-ink)]"
           >
             {next.title} →
           </Link>
@@ -184,7 +184,7 @@ export default function MinimalReleasePage({ params }: Props) {
         )}
       </nav>
 
-      <footer className="mt-16 max-w-2xl text-sm text-black/30">
+      <footer className="mt-16 max-w-2xl text-sm text-[rgb(var(--ledger-ink-rgb)/0.30)]">
         {year(release.releaseDate) || "—"} · Maxwell Young
       </footer>
     </main>
