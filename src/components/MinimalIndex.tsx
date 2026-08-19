@@ -57,12 +57,6 @@ export default function MinimalIndex() {
         <Link href="/forum" className="transition hover:text-black">
           Notes
         </Link>
-        <Link href="/quiz" className="transition hover:text-black">
-          Quiz
-        </Link>
-        <Link href="/artwork" className="transition hover:text-black">
-          Artwork
-        </Link>
         <a
           href="https://open.spotify.com/artist/5HONdRTLNvBjlD2LirKp0q"
           target="_blank"

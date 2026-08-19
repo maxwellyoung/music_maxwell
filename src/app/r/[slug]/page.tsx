@@ -85,6 +85,17 @@ export default function MinimalReleasePage({ params }: Props) {
           </div>
         </div>
 
+        {release.details && release.details.length > 0 && (
+          <dl className="mt-8 max-w-prose text-sm leading-7 text-black/50">
+            {release.details.map((detail) => (
+              <div key={detail.label} className="flex gap-3">
+                <dt className="w-24 shrink-0 text-black/35">{detail.label}</dt>
+                <dd>{detail.value}</dd>
+              </div>
+            ))}
+          </dl>
+        )}
+
         {(listenLinks.length > 0 || release.releasePath) && (
           <div className="mt-10 flex flex-wrap gap-x-5 gap-y-2 border-t border-black/10 pt-4 text-sm">
             {listenLinks.map(({ label, href }) => (
