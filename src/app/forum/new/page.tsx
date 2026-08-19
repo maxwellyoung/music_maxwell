@@ -6,6 +6,8 @@ import { ArrowLeft } from "lucide-react";
 export const metadata: Metadata = {
   title: "New Note | Maxwell Young",
   description: "Post a note around Maxwell Young releases.",
+  alternates: { canonical: "/forum/new" },
+  robots: { index: false, follow: false },
 };
 
 export default async function NewTopicPage({
@@ -20,7 +22,7 @@ export default async function NewTopicPage({
       <div className="mx-auto max-w-[1280px]">
         <Link
           href="/forum"
-          className="group mb-12 inline-flex min-h-11 items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-foreground/50 transition hover:text-primary"
+          className="font-pixel-dot group mb-12 inline-flex min-h-11 items-center gap-2 text-[11px] uppercase tracking-[0.1em] text-foreground/50 transition hover:text-primary"
         >
           <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
           Back to the wall

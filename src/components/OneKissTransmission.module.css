@@ -1,0 +1,412 @@
+.stage {
+  --signal-progress: 0%;
+  position: relative;
+  min-height: max(43rem, calc(100svh - 6rem));
+  overflow: hidden;
+  border-bottom: 1px solid rgb(255 255 255 / 0.16);
+  background: #05070c;
+}
+
+.backdrop {
+  position: absolute;
+  inset: 0;
+  transform: scale(1.04);
+  background-image: linear-gradient(
+      90deg,
+      rgb(5 7 12 / 0.94),
+      rgb(5 7 12 / 0.18)
+    ),
+    url("/1kiss/signal-bloom-blue.webp");
+  background-position: center;
+  background-size: cover;
+  transition: filter 500ms ease;
+}
+
+.playing .backdrop {
+  filter: saturate(1.45) contrast(1.08);
+}
+
+.scan {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  border-right: 1px solid #d8ff00;
+  box-shadow:
+    -18px 0 48px rgb(142 166 255 / 0.4),
+    16px 0 64px rgb(255 43 134 / 0.28);
+  opacity: 0.8;
+  transform: translate3d(calc(var(--signal-progress) - 100%), 0, 0);
+  will-change: transform;
+}
+
+.frame {
+  position: absolute;
+  z-index: 1;
+  top: 13%;
+  right: clamp(1.25rem, 5vw, 5rem);
+  width: min(54vw, 50rem);
+  height: 70%;
+  overflow: hidden;
+  border: 1px solid rgb(255 255 255 / 0.2);
+  background: #111;
+}
+
+.frame img {
+  filter: saturate(0.82) contrast(1.06);
+  transition:
+    filter 500ms ease,
+    transform 2.4s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.playing .frame img {
+  filter: saturate(1.24) contrast(1.08);
+  transform: scale(1.035);
+}
+
+.frame::after {
+  position: absolute;
+  inset: 0;
+  content: "";
+  background: linear-gradient(
+      transparent 48%,
+      rgb(216 255 0 / 0.76) 48% 48.15%,
+      transparent 48.15%
+    ),
+    linear-gradient(
+      90deg,
+      transparent 58%,
+      rgb(255 43 134 / 0.7) 58% 58.1%,
+      transparent 58.1%
+    );
+  mix-blend-mode: screen;
+  opacity: 0.58;
+}
+
+.chrome {
+  position: relative;
+  z-index: 4;
+  display: flex;
+  min-height: max(43rem, calc(100svh - 6rem));
+  flex-direction: column;
+  justify-content: space-between;
+  padding: clamp(6.5rem, 10vw, 8.5rem) clamp(1.25rem, 4vw, 4rem)
+    clamp(1.5rem, 4vw, 3.5rem);
+}
+
+.mast {
+  max-width: 74rem;
+}
+
+.title {
+  margin: 0.8rem 0 0;
+  color: #f5f8ff;
+  font-size: clamp(6.5rem, 20vw, 17rem);
+  line-height: 0.67;
+  letter-spacing: -0.075em;
+}
+
+.live {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.live::before {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 999px;
+  background: #d8ff00;
+  content: "";
+  box-shadow: 0 0 1.5rem rgb(216 255 0 / 0.8);
+}
+
+.console {
+  display: grid;
+  width: min(100%, 74rem);
+  grid-template-columns: 1fr;
+  gap: clamp(1rem, 2vw, 1.5rem);
+}
+
+.lyricWindow {
+  min-width: 0;
+  text-wrap: balance;
+}
+
+.lyricRail {
+  display: grid;
+  min-height: 10.75rem;
+  grid-template-rows: 1.35rem minmax(6.5rem, auto) 1.35rem;
+  align-items: center;
+  gap: 0.35rem;
+  margin-top: 0.65rem;
+}
+
+.lyricContext {
+  overflow: hidden;
+  width: 100%;
+  color: rgb(245 248 255 / 0.38);
+  font-size: clamp(0.8rem, 1.4vw, 1.05rem);
+  line-height: 1;
+  text-align: left;
+  text-overflow: ellipsis;
+  text-transform: uppercase;
+  white-space: nowrap;
+  transition:
+    color 160ms ease,
+    transform 160ms ease;
+}
+
+.lyricContext:not(:disabled) {
+  cursor: pointer;
+}
+
+.lyricContext:not(:disabled):hover {
+  color: rgb(245 248 255 / 0.7);
+  transform: translateX(0.2rem);
+}
+
+.lyricContext:focus-visible,
+.lyricLine:focus-visible {
+  outline: 1px solid #d8ff00;
+  outline-offset: 0.25rem;
+}
+
+.previous {
+  color: rgb(245 248 255 / 0.38);
+}
+
+.next {
+  color: rgb(245 248 255 / 0.18);
+}
+
+.lyricLine {
+  min-width: 0;
+  width: 100%;
+  margin: 0;
+  color: rgb(245 248 255 / 0.24);
+  font-size: clamp(2.6rem, 5.2vw, 4.8rem);
+  line-height: 0.88;
+  letter-spacing: -0.04em;
+  text-align: left;
+  text-transform: uppercase;
+}
+
+.word {
+  position: relative;
+  display: inline-block;
+  margin-right: 0.22em;
+  color: rgb(245 248 255 / 0.24);
+}
+
+.wordFill {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  clip-path: inset(0 calc(100% - var(--word-progress)) 0 0);
+  color: #f5f8ff;
+  white-space: nowrap;
+  will-change: clip-path;
+}
+
+.transport {
+  border-top: 1px solid rgb(255 255 255 / 0.28);
+}
+
+.transportButton {
+  display: grid;
+  min-height: 5.25rem;
+  width: 100%;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 1rem;
+  border-bottom: 1px solid rgb(255 255 255 / 0.28);
+  color: inherit;
+  text-align: left;
+}
+
+.playIcon {
+  display: grid;
+  width: 2.75rem;
+  height: 2.75rem;
+  place-items: center;
+  border: 1px solid currentColor;
+}
+
+.ruler {
+  position: relative;
+  height: 2.8rem;
+  cursor: pointer;
+  border-bottom: 1px solid rgb(255 255 255 / 0.28);
+}
+
+.rulerTrack {
+  position: absolute;
+  top: 0.85rem;
+  right: 0;
+  left: 0;
+  height: 0.25rem;
+  background: rgb(255 255 255 / 0.14);
+}
+
+.rulerFill {
+  width: 100%;
+  height: 100%;
+  background: #8ea6ff;
+  clip-path: inset(0 calc(100% - var(--signal-progress)) 0 0);
+  will-change: clip-path;
+}
+
+.ticks {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 1.55rem;
+  color: rgb(245 248 255 / 0.48);
+}
+
+.packet {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(16rem, 0.42fr) minmax(20rem, 1fr);
+  border-bottom: 1px solid rgb(255 255 255 / 0.16);
+}
+
+.packetIndex {
+  position: sticky;
+  top: 4.5rem;
+  align-self: start;
+  padding: clamp(3rem, 7vw, 7rem) clamp(1.25rem, 4vw, 4rem);
+}
+
+.packetBody {
+  min-width: 0;
+  border-left: 1px solid rgb(255 255 255 / 0.16);
+}
+
+.artifact {
+  min-height: 68svh;
+  padding: clamp(2.5rem, 6vw, 6rem);
+  border-bottom: 1px solid rgb(255 255 255 / 0.16);
+}
+
+.artifact:last-child {
+  border-bottom: 0;
+}
+
+.artwork {
+  position: relative;
+  width: min(100%, 45rem);
+  aspect-ratio: 1;
+  margin: 2.5rem auto 0;
+  overflow: hidden;
+  border: 1px solid rgb(255 255 255 / 0.18);
+}
+
+.dataGrid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 3rem;
+  border-top: 1px solid rgb(255 255 255 / 0.2);
+}
+
+.dataCell {
+  min-height: 7rem;
+  padding: 1rem 1rem 1.5rem 0;
+  border-bottom: 1px solid rgb(255 255 255 / 0.2);
+}
+
+.dataCell:not(:nth-child(3n + 1)) {
+  padding-left: 1rem;
+  border-left: 1px solid rgb(255 255 255 / 0.2);
+}
+
+.hash {
+  overflow-wrap: anywhere;
+}
+
+.packetTitle {
+  color: #f5f8ff;
+}
+
+@media (max-width: 760px) {
+  .stage {
+    min-height: max(50rem, calc(100svh - 5rem));
+  }
+
+  .frame {
+    top: 18%;
+    right: 0;
+    width: 82%;
+    height: 42%;
+    border-right: 0;
+  }
+
+  .chrome {
+    min-height: max(50rem, calc(100svh - 5rem));
+  }
+
+  .title {
+    font-size: clamp(6rem, 34vw, 10rem);
+  }
+
+  .lyricRail {
+    min-height: 9rem;
+    grid-template-rows: 1.1rem minmax(5.6rem, auto) 1.1rem;
+  }
+
+  .lyricLine {
+    font-size: clamp(2.35rem, 10.5vw, 3.75rem);
+  }
+
+  .longLine {
+    font-size: clamp(1.95rem, 6.1vw, 2.65rem);
+  }
+
+  .packet {
+    grid-template-columns: 1fr;
+  }
+
+  .packetIndex {
+    position: relative;
+    top: auto;
+    padding-bottom: 2rem;
+  }
+
+  .packetBody {
+    border-top: 1px solid rgb(255 255 255 / 0.16);
+    border-left: 0;
+  }
+
+  .artifact {
+    min-height: auto;
+    padding: 3rem 1.25rem;
+  }
+
+  .dataGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .dataCell:not(:nth-child(3n + 1)) {
+    padding-left: 0;
+    border-left: 0;
+  }
+
+  .dataCell:nth-child(even) {
+    padding-left: 1rem;
+    border-left: 1px solid rgb(255 255 255 / 0.2);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .frame img,
+  .backdrop,
+  .lyricContext {
+    transition: none;
+  }
+
+  .playing .frame img {
+    transform: none;
+  }
+}

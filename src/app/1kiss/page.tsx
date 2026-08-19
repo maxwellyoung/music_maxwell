@@ -1,152 +1,92 @@
-import type { Metadata } from "next";
-import Image from "next/image";
-import Link from "next/link";
-import songs from "~/components/songsData";
+import JsonLd from "~/components/JsonLd";
+import OneKissTransmission from "~/components/OneKissTransmission";
+import ReleaseMoment from "~/components/ReleaseMoment";
+import ReleaseLyrics from "~/components/ReleaseLyrics";
+import ReleaseNavigation from "~/components/ReleaseNavigation";
+import ReleaseRoomShell from "~/components/ReleaseRoomShell";
+import { oneKissReleaseMedia } from "~/data/releaseMedia";
+import { getReleaseBySlug } from "~/data/releases";
+import { createReleaseMetadata } from "~/lib/releaseMetadata";
 
-export const metadata: Metadata = {
+const song = getReleaseBySlug("1kiss")!;
+
+export const metadata = createReleaseMetadata(song, {
   title: "1kiss | Maxwell Young",
   description:
-    "1kiss by Maxwell Young. Bright, glossy Pop / Alt R&B. Out now.",
-  openGraph: {
-    title: "1kiss | Maxwell Young",
-    description: "your hips / our lips / one kiss",
-    images: ["/1kiss/key-art-feed.png"],
-  },
-  twitter: {
-    card: "summary_large_image",
-    images: ["/1kiss/key-art-feed.png"],
-  },
-};
-
-const song = songs.find((item) => item.title === "1kiss")!;
+    "1kiss by Maxwell Young, released July 24, 2026. Lyrics, credits, artwork, and listening links.",
+});
+const spotifyUrl = song.links.spotify!;
 const lyric = song.lyrics?.["1kiss"] ?? "";
 const lyricBlocks = lyric.split("\n\n");
 const creditLines = song.credits?.split("\n") ?? [];
 
 export default function OneKissPage() {
   return (
-    <main className="one-kiss-brand min-h-screen bg-[#05070c] text-[#f5f8ff]">
-      <section className="relative isolate overflow-hidden border-b border-white/15 px-5 pb-16 pt-28 sm:px-8 lg:px-12">
-        <Image
-          src="/1kiss/signal-bloom-blue.png"
-          alt=""
-          fill
-          priority
-          sizes="100vw"
-          className="-z-20 object-cover opacity-40"
-        />
-        <div className="absolute inset-0 -z-10 bg-[linear-gradient(90deg,rgba(5,7,12,.94)_0%,rgba(5,7,12,.74)_46%,rgba(5,7,12,.36)_100%)]" />
+    <ReleaseRoomShell
+      slug={song.slug}
+      className="one-kiss-brand !bg-[#05070c] !text-[#f5f8ff]"
+    >
+      <JsonLd
+        data={{
+          "@context": "https://schema.org",
+          "@type": "MusicRecording",
+          "@id": "https://www.maxwellyoung.info/1kiss#recording",
+          name: "1kiss",
+          url: "https://www.maxwellyoung.info/1kiss",
+          image: "https://www.maxwellyoung.info/artworks/1kiss.jpg",
+          datePublished: "2026-07-24",
+          duration: "PT2M3S",
+          genre: ["Pop", "Alternative R&B"],
+          byArtist: {
+            "@type": "Person",
+            "@id": "https://www.maxwellyoung.info/#artist",
+            name: "Maxwell Young",
+          },
+          sameAs: spotifyUrl,
+          inAlbum: {
+            "@type": "MusicAlbum",
+            name: "1kiss",
+            albumReleaseType: "SingleRelease",
+          },
+        }}
+      />
 
-        <div className="mx-auto grid max-w-[1440px] gap-10 lg:grid-cols-[0.88fr_1.12fr] lg:items-end">
-          <div className="order-2 lg:order-1">
-            <p className="font-pixel-dot text-[11px] uppercase tracking-[0.16em] text-[#b7c8eb]">
-              Maxwell Young / Ninetynine Records / out now
-            </p>
-            <h1 className="font-pixel-line mb-0 mt-4 text-[clamp(6rem,16vw,13rem)] leading-[0.72] tracking-[-0.055em] text-[#f5f8ff]">
-              1kiss
-            </h1>
-            <p className="font-pixel-line mt-9 max-w-[12ch] text-4xl uppercase leading-[0.84] tracking-[-0.025em] sm:text-6xl">
-              your hips
-              <br />
-              our lips
-              <br />
-              one kiss
-            </p>
-            <div className="mt-10 flex flex-wrap items-center gap-6">
-              <a
-                href={song.links.spotify}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-pixel-dot border-b border-white/70 pb-1 text-xs uppercase tracking-[0.12em] transition hover:border-[#ff40aa] hover:text-[#ff40aa]"
-              >
-                Listen on Spotify ↗
-              </a>
-              <a
-                href={song.links.appleMusic}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-pixel-dot border-b border-white/40 pb-1 text-xs uppercase tracking-[0.12em] text-[#f5f8ff]/70 transition hover:border-[#ff40aa] hover:text-[#ff40aa]"
-              >
-                Apple Music ↗
-              </a>
-            </div>
-          </div>
-
-          <div className="order-1 lg:order-2">
-            <div className="relative aspect-square overflow-hidden border-l-[6px] border-[#ff40aa]">
-              <Image
-                src={song.artwork}
-                alt="1kiss artwork"
-                fill
-                priority
-                sizes="(min-width: 1024px) 54vw, 100vw"
-                className="object-cover"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section className="border-b border-white/15 bg-[#eef4ff] text-[#07090d]">
-        <div className="mx-auto grid max-w-[1440px] gap-12 px-5 py-16 sm:px-8 lg:grid-cols-[0.34fr_0.66fr] lg:px-12">
-          <div>
-            <p className="font-pixel-dot text-xs uppercase tracking-[0.14em] text-[#07090d]/60">
-              The record
-            </p>
-            <div className="mt-5 h-2 w-24 bg-[#ff40aa]" />
-          </div>
-          <div>
-            <p className="font-pixel-line max-w-4xl text-3xl leading-[0.96] tracking-[-0.02em] sm:text-5xl">
-              Bright, hyper-tuned Pop / Alt R&amp;B with club-cut vocal chops, a
-              bouncy 136 BPM pulse, and a hook built to replay.
-            </p>
-            <div className="font-pixel-dot mt-10 grid gap-4 border-y border-black/15 py-6 text-xs uppercase tracking-[0.12em] sm:grid-cols-3">
-              <span>02:03</span>
-              <span>136 BPM</span>
-              <span>F# / clean</span>
-            </div>
-          </div>
-        </div>
-      </section>
+      <OneKissTransmission
+        artworkUrl={song.artwork}
+        excerptUrl={song.previewUrl!}
+        masterSha256={oneKissReleaseMedia.audioMaster.sha256}
+      />
 
       <section className="border-b border-white/15">
-        <div className="mx-auto grid max-w-[1440px] gap-12 px-5 py-16 sm:px-8 lg:grid-cols-[0.34fr_0.66fr] lg:px-12">
-          <div>
-            <p className="font-pixel-dot text-xs uppercase tracking-[0.14em] text-[#b7c8eb]">
-              Lyrics
-            </p>
-          </div>
-          <div className="grid gap-x-10 gap-y-8 sm:grid-cols-2">
-            {lyricBlocks.map((block, index) => (
-              <p
-                key={`${index}-${block.slice(0, 24)}`}
-                className="text-white/82 whitespace-pre-line text-lg font-semibold leading-relaxed"
-              >
-                {block}
-              </p>
-            ))}
-          </div>
+        <div className="mx-auto grid max-w-[1120px] gap-8 px-5 py-16 sm:px-8 lg:grid-cols-[0.28fr_0.72fr] lg:px-12 lg:py-24">
+          <p className="font-pixel-dot text-xs uppercase tracking-[0.1em] text-[#8ea6ff]">
+            A / 03 / lyrics
+          </p>
+          <ReleaseLyrics blocks={lyricBlocks} tone="dark" />
         </div>
       </section>
 
-      <section>
-        <div className="mx-auto grid max-w-[1440px] gap-12 px-5 py-14 sm:px-8 lg:grid-cols-[0.34fr_0.66fr] lg:px-12">
-          <p className="font-pixel-dot text-xs uppercase tracking-[0.14em] text-[#b7c8eb]">
-            Credits
+      <section className="bg-[#f2ede4] text-[#07090d]">
+        <div className="mx-auto grid max-w-[1120px] gap-8 px-5 py-16 sm:px-8 lg:grid-cols-[0.28fr_0.72fr] lg:px-12 lg:py-24">
+          <p className="font-pixel-dot text-xs uppercase tracking-[0.14em]">
+            A / 04 / credits
           </p>
-          <div className="grid gap-3 text-lg font-semibold text-white/82 sm:grid-cols-2">
-            {creditLines.map((line, index) => (
-              <p key={`${index}-${line}`}>{line}</p>
-            ))}
+          <div>
+            <div className="grid gap-3 text-lg font-bold sm:grid-cols-2">
+              {creditLines.map((line) => (
+                <p key={line}>{line}</p>
+              ))}
+            </div>
+            <div className="mt-12 border-t border-black/15 pt-8">
+              <ReleaseMoment spotifyUrl={spotifyUrl} />
+            </div>
           </div>
-          <Link
-            href="/"
-            className="font-pixel-dot w-fit border-b border-white/70 pb-1 text-xs uppercase tracking-[0.12em] transition hover:border-[#ff40aa] hover:text-[#ff40aa]"
-          >
-            Back to the archive ↙
-          </Link>
+          <ReleaseNavigation
+            currentSlug={song.slug}
+            className="lg:col-start-2"
+          />
         </div>
       </section>
-    </main>
+    </ReleaseRoomShell>
   );
 }

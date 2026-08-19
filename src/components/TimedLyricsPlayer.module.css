@@ -1,0 +1,116 @@
+.player {
+  --timed-progress: 0%;
+  position: relative;
+  overflow: hidden;
+  border-top: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+  border-bottom: 1px solid color-mix(in srgb, currentColor 22%, transparent);
+}
+
+.header {
+  display: grid;
+  min-height: 4.5rem;
+  grid-template-columns: auto 1fr auto;
+  align-items: center;
+  gap: 1rem;
+  border-bottom: 1px solid color-mix(in srgb, currentColor 18%, transparent);
+}
+
+.play {
+  display: grid;
+  width: 2.75rem;
+  height: 2.75rem;
+  place-items: center;
+  border: 1px solid currentColor;
+}
+
+.stage {
+  display: grid;
+  min-height: 22rem;
+  align-content: center;
+  gap: 0.65rem;
+  padding: clamp(2rem, 6vw, 4.5rem) 0;
+}
+
+.line {
+  width: 100%;
+  text-align: left;
+  transition:
+    color 160ms ease,
+    opacity 160ms ease,
+    transform 160ms ease;
+}
+
+.line:focus-visible {
+  outline: 2px solid var(--sheet-accent, currentColor);
+  outline-offset: 4px;
+}
+
+.previous {
+  color: color-mix(in srgb, currentColor 38%, transparent);
+  font-size: clamp(1rem, 2vw, 1.35rem);
+}
+
+.active {
+  color: color-mix(in srgb, currentColor 25%, transparent);
+  font-size: clamp(2.25rem, 6vw, 5.5rem);
+  line-height: 0.92;
+  letter-spacing: -0.045em;
+}
+
+.next {
+  color: color-mix(in srgb, currentColor 16%, transparent);
+  font-size: clamp(1rem, 2vw, 1.35rem);
+}
+
+.word {
+  position: relative;
+  display: inline-block;
+  margin-right: 0.22em;
+}
+
+.wordFill {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  width: var(--word-progress);
+  color: var(--sheet-accent, currentColor);
+  white-space: nowrap;
+}
+
+.ruler {
+  position: relative;
+  height: 3.5rem;
+  cursor: pointer;
+}
+
+.track {
+  position: absolute;
+  top: 1rem;
+  right: 0;
+  left: 0;
+  height: 2px;
+  background: color-mix(in srgb, currentColor 18%, transparent);
+}
+
+.fill {
+  width: var(--timed-progress);
+  height: 100%;
+  background: var(--sheet-accent, currentColor);
+}
+
+.ticks {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 1.6rem;
+  opacity: 0.42;
+}
+
+@media (max-width: 640px) {
+  .stage {
+    min-height: 19rem;
+  }
+
+  .active {
+    font-size: clamp(2.1rem, 11vw, 3.6rem);
+  }
+}

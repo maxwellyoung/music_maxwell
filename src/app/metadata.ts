@@ -5,10 +5,10 @@ export const metadata: Metadata = {
     process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000",
   ),
   title: "Maxwell Young",
-  description: "Music, release notes, videos, lyrics, and archive.",
+  description: "Music, releases, videos, lyrics, credits, and archive.",
   openGraph: {
     title: "Maxwell Young",
-    description: "Music, release notes, videos, lyrics, and archive.",
+    description: "Music, releases, videos, lyrics, credits, and archive.",
     url: process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000",
     siteName: "Maxwell Young",
     locale: "en_US",
@@ -17,6 +17,6 @@ export const metadata: Metadata = {
   twitter: {
     card: "summary_large_image",
     title: "Maxwell Young",
-    description: "Music, release notes, videos, lyrics, and archive.",
+    description: "Music, releases, videos, lyrics, credits, and archive.",
   },
 };

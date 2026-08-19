@@ -6,7 +6,6 @@ import { useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
 import { subscribeToForumTopics } from "~/lib/pusherClient";
 import { ArrowUpRight, MessageCircle } from "lucide-react";
-import { motion } from "framer-motion";
 
 const PAGE_SIZE = 10;
 
@@ -100,41 +99,26 @@ export default function ForumTopicsInfinite({
   }, [query]);
 
   return (
-    <section aria-label="Notes">
-      {!query && (
-        <div className="mb-4 flex items-center justify-between">
-          <h2 className="mb-0 text-xs font-bold uppercase tracking-[0.2em] text-foreground/45">
-            Latest fragments
-          </h2>
-          <span className="font-reenie text-2xl leading-none text-primary">
-            newest first
-          </span>
-        </div>
-      )}
+    <section aria-label="Notes" className="min-w-0 overflow-hidden">
       <div className="border-b border-foreground/15">
         {topics.length === 0 && (
           <div className="border-t border-foreground/15 py-16">
-            <p className="font-reenie text-4xl leading-none text-foreground/60">
-              {query
-                ? "nothing matched that scribble"
-                : "nothing on the wall yet"}
+            <p className="font-pixel-line text-2xl leading-none text-foreground/65 sm:text-3xl">
+              {query ? "No notes matched." : "No notes yet."}
             </p>
-            <p className="mt-3 max-w-md text-sm text-foreground/45">
-              {query
-                ? "Try a lyric, username, or a shorter piece of the thought."
-                : "Be the first person to pin something up."}
-            </p>
+            {query && (
+              <p className="mt-3 max-w-md text-sm text-foreground/45">
+                Try a shorter word or username.
+              </p>
+            )}
           </div>
         )}
         {topics.map((topic, index) => (
-          <motion.article
+          <article
             key={topic.id}
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.35, delay: Math.min(index * 0.035, 0.2) }}
-            className="group relative grid gap-5 border-t border-foreground/15 py-8 sm:grid-cols-[3.5rem_1fr_auto] sm:gap-7 sm:py-10"
+            className="wall-note group relative grid gap-5 border-t border-foreground/15 py-8 pl-5 sm:grid-cols-[3.5rem_1fr_auto] sm:gap-7 sm:py-10 sm:pl-7"
           >
-            <div className="font-reenie text-3xl leading-none text-primary/75">
+            <div className="font-pixel-dot text-sm leading-none text-primary/70">
               {String(index + 1).padStart(2, "0")}
             </div>
             <div className="min-w-0">
@@ -142,7 +126,7 @@ export default function ForumTopicsInfinite({
                 href={`/forum/${topic.id}`}
                 className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               >
-                <h3 className="mb-3 max-w-3xl text-3xl font-semibold leading-[1.02] tracking-[-0.035em] transition-colors group-hover:text-primary sm:text-4xl">
+                <h3 className="font-pixel-line mb-3 max-w-3xl text-3xl leading-[0.98] transition-colors group-hover:text-primary sm:text-4xl">
                   {topic.title}
                 </h3>
                 <p className="max-w-3xl whitespace-pre-line text-base leading-relaxed text-foreground/60">
@@ -151,7 +135,7 @@ export default function ForumTopicsInfinite({
                     : topic.content}
                 </p>
               </Link>
-              <div className="mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs font-bold uppercase tracking-[0.14em] text-foreground/40">
+              <div className="font-pixel-dot mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-[11px] uppercase tracking-[0.1em] text-foreground/45">
                 {topic.author?.username ? (
                   <Link
                     href={`/user/${topic.author.username}`}
@@ -186,7 +170,7 @@ export default function ForumTopicsInfinite({
               </Link>
               {userRole === "admin" && <TopicActions topicId={topic.id} />}
             </div>
-          </motion.article>
+          </article>
         ))}
         {loading &&
           hasMore &&
@@ -199,12 +183,12 @@ export default function ForumTopicsInfinite({
         className="flex min-h-20 items-center justify-center"
       >
         {loading && (
-          <span className="font-reenie text-2xl text-foreground/50">
-            finding more fragments...
+          <span className="font-pixel-dot text-[11px] uppercase tracking-[0.1em] text-foreground/45">
+            loading more
           </span>
         )}
         {!hasMore && topics.length > 0 && (
-          <div className="flex items-center gap-3 text-xs font-bold uppercase tracking-[0.18em] text-foreground/35">
+          <div className="font-pixel-dot flex items-center gap-3 text-[11px] uppercase tracking-[0.1em] text-foreground/35">
             <span className="h-px w-8 bg-foreground/20" />
             <span>End of the wall</span>
             <span className="h-px w-8 bg-foreground/20" />

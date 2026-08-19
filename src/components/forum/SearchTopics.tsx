@@ -36,10 +36,10 @@ export function SearchTopics({ initialQuery }: { initialQuery?: string }) {
   }, [debouncedQuery, createQueryString, router, initialQuery]);
 
   return (
-    <div className="relative">
+    <div className="relative min-w-0 max-w-full overflow-hidden">
       <label
         htmlFor="notes-search"
-        className="mb-2 block text-xs font-bold uppercase tracking-[0.16em] text-foreground/45"
+        className="font-pixel-dot mb-2 block text-[11px] uppercase tracking-[0.1em] text-foreground/45"
       >
         Search words or people
       </label>

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { ArrowUpRight, LockKeyhole, Sparkles } from "lucide-react";
+import { ArrowUpRight, LockKeyhole } from "lucide-react";
 import { useToast } from "~/components/ui/use-toast";
 
 interface TopicResponse {
@@ -13,24 +13,6 @@ interface TopicResponse {
 const MAX_TITLE_LENGTH = 200;
 const MAX_CONTENT_LENGTH = 10000;
 const DRAFT_KEY = "maxwell-notes-draft";
-
-const prompts = [
-  {
-    label: "a favourite line",
-    title: "the line I kept",
-    content: "the line that followed me home was...",
-  },
-  {
-    label: "a false alarm",
-    title: "false alarm",
-    content: "for a second I thought...",
-  },
-  {
-    label: "after the song",
-    title: "when it ended",
-    content: "the room felt different because...",
-  },
-];
 
 export function NewTopicForm({
   initialTitle = "",
@@ -127,37 +109,15 @@ export function NewTopicForm({
     <div className="grid gap-12 lg:grid-cols-[0.58fr_0.42fr] lg:gap-16">
       <div>
         <div className="mb-10">
-          <p className="text-xs font-bold uppercase tracking-[0.22em] text-primary">
+          <p className="font-pixel-dot text-xs uppercase tracking-[0.12em] text-primary">
             New fragment
           </p>
-          <h1 className="mb-3 mt-3 text-5xl leading-[0.92] tracking-[-0.05em] sm:text-7xl">
-            Leave one.
+          <h1 className="font-pixel-line mb-3 mt-3 text-4xl leading-[0.9] sm:text-6xl">
+            leave one<span className="font-pixel-dot text-primary">.</span>
           </h1>
-          <p className="font-reenie text-4xl leading-none text-foreground/60">
-            write it before it disappears
+          <p className="max-w-lg text-base leading-relaxed text-foreground/55 sm:text-lg">
+            A heading and whatever you want to leave behind.
           </p>
-        </div>
-
-        <div className="mb-10">
-          <p className="mb-3 text-xs font-bold uppercase tracking-[0.16em] text-foreground/40">
-            Need a way in?
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {prompts.map((prompt) => (
-              <button
-                key={prompt.label}
-                type="button"
-                onClick={() => {
-                  setTitle(prompt.title);
-                  setContent(prompt.content);
-                }}
-                className="inline-flex min-h-10 items-center gap-2 rounded-full border border-foreground/20 px-4 text-sm text-foreground/65 transition hover:-rotate-1 hover:border-primary hover:bg-primary hover:text-white"
-              >
-                <Sparkles className="h-3.5 w-3.5" />
-                {prompt.label}
-              </button>
-            ))}
-          </div>
         </div>
 
         <form onSubmit={onSubmit} className="space-y-8">
@@ -165,7 +125,7 @@ export function NewTopicForm({
             <div className="mb-2 flex items-end justify-between gap-4">
               <label
                 htmlFor="title"
-                className="text-xs font-bold uppercase tracking-[0.18em]"
+                className="font-pixel-dot text-[11px] uppercase tracking-[0.1em]"
               >
                 Heading
               </label>
@@ -198,7 +158,7 @@ export function NewTopicForm({
             <div className="mb-2 flex items-end justify-between gap-4">
               <label
                 htmlFor="content"
-                className="text-xs font-bold uppercase tracking-[0.18em]"
+                className="font-pixel-dot text-[11px] uppercase tracking-[0.1em]"
               >
                 Note
               </label>
@@ -229,8 +189,8 @@ export function NewTopicForm({
           </div>
 
           {!session && status !== "loading" && (
-            <div className="bg-accent/8 flex gap-3 border-l-2 border-accent px-4 py-3 text-sm leading-relaxed text-foreground/65">
-              <LockKeyhole className="mt-0.5 h-4 w-4 shrink-0 text-accent" />
+            <div className="flex gap-3 border-l-2 border-primary bg-primary/5 px-4 py-3 text-sm leading-relaxed text-foreground/65">
+              <LockKeyhole className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
               Your draft will wait here while Google signs you in.
             </div>
           )}
@@ -240,14 +200,14 @@ export function NewTopicForm({
               type="button"
               onClick={() => router.back()}
               disabled={isLoading}
-              className="min-h-11 text-left text-xs font-bold uppercase tracking-[0.16em] text-foreground/45 transition hover:text-foreground"
+              className="font-pixel-dot min-h-11 text-left text-[11px] uppercase tracking-[0.1em] text-foreground/45 transition hover:text-foreground"
             >
               Keep it to myself
             </button>
             <button
               type="submit"
               disabled={isLoading || !isValid || status === "loading"}
-              className="group inline-flex min-h-12 items-center justify-center gap-3 rounded-full bg-foreground px-6 text-xs font-bold uppercase tracking-[0.18em] text-background transition hover:bg-primary disabled:cursor-not-allowed disabled:opacity-35"
+              className="font-pixel-dot group inline-flex min-h-12 items-center justify-center gap-3 border border-foreground bg-foreground px-6 text-[11px] uppercase tracking-[0.1em] text-background transition hover:border-primary hover:bg-primary disabled:cursor-not-allowed disabled:opacity-35"
             >
               {isLoading
                 ? "Pinning..."
@@ -263,24 +223,17 @@ export function NewTopicForm({
       </div>
 
       <aside className="lg:sticky lg:top-32 lg:self-start">
-        <p className="mb-4 text-xs font-bold uppercase tracking-[0.18em] text-foreground/40">
-          Live preview
-        </p>
-        <div className="relative mx-auto max-w-md rotate-[1.5deg] bg-[#ff789a] px-7 pb-10 pt-8 shadow-[10px_14px_0_rgba(17,16,15,0.12)] transition-transform duration-300 hover:rotate-0 sm:px-9 sm:pb-14">
-          <span className="absolute -top-3 left-1/2 h-7 w-24 -translate-x-1/2 -rotate-2 bg-[#d9ff5f]/85 mix-blend-multiply" />
-          <p className="mb-8 text-[10px] font-bold uppercase tracking-[0.22em] text-black/45">
+        <div className="relative mx-auto max-w-md border border-foreground/20 bg-white/45 px-7 pb-10 pt-8 shadow-[7px_9px_0_rgba(49,87,236,0.12)] sm:px-9 sm:pb-14">
+          <p className="font-pixel-dot mb-8 text-[10px] uppercase tracking-[0.1em] text-foreground/40">
             a note from you
           </p>
-          <h2 className="mb-5 break-words text-4xl leading-[0.95] tracking-[-0.045em] text-black sm:text-5xl">
+          <h2 className="font-pixel-line mb-5 break-words text-3xl leading-[0.94] text-foreground sm:text-4xl">
             {previewTitle}
           </h2>
-          <p className="whitespace-pre-wrap break-words text-lg leading-relaxed text-black/65">
+          <p className="whitespace-pre-wrap break-words text-lg leading-relaxed text-foreground/60">
             {previewContent}
           </p>
         </div>
-        <p className="font-reenie mt-8 text-center text-3xl leading-none text-foreground/45">
-          links become playable in replies
-        </p>
       </aside>
     </div>
   );

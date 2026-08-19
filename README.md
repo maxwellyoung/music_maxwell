@@ -1,16 +1,16 @@
 # Music Maxwell
 
-Public release page and music surface for Maxwell Young.
+Public music archive and release surface for Maxwell Young.
 
-The app is built as a full product surface rather than a static link page: release pages, media assets, auth/database foundations, and a modern Next.js UI stack.
+The public hierarchy is deliberately simple: a calm release archive, factual artefact sheets, and a small number of release worlds with song-specific interactions.
 
 ## What it demonstrates
 
 - Next.js app structure for a real personal/music product.
-- Prisma and auth-ready backend foundations.
-- Public release/media presentation.
-- Stronger product packaging than a generic artist link page.
-- A design-engineering bridge between music, identity, and web product work.
+- A typed release catalogue for archive, sheet, room, metadata, and sitemap identity.
+- Public artwork, lyrics, credits, films, audio excerpts, and verified listening links.
+- Bespoke worlds for 1kiss, Turn It Up, and Wintour.
+- Optional account and listener-note foundations kept outside the primary archive path.
 
 ## Tech stack
 
@@ -20,7 +20,7 @@ The app is built as a full product surface rather than a static link page: relea
 - NextAuth
 - Tailwind CSS
 - Radix UI
-- React Three Fiber / Drei
+- Vercel Analytics
 
 ## Getting Started
 
@@ -74,11 +74,21 @@ pnpm dev
 
 The app will be available at [http://localhost:3000](http://localhost:3000) (or another port if 3000 is in use).
 
+### 6. Run the release gate
+
+```bash
+pnpm test
+pnpm typecheck
+pnpm lint
+pnpm build
+```
+
 ## Deployment
 
 - Set all required environment variables in your deployment platform (e.g., Vercel).
 - Make sure `DATABASE_URL`, `NEXTAUTH_URL`, `NEXTAUTH_SECRET`, `GOOGLE_CLIENT_ID`, and `GOOGLE_CLIENT_SECRET` are set for production.
 - Redeploy after making changes to environment variables.
+- Deploy only from a committed, clean branch that reproduces the public build.
 
 ## Troubleshooting
 

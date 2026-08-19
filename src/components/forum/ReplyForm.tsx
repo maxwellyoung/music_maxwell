@@ -23,7 +23,7 @@ export default function ReplyForm({
   if (status === "loading") {
     return (
       <div className="mt-10 flex items-center justify-center border-t border-white/20 py-10">
-        <div className="h-5 w-5 animate-spin rounded-full border-2 border-white border-t-transparent" />
+        <div className="h-5 w-5 animate-spin rounded-full border-2 border-[#8ea6ff] border-t-transparent" />
       </div>
     );
   }
@@ -31,17 +31,19 @@ export default function ReplyForm({
   if (!session) {
     return (
       <div className="mt-12 border-t border-white/20 pt-10">
-        <p className="text-xs font-bold uppercase tracking-[0.2em] text-white/45">
+        <p className="font-pixel-dot text-[11px] uppercase tracking-[0.1em] text-[#8ea6ff]">
           Add your voice
         </p>
-        <h3 className="mb-3 mt-2 text-3xl text-white">Leave an echo</h3>
+        <h3 className="font-pixel-line mb-3 mt-2 text-3xl text-white">
+          leave an echo.
+        </h3>
         <p className="mb-6 max-w-lg text-sm leading-relaxed text-white/50">
           Sign in to reply. Your username appears beside anything you leave on
           the wall.
         </p>
         <Button
           onClick={() => signIn()}
-          className="h-12 rounded-full bg-white px-6 text-xs font-bold uppercase tracking-[0.16em] text-black hover:bg-white/85"
+          className="font-pixel-dot h-12 rounded-none bg-white px-6 text-[11px] uppercase tracking-[0.1em] text-black hover:bg-[#8ea6ff]"
           aria-label="Sign in to reply to this topic"
         >
           Sign in to reply
@@ -94,10 +96,12 @@ export default function ReplyForm({
 
   return (
     <div className="mt-12 border-t border-white/20 pt-10">
-      <p className="text-xs font-bold uppercase tracking-[0.2em] text-white/45">
+      <p className="font-pixel-dot text-[11px] uppercase tracking-[0.1em] text-[#8ea6ff]">
         Add your voice
       </p>
-      <h3 className="mb-6 mt-2 text-3xl text-white">Leave an echo</h3>
+      <h3 className="font-pixel-line mb-6 mt-2 text-3xl text-white">
+        leave an echo.
+      </h3>
       <form className="space-y-4" onSubmit={handleSubmit}>
         <div className="space-y-2">
           <Textarea
@@ -107,7 +111,7 @@ export default function ReplyForm({
             required
             disabled={isLoading}
             aria-label="Reply content"
-            className="min-h-[150px] resize-y rounded-none border border-white/25 bg-white/5 text-white shadow-none placeholder:text-white/25 focus:border-white/60 focus:ring-white/30"
+            className="min-h-[150px] resize-y rounded-none border border-white/25 bg-white/5 text-white shadow-none placeholder:text-white/25 focus:border-[#8ea6ff] focus:ring-[#8ea6ff]"
             maxLength={maxChars}
           />
           <div className="flex justify-end">
@@ -128,7 +132,7 @@ export default function ReplyForm({
             size="lg"
             disabled={isLoading || !content.trim()}
             aria-label={isLoading ? "Posting reply" : "Post reply"}
-            className="rounded-full bg-white px-7 text-xs font-bold uppercase tracking-[0.16em] text-black hover:bg-white/85"
+            className="font-pixel-dot rounded-none bg-white px-7 text-[11px] uppercase tracking-[0.1em] text-black hover:bg-[#8ea6ff]"
           >
             {isLoading ? (
               <>

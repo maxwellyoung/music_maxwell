@@ -7,6 +7,11 @@
     "build": "prisma generate && next build",
     "dev": "next dev",
     "lint": "ESLINT_USE_FLAT_CONFIG=false eslint src tailwind.config.ts --ext .ts,.tsx,.js",
+    "release:check": "pnpm test && pnpm audit:quiz && pnpm typecheck && pnpm lint && pnpm build",
+    "test": "node --experimental-strip-types --test src/data/releases.test.ts src/app/quiz/quiz-engine.test.ts",
+    "typecheck": "tsc --noEmit",
+    "verify:clean": "node scripts/verify-clean.mjs",
+    "audit:quiz": "node --experimental-strip-types scripts/audit-quiz.ts",
     "start": "next start"
   },
   "dependencies": {
@@ -17,7 +22,6 @@
     "@radix-ui/react-alert-dialog": "^1.1.15",
     "@radix-ui/react-aspect-ratio": "^1.1.8",
     "@radix-ui/react-dialog": "^1.1.15",
-    "@radix-ui/react-dropdown-menu": "^2.1.16",
     "@radix-ui/react-label": "^2.1.8",
     "@radix-ui/react-select": "^2.2.6",
     "@radix-ui/react-separator": "^1.1.8",
@@ -26,12 +30,8 @@
     "@radix-ui/react-switch": "^1.2.6",
     "@radix-ui/react-toast": "^1.2.15",
     "@radix-ui/react-toggle": "^1.1.10",
-    "@radix-ui/react-toggle-group": "^1.1.11",
     "@react-email/components": "^1.0.12",
     "@react-email/render": "^2.0.7",
-    "@react-spring/three": "^9.7.4",
-    "@react-three/drei": "^9.122.0",
-    "@react-three/fiber": "^8.15.19",
     "@sanity/client": "^7.21.0",
     "@t3-oss/env-nextjs": "^0.10.1",
     "@types/nodemailer": "^6.4.17",
@@ -46,11 +46,8 @@
     "embla-carousel-react": "^8.5.2",
     "framer-motion": "^11.2.4",
     "geist": "^1.7.0",
-    "graphql": "^16.9.0",
-    "graphql-request": "^7.1.0",
     "lru-cache": "^11.1.0",
     "lucide-react": "^0.378.0",
-    "motion": "^12.11.0",
     "next": "^15.5.15",
     "next-auth": "^4.24.14",
     "nodemailer": "^8.0.5",
@@ -60,7 +57,6 @@
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-resizable-panels": "^2.0.19",
-    "react-rnd": "^10.4.13",
     "resend": "^4.5.1",
     "shopify-buy": "^2.22.0",
     "tailwind-merge": "^2.3.0",
@@ -74,13 +70,13 @@
     "@next/bundle-analyzer": "^15.5.15",
     "@types/eslint": "^8.56.10",
     "@types/lodash.debounce": "^4.0.9",
-    "@types/node": "^20.16.14",
+    "@types/node": "^24.13.3",
     "@types/react": "^18.3.6",
     "@types/react-dom": "^18.2.19",
     "@types/shopify-buy": "^2.17.4",
     "@types/three": "0.172.0",
-    "@typescript-eslint/eslint-plugin": "^8.59.0",
-    "@typescript-eslint/parser": "^8.59.0",
+    "@typescript-eslint/eslint-plugin": "^8.65.0",
+    "@typescript-eslint/parser": "^8.65.0",
     "autoprefixer": "^10.5.0",
     "eslint": "^9.39.4",
     "eslint-config-next": "^15.5.15",
@@ -89,7 +85,7 @@
     "prettier-plugin-tailwindcss": "^0.5.11",
     "prisma": "^5.10.2",
     "tailwindcss": "^3.4.19",
-    "typescript": "^5.4.2"
+    "typescript": "^6.0.3"
   },
   "ct3aMetadata": {
     "initVersion": "7.33.1"
@@ -101,6 +97,9 @@
       "postcss": "^8.5.10",
       "uuid": "^14.0.0"
     }
+  },
+  "engines": {
+    "node": "24.x"
   },
   "packageManager": "pnpm@9.1.1"
 }

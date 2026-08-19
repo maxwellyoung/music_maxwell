@@ -155,7 +155,7 @@ function renderRichContent(text: string) {
             href={url || "#"}
             target="_blank"
             rel="noopener noreferrer"
-            className="break-all text-white underline decoration-white/40 underline-offset-4"
+            className="break-all text-[#8ea6ff] underline decoration-white/25 underline-offset-4"
           >
             {url}
           </a>,
@@ -281,9 +281,19 @@ export default function RepliesList({
         message="Are you sure you want to delete this reply?"
       />
       {reportOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4"
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="report-reply-title"
+        >
           <div className="w-[calc(100%-2rem)] max-w-sm bg-[#f2ede4] p-8 text-[#11100f] shadow-2xl">
-            <div className="mb-4 text-lg font-semibold">Report Reply</div>
+            <div
+              id="report-reply-title"
+              className="font-pixel-line mb-4 text-2xl"
+            >
+              report reply.
+            </div>
             <textarea
               className="mb-4 w-full rounded-none border border-black/20 bg-transparent px-3 py-2 text-base text-[#11100f]"
               rows={3}
@@ -313,8 +323,8 @@ export default function RepliesList({
       )}
       {replies.length === 0 && (
         <div className="border-b border-white/20 py-12">
-          <p className="font-reenie text-4xl leading-none text-white/55">
-            no echoes yet
+          <p className="font-pixel-line text-2xl leading-none text-white/65">
+            no echoes yet.
           </p>
           <p className="mt-3 text-sm text-white/40">
             There is room for the first response.
@@ -326,16 +336,16 @@ export default function RepliesList({
           key={reply.id}
           className="group grid gap-5 border-b border-white/20 py-8 sm:grid-cols-[3.5rem_1fr] sm:gap-8 sm:py-10"
         >
-          <div className="font-reenie text-3xl leading-none text-white/70">
+          <div className="font-pixel-dot text-sm leading-none text-[#8ea6ff]">
             {String(index + 1).padStart(2, "0")}
           </div>
           <div>
             <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-              <div className="flex items-center gap-2 text-sm font-bold uppercase tracking-[0.14em]">
+              <div className="font-pixel-dot flex items-center gap-2 text-[11px] uppercase tracking-[0.1em]">
                 {reply.author?.username ? (
                   <Link
                     href={`/user/${reply.author.username}`}
-                    className="text-white transition hover:text-white"
+                    className="text-white transition hover:text-[#8ea6ff]"
                   >
                     @{reply.author.username}
                   </Link>
@@ -353,7 +363,7 @@ export default function RepliesList({
                   />
                 )}
               </div>
-              <span className="text-xs font-bold uppercase tracking-[0.14em] text-white/35">
+              <span className="font-pixel-dot text-[11px] uppercase tracking-[0.1em] text-white/35">
                 {new Date(reply.createdAt).toLocaleDateString("en-NZ", {
                   day: "numeric",
                   month: "short",
@@ -381,7 +391,7 @@ export default function RepliesList({
                 </button>
               )}
               <button
-                className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 text-white/35 transition-colors hover:border-white/60 hover:text-white"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 text-white/35 transition-colors hover:border-[#8ea6ff] hover:text-[#8ea6ff]"
                 onClick={() => handleReport(reply.id)}
                 title="Report"
                 aria-label="Report reply"

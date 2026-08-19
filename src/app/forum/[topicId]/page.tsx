@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import Link from "next/link";
-import { ArrowLeft, MessageCircle } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import ReplyForm from "~/components/forum/ReplyForm";
 import RepliesList from "~/components/forum/RepliesList";
 import TopicActions from "~/components/forum/TopicActions";
@@ -39,11 +39,12 @@ export default async function TopicPage({
     return (
       <main className="notes-canvas flex min-h-[70vh] items-center px-5 py-16">
         <div className="mx-auto w-full max-w-3xl text-center">
-          <p className="font-reenie text-5xl text-primary">missing fragment</p>
-          <h1 className="mt-4 text-4xl">This note is no longer on the wall.</h1>
+          <h1 className="font-pixel-line text-4xl">
+            This note is no longer on the wall.
+          </h1>
           <Link
             href="/forum"
-            className="mt-8 inline-flex border-b-2 border-foreground pb-1 text-sm font-bold uppercase tracking-[0.16em]"
+            className="font-pixel-dot mt-8 inline-flex border-b-2 border-foreground pb-1 text-xs uppercase tracking-[0.1em]"
           >
             Back to Notes
           </Link>
@@ -58,19 +59,14 @@ export default async function TopicPage({
   return (
     <main className="notes-canvas min-h-screen">
       <div className="border-b border-foreground/15 px-5 py-5 sm:px-8 lg:px-12">
-        <div className="mx-auto flex max-w-[1440px] items-center justify-between">
+        <div className="mx-auto flex max-w-[1120px] items-center">
           <Link
             href="/forum"
-            className="group inline-flex min-h-11 items-center gap-2 text-xs font-bold uppercase tracking-[0.18em] text-foreground/55 transition hover:text-primary"
+            className="font-pixel-dot group inline-flex min-h-11 items-center gap-2 text-[11px] uppercase tracking-[0.1em] text-foreground/55 transition hover:text-primary"
           >
             <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
             The wall
           </Link>
-          <div className="flex items-center gap-2 text-xs font-bold uppercase tracking-[0.16em] text-foreground/40">
-            <MessageCircle className="h-4 w-4" />
-            {topic.replies.length}{" "}
-            {topic.replies.length === 1 ? "echo" : "echoes"}
-          </div>
         </div>
       </div>
 
@@ -78,7 +74,7 @@ export default async function TopicPage({
         <div className="mx-auto max-w-[1440px]">
           <div className="grid gap-10 lg:grid-cols-[0.25fr_0.75fr] lg:gap-16">
             <aside className="lg:pt-3">
-              <p className="mb-2 text-xs font-bold uppercase tracking-[0.18em] text-foreground/40">
+              <p className="font-pixel-dot mb-2 text-[11px] uppercase tracking-[0.1em] text-foreground/40">
                 Pinned by
               </p>
               {topic.author?.username ? (
@@ -91,7 +87,7 @@ export default async function TopicPage({
               ) : (
                 <p className="text-lg text-foreground/55">anonymous</p>
               )}
-              <p className="mt-5 text-xs font-bold uppercase tracking-[0.16em] text-foreground/40">
+              <p className="font-pixel-dot mt-5 text-[11px] uppercase tracking-[0.1em] text-foreground/40">
                 {topic.createdAt.toLocaleDateString("en-NZ", {
                   day: "2-digit",
                   month: "long",
@@ -106,7 +102,7 @@ export default async function TopicPage({
             </aside>
 
             <div>
-              <h1 className="mb-10 max-w-5xl text-5xl font-bold leading-[0.92] tracking-[-0.055em] sm:text-7xl lg:text-8xl">
+              <h1 className="font-pixel-line mb-10 max-w-5xl break-words text-4xl leading-[0.92] sm:text-6xl">
                 {topic.title}
               </h1>
               <div className="max-w-3xl border-l-2 border-primary pl-6 sm:pl-10">
@@ -129,15 +125,10 @@ export default async function TopicPage({
       <section className="bg-[#11100f] px-5 py-14 text-white sm:px-8 sm:py-20 lg:px-12">
         <div className="mx-auto max-w-[1120px]">
           <div className="mb-10 flex items-end justify-between gap-5 border-b border-white/20 pb-5">
-            <div>
-              <p className="text-xs font-bold uppercase tracking-[0.2em] text-white/45">
-                Replies
-              </p>
-              <h2 className="mb-0 mt-2 text-4xl text-white sm:text-5xl">
-                Echoes
-              </h2>
-            </div>
-            <span className="font-reenie text-3xl text-white/45">
+            <h2 className="font-pixel-line mb-0 text-4xl text-white sm:text-5xl">
+              echoes<span className="font-pixel-dot text-[#8ea6ff]">.</span>
+            </h2>
+            <span className="font-pixel-dot text-[11px] uppercase tracking-[0.1em] text-white/45">
               {topic.replies.length || "no"}{" "}
               {topic.replies.length === 1 ? "reply" : "replies"}
             </span>

@@ -1,0 +1,6 @@
+import test from "node:test";import assert from "node:assert/strict";import {achievements,answer,initialGame,modeSize,selectQuestions,validateSources} from "./quiz-engine.ts";import {questions,sources} from "./quiz-data.ts";
+test("all questions have valid public sources",()=>assert.equal(validateSources(questions,sources),true));
+test("catalog has at least 30 unique questions",()=>{assert.ok(questions.length>=30);assert.equal(new Set(questions.map(q=>q.id)).size,questions.length)});
+test("modes select no repeats and obey size",()=>{for(const m of ["quick","deep","full"] as const){const x=selectQuestions(questions,m,()=>.42);assert.equal(new Set(x.map(q=>q.id)).size,x.length);assert.equal(x.length,Math.min(modeSize[m],m==="deep"?questions.filter(q=>q.difficulty>=2).length:questions.length))}});
+test("streak multiplier and risk reward score",()=>{let g=initialGame;g=answer(g,true,1);g=answer(g,true,1);g=answer(g,true,1);assert.equal(g.score,350);assert.equal(g.streak,3);g=answer(g,false,1,true);assert.equal(g.lives,1);assert.equal(g.streak,0)});
+test("achievements remain deterministic and local",()=>assert.deepEqual(achievements({score:9,correct:5,answered:10,streak:5,lives:3}),["First five","On repeat","Untouched"]));
