@@ -12,6 +12,10 @@ export default function Navbar() {
   const { data: session } = useSession();
   const isForum = pathname.startsWith("/forum");
   const isHome = pathname === "/";
+  // /lab hosts full-page design experiments judged without site chrome.
+  const isLab = pathname.startsWith("/lab");
+
+  if (isLab) return null;
 
   return (
     <header

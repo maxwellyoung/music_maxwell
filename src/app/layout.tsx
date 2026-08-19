@@ -7,6 +7,7 @@ import JsonLd from "~/components/JsonLd";
 import { SessionProvider } from "~/components/providers/SessionProvider";
 import { Toaster } from "~/components/ui/toaster";
 import Footer from "~/components/Footer";
+import FooterGate from "~/components/FooterGate";
 import Navbar from "../components/Navbar";
 
 const appUrl =
@@ -104,7 +105,9 @@ export default function RootLayout({
           <div id="main-content" tabIndex={-1} className="flex-1 outline-none">
             {children}
           </div>
-          <Footer />
+          <FooterGate>
+            <Footer />
+          </FooterGate>
           <Toaster />
           <Analytics />
         </SessionProvider>
