@@ -1,11 +1,9 @@
 export const siteConfig = {
   featuredReleaseSlug: "1kiss",
   featuredHero: {
-    stills: [
-      "/1kiss/still-film-editorial.jpg",
-      "/1kiss/still-film-close-smile.jpg",
-      "/1kiss/still-film-direct.jpg",
-    ],
+    // Official cover art only — Maxwell vetoed the raw webcam film stills
+    // (2026-08-20), and every other campaign photo is the same footage.
+    stills: ["/artworks/1kiss.jpg"],
     excerpt: "/1kiss/1kiss-hook.m4a",
     excerptSeconds: 18,
     standbyLine: "your hips / our lips / one kiss",

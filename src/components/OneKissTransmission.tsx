@@ -127,7 +127,7 @@ export default function OneKissTransmission({
         <div className={styles.backdrop} aria-hidden="true" />
         <div className={styles.frame} aria-hidden="true">
           <Image
-            src="/1kiss/still-hook.jpg"
+            src="/artworks/1kiss.jpg"
             alt=""
             fill
             priority
