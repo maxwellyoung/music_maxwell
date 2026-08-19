@@ -92,8 +92,8 @@ export default function LedgerSkyTower() {
       if (disposed || !mount) return;
 
       const scene = new THREE.Scene();
-      const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 100);
-      camera.position.set(0, 1, 8);
+      const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
+      camera.position.set(0, 0.3, 7.4);
 
       const renderer = new THREE.WebGLRenderer({
         antialias: true,
@@ -123,8 +123,8 @@ export default function LedgerSkyTower() {
       });
 
       const group = new THREE.Group();
-      group.scale.setScalar(0.65);
-      group.position.y = -0.5;
+      group.scale.setScalar(0.82);
+      group.position.y = -0.25;
       scene.add(group);
 
       let mesh: InstanceType<typeof THREE.Mesh> | undefined;

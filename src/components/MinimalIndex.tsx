@@ -122,11 +122,11 @@ export default function MinimalIndex({
         </a>
       </footer>
 
-      {/* Right column: the dithered Sky Tower keeps quiet residence; a
+      {/* Right column: the dithered Sky Tower stands full-height; a
           release's artwork fades in over it while its row is held. */}
       <div
         aria-hidden="true"
-        className="pointer-events-none fixed right-8 top-1/2 hidden h-72 w-72 -translate-y-1/2 lg:block xl:right-24 xl:h-96 xl:w-96"
+        className="pointer-events-none fixed inset-y-0 right-0 hidden w-[42vw] lg:block"
       >
         <div
           className={`absolute inset-0 transition-opacity duration-500 ${
@@ -136,7 +136,7 @@ export default function MinimalIndex({
           <LedgerSkyTower />
         </div>
         <div
-          className={`absolute inset-0 transition-opacity duration-200 ${
+          className={`absolute left-1/2 top-1/2 h-[24rem] w-[24rem] max-w-[36vw] -translate-x-1/2 -translate-y-1/2 transition-opacity duration-200 xl:h-[28rem] xl:w-[28rem] ${
             activeRelease ? "opacity-100" : "opacity-0"
           }`}
         >
@@ -145,7 +145,7 @@ export default function MinimalIndex({
               src={activeRelease.artwork}
               alt=""
               fill
-              sizes="24rem"
+              sizes="28rem"
               className="object-cover"
             />
           )}
