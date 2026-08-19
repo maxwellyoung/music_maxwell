@@ -51,7 +51,7 @@ export default function AuthForm() {
       transition={{ duration: 0.4 }}
       className="flex items-center justify-center px-4"
     >
-      <Card className="w-full max-w-md border border-border/50 bg-background/60 backdrop-blur-sm">
+      <Card className="w-full max-w-md border border-border/50 bg-background/60 backdrop-blur-xs">
         <CardHeader className="space-y-1 text-center">
           <h1 className="mb-0 text-2xl font-bold tracking-tight">
             Welcome Back

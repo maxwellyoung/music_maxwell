@@ -201,7 +201,7 @@ export default function Wintour() {
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
                 transition={{ duration: 0.3 }}
-                className="max-h-[90vh] w-full max-w-screen-md overflow-auto rounded-lg border-2 border-[hsl(var(--rust))] bg-[#111] text-[#f5f4f0] shadow-lg"
+                className="max-h-[90vh] w-full max-w-(--breakpoint-md) overflow-auto rounded-lg border-2 border-[hsl(var(--rust))] bg-[#111] text-[#f5f4f0] shadow-lg"
                 onClick={(e) => e.stopPropagation()}
               >
                 <div className="relative px-6 py-8 md:py-12">

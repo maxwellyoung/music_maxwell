@@ -22,7 +22,7 @@ export default function ArtworkIndexPage() {
       <p className="text-[11px] font-bold uppercase tracking-[0.26em] text-foreground/45">
         Covers · {covers.length} of them
       </p>
-      <h1 className="mb-0 mt-4 text-6xl leading-[0.84] tracking-[-0.05em] sm:text-8xl">
+      <h1 className="mb-0 mt-4 text-6xl leading-[0.84] tracking-tighter sm:text-8xl">
         The artwork
       </h1>
       <p className="font-reenie mt-6 max-w-xl text-3xl leading-none text-foreground/60 sm:text-4xl">
@@ -52,7 +52,7 @@ export default function ArtworkIndexPage() {
                     <Link
                       key={release.slug}
                       href={href}
-                      className="group focus-visible:outline-none"
+                      className="group focus-visible:outline-hidden"
                     >
                       <div className="relative aspect-square overflow-hidden bg-black group-focus-visible:ring-2 group-focus-visible:ring-foreground group-focus-visible:ring-offset-4 group-focus-visible:ring-offset-background">
                         <Image

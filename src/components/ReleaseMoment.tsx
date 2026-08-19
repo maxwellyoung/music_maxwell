@@ -45,7 +45,7 @@ export default function ReleaseMoment({
               state: "pre_release",
             })
           }
-          className="font-pixel-dot w-fit border-b border-current pb-1 text-xs uppercase tracking-[0.1em] transition hover:text-[#8ea6ff] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-current"
+          className="font-pixel-dot w-fit border-b border-current pb-1 text-xs uppercase tracking-widest transition hover:text-[#8ea6ff] focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-current"
         >
           open on Spotify ↗
         </a>
@@ -66,7 +66,7 @@ export default function ReleaseMoment({
           state: "out_now",
         })
       }
-      className="font-pixel-dot inline-flex min-h-12 w-fit items-center border border-current px-5 text-xs uppercase tracking-[0.1em] transition hover:border-[#8ea6ff] hover:text-[#8ea6ff] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-current"
+      className="font-pixel-dot inline-flex min-h-12 w-fit items-center border border-current px-5 text-xs uppercase tracking-widest transition hover:border-[#8ea6ff] hover:text-[#8ea6ff] focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-current"
     >
       out now — listen on Spotify ↗
     </a>

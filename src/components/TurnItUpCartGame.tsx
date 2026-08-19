@@ -273,7 +273,7 @@ export default function TurnItUpCartGame() {
       height={HEIGHT}
       tabIndex={0}
       aria-label="Turn It Up cart game. Collect seven falling cans with the cart. Use left and right arrows or A and D. Miss three and the run ends."
-      className="block aspect-[720/500] w-full border border-[#152018] bg-[#f4f5ef] outline-none focus-visible:ring-4 focus-visible:ring-[#6f8468]/45"
+      className="block aspect-720/500 w-full border border-[#152018] bg-[#f4f5ef] outline-hidden focus-visible:ring-4 focus-visible:ring-[#6f8468]/45"
       onKeyDown={(event) => {
         const state = stateRef.current;
         if (event.key.toLowerCase() === "f") {

@@ -343,7 +343,7 @@ export default function RepliesList({
           </div>
           <div>
             <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-              <div className="font-pixel-dot flex items-center gap-2 text-[11px] uppercase tracking-[0.1em]">
+              <div className="font-pixel-dot flex items-center gap-2 text-[11px] uppercase tracking-widest">
                 {reply.author?.username ? (
                   <Link
                     href={`/user/${reply.author.username}`}
@@ -365,7 +365,7 @@ export default function RepliesList({
                   />
                 )}
               </div>
-              <span className="font-pixel-dot text-[11px] uppercase tracking-[0.1em] text-white/35">
+              <span className="font-pixel-dot text-[11px] uppercase tracking-widest text-white/35">
                 {new Date(reply.createdAt).toLocaleDateString("en-NZ", {
                   day: "numeric",
                   month: "short",

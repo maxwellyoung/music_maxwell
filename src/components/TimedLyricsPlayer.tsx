@@ -120,7 +120,7 @@ export default function TimedLyricsPlayer({
         <button
           type="button"
           onClick={() => void togglePlayback()}
-          className="grid h-11 w-11 place-items-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--sheet-accent)]"
+          className="grid h-11 w-11 place-items-center focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-(--sheet-accent)"
           aria-label={playing ? `Pause ${release}` : `Play ${release}`}
         >
           <span className={styles.play} aria-hidden="true">
@@ -134,7 +134,7 @@ export default function TimedLyricsPlayer({
         <span className="font-pixel-dot text-[10px] uppercase tracking-[0.14em] opacity-55">
           {playing ? "lyrics live" : "play with lyrics"}
         </span>
-        <span className="font-pixel-dot text-[10px] tabular-nums tracking-[0.1em] opacity-50">
+        <span className="font-pixel-dot text-[10px] tabular-nums tracking-widest opacity-50">
           {clockTime(currentTime)} / {clockTime(record.duration)}
         </span>
       </div>
@@ -197,7 +197,7 @@ export default function TimedLyricsPlayer({
           <div className={styles.fill} />
         </div>
         <div
-          className={`${styles.ticks} font-pixel-dot text-[9px] tabular-nums tracking-[0.1em]`}
+          className={`${styles.ticks} font-pixel-dot text-[9px] tabular-nums tracking-widest`}
           aria-hidden="true"
         >
           <span>00:00</span>

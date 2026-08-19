@@ -69,7 +69,7 @@ export default async function ForumPage({
             </p>
             <Link
               href="/forum/new"
-              className="font-pixel-dot group inline-flex min-h-11 w-fit items-center gap-3 border-b border-foreground pb-1 text-[11px] uppercase tracking-[0.1em] transition hover:border-primary hover:text-primary"
+              className="font-pixel-dot group inline-flex min-h-11 w-fit items-center gap-3 border-b border-foreground pb-1 text-[11px] uppercase tracking-widest transition hover:border-primary hover:text-primary"
             >
               leave a note
               <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
@@ -87,18 +87,18 @@ export default async function ForumPage({
               </div>
               {query ? (
                 <div className="flex items-center gap-4">
-                  <p className="font-pixel-dot text-[11px] uppercase tracking-[0.1em] text-foreground/45">
+                  <p className="font-pixel-dot text-[11px] uppercase tracking-widest text-foreground/45">
                     {total} {total === 1 ? "match" : "matches"}
                   </p>
                   <Link
                     href="/forum"
-                    className="font-pixel-dot text-[11px] uppercase tracking-[0.1em] text-primary hover:underline"
+                    className="font-pixel-dot text-[11px] uppercase tracking-widest text-primary hover:underline"
                   >
                     clear
                   </Link>
                 </div>
               ) : (
-                <p className="font-pixel-dot text-[11px] uppercase tracking-[0.1em] text-foreground/45">
+                <p className="font-pixel-dot text-[11px] uppercase tracking-widest text-foreground/45">
                   latest first
                 </p>
               )}

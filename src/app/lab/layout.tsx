@@ -23,7 +23,7 @@ export default function LabLayout({
       {children}
       <nav
         aria-label="Design variants"
-        className="fixed bottom-4 left-1/2 z-50 flex -translate-x-1/2 gap-1 rounded-full border border-black/10 bg-white/90 px-2 py-1 text-[11px] font-medium text-black shadow-lg backdrop-blur"
+        className="fixed bottom-4 left-1/2 z-50 flex -translate-x-1/2 gap-1 rounded-full border border-black/10 bg-white/90 px-2 py-1 text-[11px] font-medium text-black shadow-lg backdrop-blur-sm"
       >
         {variants.map((v) => (
           <Link

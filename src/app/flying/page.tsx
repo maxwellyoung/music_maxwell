@@ -19,7 +19,7 @@ export default function FlyingPage() {
   return (
     <ReleaseRoomShell
       slug={song.slug}
-      className="!bg-[#dce9f2] !text-[#102230]"
+      className="bg-[#dce9f2]! text-[#102230]!"
     >
       <JsonLd
         data={{
@@ -62,7 +62,7 @@ export default function FlyingPage() {
                 service: "all_links",
                 location: "release_room",
               }}
-              className="font-pixel-dot mt-8 inline-flex min-h-12 items-center border border-[#102230] px-5 text-xs uppercase tracking-[0.1em] transition hover:bg-[#102230] hover:text-[#dce9f2] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#102230]"
+              className="font-pixel-dot mt-8 inline-flex min-h-12 items-center border border-[#102230] px-5 text-xs uppercase tracking-widest transition hover:bg-[#102230] hover:text-[#dce9f2] focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#102230]"
             >
               listen everywhere ↗
             </TrackedLink>
@@ -79,7 +79,7 @@ export default function FlyingPage() {
                 className="object-cover"
               />
             </div>
-            <div className="font-pixel-dot grid grid-cols-[auto_1fr_auto] items-center gap-4 border-x border-b border-[#102230]/25 px-4 py-3 text-[10px] uppercase tracking-[0.1em]">
+            <div className="font-pixel-dot grid grid-cols-[auto_1fr_auto] items-center gap-4 border-x border-b border-[#102230]/25 px-4 py-3 text-[10px] uppercase tracking-widest">
               <span>00:00</span>
               <span className="h-px bg-[#102230]/35">
                 <span className="block h-px w-[72%] bg-[#315b76]" />

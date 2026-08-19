@@ -44,7 +44,7 @@ export default async function TopicPage({
           </h1>
           <Link
             href="/forum"
-            className="font-pixel-dot mt-8 inline-flex border-b-2 border-foreground pb-1 text-xs uppercase tracking-[0.1em]"
+            className="font-pixel-dot mt-8 inline-flex border-b-2 border-foreground pb-1 text-xs uppercase tracking-widest"
           >
             Back to Notes
           </Link>
@@ -62,7 +62,7 @@ export default async function TopicPage({
         <div className="mx-auto flex max-w-[1120px] items-center">
           <Link
             href="/forum"
-            className="font-pixel-dot group inline-flex min-h-11 items-center gap-2 text-[11px] uppercase tracking-[0.1em] text-foreground/55 transition hover:text-primary"
+            className="font-pixel-dot group inline-flex min-h-11 items-center gap-2 text-[11px] uppercase tracking-widest text-foreground/55 transition hover:text-primary"
           >
             <ArrowLeft className="h-4 w-4 transition-transform group-hover:-translate-x-1" />
             The wall
@@ -74,7 +74,7 @@ export default async function TopicPage({
         <div className="mx-auto max-w-[1440px]">
           <div className="grid gap-10 lg:grid-cols-[0.25fr_0.75fr] lg:gap-16">
             <aside className="lg:pt-3">
-              <p className="font-pixel-dot mb-2 text-[11px] uppercase tracking-[0.1em] text-foreground/40">
+              <p className="font-pixel-dot mb-2 text-[11px] uppercase tracking-widest text-foreground/40">
                 Pinned by
               </p>
               {topic.author?.username ? (
@@ -87,7 +87,7 @@ export default async function TopicPage({
               ) : (
                 <p className="text-lg text-foreground/55">anonymous</p>
               )}
-              <p className="font-pixel-dot mt-5 text-[11px] uppercase tracking-[0.1em] text-foreground/40">
+              <p className="font-pixel-dot mt-5 text-[11px] uppercase tracking-widest text-foreground/40">
                 {topic.createdAt.toLocaleDateString("en-NZ", {
                   day: "2-digit",
                   month: "long",
@@ -102,7 +102,7 @@ export default async function TopicPage({
             </aside>
 
             <div>
-              <h1 className="font-pixel-line mb-10 max-w-5xl break-words text-4xl leading-[0.92] sm:text-6xl">
+              <h1 className="font-pixel-line mb-10 max-w-5xl wrap-break-word text-4xl leading-[0.92] sm:text-6xl">
                 {topic.title}
               </h1>
               <div className="max-w-3xl border-l-2 border-primary pl-6 sm:pl-10">
@@ -128,7 +128,7 @@ export default async function TopicPage({
             <h2 className="font-pixel-line mb-0 text-4xl text-white sm:text-5xl">
               echoes<span className="font-pixel-dot text-[#8ea6ff]">.</span>
             </h2>
-            <span className="font-pixel-dot text-[11px] uppercase tracking-[0.1em] text-white/45">
+            <span className="font-pixel-dot text-[11px] uppercase tracking-widest text-white/45">
               {topic.replies.length || "no"}{" "}
               {topic.replies.length === 1 ? "reply" : "replies"}
             </span>

@@ -35,7 +35,7 @@ export default function ReleaseLyrics({
           <button
             type="button"
             onClick={() => setExpanded((value) => !value)}
-            className="border-current/25 mt-10 min-h-12 border-y px-0 text-sm font-bold transition hover:opacity-55 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-current"
+            className="border-current/25 mt-10 min-h-12 border-y px-0 text-sm font-bold transition hover:opacity-55 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-current"
             aria-expanded={expanded}
           >
             {expanded

@@ -142,7 +142,7 @@ export default function QuizClient() {
         <p className="text-[11px] font-bold uppercase tracking-[0.26em] text-foreground/45">
           Listening room · public notes
         </p>
-        <h1 className="mb-0 mt-4 max-w-3xl text-6xl leading-[0.84] tracking-[-0.05em] sm:text-8xl">
+        <h1 className="mb-0 mt-4 max-w-3xl text-6xl leading-[0.84] tracking-tighter sm:text-8xl">
           Were you listening?
         </h1>
         <p className="font-reenie mt-6 max-w-xl text-3xl leading-none text-foreground/60 sm:text-4xl">
@@ -154,7 +154,7 @@ export default function QuizClient() {
             <button
               key={m}
               onClick={() => start(m)}
-              className="group grid w-full grid-cols-[3rem_1fr_auto] items-baseline gap-4 border-b border-foreground/15 py-6 text-left transition hover:border-foreground/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground sm:grid-cols-[4rem_16rem_1fr_auto] sm:gap-8"
+              className="group grid w-full grid-cols-[3rem_1fr_auto] items-baseline gap-4 border-b border-foreground/15 py-6 text-left transition hover:border-foreground/40 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-foreground sm:grid-cols-[4rem_16rem_1fr_auto] sm:gap-8"
             >
               <span className="text-xs font-bold tracking-[0.16em] text-foreground/35">
                 {String(index + 1).padStart(2, "0")}
@@ -212,7 +212,7 @@ export default function QuizClient() {
         <p className="text-[11px] font-bold uppercase tracking-[0.26em] text-foreground/45">
           Playback complete · {modeCopy[mode][0]}
         </p>
-        <h1 className="mb-0 mt-4 text-6xl leading-[0.84] tracking-[-0.05em] sm:text-8xl">
+        <h1 className="mb-0 mt-4 text-6xl leading-[0.84] tracking-tighter sm:text-8xl">
           {title}
         </h1>
         <p className="font-reenie mt-5 text-4xl leading-none text-foreground/60">
@@ -384,7 +384,7 @@ export default function QuizClient() {
                   key={option}
                   disabled={picked !== null}
                   onClick={() => choose(i)}
-                  className={`flex items-baseline gap-4 border border-foreground/20 px-5 py-4 text-left text-base font-semibold transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-foreground ${state}`}
+                  className={`flex items-baseline gap-4 border border-foreground/20 px-5 py-4 text-left text-base font-semibold transition focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-foreground ${state}`}
                 >
                   <span className="text-xs font-bold opacity-40">
                     {String.fromCharCode(65 + i)}

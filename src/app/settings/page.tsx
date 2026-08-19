@@ -166,7 +166,7 @@ export default function SettingsPage() {
           <p className="text-xs font-bold uppercase tracking-[0.2em] text-primary">
             Your account
           </p>
-          <h1 className="mb-3 mt-3 text-5xl leading-[0.92] tracking-[-0.05em] sm:text-7xl">
+          <h1 className="mb-3 mt-3 text-5xl leading-[0.92] tracking-tighter sm:text-7xl">
             Make it yours.
           </h1>
           <p className="font-reenie text-4xl leading-none text-foreground/55">

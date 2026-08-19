@@ -42,7 +42,7 @@ export default function MinimalExcerpt({ src }: { src: string }) {
         type="button"
         onClick={toggle}
         aria-pressed={playing}
-        className="underline decoration-[rgb(var(--ledger-ink-rgb)/0.25)] underline-offset-4 transition hover:decoration-[var(--ledger-ink)] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--ledger-ink)]"
+        className="underline decoration-[rgb(var(--ledger-ink-rgb)/0.25)] underline-offset-4 transition hover:decoration-(--ledger-ink) focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-(--ledger-ink)"
       >
         {playing ? "❚❚ pause" : "▸ play excerpt"}
       </button>

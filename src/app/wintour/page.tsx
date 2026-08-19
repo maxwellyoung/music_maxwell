@@ -87,7 +87,7 @@ export default function WintourPage() {
                       service: label.toLowerCase().replace(" ", "_"),
                       location: "release_room",
                     }}
-                    className="border-b border-black/30 pb-1 text-sm font-bold transition hover:border-[#c61f36] hover:text-[#c61f36] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#c61f36]"
+                    className="border-b border-black/30 pb-1 text-sm font-bold transition hover:border-[#c61f36] hover:text-[#c61f36] focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#c61f36]"
                   >
                     {label} ↗
                   </TrackedLink>
@@ -117,7 +117,7 @@ export default function WintourPage() {
             <p className="text-xs font-bold uppercase tracking-[0.15em] text-[#c61f36]">
               01 / Artwork
             </p>
-            <p className="mt-3 max-w-[17rem] text-sm leading-relaxed text-black/55">
+            <p className="mt-3 max-w-68 text-sm leading-relaxed text-black/55">
               Two crops of the same frame. Move the red line to compare them.
             </p>
           </div>
@@ -136,7 +136,7 @@ export default function WintourPage() {
             rel="noopener noreferrer"
             event="film_opened"
             eventData={{ release: song.title, location: "release_room" }}
-            className="group relative block aspect-video overflow-hidden border border-white/25 bg-black focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#c61f36]"
+            className="group relative block aspect-video overflow-hidden border border-white/25 bg-black focus-visible:outline-hidden focus-visible:ring-4 focus-visible:ring-[#c61f36]"
           >
             <Image
               src="https://img.youtube.com/vi/CVpatk_f0tg/maxresdefault.jpg"

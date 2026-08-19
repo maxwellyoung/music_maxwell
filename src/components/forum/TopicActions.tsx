@@ -52,7 +52,7 @@ export default function TopicActions({ topicId }: TopicActionsProps) {
       <button
         onClick={handleDelete}
         disabled={isDeleting}
-        className="group ml-2 flex h-10 w-10 items-center justify-center rounded-full border border-transparent bg-transparent p-0 text-muted-foreground transition hover:border-destructive hover:bg-destructive/10 hover:text-destructive focus:outline-none focus:ring-2 focus:ring-destructive/40"
+        className="group ml-2 flex h-10 w-10 items-center justify-center rounded-full border border-transparent bg-transparent p-0 text-muted-foreground transition hover:border-destructive hover:bg-destructive/10 hover:text-destructive focus:outline-hidden focus:ring-2 focus:ring-destructive/40"
         aria-label="Delete Topic"
         title="Delete Topic"
       >

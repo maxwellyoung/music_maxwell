@@ -24,7 +24,7 @@ export default function AdminPage() {
     <main className="container mx-auto py-12">
       <h1 className="mb-8 text-3xl font-bold">Admin Dashboard</h1>
       {/* Add admin controls here: topics, users, reports, etc. */}
-      <div className="rounded-xl border bg-background p-8 shadow">
+      <div className="rounded-xl border bg-background p-8 shadow-sm">
         <p>Welcome, admin! Here you can manage topics, users, and more.</p>
         {/* Example: <AdminTopicsTable /> <AdminUsersTable /> */}
       </div>

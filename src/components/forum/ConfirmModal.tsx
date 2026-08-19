@@ -35,7 +35,7 @@ export default function ConfirmModal({
             Cancel
           </button>
           <button
-            className="rounded-lg bg-destructive px-4 py-2 font-semibold text-destructive-foreground shadow hover:bg-destructive/90"
+            className="rounded-lg bg-destructive px-4 py-2 font-semibold text-destructive-foreground shadow-sm hover:bg-destructive/90"
             onClick={onConfirm}
           >
             Delete

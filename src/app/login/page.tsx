@@ -36,7 +36,7 @@ export default function LoginPage() {
             sizes="48vw"
             className="object-cover opacity-70"
           />
-          <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/25" />
+          <div className="absolute inset-0 bg-linear-to-t from-black via-transparent to-black/25" />
           <p className="font-reenie absolute bottom-12 left-12 max-w-md rotate-[-4deg] text-6xl leading-[0.8] text-white">
             something you almost said
           </p>

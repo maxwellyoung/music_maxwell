@@ -34,7 +34,7 @@ export default function ClassicHome() {
       <div className="mb-10 mt-4 text-center">
         <Link
           href="/quiz"
-          className="font-reenie text-2xl text-foreground/45 transition hover:text-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent"
+          className="font-reenie text-2xl text-foreground/45 transition hover:text-accent focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-accent"
         >
           shuffle the liner notes →
         </Link>

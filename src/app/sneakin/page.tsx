@@ -19,7 +19,7 @@ export default function SneakinPage() {
   return (
     <ReleaseRoomShell
       slug={song.slug}
-      className="!bg-[#f2ede4] !text-[#141210]"
+      className="bg-[#f2ede4]! text-[#141210]!"
     >
       <JsonLd
         data={{
@@ -58,7 +58,7 @@ export default function SneakinPage() {
                 service: "apple_music",
                 location: "release_room",
               }}
-              className="font-pixel-dot mt-9 inline-block border-b border-black pb-1 text-xs uppercase tracking-[0.1em] transition hover:border-[#c43762] hover:text-[#c43762]"
+              className="font-pixel-dot mt-9 inline-block border-b border-black pb-1 text-xs uppercase tracking-widest transition hover:border-[#c43762] hover:text-[#c43762]"
             >
               listen on Apple Music ↗
             </TrackedLink>

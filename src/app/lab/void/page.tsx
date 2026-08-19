@@ -20,9 +20,9 @@ export default function VoidLabPage() {
         </p>
         <Link
           href={featured.releasePath ?? "/"}
-          className="group mt-10 block focus-visible:outline-none"
+          className="group mt-10 block focus-visible:outline-hidden"
         >
-          <span className="relative block h-[68vmin] w-[68vmin] max-w-[34rem] overflow-hidden sm:h-[56vmin] sm:w-[56vmin]">
+          <span className="relative block h-[68vmin] w-[68vmin] max-w-136 overflow-hidden sm:h-[56vmin] sm:w-[56vmin]">
             <Image
               src={featured.artwork}
               alt={`${featured.title} artwork`}
@@ -49,7 +49,7 @@ export default function VoidLabPage() {
             <li key={release.slug}>
               <Link
                 href={release.releasePath ?? "/#archive"}
-                className="transition hover:text-white focus-visible:text-white focus-visible:outline-none"
+                className="transition hover:text-white focus-visible:text-white focus-visible:outline-hidden"
               >
                 {release.title}
                 <span className="text-white/25">

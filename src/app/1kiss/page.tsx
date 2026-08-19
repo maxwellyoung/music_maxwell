@@ -24,7 +24,7 @@ export default function OneKissPage() {
   return (
     <ReleaseRoomShell
       slug={song.slug}
-      className="one-kiss-brand !bg-[#05070c] !text-[#f5f8ff]"
+      className="one-kiss-brand bg-[#05070c]! text-[#f5f8ff]!"
     >
       <JsonLd
         data={{
@@ -59,7 +59,7 @@ export default function OneKissPage() {
 
       <section className="border-b border-white/15">
         <div className="mx-auto grid max-w-[1120px] gap-8 px-5 py-16 sm:px-8 lg:grid-cols-[0.28fr_0.72fr] lg:px-12 lg:py-24">
-          <p className="font-pixel-dot text-xs uppercase tracking-[0.1em] text-[#8ea6ff]">
+          <p className="font-pixel-dot text-xs uppercase tracking-widest text-[#8ea6ff]">
             A / 03 / lyrics
           </p>
           <ReleaseLyrics blocks={lyricBlocks} tone="dark" />

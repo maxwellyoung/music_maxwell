@@ -214,7 +214,7 @@ export default function LedgerSkyTower() {
     <div
       ref={mountRef}
       aria-hidden="true"
-      className="h-full w-full text-[var(--ledger-ink)]"
+      className="h-full w-full text-(--ledger-ink)"
     />
   );
 }

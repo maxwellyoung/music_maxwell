@@ -89,7 +89,7 @@ export default function TurnItUpPage() {
                       service: label.toLowerCase().replace(" ", "_"),
                       location: "release_room",
                     }}
-                    className="border-b border-[#152018]/35 pb-1 text-sm font-bold transition hover:border-[#6f8468] hover:text-[#52634d] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#6f8468]"
+                    className="border-b border-[#152018]/35 pb-1 text-sm font-bold transition hover:border-[#6f8468] hover:text-[#52634d] focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#6f8468]"
                   >
                     {label} ↗
                   </TrackedLink>
@@ -139,7 +139,7 @@ export default function TurnItUpPage() {
               rel="noopener noreferrer"
               event="film_opened"
               eventData={{ release: song.title, location: "release_room" }}
-              className="group relative block aspect-video overflow-hidden border border-[#152018]/25 bg-black focus-visible:outline-none focus-visible:ring-4 focus-visible:ring-[#6f8468]/45"
+              className="group relative block aspect-video overflow-hidden border border-[#152018]/25 bg-black focus-visible:outline-hidden focus-visible:ring-4 focus-visible:ring-[#6f8468]/45"
             >
               <Image
                 src="https://img.youtube.com/vi/YzKTnAIGqvg/maxresdefault.jpg"

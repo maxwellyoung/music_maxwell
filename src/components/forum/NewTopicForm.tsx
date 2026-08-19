@@ -125,7 +125,7 @@ export function NewTopicForm({
             <div className="mb-2 flex items-end justify-between gap-4">
               <label
                 htmlFor="title"
-                className="font-pixel-dot text-[11px] uppercase tracking-[0.1em]"
+                className="font-pixel-dot text-[11px] uppercase tracking-widest"
               >
                 Heading
               </label>
@@ -158,7 +158,7 @@ export function NewTopicForm({
             <div className="mb-2 flex items-end justify-between gap-4">
               <label
                 htmlFor="content"
-                className="font-pixel-dot text-[11px] uppercase tracking-[0.1em]"
+                className="font-pixel-dot text-[11px] uppercase tracking-widest"
               >
                 Note
               </label>
@@ -200,14 +200,14 @@ export function NewTopicForm({
               type="button"
               onClick={() => router.back()}
               disabled={isLoading}
-              className="font-pixel-dot min-h-11 text-left text-[11px] uppercase tracking-[0.1em] text-foreground/45 transition hover:text-foreground"
+              className="font-pixel-dot min-h-11 text-left text-[11px] uppercase tracking-widest text-foreground/45 transition hover:text-foreground"
             >
               Keep it to myself
             </button>
             <button
               type="submit"
               disabled={isLoading || !isValid || status === "loading"}
-              className="font-pixel-dot group inline-flex min-h-12 items-center justify-center gap-3 border border-foreground bg-foreground px-6 text-[11px] uppercase tracking-[0.1em] text-background transition hover:border-primary hover:bg-primary disabled:cursor-not-allowed disabled:opacity-35"
+              className="font-pixel-dot group inline-flex min-h-12 items-center justify-center gap-3 border border-foreground bg-foreground px-6 text-[11px] uppercase tracking-widest text-background transition hover:border-primary hover:bg-primary disabled:cursor-not-allowed disabled:opacity-35"
             >
               {isLoading
                 ? "Pinning..."
@@ -224,13 +224,13 @@ export function NewTopicForm({
 
       <aside className="lg:sticky lg:top-32 lg:self-start">
         <div className="relative mx-auto max-w-md border border-foreground/20 bg-white/45 px-7 pb-10 pt-8 shadow-[7px_9px_0_rgba(49,87,236,0.12)] sm:px-9 sm:pb-14">
-          <p className="font-pixel-dot mb-8 text-[10px] uppercase tracking-[0.1em] text-foreground/40">
+          <p className="font-pixel-dot mb-8 text-[10px] uppercase tracking-widest text-foreground/40">
             a note from you
           </p>
-          <h2 className="font-pixel-line mb-5 break-words text-3xl leading-[0.94] text-foreground sm:text-4xl">
+          <h2 className="font-pixel-line mb-5 wrap-break-word text-3xl leading-[0.94] text-foreground sm:text-4xl">
             {previewTitle}
           </h2>
-          <p className="whitespace-pre-wrap break-words text-lg leading-relaxed text-foreground/60">
+          <p className="whitespace-pre-wrap wrap-break-word text-lg leading-relaxed text-foreground/60">
             {previewContent}
           </p>
         </div>

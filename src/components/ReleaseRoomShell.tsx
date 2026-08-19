@@ -27,14 +27,14 @@ export default function ReleaseRoomShell({
   return (
     <main
       className={cn(
-        "release-room relative isolate min-h-screen overflow-hidden bg-[var(--release-paper)] text-[var(--release-ink)]",
+        "release-room relative isolate min-h-screen overflow-hidden bg-(--release-paper) text-(--release-ink)",
         className,
       )}
       data-release-material={world.material.texture}
       style={style}
     >
       <div className="release-material-layer" aria-hidden="true" />
-      <div className="relative z-[1]">{children}</div>
+      <div className="relative z-1">{children}</div>
     </main>
   );
 }

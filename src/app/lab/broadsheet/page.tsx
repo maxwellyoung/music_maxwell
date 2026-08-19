@@ -24,7 +24,7 @@ export default function BroadsheetLabPage() {
           <span>Tāmaki Makaurau / Wellington</span>
           <span>Est. 2016 · alt-pop</span>
         </div>
-        <h1 className="mt-3 text-[clamp(3.2rem,10vw,8.5rem)] font-bold leading-[0.82] tracking-[-0.05em]">
+        <h1 className="mt-3 text-[clamp(3.2rem,10vw,8.5rem)] font-bold leading-[0.82] tracking-tighter">
           Maxwell Young
         </h1>
       </header>
@@ -63,7 +63,7 @@ export default function BroadsheetLabPage() {
         </div>
         <Link
           href={featured.releasePath ?? "/"}
-          className="relative block aspect-square overflow-hidden focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#141310] focus-visible:ring-offset-4 focus-visible:ring-offset-[#f2ede4]"
+          className="relative block aspect-square overflow-hidden focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#141310] focus-visible:ring-offset-4 focus-visible:ring-offset-[#f2ede4]"
         >
           <Image
             src={featured.artwork}
@@ -91,7 +91,7 @@ export default function BroadsheetLabPage() {
             <Link
               key={release.slug}
               href={release.releasePath ?? "/#archive"}
-              className="group mb-5 flex break-inside-avoid items-baseline gap-3 border-b border-black/15 pb-2 focus-visible:outline-none"
+              className="group mb-5 flex break-inside-avoid items-baseline gap-3 border-b border-black/15 pb-2 focus-visible:outline-hidden"
             >
               <span className="relative block h-10 w-10 shrink-0 self-center overflow-hidden">
                 <Image

@@ -16,7 +16,7 @@ export default function PrivacyPage() {
           Site note / 01
         </p>
         <div>
-          <h1 className="font-pixel-line mb-0 text-[clamp(4rem,10vw,8rem)] leading-[0.76] tracking-[-0.05em]">
+          <h1 className="font-pixel-line mb-0 text-[clamp(4rem,10vw,8rem)] leading-[0.76] tracking-tighter">
             privacy.
           </h1>
           <div className="mt-12 max-w-2xl space-y-8 border-t border-black/20 pt-8 text-base leading-relaxed sm:text-lg">
@@ -55,7 +55,7 @@ export default function PrivacyPage() {
           </div>
           <Link
             href="/"
-            className="font-pixel-dot mt-12 inline-block border-b border-black pb-1 text-xs uppercase tracking-[0.1em] transition hover:border-[#3157ec] hover:text-[#3157ec]"
+            className="font-pixel-dot mt-12 inline-block border-b border-black pb-1 text-xs uppercase tracking-widest transition hover:border-[#3157ec] hover:text-[#3157ec]"
           >
             Back to the music ↙
           </Link>

@@ -124,7 +124,7 @@ export default function ForumTopicsInfinite({
             <div className="min-w-0">
               <Link
                 href={`/forum/${topic.id}`}
-                className="block focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
+                className="block focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary"
               >
                 <h3 className="font-pixel-line mb-3 max-w-3xl text-3xl leading-[0.98] transition-colors group-hover:text-primary sm:text-4xl">
                   {topic.title}
@@ -135,7 +135,7 @@ export default function ForumTopicsInfinite({
                     : topic.content}
                 </p>
               </Link>
-              <div className="font-pixel-dot mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-[11px] uppercase tracking-[0.1em] text-foreground/45">
+              <div className="font-pixel-dot mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-[11px] uppercase tracking-widest text-foreground/45">
                 {topic.author?.username ? (
                   <Link
                     href={`/user/${topic.author.username}`}
@@ -183,12 +183,12 @@ export default function ForumTopicsInfinite({
         className="flex min-h-20 items-center justify-center"
       >
         {loading && (
-          <span className="font-pixel-dot text-[11px] uppercase tracking-[0.1em] text-foreground/45">
+          <span className="font-pixel-dot text-[11px] uppercase tracking-widest text-foreground/45">
             loading more
           </span>
         )}
         {!hasMore && topics.length > 0 && (
-          <div className="font-pixel-dot flex items-center gap-3 text-[11px] uppercase tracking-[0.1em] text-foreground/35">
+          <div className="font-pixel-dot flex items-center gap-3 text-[11px] uppercase tracking-widest text-foreground/35">
             <span className="h-px w-8 bg-foreground/20" />
             <span>End of the wall</span>
             <span className="h-px w-8 bg-foreground/20" />

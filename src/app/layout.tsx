@@ -96,13 +96,13 @@ export default function RootLayout({
         />
         <a
           href="#main-content"
-          className="fixed left-4 top-4 z-[100] -translate-y-24 bg-[#f2ede4] px-4 py-3 text-sm font-bold text-[#07090d] transition focus:translate-y-0"
+          className="fixed left-4 top-4 z-100 -translate-y-24 bg-[#f2ede4] px-4 py-3 text-sm font-bold text-[#07090d] transition focus:translate-y-0"
         >
           Skip to content
         </a>
         <SessionProvider>
           <Navbar />
-          <div id="main-content" tabIndex={-1} className="flex-1 outline-none">
+          <div id="main-content" tabIndex={-1} className="flex-1 outline-hidden">
             {children}
           </div>
           <FooterGate>

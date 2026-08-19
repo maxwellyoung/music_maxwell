@@ -25,7 +25,7 @@ export default function MinimalIndex({
   const activeRelease = releases.find((r) => r.slug === active);
 
   return (
-    <main className="ledger min-h-svh bg-[var(--ledger-paper)] px-6 py-16 text-[var(--ledger-ink)] sm:px-12 lg:px-20">
+    <main className="ledger min-h-svh bg-(--ledger-paper) px-6 py-16 text-(--ledger-ink) sm:px-12 lg:px-20">
       <header className="max-w-xl">
         <h1 className="mb-0 text-sm font-medium">Maxwell Young</h1>
         <p className="mt-1 text-sm text-[rgb(var(--ledger-ink-rgb)/0.40)]">
@@ -34,7 +34,7 @@ export default function MinimalIndex({
         <p className="mt-6 text-sm leading-relaxed">
           <Link
             href="/1kiss"
-            className="underline decoration-[rgb(var(--ledger-ink-rgb)/0.25)] underline-offset-4 transition hover:decoration-[var(--ledger-ink)]"
+            className="underline decoration-[rgb(var(--ledger-ink-rgb)/0.25)] underline-offset-4 transition hover:decoration-(--ledger-ink)"
           >
             1kiss
           </Link>{" "}
@@ -52,7 +52,7 @@ export default function MinimalIndex({
                 onMouseLeave={() => setActive(null)}
                 onFocus={() => setActive(release.slug)}
                 onBlur={() => setActive(null)}
-                className="group flex items-baseline justify-between gap-6 border-b border-[rgb(var(--ledger-ink-rgb)/0.10)] py-3 text-sm transition-colors hover:bg-[var(--ledger-ink)] hover:px-3 hover:text-[var(--ledger-paper)] focus-visible:bg-[var(--ledger-ink)] focus-visible:px-3 focus-visible:text-[var(--ledger-paper)] focus-visible:outline-none"
+                className="group flex items-baseline justify-between gap-6 border-b border-[rgb(var(--ledger-ink-rgb)/0.10)] py-3 text-sm transition-colors hover:bg-(--ledger-ink) hover:px-3 hover:text-(--ledger-paper) focus-visible:bg-(--ledger-ink) focus-visible:px-3 focus-visible:text-(--ledger-paper) focus-visible:outline-hidden"
               >
                 <span className="font-medium">{release.title}</span>
                 <span className="shrink-0 tabular-nums text-[rgb(var(--ledger-ink-rgb)/0.40)] group-hover:text-[rgb(var(--ledger-paper-rgb)/0.60)] group-focus-visible:text-[rgb(var(--ledger-paper-rgb)/0.60)]">
@@ -73,7 +73,7 @@ export default function MinimalIndex({
               <li key={note.id} className="text-sm leading-relaxed">
                 <Link
                   href={`/forum/${note.id}`}
-                  className="text-[rgb(var(--ledger-ink-rgb)/0.70)] transition hover:text-[var(--ledger-ink)]"
+                  className="text-[rgb(var(--ledger-ink-rgb)/0.70)] transition hover:text-(--ledger-ink)"
                 >
                   “{note.title}”
                   <span className="text-[rgb(var(--ledger-ink-rgb)/0.35)]"> — {note.author}</span>
@@ -84,7 +84,7 @@ export default function MinimalIndex({
           <p className="mt-3 text-sm">
             <Link
               href="/forum"
-              className="text-[rgb(var(--ledger-ink-rgb)/0.40)] underline decoration-[rgb(var(--ledger-ink-rgb)/0.20)] underline-offset-4 transition hover:text-[var(--ledger-ink)] hover:decoration-[var(--ledger-ink)]"
+              className="text-[rgb(var(--ledger-ink-rgb)/0.40)] underline decoration-[rgb(var(--ledger-ink-rgb)/0.20)] underline-offset-4 transition hover:text-(--ledger-ink) hover:decoration-(--ledger-ink)"
             >
               leave something behind
             </Link>
@@ -93,14 +93,14 @@ export default function MinimalIndex({
       )}
 
       <footer className="mt-16 flex max-w-2xl flex-wrap gap-x-5 gap-y-2 text-sm text-[rgb(var(--ledger-ink-rgb)/0.40)]">
-        <Link href="/forum" className="transition hover:text-[var(--ledger-ink)]">
+        <Link href="/forum" className="transition hover:text-(--ledger-ink)">
           Notes
         </Link>
         <a
           href="https://open.spotify.com/artist/5HONdRTLNvBjlD2LirKp0q"
           target="_blank"
           rel="noopener noreferrer"
-          className="transition hover:text-[var(--ledger-ink)]"
+          className="transition hover:text-(--ledger-ink)"
         >
           Spotify
         </a>
@@ -108,7 +108,7 @@ export default function MinimalIndex({
           href="https://instagram.com/maxwell_young"
           target="_blank"
           rel="noopener noreferrer"
-          className="transition hover:text-[var(--ledger-ink)]"
+          className="transition hover:text-(--ledger-ink)"
         >
           Instagram
         </a>
@@ -116,7 +116,7 @@ export default function MinimalIndex({
           href="https://www.youtube.com/@maxwell_young"
           target="_blank"
           rel="noopener noreferrer"
-          className="transition hover:text-[var(--ledger-ink)]"
+          className="transition hover:text-(--ledger-ink)"
         >
           YouTube
         </a>

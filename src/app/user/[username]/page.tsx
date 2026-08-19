@@ -104,7 +104,7 @@ export default async function UserProfilePage({
               <p className="mb-4 text-xs font-bold uppercase tracking-[0.22em] text-white/45">
                 Notes contributor
               </p>
-              <h1 className="mb-3 break-words text-5xl leading-[0.9] tracking-[-0.055em] text-white sm:text-7xl lg:text-8xl">
+              <h1 className="mb-3 wrap-break-word text-5xl leading-[0.9] tracking-[-0.055em] text-white sm:text-7xl lg:text-8xl">
                 {displayName}
               </h1>
               <p className="font-reenie text-4xl leading-none text-white/45">

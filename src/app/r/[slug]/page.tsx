@@ -48,7 +48,7 @@ export default async function MinimalReleasePage({ params }: Props) {
   const listenLinks = streamingEntries(release);
 
   return (
-    <main className="ledger min-h-svh bg-[var(--ledger-paper)] px-6 py-16 text-[var(--ledger-ink)] sm:px-12 lg:px-20">
+    <main className="ledger min-h-svh bg-(--ledger-paper) px-6 py-16 text-(--ledger-ink) sm:px-12 lg:px-20">
       <header className="flex max-w-2xl items-baseline justify-between text-sm">
         <Link
           href="/"
@@ -56,7 +56,7 @@ export default async function MinimalReleasePage({ params }: Props) {
         >
           Maxwell Young
         </Link>
-        <Link href="/" className="text-[rgb(var(--ledger-ink-rgb)/0.40)] transition hover:text-[var(--ledger-ink)]">
+        <Link href="/" className="text-[rgb(var(--ledger-ink-rgb)/0.40)] transition hover:text-(--ledger-ink)">
           ← index
         </Link>
       </header>
@@ -104,7 +104,7 @@ export default async function MinimalReleasePage({ params }: Props) {
                 href={href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="underline decoration-[rgb(var(--ledger-ink-rgb)/0.25)] underline-offset-4 transition hover:decoration-[var(--ledger-ink)]"
+                className="underline decoration-[rgb(var(--ledger-ink-rgb)/0.25)] underline-offset-4 transition hover:decoration-(--ledger-ink)"
               >
                 {label}
               </a>
@@ -112,7 +112,7 @@ export default async function MinimalReleasePage({ params }: Props) {
             {release.releasePath && (
               <Link
                 href={release.releasePath}
-                className="text-[rgb(var(--ledger-ink-rgb)/0.40)] transition hover:text-[var(--ledger-ink)]"
+                className="text-[rgb(var(--ledger-ink-rgb)/0.40)] transition hover:text-(--ledger-ink)"
               >
                 Enter the release room ↗
               </Link>
@@ -165,7 +165,7 @@ export default async function MinimalReleasePage({ params }: Props) {
         {prev ? (
           <Link
             href={`/r/${prev.slug}`}
-            className="text-[rgb(var(--ledger-ink-rgb)/0.40)] transition hover:text-[var(--ledger-ink)]"
+            className="text-[rgb(var(--ledger-ink-rgb)/0.40)] transition hover:text-(--ledger-ink)"
           >
             ← {prev.title}
           </Link>
@@ -175,7 +175,7 @@ export default async function MinimalReleasePage({ params }: Props) {
         {next ? (
           <Link
             href={`/r/${next.slug}`}
-            className="text-right text-[rgb(var(--ledger-ink-rgb)/0.40)] transition hover:text-[var(--ledger-ink)]"
+            className="text-right text-[rgb(var(--ledger-ink-rgb)/0.40)] transition hover:text-(--ledger-ink)"
           >
             {next.title} →
           </Link>

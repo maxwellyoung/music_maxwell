@@ -30,7 +30,7 @@ export default function ReleaseNavigation({
         {newer && (
           <Link
             href={newer.releasePath!}
-            className="group text-sm font-bold leading-tight transition hover:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-current"
+            className="group text-sm font-bold leading-tight transition hover:opacity-50 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-current"
           >
             <span className="block text-xs font-medium opacity-45">
               ← newer
@@ -41,7 +41,7 @@ export default function ReleaseNavigation({
       </div>
       <Link
         href="/#archive"
-        className="border-current/20 order-3 col-span-2 flex min-h-14 items-center justify-center border-t px-5 text-xs font-bold transition hover:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-current sm:order-none sm:col-span-1 sm:min-h-20 sm:border-t-0"
+        className="border-current/20 order-3 col-span-2 flex min-h-14 items-center justify-center border-t px-5 text-xs font-bold transition hover:opacity-50 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-current sm:order-0 sm:col-span-1 sm:min-h-20 sm:border-t-0"
       >
         archive
       </Link>
@@ -49,7 +49,7 @@ export default function ReleaseNavigation({
         {older && (
           <Link
             href={older.releasePath!}
-            className="group text-sm font-bold leading-tight transition hover:opacity-50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-current"
+            className="group text-sm font-bold leading-tight transition hover:opacity-50 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-current"
           >
             <span className="block text-xs font-medium opacity-45">
               older →

@@ -31,7 +31,7 @@ export default function ReplyForm({
   if (!session) {
     return (
       <div className="mt-12 border-t border-white/20 pt-10">
-        <p className="font-pixel-dot text-[11px] uppercase tracking-[0.1em] text-[#8ea6ff]">
+        <p className="font-pixel-dot text-[11px] uppercase tracking-widest text-[#8ea6ff]">
           Add your voice
         </p>
         <h3 className="font-pixel-line mb-3 mt-2 text-3xl text-white">
@@ -43,7 +43,7 @@ export default function ReplyForm({
         </p>
         <Button
           onClick={() => signIn()}
-          className="font-pixel-dot h-12 rounded-none bg-white px-6 text-[11px] uppercase tracking-[0.1em] text-black hover:bg-[#8ea6ff]"
+          className="font-pixel-dot h-12 rounded-none bg-white px-6 text-[11px] uppercase tracking-widest text-black hover:bg-[#8ea6ff]"
           aria-label="Sign in to reply to this topic"
         >
           Sign in to reply
@@ -96,7 +96,7 @@ export default function ReplyForm({
 
   return (
     <div className="mt-12 border-t border-white/20 pt-10">
-      <p className="font-pixel-dot text-[11px] uppercase tracking-[0.1em] text-[#8ea6ff]">
+      <p className="font-pixel-dot text-[11px] uppercase tracking-widest text-[#8ea6ff]">
         Add your voice
       </p>
       <h3 className="font-pixel-line mb-6 mt-2 text-3xl text-white">
@@ -132,7 +132,7 @@ export default function ReplyForm({
             size="lg"
             disabled={isLoading || !content.trim()}
             aria-label={isLoading ? "Posting reply" : "Post reply"}
-            className="font-pixel-dot rounded-none bg-white px-7 text-[11px] uppercase tracking-[0.1em] text-black hover:bg-[#8ea6ff]"
+            className="font-pixel-dot rounded-none bg-white px-7 text-[11px] uppercase tracking-widest text-black hover:bg-[#8ea6ff]"
           >
             {isLoading ? (
               <>

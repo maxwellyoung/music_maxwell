@@ -19,13 +19,13 @@ export default function Error({
       </p>
       <button
         onClick={() => reset()}
-        className="mb-4 rounded-lg bg-primary px-6 py-3 font-semibold text-primary-foreground shadow transition hover:bg-accent"
+        className="mb-4 rounded-lg bg-primary px-6 py-3 font-semibold text-primary-foreground shadow-sm transition hover:bg-accent"
       >
         Try Again
       </button>
       <Link
         href="/"
-        className="rounded-lg bg-muted px-6 py-3 font-semibold text-foreground shadow transition hover:bg-accent"
+        className="rounded-lg bg-muted px-6 py-3 font-semibold text-foreground shadow-sm transition hover:bg-accent"
       >
         Go Home
       </Link>

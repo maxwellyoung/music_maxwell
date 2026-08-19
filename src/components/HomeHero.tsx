@@ -228,7 +228,7 @@ export default function HomeHero({ release, presentation }: HomeHeroProps) {
           <p className="font-pixel-dot text-[10px] uppercase tracking-[0.16em] text-[#b7c8eb] sm:text-xs">
             {release.artist} / {release.releaseDate}
           </p>
-          <h1 className="font-pixel-line mb-0 mt-3 text-[clamp(5.5rem,14vw,11rem)] leading-[0.74] tracking-[-0.05em] text-[#f5f8ff]">
+          <h1 className="font-pixel-line mb-0 mt-3 text-[clamp(5.5rem,14vw,11rem)] leading-[0.74] tracking-tighter text-[#f5f8ff]">
             {release.title}
           </h1>
         </motion.div>
@@ -239,7 +239,7 @@ export default function HomeHero({ release, presentation }: HomeHeroProps) {
           transition={{ delay: 0.25, duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
           className="relative z-10 mt-auto grid gap-7 pt-[48vh] sm:max-w-[38%] sm:pt-0"
         >
-          <div className="min-h-[6.5rem] sm:min-h-[7.5rem]" aria-hidden="true">
+          <div className="min-h-26 sm:min-h-30" aria-hidden="true">
             <motion.p
               initial={{ opacity: 0, y: 12 }}
               animate={{ opacity: 1, y: 0 }}
@@ -286,7 +286,7 @@ export default function HomeHero({ release, presentation }: HomeHeroProps) {
               type="button"
               onClick={() => void togglePlayback()}
               aria-pressed={isPlaying}
-              className="font-pixel-dot group flex min-h-12 w-full items-center gap-3 border-y border-white/25 py-3 text-left text-xs uppercase tracking-[0.1em] transition hover:border-[#8ea6ff] hover:text-[#8ea6ff] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+              className="font-pixel-dot group flex min-h-12 w-full items-center gap-3 border-y border-white/25 py-3 text-left text-xs uppercase tracking-widest transition hover:border-[#8ea6ff] hover:text-[#8ea6ff] focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-white"
             >
               <span
                 className="grid h-8 w-8 place-items-center border border-current"
@@ -323,7 +323,7 @@ export default function HomeHero({ release, presentation }: HomeHeroProps) {
                   location: "home_hero",
                 })
               }
-              className="font-pixel-dot group inline-flex min-h-12 items-center gap-3 border-b border-[#f5f8ff] pb-1 text-xs uppercase tracking-[0.1em] transition hover:border-[#8ea6ff] hover:text-[#8ea6ff] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+              className="font-pixel-dot group inline-flex min-h-12 items-center gap-3 border-b border-[#f5f8ff] pb-1 text-xs uppercase tracking-widest transition hover:border-[#8ea6ff] hover:text-[#8ea6ff] focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-white"
             >
               enter {release.title}
               <ArrowDownRight

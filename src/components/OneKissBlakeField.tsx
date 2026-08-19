@@ -325,7 +325,7 @@ export default function OneKissBlakeField({
         />
       </svg>
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_72%_42%,transparent_0%,rgba(5,7,12,.06)_42%,rgba(5,7,12,.62)_100%)]" />
-      <div className="absolute inset-0 opacity-[0.16] mix-blend-overlay [background-image:url('/grain.webp')]" />
+      <div className="absolute inset-0 opacity-[0.16] mix-blend-overlay bg-[url('/grain.webp')]" />
     </div>
   );
 }

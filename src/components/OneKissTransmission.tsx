@@ -206,7 +206,7 @@ export default function OneKissTransmission({
               <button
                 type="button"
                 onClick={() => void togglePlayback()}
-                className={`${styles.transportButton} font-pixel-dot text-[11px] uppercase tracking-[0.12em] transition hover:text-[#d8ff00] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#d8ff00]`}
+                className={`${styles.transportButton} font-pixel-dot text-[11px] uppercase tracking-[0.12em] transition hover:text-[#d8ff00] focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#d8ff00]`}
                 aria-label={
                   playing ? "Pause 1kiss excerpt" : "Play 1kiss excerpt"
                 }

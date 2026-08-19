@@ -95,7 +95,7 @@ export default function CTASection() {
         />
         {/* Additional gradient overlay */}
         <div
-          className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-black to-transparent"
+          className="absolute bottom-0 left-0 right-0 h-32 bg-linear-to-t from-black to-transparent"
           style={{ zIndex: 1 }}
         />
       </div>
