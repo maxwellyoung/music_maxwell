@@ -1,4 +1,4 @@
-import releases from "../../data/releases.ts";
+import releases from "../../../data/releases.ts";
 
 export type Category = "Origins" | "Songs" | "Collaborators" | "Visuals" | "Interviews" | "Deep Cuts" | "Current Canon" | "Covers";
 export type Difficulty = 1 | 2 | 3;

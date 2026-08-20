@@ -6,9 +6,6 @@ import { Analytics } from "@vercel/analytics/next";
 import JsonLd from "~/components/JsonLd";
 import { SessionProvider } from "~/components/providers/SessionProvider";
 import { Toaster } from "~/components/ui/toaster";
-import Footer from "~/components/Footer";
-import FooterGate from "~/components/FooterGate";
-import Navbar from "../components/Navbar";
 
 const appUrl =
   process.env.NEXT_PUBLIC_APP_URL ?? "https://www.maxwellyoung.info";
@@ -109,13 +106,7 @@ export default function RootLayout({
           Skip to content
         </a>
         <SessionProvider>
-          <Navbar />
-          <div id="main-content" tabIndex={-1} className="flex-1 outline-hidden">
-            {children}
-          </div>
-          <FooterGate>
-            <Footer />
-          </FooterGate>
+          {children}
           <Toaster />
           <Analytics />
         </SessionProvider>
