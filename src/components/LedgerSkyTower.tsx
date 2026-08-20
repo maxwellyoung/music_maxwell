@@ -21,6 +21,7 @@ const FRAGMENT = /* glsl */ `
   uniform vec3 uLightPos;
   uniform vec3 uInk;
   uniform float uAudio;
+  uniform float uTime;
 
   varying vec3 vNormal;
   varying vec3 vWorldPos;
@@ -69,8 +70,19 @@ const FRAGMENT = /* glsl */ `
     // Keep only the dark dots of the Bayer pattern; paper shows through.
     if (step(dither4x4(gl_FragCoord.xy * 0.35), light) > 0.5) discard;
 
+    // While sound plays the ink turns chromatic: the 1kiss palette
+    // sweeps up the tower, vividness riding the audio level.
+    vec3 pink = vec3(1.0, 0.25, 0.667);
+    vec3 cyan = vec3(0.196, 0.847, 1.0);
+    vec3 gold = vec3(1.0, 0.78, 0.25);
+    float band = vWorldPos.y * 0.35 + uTime * 0.35;
+    vec3 chroma = mix(pink, cyan, 0.5 + 0.5 * sin(band));
+    chroma = mix(chroma, gold, 0.5 + 0.5 * sin(band * 0.61 + 2.1));
+    float vivid = clamp(uAudio * 1.7, 0.0, 1.0) * 0.85;
+    vec3 ink = mix(uInk, chroma, vivid);
+
     float fadeY = smoothstep(-4.5, -2.0, vWorldPos.y);
-    gl_FragColor = vec4(uInk, fadeY);
+    gl_FragColor = vec4(ink, fadeY);
   }
 `;
 
@@ -123,6 +135,7 @@ export default function LedgerSkyTower() {
           uLightPos: { value: new THREE.Vector3(5, 10, 5) },
           uInk: { value: inkOf() },
           uAudio: { value: 0 },
+          uTime: { value: 0 },
         },
         vertexShader: VERTEX,
         fragmentShader: FRAGMENT,
@@ -247,6 +260,7 @@ export default function LedgerSkyTower() {
         }
         audioLevel += (audioTarget - audioLevel) * 0.18;
         material.uniforms.uAudio!.value = audioLevel;
+        material.uniforms.uTime!.value = t;
         if (mesh) {
           const scrollTilt = window.scrollY * 0.00035;
           if (reduceMotion.matches) {
