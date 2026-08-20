@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import dynamic from "next/dynamic";
 import Link from "next/link";
 import LedgerLightSwitch from "~/components/LedgerLightSwitch";
 import LedgerWordmark from "~/components/LedgerWordmark";
@@ -8,6 +9,8 @@ import ForumTopicsInfinite, {
 import { SearchTopics } from "~/components/forum/SearchTopics";
 import { getReleaseWallWhere } from "~/lib/forum";
 import { prisma } from "~/lib/prisma";
+
+const LedgerSkyTower = dynamic(() => import("~/components/LedgerSkyTower"));
 
 export const metadata: Metadata = {
   title: "Town square — Maxwell Young",
@@ -72,7 +75,7 @@ export default async function ForumPage({
         </Link>
       </header>
 
-      <div className="px-6 pb-20 pt-16 sm:px-12 lg:px-20">
+      <div className="px-6 pb-20 pt-16 sm:px-12 lg:px-20 lg:pr-[46vw]">
         <section className="max-w-2xl" aria-label="Notes">
           <p className="text-xl leading-snug sm:text-2xl">
             <span className="font-semibold">Town square.</span>{" "}
@@ -121,6 +124,14 @@ export default async function ForumPage({
             total={total}
             query={query}
           />
+        </div>
+
+        {/* The Beehive watches the square — crude, kafkaesque, on purpose. */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none fixed inset-y-0 right-0 hidden w-[42vw] lg:block"
+        >
+          <LedgerSkyTower monument="beehive" />
         </div>
 
         <footer className="mt-24 max-w-2xl border-t border-[rgb(var(--ledger-ink-rgb)/0.12)] pt-4">
