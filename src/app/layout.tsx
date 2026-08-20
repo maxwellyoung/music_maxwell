@@ -87,6 +87,9 @@ export default function RootLayout({
                   "https://music.apple.com/us/artist/maxwell-young/1113632139",
                   "https://www.youtube.com/@maxwell_young",
                   "https://www.instagram.com/maxwell_young",
+                  "https://www.tiktok.com/@internetmaxwell",
+                  "https://maxwellyoung.bandcamp.com",
+                  "https://twitter.com/internetmaxwell",
                 ],
               },
               {

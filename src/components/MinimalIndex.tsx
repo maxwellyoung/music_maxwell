@@ -108,45 +108,39 @@ export default function MinimalIndex({
                 </Link>
               </span>
             </span>
-            <span className="flex items-baseline gap-x-4">
+            <span className="flex flex-wrap items-baseline gap-x-4 gap-y-2">
               <Link
                 href="/forum"
                 className="transition hover:text-(--ledger-ink)"
               >
                 Notes
               </Link>
-              <a
-                href="https://birds.silk.cx/@maxwell"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="transition hover:text-(--ledger-ink)"
-              >
-                Silk
-              </a>
-              <a
-                href="https://open.spotify.com/artist/5HONdRTLNvBjlD2LirKp0q"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="transition hover:text-(--ledger-ink)"
-              >
-                Spotify
-              </a>
-              <a
-                href="https://instagram.com/maxwell_young"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="transition hover:text-(--ledger-ink)"
-              >
-                Instagram
-              </a>
-              <a
-                href="https://www.youtube.com/@maxwell_young"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="transition hover:text-(--ledger-ink)"
-              >
-                YouTube
-              </a>
+              {[
+                [
+                  "Spotify",
+                  "https://open.spotify.com/artist/5HONdRTLNvBjlD2LirKp0q",
+                ],
+                [
+                  "Apple Music",
+                  "https://music.apple.com/nz/artist/maxwell-young/1113632139",
+                ],
+                ["TikTok", "https://www.tiktok.com/@internetmaxwell"],
+                ["Instagram", "https://instagram.com/maxwell_young"],
+                ["YouTube", "https://www.youtube.com/@maxwell_young"],
+                ["Bandcamp", "https://maxwellyoung.bandcamp.com"],
+                ["X", "https://twitter.com/internetmaxwell"],
+                ["Silk", "https://birds.silk.cx/@maxwell"],
+              ].map(([label, href]) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="transition hover:text-(--ledger-ink)"
+                >
+                  {label}
+                </a>
+              ))}
               <LedgerLightSwitch />
             </span>
           </div>
