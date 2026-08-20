@@ -26,6 +26,20 @@ const nextConfig = {
       },
     ],
   },
+  async redirects() {
+    // Campaign rooms retired 2026-08-20: one release-page system, the ledger.
+    return [
+      { source: "/1kiss", destination: "/r/1kiss", permanent: true },
+      {
+        source: "/sneakin",
+        destination: "/r/sneakin-drinks-into-bars",
+        permanent: true,
+      },
+      { source: "/turn-it-up", destination: "/r/turn-it-up", permanent: true },
+      { source: "/flying", destination: "/r/flying", permanent: true },
+      { source: "/wintour", destination: "/r/wintour", permanent: true },
+    ];
+  },
   async headers() {
     return [
       {
