@@ -40,9 +40,17 @@ export default function RootLayout({
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${GeistSans.variable} ${GeistPixelLine.variable} ${GeistPixelCircle.variable}`}
     >
       <head>
+        <script
+          // Applies the stored ledger scheme before first paint; must stay inline.
+          dangerouslySetInnerHTML={{
+            __html:
+              'try{var s=localStorage.getItem("ledger-scheme");if(s==="dark"||s==="light")document.documentElement.dataset.ledger=s}catch(e){}',
+          }}
+        />
         <link rel="icon" href="/icons/favicon.ico" />
         <link
           rel="icon"

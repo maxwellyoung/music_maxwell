@@ -66,6 +66,9 @@ const nextConfig = {
     serverActions: {
       bodySizeLimit: "2mb",
     },
+    // Router navigations run through document.startViewTransition where
+    // supported; the ledger names its release covers as shared elements.
+    viewTransition: true,
   },
   // Next 16 builds with Turbopack; the old webpack crypto fallback is obsolete.
   turbopack: {},

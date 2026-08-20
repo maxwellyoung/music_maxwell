@@ -11,15 +11,16 @@ const LedgerSkyTower = dynamic(() => import("~/components/LedgerSkyTower"), {
   ssr: false,
 });
 
+import LedgerLightSwitch from "~/components/LedgerLightSwitch";
+
 const year = (date?: string) => date?.match(/\d{4}$/)?.[0] ?? "";
 
-export type MarginNote = { id: string; title: string; author: string };
-
-// The ledger homepage: text-first, artwork only on intent.
+// The ledger homepage: text-first, artwork only on intent. Marginalia
+// streams in through notesSlot so the index never waits on the database.
 export default function MinimalIndex({
-  notes = [],
+  notesSlot,
 }: {
-  notes?: MarginNote[];
+  notesSlot?: React.ReactNode;
 }) {
   const [active, setActive] = useState<string | null>(null);
   const activeRelease = releases.find((r) => r.slug === active);
@@ -44,8 +45,8 @@ export default function MinimalIndex({
 
       <section className="mt-16 max-w-2xl" aria-label="Discography">
         <ol className="border-t border-[rgb(var(--ledger-ink-rgb)/0.10)]">
-          {releases.map((release) => (
-            <li key={release.slug}>
+          {releases.map((release, index) => (
+            <li key={release.slug} style={{ "--row": index } as React.CSSProperties}>
               <Link
                 href={`/r/${release.slug}`}
                 onMouseEnter={() => setActive(release.slug)}
@@ -65,34 +66,10 @@ export default function MinimalIndex({
         </ol>
       </section>
 
-      {notes.length > 0 && (
-        <section className="mt-16 max-w-2xl" aria-label="Latest notes">
-          <p className="text-sm text-[rgb(var(--ledger-ink-rgb)/0.40)]">from the wall —</p>
-          <ul className="mt-2 space-y-1">
-            {notes.map((note) => (
-              <li key={note.id} className="text-sm leading-relaxed">
-                <Link
-                  href={`/forum/${note.id}`}
-                  className="text-[rgb(var(--ledger-ink-rgb)/0.70)] transition hover:text-(--ledger-ink)"
-                >
-                  “{note.title}”
-                  <span className="text-[rgb(var(--ledger-ink-rgb)/0.35)]"> — {note.author}</span>
-                </Link>
-              </li>
-            ))}
-          </ul>
-          <p className="mt-3 text-sm">
-            <Link
-              href="/forum"
-              className="text-[rgb(var(--ledger-ink-rgb)/0.40)] underline decoration-[rgb(var(--ledger-ink-rgb)/0.20)] underline-offset-4 transition hover:text-(--ledger-ink) hover:decoration-(--ledger-ink)"
-            >
-              leave something behind
-            </Link>
-          </p>
-        </section>
-      )}
+      {notesSlot}
 
-      <footer className="mt-16 flex max-w-2xl flex-wrap gap-x-5 gap-y-2 text-sm text-[rgb(var(--ledger-ink-rgb)/0.40)]">
+      <footer className="mt-16 flex max-w-2xl flex-wrap items-baseline gap-x-5 gap-y-2 text-sm text-[rgb(var(--ledger-ink-rgb)/0.40)]">
+        <LedgerLightSwitch />
         <Link href="/forum" className="transition hover:text-(--ledger-ink)">
           Notes
         </Link>
@@ -147,6 +124,7 @@ export default function MinimalIndex({
               fill
               sizes="28rem"
               className="object-cover"
+              style={{ viewTransitionName: "release-cover" }}
             />
           )}
         </div>

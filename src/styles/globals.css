@@ -455,10 +455,56 @@ html {
 }
 
 @media (prefers-color-scheme: dark) {
-  .ledger {
+  :root:not([data-ledger="light"]) .ledger {
     --ledger-paper: #0d0d0e;
     --ledger-ink: #e7e7e4;
     --ledger-ink-rgb: 231 231 228;
     --ledger-paper-rgb: 13 13 14;
+  }
+}
+
+/* Explicit choice from the ◐ switch outranks the system scheme. */
+:root[data-ledger="dark"] .ledger {
+  --ledger-paper: #0d0d0e;
+  --ledger-ink: #e7e7e4;
+  --ledger-ink-rgb: 231 231 228;
+  --ledger-paper-rgb: 13 13 14;
+}
+
+/* Ledger typography: selection in ink, balanced headings, calm prose. */
+.ledger ::selection {
+  background: var(--ledger-ink);
+  color: var(--ledger-paper);
+}
+
+.ledger h1,
+.ledger h2 {
+  text-wrap: balance;
+}
+
+.ledger p {
+  text-wrap: pretty;
+}
+
+.ledger .hang {
+  hanging-punctuation: first;
+}
+
+/* Rows settle in on first paint — CSS only, honours reduced motion. */
+@media (prefers-reduced-motion: no-preference) {
+  .ledger ol li {
+    transition:
+      opacity 0.45s ease,
+      transform 0.45s ease;
+    transition-delay: calc(var(--row, 0) * 22ms);
+    @starting-style {
+      opacity: 0;
+      transform: translateY(5px);
+    }
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.22s;
   }
 }

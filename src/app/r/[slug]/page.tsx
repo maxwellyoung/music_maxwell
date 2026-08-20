@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import LedgerLightSwitch from "~/components/LedgerLightSwitch";
 import MinimalExcerpt from "~/components/MinimalExcerpt";
 import releases, { getReleaseBySlug } from "~/data/releases";
 
@@ -32,8 +33,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: `${release.title} | Maxwell Young`,
     description: `${release.title} by Maxwell Young — ${release.releaseType ?? "release"}, ${release.releaseDate ?? ""}. Lyrics, credits, and listening links.`,
     alternates: { canonical: release.releasePath ?? `/r/${release.slug}` },
-    openGraph: { images: [release.artwork] },
-    twitter: { card: "summary_large_image", images: [release.artwork] },
+    twitter: { card: "summary_large_image" },
   };
 }
 
@@ -67,13 +67,16 @@ export default async function MinimalReleasePage({ params }: Props) {
             <h1 className="mb-0 text-2xl font-medium tracking-[-0.01em]">
               {release.title}
             </h1>
-            <p className="mt-1 text-sm text-[rgb(var(--ledger-ink-rgb)/0.40)]">
+            <p className="mt-1 text-sm tabular-nums text-[rgb(var(--ledger-ink-rgb)/0.40)]">
               {release.releaseType?.toLowerCase() ?? "release"}
               {release.releaseDate ? ` · ${release.releaseDate}` : ""}
               {release.duration ? ` · ${release.duration}` : ""}
             </p>
           </div>
-          <div className="relative h-24 w-24 shrink-0 sm:h-32 sm:w-32">
+          <div
+            className="relative h-24 w-24 shrink-0 sm:h-32 sm:w-32"
+            style={{ viewTransitionName: "release-cover" }}
+          >
             <Image
               src={release.artwork}
               alt={`${release.title} artwork`}
@@ -184,8 +187,11 @@ export default async function MinimalReleasePage({ params }: Props) {
         )}
       </nav>
 
-      <footer className="mt-16 max-w-2xl text-sm text-[rgb(var(--ledger-ink-rgb)/0.30)]">
-        {year(release.releaseDate) || "—"} · Maxwell Young
+      <footer className="mt-16 flex max-w-2xl items-baseline gap-4 text-sm text-[rgb(var(--ledger-ink-rgb)/0.30)]">
+        <span className="tabular-nums">
+          {year(release.releaseDate) || "—"} · Maxwell Young
+        </span>
+        <LedgerLightSwitch />
       </footer>
     </main>
   );
