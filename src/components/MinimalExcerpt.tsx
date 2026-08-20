@@ -121,7 +121,12 @@ export default function MinimalExcerpt({
           aria-pressed={playing}
           className="underline decoration-[rgb(var(--ledger-ink-rgb)/0.25)] underline-offset-4 transition-[text-decoration-color,transform] duration-150 [transition-timing-function:var(--ease-out-strong)] hover:decoration-(--ledger-ink) focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-(--ledger-ink) active:scale-[0.97]"
         >
-          {playing ? "❚❚ pause" : "▸ play excerpt"}
+          <span
+            key={playing ? "pause" : "play"}
+            className="label-morph inline-block"
+          >
+            {playing ? "❚❚ pause" : "▸ play excerpt"}
+          </span>
         </button>
         <span className="tabular-nums text-[rgb(var(--ledger-ink-rgb)/0.40)]" aria-hidden="true">
           {format(time)}

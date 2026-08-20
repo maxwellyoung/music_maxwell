@@ -94,8 +94,8 @@ export default function AppendixPage() {
         </div>
 
         <p className="mt-10 max-w-prose font-mono text-xs leading-6 text-[rgb(var(--ledger-ink-rgb)/0.35)]">
-          {releases.length} entries. Compiled from the official catalogue;
-          omissions are silences, not absences.
+          {releases.length} entries. Compiled from the official catalogue.
+          Fields not on record are marked —.
         </p>
       </div>
     </main>

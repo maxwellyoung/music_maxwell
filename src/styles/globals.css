@@ -534,13 +534,19 @@ html {
 .ledger details::details-content {
   block-size: 0;
   overflow: clip;
+  opacity: 0.4;
+  filter: blur(3px);
   transition:
     block-size 240ms var(--ease-out-strong),
+    opacity 240ms var(--ease-out-strong),
+    filter 240ms var(--ease-out-strong),
     content-visibility 240ms allow-discrete;
 }
 
 .ledger details[open]::details-content {
   block-size: auto;
+  opacity: 1;
+  filter: blur(0);
 }
 
 /* The shared cover element gets a deliberate curve on route changes. */
@@ -577,4 +583,71 @@ html {
 :root[data-hour="golden"][data-ledger="light"] .ledger {
   --ledger-paper: #faf3ea;
   --ledger-paper-rgb: 250 243 234;
+}
+
+/* ── Emil blur: states refocus instead of swapping ──────────────── */
+@media (prefers-reduced-motion: no-preference) {
+  /* Covers condense out of the tower when a row is held or walked. */
+  .cover-condense {
+    animation: cover-condense 240ms var(--ease-out-strong) both;
+  }
+
+  @keyframes cover-condense {
+    from {
+      opacity: 0.2;
+      filter: blur(8px);
+      transform: scale(1.01);
+    }
+    to {
+      opacity: 1;
+      filter: blur(0);
+      transform: scale(1);
+    }
+  }
+
+  /* Play/pause label morphs through a breath of blur. */
+  .label-morph {
+    animation: label-morph 180ms var(--ease-out-strong) both;
+  }
+
+  @keyframes label-morph {
+    from {
+      opacity: 0.3;
+      filter: blur(3px);
+    }
+    to {
+      opacity: 1;
+      filter: blur(0);
+    }
+  }
+
+  /* Route changes refocus the page rather than crossfading it. */
+  ::view-transition-old(root) {
+    animation: vt-defocus 200ms var(--ease-out-strong) both;
+  }
+
+  ::view-transition-new(root) {
+    animation: vt-refocus 260ms var(--ease-out-strong) both;
+  }
+}
+
+@keyframes vt-defocus {
+  to {
+    opacity: 0;
+    filter: blur(6px);
+  }
+}
+
+@keyframes vt-refocus {
+  from {
+    opacity: 0;
+    filter: blur(6px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation: none;
+  }
 }

@@ -175,14 +175,16 @@ export default function MinimalIndex({
           }`}
         >
           {activeRelease && (
-            <Image
-              src={activeRelease.artwork}
-              alt=""
-              fill
-              sizes="28rem"
-              className="object-cover"
-              style={{ viewTransitionName: "release-cover" }}
-            />
+            <div key={activeRelease.slug} className="cover-condense absolute inset-0">
+              <Image
+                src={activeRelease.artwork}
+                alt=""
+                fill
+                sizes="28rem"
+                className="object-cover"
+                style={{ viewTransitionName: "release-cover" }}
+              />
+            </div>
           )}
         </div>
       </div>
