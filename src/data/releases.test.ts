@@ -59,8 +59,8 @@ test("release metadata is generated from the catalogue identity", () => {
     description: "1kiss by Maxwell Young.",
   });
 
-  assert.equal(metadata.alternates?.canonical, "/1kiss");
-  assert.equal(metadata.openGraph?.url, "/1kiss");
+  assert.equal(metadata.alternates?.canonical, "/r/1kiss");
+  assert.equal(metadata.openGraph?.url, "/r/1kiss");
   assert.deepEqual(metadata.twitter?.images, ["/artworks/1kiss.jpg"]);
 });
 

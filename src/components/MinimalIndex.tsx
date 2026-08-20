@@ -3,11 +3,12 @@
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import LedgerLightSwitch from "~/components/LedgerLightSwitch";
 import LedgerWordmark from "~/components/LedgerWordmark";
 import MinimalExcerpt from "~/components/MinimalExcerpt";
 import releases, { getReleaseBySlug } from "~/data/releases";
+import { play, stop } from "~/lib/ledgerPlayer";
 
 // Loads three.js after paint, desktop only; never blocks the ledger text.
 const LedgerSkyTower = dynamic(() => import("~/components/LedgerSkyTower"), {
@@ -24,8 +25,26 @@ export default function MinimalIndex({
   notesSlot?: React.ReactNode;
 }) {
   const [active, setActive] = useState<string | null>(null);
+  const dwell = useRef<number | undefined>(undefined);
   const activeRelease = releases.find((r) => r.slug === active);
   const featured = getReleaseBySlug("1kiss");
+
+  // Holding a row plays it: 250ms dwell so a pass over the list stays
+  // silent, then the shared voice takes the row's excerpt. Leaving stops
+  // only what this row started. Browsers gate audio until the first real
+  // gesture; keyboard focus counts, a virgin mouse pass may stay quiet.
+  const enter = (slug: string, previewUrl?: string) => {
+    setActive(slug);
+    window.clearTimeout(dwell.current);
+    if (previewUrl) {
+      dwell.current = window.setTimeout(() => void play(previewUrl), 250);
+    }
+  };
+  const leave = (previewUrl?: string) => {
+    setActive(null);
+    window.clearTimeout(dwell.current);
+    if (previewUrl) stop(previewUrl);
+  };
 
   return (
     <main className="ledger min-h-svh bg-(--ledger-paper) text-(--ledger-ink)">
@@ -42,7 +61,7 @@ export default function MinimalIndex({
         <section className="max-w-2xl" aria-label="Now playing">
           <p className="text-xl leading-snug sm:text-2xl">
             <Link
-              href="/1kiss"
+              href="/r/1kiss"
               className="font-semibold underline decoration-[rgb(var(--ledger-ink-rgb)/0.25)] underline-offset-[6px] transition hover:decoration-(--ledger-ink)"
             >
               1kiss
@@ -67,10 +86,10 @@ export default function MinimalIndex({
               >
                 <Link
                   href={`/r/${release.slug}`}
-                  onMouseEnter={() => setActive(release.slug)}
-                  onMouseLeave={() => setActive(null)}
-                  onFocus={() => setActive(release.slug)}
-                  onBlur={() => setActive(null)}
+                  onMouseEnter={() => enter(release.slug, release.previewUrl)}
+                  onMouseLeave={() => leave(release.previewUrl)}
+                  onFocus={() => enter(release.slug, release.previewUrl)}
+                  onBlur={() => leave(release.previewUrl)}
                   className="group flex items-baseline justify-between gap-6 border-b border-[rgb(var(--ledger-ink-rgb)/0.10)] py-3 text-sm transition-colors duration-150 hover:bg-(--ledger-ink) hover:text-(--ledger-paper) focus-visible:bg-(--ledger-ink) focus-visible:text-(--ledger-paper) focus-visible:outline-hidden"
                 >
                   <span className="font-medium transition-transform duration-200 [transition-timing-function:var(--ease-out-strong)] group-hover:translate-x-3 group-focus-visible:translate-x-3">

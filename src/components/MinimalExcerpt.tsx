@@ -1,14 +1,14 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import { pause, play, state } from "~/lib/ledgerPlayer";
 
 const format = (seconds: number) => {
   const whole = Math.max(0, Math.floor(seconds));
   return `${Math.floor(whole / 60)}:${String(whole % 60).padStart(2, "0")}`;
 };
 
-// Text-only excerpt player so /r pages keep the ledger language
-// instead of the browser's gray audio chrome.
+// Text-only excerpt control over the shared ledger voice.
 export default function MinimalExcerpt({
   src,
   title,
@@ -16,97 +16,52 @@ export default function MinimalExcerpt({
   src: string;
   title?: string;
 }) {
-  const audioRef = useRef<HTMLAudioElement>(null);
-  const analyserRef = useRef<AnalyserNode | null>(null);
-  const meterFrame = useRef(0);
   const [playing, setPlaying] = useState(false);
   const [time, setTime] = useState(0);
   const [duration, setDuration] = useState<number | null>(null);
+  const frame = useRef(0);
+
+  // Track the shared player; this control only owns its own src.
+  useEffect(() => {
+    const onPlayer = (event: Event) => {
+      const detail = (event as CustomEvent<{ src: string; playing: boolean }>)
+        .detail;
+      setPlaying(detail.playing && detail.src === src);
+    };
+    window.addEventListener("ledger:player", onPlayer);
+    return () => window.removeEventListener("ledger:player", onPlayer);
+  }, [src]);
 
   useEffect(() => {
-    const audio = audioRef.current;
-    return () => {
-      window.cancelAnimationFrame(meterFrame.current);
-      window.dispatchEvent(
-        new CustomEvent("ledger:audio-level", { detail: 0 }),
-      );
-      audio?.pause();
-    };
-  }, []);
-
-  // Broadcast the playback level so listening surfaces (the Sky Tower)
-  // can move with the music. Wired lazily on first play.
-  const startMeter = () => {
-    const audio = audioRef.current;
-    if (!audio) return;
-    if (!analyserRef.current) {
-      try {
-        const AudioContextCtor =
-          window.AudioContext ??
-          (window as unknown as { webkitAudioContext?: typeof AudioContext })
-            .webkitAudioContext;
-        if (!AudioContextCtor) return;
-        const context = new AudioContextCtor();
-        const source = context.createMediaElementSource(audio);
-        const analyser = context.createAnalyser();
-        analyser.fftSize = 256;
-        source.connect(analyser);
-        analyser.connect(context.destination);
-        analyserRef.current = analyser;
-      } catch {
-        return; // metering is decoration; playback still works
-      }
-    }
-    const data = new Uint8Array(analyserRef.current.fftSize);
+    if (!playing) return;
     const tick = () => {
-      const analyser = analyserRef.current;
-      const element = audioRef.current;
-      if (!analyser || !element) return;
-      analyser.getByteTimeDomainData(data);
-      let sum = 0;
-      for (const value of data) {
-        const centered = (value - 128) / 128;
-        sum += centered * centered;
+      const s = state();
+      if (s.src === src) {
+        setTime(s.time);
+        if (s.duration) setDuration(s.duration);
       }
-      const rms = Math.sqrt(sum / data.length);
-      window.dispatchEvent(
-        new CustomEvent("ledger:audio-level", { detail: Math.min(1, rms * 3) }),
-      );
-      if (!element.paused && !element.ended) {
-        meterFrame.current = window.requestAnimationFrame(tick);
-      } else {
-        window.dispatchEvent(
-          new CustomEvent("ledger:audio-level", { detail: 0 }),
-        );
-      }
+      frame.current = window.requestAnimationFrame(tick);
     };
-    meterFrame.current = window.requestAnimationFrame(tick);
-  };
+    frame.current = window.requestAnimationFrame(tick);
+    return () => window.cancelAnimationFrame(frame.current);
+  }, [playing, src]);
 
-  // The tab title plays along: "▶ 1kiss — Maxwell Young" while sounding.
+  // The tab title plays along while this excerpt sounds.
   useEffect(() => {
-    if (!title) return;
+    if (!title || !playing) return;
     const original = document.title;
-    if (playing) document.title = `▶ ${title} — Maxwell Young`;
+    document.title = `▶ ${title} — Maxwell Young`;
     return () => {
       document.title = original;
     };
   }, [playing, title]);
 
-  const toggle = async () => {
-    const audio = audioRef.current;
-    if (!audio) return;
-    if (audio.paused) {
-      try {
-        await audio.play();
-        setPlaying(true);
-        startMeter();
-      } catch {
-        setPlaying(false);
-      }
+  const toggle = () => {
+    const s = state();
+    if (s.playing && s.src === src) {
+      pause();
     } else {
-      audio.pause();
-      setPlaying(false);
+      void play(src);
     }
   };
 
@@ -128,7 +83,10 @@ export default function MinimalExcerpt({
             {playing ? "❚❚ pause" : "▸ play excerpt"}
           </span>
         </button>
-        <span className="tabular-nums text-[rgb(var(--ledger-ink-rgb)/0.40)]" aria-hidden="true">
+        <span
+          className="tabular-nums text-[rgb(var(--ledger-ink-rgb)/0.40)]"
+          aria-hidden="true"
+        >
           {format(time)}
           {duration ? ` / ${format(duration)}` : ""}
         </span>
@@ -141,22 +99,10 @@ export default function MinimalExcerpt({
         }`}
       >
         <div
-          className="h-full w-full origin-left bg-(--ledger-ink) transition-transform duration-300 ease-linear"
+          className="h-full w-full origin-left bg-(--ledger-ink)"
           style={{ transform: `scaleX(${progress})` }}
         />
       </div>
-      {/* eslint-disable-next-line jsx-a11y/media-has-caption -- instrumental music excerpt */}
-      <audio
-        ref={audioRef}
-        src={src}
-        preload="none"
-        onTimeUpdate={(e) => setTime(e.currentTarget.currentTime)}
-        onLoadedMetadata={(e) => setDuration(e.currentTarget.duration)}
-        onEnded={() => {
-          setPlaying(false);
-          setTime(0);
-        }}
-      />
     </div>
   );
 }
