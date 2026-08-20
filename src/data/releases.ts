@@ -159,7 +159,8 @@ Ninetynine Records
     duration: "2:22",
     releaseType: "Single",
     releasePath: "/r/sneakin-drinks-into-bars",
-    previewUrl: "/excerpts/sneakin-drinks-into-bars.m4a",
+    previewUrl:
+      "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/3a/e2/79/3ae279a5-1016-1804-1729-f4905275faaf/mzaf_18029532613621274581.plus.aac.p.m4a",
     lyrics: {
       "Sneakin Drinks Into Bars": `sneakin drinks into bars
 sensing it'll fall apart
@@ -198,7 +199,8 @@ you know i love it`,
       tidal: "https://listen.tidal.com/track/501878604",
       pandora: "https://www.pandora.com/TR:194654849",
     },
-    previewUrl: "/excerpts/flying.m4a",
+    previewUrl:
+      "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/0b/52/db/0b52db97-778c-8c81-cf35-a73cf777a19f/mzaf_13680584974187256804.plus.aac.p.m4a",
     releaseDate: "April 4, 2026",
     duration: "1:52",
     releaseType: "Single",
@@ -300,7 +302,8 @@ i run ur mind
 i tell why, i never lie
 i don't know why u make it feel like that`,
     },
-    previewUrl: "/excerpts/wintour.m4a",
+    previewUrl:
+      "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview221/v4/1b/e8/c4/1be8c4b6-2892-ac13-0ce8-478f3a564b8e/mzaf_4067427662252438402.plus.aac.p.m4a",
     credits: `Produced by Maxwell Young & Eddie Johnston
     Artwork by Elijah Broughton`,
     videoLink: "https://www.youtube.com/watch?v=CVpatk_f0tg",
@@ -324,7 +327,8 @@ i don't know why u make it feel like that`,
     releaseType: "Single",
     releasePath: "/r/turn-it-up",
     world: "cart-grid",
-    previewUrl: "/excerpts/turn-it-up.m4a",
+    previewUrl:
+      "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/f3/66/49/f36649c5-c8be-156f-3846-ada73a678d74/mzaf_15276852306355963567.plus.aac.p.m4a",
     details: [
       { label: "Collaboration", value: "Thom Haha" },
       { label: "Film", value: "Tom Shackleton" },
@@ -387,7 +391,8 @@ All the girls with me wanna fuck it n turn up`,
     duration: "1:52",
     releaseType: "Single",
     releasePath: "/r/flying",
-    previewUrl: "/excerpts/freewheelin.m4a",
+    previewUrl:
+      "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/a9/b5/01/a9b501bf-0d4b-633f-5429-6da20395163e/mzaf_6314341374266041642.plus.aac.p.m4a",
     lyrics: {
       "Freewheelin'": `Laying back with you
 I wanna do it all the time now
@@ -448,7 +453,8 @@ You know I'm saying`,
     releaseDate: "November 17, 2023",
     duration: "1:38",
     releaseType: "Single",
-    previewUrl: "/excerpts/i-just-wanna-fly.m4a",
+    previewUrl:
+      "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview116/v4/3e/9c/f0/3e9cf07e-96dd-bdea-11ea-51436a19c5d2/mzaf_3173747365233227402.plus.aac.p.m4a",
     lyrics: {
       "I Just Wanna Fly": `We've both been here before
   Each time left me alone
@@ -508,7 +514,8 @@ You know I'm saying`,
     releaseDate: "October 20, 2023",
     duration: "1:50",
     releaseType: "Single",
-    previewUrl: "/excerpts/hopeless.m4a",
+    previewUrl:
+      "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview126/v4/8d/e4/d7/8de4d752-1519-d565-9a27-a5cc3982b75c/mzaf_13756937912135469560.plus.aac.p.m4a",
     lyrics: {
       Hopeless: `We were so close
       Know it's been over a year
@@ -571,7 +578,8 @@ You know I'm saying`,
     releaseDate: "October 6, 2023",
     duration: "4:17",
     releaseType: "Double single",
-    previewUrl: "/excerpts/call-ur-name-go-ahead.m4a",
+    previewUrl:
+      "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview116/v4/d3/da/be/d3dabedc-d792-25a6-9e1f-967715e14a6c/mzaf_6177786969676094496.plus.aac.p.m4a",
     previewLyricVersion: "Call Ur Name",
     lyrics: {
       "Call Ur Name": `[Verse 1]
@@ -855,7 +863,8 @@ You know I'm saying`,
     releaseDate: "February 5, 2021",
     duration: "5:49",
     releaseType: "Double single",
-    previewUrl: "/excerpts/videostar-cleopatra.m4a",
+    previewUrl:
+      "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview115/v4/43/2b/90/432b9089-cacc-1193-4c17-7ca6e84c9471/mzaf_2854893502213579383.plus.aac.p.m4a",
     previewLyricVersion: "Videostar",
     lyrics: {
       Videostar: `[Intro]

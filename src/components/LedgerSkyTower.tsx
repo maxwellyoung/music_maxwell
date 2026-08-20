@@ -256,6 +256,12 @@ export default function LedgerSkyTower({
       const scheme = window.matchMedia("(prefers-color-scheme: dark)");
       const onScheme = () => material.uniforms.uInk!.value.copy(inkOf());
       scheme.addEventListener("change", onScheme);
+      // The ◐ switch flips data-ledger on <html>; follow it without reload.
+      const attrObserver = new MutationObserver(onScheme);
+      attrObserver.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ["data-ledger", "data-hour"],
+      });
 
       const pointer = new THREE.Vector2(0, 0);
       const pointerTarget = new THREE.Vector2(0, 0);
@@ -356,6 +362,7 @@ export default function LedgerSkyTower({
       cleanup = () => {
         window.cancelAnimationFrame(frame);
         observer.disconnect();
+        attrObserver.disconnect();
         window.removeEventListener("pointermove", onPointer);
         window.removeEventListener("ledger:audio-level", onAudio);
         canvas.removeEventListener("pointerdown", onDown);
