@@ -48,7 +48,7 @@ export default async function TopicPage({
         href="/forum"
         className="text-sm leading-none text-[rgb(var(--ledger-ink-rgb)/0.40)] transition hover:text-(--ledger-ink)"
       >
-        ← the wall
+        ← the square
       </Link>
     </header>
   );
@@ -59,7 +59,7 @@ export default async function TopicPage({
         {header}
         <div className="px-6 pb-20 pt-16 sm:px-12 lg:px-20">
           <p className="max-w-2xl text-xl">
-            This note is no longer on the wall.
+            This note is no longer in the square.
           </p>
           <Link
             href="/forum"

@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import dynamic from "next/dynamic";
 import Link from "next/link";
 import LedgerLightSwitch from "~/components/LedgerLightSwitch";
 import LedgerWordmark from "~/components/LedgerWordmark";
@@ -10,10 +9,8 @@ import { SearchTopics } from "~/components/forum/SearchTopics";
 import { getReleaseWallWhere } from "~/lib/forum";
 import { prisma } from "~/lib/prisma";
 
-const LedgerSkyTower = dynamic(() => import("~/components/LedgerSkyTower"));
-
 export const metadata: Metadata = {
-  title: "Notes — Maxwell Young",
+  title: "Town square — Maxwell Young",
   description: "Listener notes on Maxwell Young releases.",
   alternates: { canonical: "/forum" },
 };
@@ -75,10 +72,10 @@ export default async function ForumPage({
         </Link>
       </header>
 
-      <div className="px-6 pb-20 pt-16 sm:px-12 lg:px-20 lg:pr-[46vw]">
+      <div className="px-6 pb-20 pt-16 sm:px-12 lg:px-20">
         <section className="max-w-2xl" aria-label="Notes">
           <p className="text-xl leading-snug sm:text-2xl">
-            <span className="font-semibold">Notes.</span>{" "}
+            <span className="font-semibold">Town square.</span>{" "}
             <span className="text-[rgb(var(--ledger-ink-rgb)/0.45)]">
               Leave something behind.
             </span>
@@ -102,7 +99,7 @@ export default async function ForumPage({
               </span>
             ) : (
               <span className="tabular-nums text-[rgb(var(--ledger-ink-rgb)/0.40)]">
-                {total} on the wall
+                {total} in the square
               </span>
             )}
           </div>
@@ -124,14 +121,6 @@ export default async function ForumPage({
             total={total}
             query={query}
           />
-        </div>
-
-        {/* Wellington's monument presides over the wall. */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none fixed inset-y-0 right-0 hidden w-[42vw] lg:block"
-        >
-          <LedgerSkyTower monument="beehive" />
         </div>
 
         <footer className="mt-24 max-w-2xl border-t border-[rgb(var(--ledger-ink-rgb)/0.12)] pt-4">

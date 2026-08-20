@@ -5,6 +5,7 @@ import { prisma } from "~/lib/prisma";
 import { triggerNewForumReply } from "~/lib/pusherServer";
 import { containsBannedWords, RATE_LIMITS } from "~/lib/constants";
 import { rateLimit } from "~/lib/rate-limit";
+import { anonymousAuthorId, requestIp } from "~/lib/anonAuthor";
 import { createReplySchema, deleteReplySchema } from "~/lib/validations";
 
 export const dynamic = "force-dynamic";
@@ -18,14 +19,14 @@ const replyRateLimiter = rateLimit({
 
 export async function POST(request: Request) {
   const session = await getServerSession(authOptions);
-  if (!session?.user?.id) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
+  // Unsigned echoes are allowed for now; anonymous callers rate-limit
+  // by address instead of account.
+  const authorId = session?.user?.id ?? (await anonymousAuthorId());
+  const limiterToken = session?.user?.id ?? `anon-reply:${requestIp(request)}`;
 
-  // Rate limiting: 1 reply per 10 seconds per user
   const rateLimitResult = await replyRateLimiter.check(
     RATE_LIMITS.REPLY_MAX_PER_INTERVAL,
-    session.user.id,
+    limiterToken,
   );
   if (!rateLimitResult.success) {
     return NextResponse.json(
@@ -56,7 +57,7 @@ export async function POST(request: Request) {
       data: {
         content,
         topicId,
-        authorId: session.user.id,
+        authorId,
       },
     });
 

@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { ArrowUpRight, LockKeyhole } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { useToast } from "~/components/ui/use-toast";
 
 interface TopicResponse {
@@ -45,15 +45,6 @@ export function NewTopicForm({
   async function onSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (!session) {
-      window.sessionStorage.setItem(
-        DRAFT_KEY,
-        JSON.stringify({ title, content }),
-      );
-      await signIn("google", { callbackUrl: "/forum/new" });
-      return;
-    }
-
     setIsLoading(true);
 
     try {
@@ -83,7 +74,7 @@ export function NewTopicForm({
       const data = (await response.json()) as TopicResponse;
       window.sessionStorage.removeItem(DRAFT_KEY);
       toast({
-        title: "Pinned to the wall",
+        title: "Pinned in the square",
         description: "Your note is live.",
       });
       router.push(`/forum/${data.id}`);
@@ -189,10 +180,23 @@ export function NewTopicForm({
           </div>
 
           {!session && status !== "loading" && (
-            <div className="flex gap-3 border-l-2 border-(--ledger-ink) bg-[rgb(var(--ledger-ink-rgb)/0.04)] px-4 py-3 text-sm leading-relaxed text-foreground/65">
-              <LockKeyhole className="mt-0.5 h-4 w-4 shrink-0 text-[rgb(var(--ledger-ink-rgb)/0.45)]" />
-              Your draft will wait here while Google signs you in.
-            </div>
+            <p className="text-sm leading-relaxed text-[rgb(var(--ledger-ink-rgb)/0.45)]">
+              Pinned as anonymous.{" "}
+              <button
+                type="button"
+                onClick={() => {
+                  window.sessionStorage.setItem(
+                    DRAFT_KEY,
+                    JSON.stringify({ title, content }),
+                  );
+                  void signIn("google", { callbackUrl: "/forum/new" });
+                }}
+                className="underline decoration-[rgb(var(--ledger-ink-rgb)/0.25)] underline-offset-4 transition hover:decoration-(--ledger-ink)"
+              >
+                Sign in
+              </button>{" "}
+              to put your name on it — your draft waits.
+            </p>
           )}
 
           <div className="flex flex-col-reverse gap-3 border-t border-foreground/15 pt-6 sm:flex-row sm:items-center sm:justify-between">
@@ -209,11 +213,7 @@ export function NewTopicForm({
               disabled={isLoading || !isValid || status === "loading"}
               className="group inline-flex min-h-12 items-center justify-center gap-3 border border-foreground bg-foreground px-6 text-[11px] uppercase tracking-widest text-background transition hover:border-(--ledger-ink) hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-35"
             >
-              {isLoading
-                ? "Pinning..."
-                : session
-                  ? "Pin to the wall"
-                  : "Sign in & pin"}
+              {isLoading ? "Pinning..." : "Pin it up"}
               {!isLoading && (
                 <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
               )}

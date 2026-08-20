@@ -175,7 +175,7 @@ export default function ForumTopicsInfinite({
         )}
         {!hasMore && topics.length > 0 && (
           <span className="text-xs text-[rgb(var(--ledger-ink-rgb)/0.30)]">
-            — end of the wall —
+            — end of the square —
           </span>
         )}
       </div>

@@ -9,15 +9,31 @@ import {
   deleteTopicSchema,
   listTopicsSchema,
 } from "~/lib/validations";
+import { anonymousAuthorId, requestIp } from "~/lib/anonAuthor";
 import { getReleaseWallWhere } from "~/lib/forum";
+import { rateLimit } from "~/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
+const anonLimiter = rateLimit({ interval: 60_000, uniqueTokenPerInterval: 500 });
+
 export async function POST(request: Request) {
   const session = await getServerSession(authOptions);
-  if (!session?.user?.id) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  let authorId = session?.user?.id;
+  if (!authorId) {
+    // Unsigned notes are allowed for now — two per minute per address.
+    const limited = await anonLimiter.check(
+      2,
+      `anon-topic:${requestIp(request)}`,
+    );
+    if (!limited.success) {
+      return NextResponse.json(
+        { error: "Slow down — a couple of unsigned notes a minute." },
+        { status: 429 },
+      );
+    }
+    authorId = await anonymousAuthorId();
   }
 
   try {
@@ -42,7 +58,7 @@ export async function POST(request: Request) {
       data: {
         title,
         content,
-        authorId: session.user.id,
+        authorId,
       },
       include: {
         author: { select: { name: true, username: true } },

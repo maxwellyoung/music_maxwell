@@ -2,6 +2,8 @@
 
 import { useEffect, useRef } from "react";
 
+type ThreeModule = typeof import("three");
+
 // The dithered Sky Tower from ninetynine.digital, ported to vanilla three
 // and re-cut for the ledger: only the dark dither dots are drawn, in the
 // current --ledger-ink colour, so it reads as print on paper (and inverts
@@ -88,7 +90,7 @@ const FRAGMENT = /* glsl */ `
 
 // Procedural Beehive (Executive Wing, Wellington): a lathe of the real
 // proportions with 32 facade ribs. No licensed mesh — ours outright.
-function beehiveGeometry(THREE: typeof import("three")) {
+function beehiveGeometry(THREE: ThreeModule) {
   const tiers: [number, number][] = [
     [1.8, 0.0],
     [1.8, 0.3],
@@ -115,8 +117,7 @@ function beehiveGeometry(THREE: typeof import("three")) {
   const ribs = 32;
   const positions: number[] = [];
   const indices: number[] = [];
-  for (let i = 0; i < tiers.length; i++) {
-    const [radius, y] = tiers[i]!;
+  for (const [radius, y] of tiers) {
     for (let j = 0; j <= around; j++) {
       const theta = (j / around) * Math.PI * 2;
       // vertical mullions: only on the walls, not plinth or mast

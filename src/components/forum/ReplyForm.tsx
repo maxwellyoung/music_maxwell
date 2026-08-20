@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { useSession, signIn } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { Button } from "~/components/ui/button";
 import { Textarea } from "~/components/ui/textarea";
 import { useToast } from "~/components/ui/use-toast";
@@ -14,7 +14,7 @@ export default function ReplyForm({
   topicId: string;
   onSuccess?: () => void;
 }) {
-  const { data: session, status } = useSession();
+  const { status } = useSession();
   const [content, setContent] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
@@ -24,30 +24,6 @@ export default function ReplyForm({
     return (
       <div className="mt-10 flex items-center justify-center border-t border-[rgb(var(--ledger-ink-rgb)/0.20)] py-10">
         <div className="h-5 w-5 animate-spin rounded-full border-2 border-(--ledger-ink) border-t-transparent" />
-      </div>
-    );
-  }
-
-  if (!session) {
-    return (
-      <div className="mt-12 border-t border-[rgb(var(--ledger-ink-rgb)/0.20)] pt-10">
-        <p className="text-[11px] uppercase tracking-widest text-[rgb(var(--ledger-ink-rgb)/0.40)]">
-          Add your voice
-        </p>
-        <h3 className="font-medium mb-3 mt-2 text-3xl text-(--ledger-ink)">
-          leave an echo.
-        </h3>
-        <p className="mb-6 max-w-lg text-sm leading-relaxed text-[rgb(var(--ledger-ink-rgb)/0.50)]">
-          Sign in to reply. Your username appears beside anything you leave on
-          the wall.
-        </p>
-        <Button
-          onClick={() => signIn()}
-          className="h-12 rounded-none bg-(--ledger-ink) px-6 text-[11px] uppercase tracking-widest text-(--ledger-paper) hover:opacity-80"
-          aria-label="Sign in to reply to this topic"
-        >
-          Sign in to reply
-        </Button>
       </div>
     );
   }

@@ -31,7 +31,7 @@ export default async function NewTopicPage({
           href="/forum"
           className="text-sm leading-none text-[rgb(var(--ledger-ink-rgb)/0.40)] transition hover:text-(--ledger-ink)"
         >
-          ← the wall
+          ← the square
         </Link>
       </header>
       <div className="px-6 pb-20 pt-16 sm:px-12 lg:px-20">

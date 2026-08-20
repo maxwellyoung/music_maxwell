@@ -132,7 +132,7 @@ export default function MinimalIndex({
                 href="/forum"
                 className="transition hover:text-(--ledger-ink)"
               >
-                Notes
+                Town square
               </Link>
               {[
                 [

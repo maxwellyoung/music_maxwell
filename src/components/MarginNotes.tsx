@@ -19,9 +19,9 @@ export default async function MarginNotes() {
     if (topics.length === 0) return null;
 
     return (
-      <section className="mt-16 max-w-2xl" aria-label="Latest notes">
+      <section className="mt-16 max-w-2xl" aria-label="Latest from the square">
         <p className="text-sm text-[rgb(var(--ledger-ink-rgb)/0.40)]">
-          from the wall —
+          from the square —
         </p>
         <ul className="hang mt-2 space-y-1">
           {topics.map((topic) => (
