@@ -128,7 +128,7 @@ export default async function MinimalReleasePage({ params }: Props) {
                 {label}
               </a>
             ))}
-            {release.releasePath && (
+            {release.releasePath && release.releasePath !== `/r/${release.slug}` && (
               <Link
                 href={release.releasePath}
                 className="text-[rgb(var(--ledger-ink-rgb)/0.40)] transition hover:text-(--ledger-ink)"

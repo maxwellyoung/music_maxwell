@@ -390,7 +390,6 @@ All the girls with me wanna fuck it n turn up`,
     releaseDate: "June 7, 2024",
     duration: "1:52",
     releaseType: "Single",
-    releasePath: "/r/flying",
     previewUrl:
       "https://audio-ssl.itunes.apple.com/itunes-assets/AudioPreview211/v4/a9/b5/01/a9b501bf-0d4b-633f-5429-6da20395163e/mzaf_6314341374266041642.plus.aac.p.m4a",
     lyrics: {

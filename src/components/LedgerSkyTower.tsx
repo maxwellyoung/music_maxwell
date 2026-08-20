@@ -156,6 +156,16 @@ export default function LedgerSkyTower({
   useEffect(() => {
     const mount = mountRef.current;
     if (!mount) return;
+    // The monument is desktop decoration: below lg the wrapper is hidden
+    // but children still mount, so bail before pulling three.js onto
+    // phones — and before creating a renderer without WebGL support.
+    if (!window.matchMedia("(min-width: 1024px)").matches) return;
+    try {
+      const probe = document.createElement("canvas");
+      if (!probe.getContext("webgl2") && !probe.getContext("webgl")) return;
+    } catch {
+      return;
+    }
 
     let disposed = false;
     let frame = 0;

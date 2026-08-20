@@ -20,6 +20,24 @@ export async function anonymousAuthorId(): Promise<string> {
   return anon.id;
 }
 
+// Instance-local LRU limits reset on cold starts and are not shared
+// across Vercel instances, so the database enforces a global ceiling on
+// unsigned writes as the durable second line.
+export async function anonymousWallCeiling(
+  perMinute: number,
+): Promise<boolean> {
+  const since = new Date(Date.now() - 60_000);
+  const [topics, replies] = await Promise.all([
+    prisma.topic.count({
+      where: { authorId: "anonymous-wall", createdAt: { gte: since } },
+    }),
+    prisma.reply.count({
+      where: { authorId: "anonymous-wall", createdAt: { gte: since } },
+    }),
+  ]);
+  return topics + replies < perMinute;
+}
+
 export function requestIp(request: Request): string {
   return (
     request.headers.get("x-forwarded-for")?.split(",")[0]?.trim() ??

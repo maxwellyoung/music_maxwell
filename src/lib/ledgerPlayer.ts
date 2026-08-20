@@ -22,6 +22,10 @@ function ensure() {
   if (audio) return audio;
   audio = new Audio();
   audio.preload = "none";
+  // Cross-origin previews feed a MediaElementSourceNode; without CORS
+  // mode Chromium routes silence through the analyser. Apple's preview
+  // CDN sends Access-Control-Allow-Origin: * (verified 2026-08-20).
+  audio.crossOrigin = "anonymous";
   audio.addEventListener("ended", () => {
     emit(0);
     emitState();

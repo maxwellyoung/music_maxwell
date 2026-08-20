@@ -1,5 +1,5 @@
-import { questions, sources } from "../src/app/quiz/quiz-data.ts";
-import { validateSources } from "../src/app/quiz/quiz-engine.ts";
+import { questions, sources } from "../src/app/(chrome)/quiz/quiz-data.ts";
+import { validateSources } from "../src/app/(chrome)/quiz/quiz-engine.ts";
 const text = JSON.stringify({ questions, sources });
 const banned = [/utm_/i, /doubleclick/i, /relationship/i, /private material/i, /—/];
 if (!validateSources(questions, sources) || banned.some((rule) => rule.test(text))) {

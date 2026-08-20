@@ -9,7 +9,11 @@ import {
   deleteTopicSchema,
   listTopicsSchema,
 } from "~/lib/validations";
-import { anonymousAuthorId, requestIp } from "~/lib/anonAuthor";
+import {
+  anonymousAuthorId,
+  anonymousWallCeiling,
+  requestIp,
+} from "~/lib/anonAuthor";
 import { getReleaseWallWhere } from "~/lib/forum";
 import { rateLimit } from "~/lib/rate-limit";
 
@@ -30,6 +34,12 @@ export async function POST(request: Request) {
     if (!limited.success) {
       return NextResponse.json(
         { error: "Slow down — a couple of unsigned notes a minute." },
+        { status: 429 },
+      );
+    }
+    if (!(await anonymousWallCeiling(6))) {
+      return NextResponse.json(
+        { error: "The square is busy — try again in a minute." },
         { status: 429 },
       );
     }

@@ -482,6 +482,17 @@ html {
   text-wrap: balance;
 }
 
+/* The base heading rule pins --foreground (near-black); ledger headings
+   must follow the ink so dark mode stays readable. */
+.ledger h1,
+.ledger h2,
+.ledger h3,
+.ledger h4,
+.ledger h5,
+.ledger h6 {
+  color: var(--ledger-ink);
+}
+
 .ledger p {
   text-wrap: pretty;
 }

@@ -5,7 +5,11 @@ import { prisma } from "~/lib/prisma";
 import { triggerNewForumReply } from "~/lib/pusherServer";
 import { containsBannedWords, RATE_LIMITS } from "~/lib/constants";
 import { rateLimit } from "~/lib/rate-limit";
-import { anonymousAuthorId, requestIp } from "~/lib/anonAuthor";
+import {
+  anonymousAuthorId,
+  anonymousWallCeiling,
+  requestIp,
+} from "~/lib/anonAuthor";
 import { createReplySchema, deleteReplySchema } from "~/lib/validations";
 
 export const dynamic = "force-dynamic";
@@ -21,6 +25,12 @@ export async function POST(request: Request) {
   const session = await getServerSession(authOptions);
   // Unsigned echoes are allowed for now; anonymous callers rate-limit
   // by address instead of account.
+  if (!session?.user?.id && !(await anonymousWallCeiling(6))) {
+    return NextResponse.json(
+      { error: "The square is busy — try again in a minute." },
+      { status: 429 },
+    );
+  }
   const authorId = session?.user?.id ?? (await anonymousAuthorId());
   const limiterToken = session?.user?.id ?? `anon-reply:${requestIp(request)}`;
 
