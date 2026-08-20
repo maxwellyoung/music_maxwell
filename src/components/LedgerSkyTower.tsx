@@ -20,6 +20,7 @@ const FRAGMENT = /* glsl */ `
   uniform vec2 uMouse;
   uniform vec3 uLightPos;
   uniform vec3 uInk;
+  uniform float uAudio;
 
   varying vec3 vNormal;
   varying vec3 vWorldPos;
@@ -62,7 +63,7 @@ const FRAGMENT = /* glsl */ `
     float mouseInfluence = dot(vNormal, vec3(uMouse * 0.5, 1.0));
     mouseInfluence = max(mouseInfluence, 0.0) * 0.2;
 
-    float light = diff * 0.65 + rim * 0.35 + spec * 0.3 + mouseInfluence + 0.08;
+    float light = diff * 0.65 + rim * 0.35 + spec * 0.3 + mouseInfluence + 0.08 + uAudio * 0.35;
     light = clamp(light, 0.0, 1.0);
 
     // Keep only the dark dots of the Bayer pattern; paper shows through.
@@ -121,6 +122,7 @@ export default function LedgerSkyTower() {
           uMouse: { value: new THREE.Vector2(0, 0) },
           uLightPos: { value: new THREE.Vector3(5, 10, 5) },
           uInk: { value: inkOf() },
+          uAudio: { value: 0 },
         },
         vertexShader: VERTEX,
         fragmentShader: FRAGMENT,
@@ -131,26 +133,6 @@ export default function LedgerSkyTower() {
       const group = new THREE.Group();
       scene.add(group);
 
-      // Orbital rings from the ninetynine.digital original, inked for paper.
-      const ringGroup = new THREE.Group();
-      ringGroup.position.y = 0.5;
-      scene.add(ringGroup);
-      const ringMaterials: InstanceType<typeof THREE.MeshBasicMaterial>[] = [];
-      [2.2, 3.0, 3.8].forEach((radius, i) => {
-        const ringMaterial = new THREE.MeshBasicMaterial({
-          color: inkOf(),
-          transparent: true,
-          opacity: 0.22 - i * 0.05,
-        });
-        ringMaterials.push(ringMaterial);
-        const ring = new THREE.Mesh(
-          new THREE.TorusGeometry(radius, 0.0035, 8, 128),
-          ringMaterial,
-        );
-        ring.rotation.x = Math.PI / 2 + i * 0.15;
-        ring.position.y = -1 + i * 0.8;
-        ringGroup.add(ring);
-      });
 
       let mesh: InstanceType<typeof THREE.Mesh> | undefined;
       let modelSize: InstanceType<typeof THREE.Vector3> | undefined;
@@ -168,7 +150,6 @@ export default function LedgerSkyTower() {
         );
         group.scale.setScalar(scale);
         group.position.y = 0;
-        ringGroup.scale.setScalar(scale / 0.65);
       };
 
       new PLYLoader().load("/models/skytower.ply", (rawGeometry) => {
@@ -189,11 +170,7 @@ export default function LedgerSkyTower() {
         "(prefers-reduced-motion: reduce)",
       );
       const scheme = window.matchMedia("(prefers-color-scheme: dark)");
-      const onScheme = () => {
-        const ink = inkOf();
-        material.uniforms.uInk!.value.copy(ink);
-        ringMaterials.forEach((m) => m.color.copy(ink));
-      };
+      const onScheme = () => material.uniforms.uInk!.value.copy(inkOf());
       scheme.addEventListener("change", onScheme);
 
       const pointer = new THREE.Vector2(0, 0);
@@ -205,6 +182,46 @@ export default function LedgerSkyTower() {
         );
       };
       window.addEventListener("pointermove", onPointer, { passive: true });
+
+      // Drag to spin, with momentum. The canvas is the only interactive
+      // surface in the column; everything else stays pointer-events-none.
+      let dragOffset = 0;
+      let dragVelocity = 0;
+      let dragging = false;
+      let lastX = 0;
+      const canvas = renderer.domElement;
+      canvas.style.pointerEvents = "auto";
+      canvas.style.cursor = "grab";
+      canvas.style.touchAction = "pan-y";
+      const onDown = (event: PointerEvent) => {
+        dragging = true;
+        lastX = event.clientX;
+        canvas.style.cursor = "grabbing";
+        canvas.setPointerCapture(event.pointerId);
+      };
+      const onDragMove = (event: PointerEvent) => {
+        if (!dragging) return;
+        const dx = event.clientX - lastX;
+        lastX = event.clientX;
+        dragOffset += dx * 0.008;
+        dragVelocity = dx * 0.008;
+      };
+      const onUp = () => {
+        dragging = false;
+        canvas.style.cursor = "grab";
+      };
+      canvas.addEventListener("pointerdown", onDown);
+      canvas.addEventListener("pointermove", onDragMove);
+      canvas.addEventListener("pointerup", onUp);
+      canvas.addEventListener("pointercancel", onUp);
+
+      // The excerpt player broadcasts its level; the tower listens.
+      let audioLevel = 0;
+      let audioTarget = 0;
+      const onAudio = (event: Event) => {
+        audioTarget = Math.min(1, (event as CustomEvent<number>).detail ?? 0);
+      };
+      window.addEventListener("ledger:audio-level", onAudio);
 
       const resize = () => {
         const { width, height } = mount.getBoundingClientRect();
@@ -224,18 +241,22 @@ export default function LedgerSkyTower() {
         if (document.visibilityState !== "visible") return;
         const t = clock.getElapsedTime();
         pointer.lerp(pointerTarget, 0.04);
+        if (!dragging) {
+          dragOffset += dragVelocity;
+          dragVelocity *= 0.95;
+        }
+        audioLevel += (audioTarget - audioLevel) * 0.18;
+        material.uniforms.uAudio!.value = audioLevel;
         if (mesh) {
+          const scrollTilt = window.scrollY * 0.00035;
           if (reduceMotion.matches) {
-            mesh.rotation.set(0, 0.6, 0);
+            mesh.rotation.set(0, 0.6 + dragOffset, 0);
           } else {
-            mesh.rotation.y = t * 0.1 + pointer.x * 0.25;
-            mesh.rotation.x = pointer.y * 0.08;
+            mesh.rotation.y =
+              t * (0.1 + audioLevel * 0.25) + pointer.x * 0.25 + dragOffset;
+            mesh.rotation.x = pointer.y * 0.08 + scrollTilt;
             mesh.position.y = Math.sin(t * 0.6) * 0.02;
           }
-        }
-        if (!reduceMotion.matches) {
-          ringGroup.rotation.y = t * 0.05;
-          ringGroup.rotation.x = Math.sin(t * 0.15) * 0.05;
         }
         material.uniforms.uMouse!.value.copy(pointer);
         material.uniforms.uLightPos!.value.set(
@@ -251,12 +272,13 @@ export default function LedgerSkyTower() {
         window.cancelAnimationFrame(frame);
         observer.disconnect();
         window.removeEventListener("pointermove", onPointer);
+        window.removeEventListener("ledger:audio-level", onAudio);
+        canvas.removeEventListener("pointerdown", onDown);
+        canvas.removeEventListener("pointermove", onDragMove);
+        canvas.removeEventListener("pointerup", onUp);
+        canvas.removeEventListener("pointercancel", onUp);
         scheme.removeEventListener("change", onScheme);
         mesh?.geometry.dispose();
-        ringGroup.children.forEach((ring) => {
-          if (ring instanceof THREE.Mesh) ring.geometry.dispose();
-        });
-        ringMaterials.forEach((m) => m.dispose());
         material.dispose();
         renderer.dispose();
         renderer.domElement.remove();

@@ -11,14 +11,71 @@ const format = (seconds: number) => {
 // instead of the browser's gray audio chrome.
 export default function MinimalExcerpt({ src }: { src: string }) {
   const audioRef = useRef<HTMLAudioElement>(null);
+  const analyserRef = useRef<AnalyserNode | null>(null);
+  const meterFrame = useRef(0);
   const [playing, setPlaying] = useState(false);
   const [time, setTime] = useState(0);
   const [duration, setDuration] = useState<number | null>(null);
 
   useEffect(() => {
     const audio = audioRef.current;
-    return () => audio?.pause();
+    return () => {
+      window.cancelAnimationFrame(meterFrame.current);
+      window.dispatchEvent(
+        new CustomEvent("ledger:audio-level", { detail: 0 }),
+      );
+      audio?.pause();
+    };
   }, []);
+
+  // Broadcast the playback level so listening surfaces (the Sky Tower)
+  // can move with the music. Wired lazily on first play.
+  const startMeter = () => {
+    const audio = audioRef.current;
+    if (!audio) return;
+    if (!analyserRef.current) {
+      try {
+        const AudioContextCtor =
+          window.AudioContext ??
+          (window as unknown as { webkitAudioContext?: typeof AudioContext })
+            .webkitAudioContext;
+        if (!AudioContextCtor) return;
+        const context = new AudioContextCtor();
+        const source = context.createMediaElementSource(audio);
+        const analyser = context.createAnalyser();
+        analyser.fftSize = 256;
+        source.connect(analyser);
+        analyser.connect(context.destination);
+        analyserRef.current = analyser;
+      } catch {
+        return; // metering is decoration; playback still works
+      }
+    }
+    const data = new Uint8Array(analyserRef.current.fftSize);
+    const tick = () => {
+      const analyser = analyserRef.current;
+      const element = audioRef.current;
+      if (!analyser || !element) return;
+      analyser.getByteTimeDomainData(data);
+      let sum = 0;
+      for (const value of data) {
+        const centered = (value - 128) / 128;
+        sum += centered * centered;
+      }
+      const rms = Math.sqrt(sum / data.length);
+      window.dispatchEvent(
+        new CustomEvent("ledger:audio-level", { detail: Math.min(1, rms * 3) }),
+      );
+      if (!element.paused && !element.ended) {
+        meterFrame.current = window.requestAnimationFrame(tick);
+      } else {
+        window.dispatchEvent(
+          new CustomEvent("ledger:audio-level", { detail: 0 }),
+        );
+      }
+    };
+    meterFrame.current = window.requestAnimationFrame(tick);
+  };
 
   const toggle = async () => {
     const audio = audioRef.current;
@@ -27,6 +84,7 @@ export default function MinimalExcerpt({ src }: { src: string }) {
       try {
         await audio.play();
         setPlaying(true);
+        startMeter();
       } catch {
         setPlaying(false);
       }
