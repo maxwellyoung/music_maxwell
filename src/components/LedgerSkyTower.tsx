@@ -101,6 +101,12 @@ export default function LedgerSkyTower() {
       });
       renderer.setClearColor(0x000000, 0);
       renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+      // setSize(..., false) never styles the element; without explicit CSS
+      // the canvas displays at buffer size, which at retina dpr blows the
+      // scene up 2x and shoves it off-viewport. Pin it to the column.
+      renderer.domElement.style.width = "100%";
+      renderer.domElement.style.height = "100%";
+      renderer.domElement.style.display = "block";
       mount.appendChild(renderer.domElement);
 
       const inkOf = () => {
