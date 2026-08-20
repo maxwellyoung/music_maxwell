@@ -548,3 +548,33 @@ html {
   animation-duration: 320ms;
   animation-timing-function: var(--ease-in-out-strong);
 }
+
+/* Blake wash: barely-there colour field that drifts while sound plays. */
+@media (prefers-reduced-motion: no-preference) {
+  .ledger-bloom {
+    animation: ledger-bloom-drift 90s var(--ease-in-out-strong) infinite
+      alternate;
+  }
+}
+
+@keyframes ledger-bloom-drift {
+  from {
+    transform: scale(1.05) translate3d(-1.5%, -1%, 0);
+  }
+  to {
+    transform: scale(1.12) translate3d(1.5%, 1%, 0);
+  }
+}
+
+/* Golden hour: 17:00-20:00 local, the paper warms. Light schemes only. */
+@media (prefers-color-scheme: light) {
+  :root[data-hour="golden"]:not([data-ledger="dark"]) .ledger {
+    --ledger-paper: #faf3ea;
+    --ledger-paper-rgb: 250 243 234;
+  }
+}
+
+:root[data-hour="golden"][data-ledger="light"] .ledger {
+  --ledger-paper: #faf3ea;
+  --ledger-paper-rgb: 250 243 234;
+}
