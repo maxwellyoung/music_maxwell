@@ -86,7 +86,70 @@ const FRAGMENT = /* glsl */ `
   }
 `;
 
-export default function LedgerSkyTower() {
+// Procedural Beehive (Executive Wing, Wellington): a lathe of the real
+// proportions with 32 facade ribs. No licensed mesh — ours outright.
+function beehiveGeometry(THREE: typeof import("three")) {
+  const tiers: [number, number][] = [
+    [1.8, 0.0],
+    [1.8, 0.3],
+    [1.48, 0.3],
+  ];
+  // ten tiered floors, straight taper with a small lip at each slab
+  for (let f = 0; f < 10; f++) {
+    const r0 = 1.48 - (f * (1.48 - 0.98)) / 10;
+    const r1 = 1.48 - ((f + 1) * (1.48 - 0.98)) / 10;
+    const y0 = 0.3 + f * 0.4;
+    const y1 = 0.3 + (f + 1) * 0.4;
+    tiers.push([r0 * 0.985, y0 + 0.06], [r1 + 0.015, y1], [r1, y1]);
+  }
+  // shallow dome and mast
+  tiers.push(
+    [0.9, 4.5],
+    [0.74, 4.72],
+    [0.48, 4.9],
+    [0.16, 5.0],
+    [0.022, 5.02],
+    [0.022, 5.85],
+  );
+  const around = 128;
+  const ribs = 32;
+  const positions: number[] = [];
+  const indices: number[] = [];
+  for (let i = 0; i < tiers.length; i++) {
+    const [radius, y] = tiers[i]!;
+    for (let j = 0; j <= around; j++) {
+      const theta = (j / around) * Math.PI * 2;
+      // vertical mullions: only on the walls, not plinth or mast
+      const wall = y > 0.3 && y < 4.35 && radius > 0.6 ? 1 : 0;
+      const r = radius * (1 + wall * 0.02 * Math.cos(theta * ribs));
+      positions.push(r * Math.sin(theta), y - 2.5, r * Math.cos(theta));
+    }
+  }
+  const ring = around + 1;
+  for (let i = 0; i < tiers.length - 1; i++) {
+    for (let j = 0; j < around; j++) {
+      const a = i * ring + j;
+      const b = a + ring;
+      indices.push(a, b, a + 1, b, b + 1, a + 1);
+    }
+  }
+  const geometry = new THREE.BufferGeometry();
+  geometry.setAttribute(
+    "position",
+    new THREE.Float32BufferAttribute(positions, 3),
+  );
+  geometry.setIndex(indices);
+  geometry.computeVertexNormals();
+  geometry.center();
+  geometry.computeBoundingBox();
+  return geometry;
+}
+
+export default function LedgerSkyTower({
+  monument = "skytower",
+}: {
+  monument?: "skytower" | "beehive";
+}) {
   const mountRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -165,19 +228,27 @@ export default function LedgerSkyTower() {
         group.position.y = 0;
       };
 
-      new PLYLoader().load("/models/skytower.ply", (rawGeometry) => {
-        if (disposed) return;
-        const geometry = rawGeometry;
-        geometry.computeVertexNormals();
-        geometry.center();
-        geometry.rotateX(-Math.PI / 2);
-        geometry.center();
-        geometry.computeBoundingBox();
+      if (monument === "beehive") {
+        const geometry = beehiveGeometry(THREE);
         modelSize = geometry.boundingBox!.getSize(new THREE.Vector3());
         mesh = new THREE.Mesh(geometry, material);
         group.add(mesh);
         fit();
-      });
+      } else {
+        new PLYLoader().load("/models/skytower.ply", (rawGeometry) => {
+          if (disposed) return;
+          const geometry = rawGeometry;
+          geometry.computeVertexNormals();
+          geometry.center();
+          geometry.rotateX(-Math.PI / 2);
+          geometry.center();
+          geometry.computeBoundingBox();
+          modelSize = geometry.boundingBox!.getSize(new THREE.Vector3());
+          mesh = new THREE.Mesh(geometry, material);
+          group.add(mesh);
+          fit();
+        });
+      }
 
       const reduceMotion = window.matchMedia(
         "(prefers-reduced-motion: reduce)",
@@ -303,7 +374,7 @@ export default function LedgerSkyTower() {
       disposed = true;
       cleanup?.();
     };
-  }, []);
+  }, [monument]);
 
   return (
     <div
