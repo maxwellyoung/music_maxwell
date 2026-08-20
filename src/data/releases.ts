@@ -316,7 +316,7 @@ i don't know why u make it feel like that`,
     links: {
       spotify: "https://open.spotify.com/album/0UIKSfLQNdEyeEiQzQ912Z",
       appleMusic:
-        "https://music.apple.com/nz/album/turn-it-up-single/1801225424",
+        "https://music.apple.com/nz/album/turn-it-up/1801225424?i=1801225645",
       youtube: "https://www.youtube.com/watch?v=YzKTnAIGqvg",
       soundCloud: "https://soundcloud.com/maxwell_young/turn-it-up",
       microsite: "https://turn-it-up.vercel.app/",
