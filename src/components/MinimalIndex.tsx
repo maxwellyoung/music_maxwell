@@ -53,7 +53,7 @@ export default function MinimalIndex({
           </p>
           {featured?.previewUrl && (
             <div className="mt-4">
-              <MinimalExcerpt src={featured.previewUrl} />
+              <MinimalExcerpt src={featured.previewUrl} title={featured.title} />
             </div>
           )}
         </section>
@@ -89,7 +89,13 @@ export default function MinimalIndex({
         {/* Colophon: one hairline, one quiet line. */}
         <footer className="mt-24 max-w-2xl border-t border-[rgb(var(--ledger-ink-rgb)/0.12)] pt-4">
           <div className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-3 text-xs text-[rgb(var(--ledger-ink-rgb)/0.35)]">
-            <span className="tabular-nums">© 2026 Maxwell Young</span>
+            <span className="tabular-nums">
+              © 2026 Maxwell Young
+              <span className="hidden text-[rgb(var(--ledger-ink-rgb)/0.20)] lg:inline">
+                {" "}
+                · ↑↓ browse · esc home
+              </span>
+            </span>
             <span className="flex items-baseline gap-x-4">
               <Link
                 href="/forum"

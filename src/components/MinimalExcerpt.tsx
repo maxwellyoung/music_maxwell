@@ -9,7 +9,13 @@ const format = (seconds: number) => {
 
 // Text-only excerpt player so /r pages keep the ledger language
 // instead of the browser's gray audio chrome.
-export default function MinimalExcerpt({ src }: { src: string }) {
+export default function MinimalExcerpt({
+  src,
+  title,
+}: {
+  src: string;
+  title?: string;
+}) {
   const audioRef = useRef<HTMLAudioElement>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
   const meterFrame = useRef(0);
@@ -76,6 +82,16 @@ export default function MinimalExcerpt({ src }: { src: string }) {
     };
     meterFrame.current = window.requestAnimationFrame(tick);
   };
+
+  // The tab title plays along: "▶ 1kiss — Maxwell Young" while sounding.
+  useEffect(() => {
+    if (!title) return;
+    const original = document.title;
+    if (playing) document.title = `▶ ${title} — Maxwell Young`;
+    return () => {
+      document.title = original;
+    };
+  }, [playing, title]);
 
   const toggle = async () => {
     const audio = audioRef.current;

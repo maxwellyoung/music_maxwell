@@ -131,7 +131,7 @@ export default async function MinimalReleasePage({ params }: Props) {
 
         {release.previewUrl && (
           <div className="mt-8">
-            <MinimalExcerpt src={release.previewUrl} />
+            <MinimalExcerpt src={release.previewUrl} title={release.title} />
           </div>
         )}
 
@@ -174,6 +174,7 @@ export default async function MinimalReleasePage({ params }: Props) {
         {prev ? (
           <Link
             href={`/r/${prev.slug}`}
+            data-ledger-prev
             className="text-[rgb(var(--ledger-ink-rgb)/0.40)] transition hover:text-(--ledger-ink)"
           >
             ← {prev.title}
@@ -184,6 +185,7 @@ export default async function MinimalReleasePage({ params }: Props) {
         {next ? (
           <Link
             href={`/r/${next.slug}`}
+            data-ledger-next
             className="text-right text-[rgb(var(--ledger-ink-rgb)/0.40)] transition hover:text-(--ledger-ink)"
           >
             {next.title} →
