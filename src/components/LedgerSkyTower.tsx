@@ -100,7 +100,7 @@ export default function LedgerSkyTower() {
         alpha: true,
       });
       renderer.setClearColor(0x000000, 0);
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 1.5));
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
       mount.appendChild(renderer.domElement);
 
       const inkOf = () => {
@@ -125,6 +125,27 @@ export default function LedgerSkyTower() {
       const group = new THREE.Group();
       scene.add(group);
 
+      // Orbital rings from the ninetynine.digital original, inked for paper.
+      const ringGroup = new THREE.Group();
+      ringGroup.position.y = 0.5;
+      scene.add(ringGroup);
+      const ringMaterials: InstanceType<typeof THREE.MeshBasicMaterial>[] = [];
+      [2.2, 3.0, 3.8].forEach((radius, i) => {
+        const ringMaterial = new THREE.MeshBasicMaterial({
+          color: inkOf(),
+          transparent: true,
+          opacity: 0.22 - i * 0.05,
+        });
+        ringMaterials.push(ringMaterial);
+        const ring = new THREE.Mesh(
+          new THREE.TorusGeometry(radius, 0.0035, 8, 128),
+          ringMaterial,
+        );
+        ring.rotation.x = Math.PI / 2 + i * 0.15;
+        ring.position.y = -1 + i * 0.8;
+        ringGroup.add(ring);
+      });
+
       let mesh: InstanceType<typeof THREE.Mesh> | undefined;
       let modelSize: InstanceType<typeof THREE.Vector3> | undefined;
 
@@ -136,11 +157,12 @@ export default function LedgerSkyTower() {
         const visibleH = 2 * distance * Math.tan((camera.fov * Math.PI) / 360);
         const visibleW = visibleH * camera.aspect;
         const scale = Math.min(
-          (visibleH * 0.92) / modelSize.y,
+          (visibleH * 0.86) / modelSize.y,
           (visibleW * 0.86) / modelSize.x,
         );
         group.scale.setScalar(scale);
         group.position.y = 0;
+        ringGroup.scale.setScalar(scale / 0.65);
       };
 
       new PLYLoader().load("/models/skytower.ply", (rawGeometry) => {
@@ -161,7 +183,11 @@ export default function LedgerSkyTower() {
         "(prefers-reduced-motion: reduce)",
       );
       const scheme = window.matchMedia("(prefers-color-scheme: dark)");
-      const onScheme = () => material.uniforms.uInk!.value.copy(inkOf());
+      const onScheme = () => {
+        const ink = inkOf();
+        material.uniforms.uInk!.value.copy(ink);
+        ringMaterials.forEach((m) => m.color.copy(ink));
+      };
       scheme.addEventListener("change", onScheme);
 
       const pointer = new THREE.Vector2(0, 0);
@@ -201,6 +227,10 @@ export default function LedgerSkyTower() {
             mesh.position.y = Math.sin(t * 0.6) * 0.02;
           }
         }
+        if (!reduceMotion.matches) {
+          ringGroup.rotation.y = t * 0.05;
+          ringGroup.rotation.x = Math.sin(t * 0.15) * 0.05;
+        }
         material.uniforms.uMouse!.value.copy(pointer);
         material.uniforms.uLightPos!.value.set(
           5 + Math.sin(t * 0.4) * 3,
@@ -217,6 +247,10 @@ export default function LedgerSkyTower() {
         window.removeEventListener("pointermove", onPointer);
         scheme.removeEventListener("change", onScheme);
         mesh?.geometry.dispose();
+        ringGroup.children.forEach((ring) => {
+          if (ring instanceof THREE.Mesh) ring.geometry.dispose();
+        });
+        ringMaterials.forEach((m) => m.dispose());
         material.dispose();
         renderer.dispose();
         renderer.domElement.remove();

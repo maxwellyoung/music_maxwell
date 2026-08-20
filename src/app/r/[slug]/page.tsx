@@ -49,24 +49,22 @@ export default async function MinimalReleasePage({ params }: Props) {
 
   return (
     <main className="ledger min-h-svh bg-(--ledger-paper) text-(--ledger-ink)">
-      <header className="sticky top-0 z-20 border-b border-[rgb(var(--ledger-ink-rgb)/0.15)] bg-(--ledger-paper) px-6 sm:px-12 lg:px-20">
-        <div className="flex h-14 items-baseline justify-between pt-[1.15rem]">
-          <Link
-            href="/"
-            className="text-lg font-semibold leading-none tracking-[-0.02em] transition hover:text-[rgb(var(--ledger-ink-rgb)/0.60)]"
-          >
-            Maxwell Young
-          </Link>
-          <Link
-            href="/"
-            className="text-sm leading-none text-[rgb(var(--ledger-ink-rgb)/0.40)] transition hover:text-(--ledger-ink)"
-          >
-            ← index
-          </Link>
-        </div>
+      <header className="flex items-baseline justify-between px-6 pt-10 sm:px-12 lg:px-20">
+        <Link
+          href="/"
+          className="text-lg font-semibold leading-none tracking-[-0.02em] transition hover:text-[rgb(var(--ledger-ink-rgb)/0.60)]"
+        >
+          Maxwell<span className="text-[rgb(var(--ledger-ink-rgb)/0.35)]"> Young</span>
+        </Link>
+        <Link
+          href="/"
+          className="text-sm leading-none text-[rgb(var(--ledger-ink-rgb)/0.40)] transition hover:text-(--ledger-ink)"
+        >
+          ← index
+        </Link>
       </header>
 
-      <div className="px-6 pb-20 pt-14 sm:px-12 lg:px-20">
+      <div className="px-6 pb-20 pt-16 sm:px-12 lg:px-20">
       <article className="max-w-2xl">
         <div className="flex items-start justify-between gap-8">
           <div>
@@ -193,10 +191,10 @@ export default async function MinimalReleasePage({ params }: Props) {
         )}
       </nav>
 
-      <footer className="mt-24 max-w-2xl border-t border-[rgb(var(--ledger-ink-rgb)/0.15)] pt-5">
-        <div className="flex items-baseline justify-between gap-8 text-sm text-[rgb(var(--ledger-ink-rgb)/0.40)]">
+      <footer className="mt-24 max-w-2xl border-t border-[rgb(var(--ledger-ink-rgb)/0.12)] pt-4">
+        <div className="flex items-baseline justify-between gap-8 text-xs text-[rgb(var(--ledger-ink-rgb)/0.35)]">
           <span className="tabular-nums">
-            {year(release.releaseDate) || "—"} · Maxwell Young · Aotearoa
+            {year(release.releaseDate) || "—"} · Maxwell Young
           </span>
           <LedgerLightSwitch />
         </div>

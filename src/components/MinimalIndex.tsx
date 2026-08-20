@@ -28,19 +28,14 @@ export default function MinimalIndex({
 
   return (
     <main className="ledger min-h-svh bg-(--ledger-paper) text-(--ledger-ink)">
-      {/* Masthead: one full-width rule the whole page hangs from. */}
-      <header className="sticky top-0 z-20 border-b border-[rgb(var(--ledger-ink-rgb)/0.15)] bg-(--ledger-paper) px-6 sm:px-12 lg:px-20">
-        <div className="flex h-14 items-baseline justify-between pt-[1.15rem]">
-          <h1 className="mb-0 text-lg font-semibold leading-none tracking-[-0.02em]">
-            Maxwell Young
-          </h1>
-          <p className="mb-0 hidden text-sm leading-none text-[rgb(var(--ledger-ink-rgb)/0.40)] sm:block">
-            alt-pop from Aotearoa · {releases.length} releases · 2018–2026
-          </p>
-        </div>
+      {/* Letterhead: the wordmark alone, two-tone, nothing else. */}
+      <header className="px-6 pt-10 sm:px-12 lg:px-20">
+        <h1 className="mb-0 text-lg font-semibold leading-none tracking-[-0.02em]">
+          Maxwell<span className="text-[rgb(var(--ledger-ink-rgb)/0.35)]"> Young</span>
+        </h1>
       </header>
 
-      <div className="px-6 pb-20 pt-14 sm:px-12 lg:px-20 lg:pr-[46vw]">
+      <div className="px-6 pb-20 pt-16 sm:px-12 lg:px-20 lg:pr-[46vw]">
         {/* Standfirst: the current record, playable in place. */}
         <section className="max-w-2xl" aria-label="Now playing">
           <p className="text-xl leading-snug sm:text-2xl">
@@ -89,13 +84,11 @@ export default function MinimalIndex({
 
         {notesSlot}
 
-        {/* Colophon */}
-        <footer className="mt-24 max-w-2xl border-t border-[rgb(var(--ledger-ink-rgb)/0.15)] pt-5">
-          <div className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-3 text-sm text-[rgb(var(--ledger-ink-rgb)/0.40)]">
-            <span className="tabular-nums">
-              © 2026 Maxwell Young · Aotearoa
-            </span>
-            <span className="flex items-baseline gap-x-5">
+        {/* Colophon: one hairline, one quiet line. */}
+        <footer className="mt-24 max-w-2xl border-t border-[rgb(var(--ledger-ink-rgb)/0.12)] pt-4">
+          <div className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-3 text-xs text-[rgb(var(--ledger-ink-rgb)/0.35)]">
+            <span className="tabular-nums">© 2026 Maxwell Young</span>
+            <span className="flex items-baseline gap-x-4">
               <Link
                 href="/forum"
                 className="transition hover:text-(--ledger-ink)"
@@ -137,7 +130,7 @@ export default function MinimalIndex({
           held. */}
       <div
         aria-hidden="true"
-        className="pointer-events-none fixed bottom-0 right-0 top-14 hidden w-[42vw] lg:block"
+        className="pointer-events-none fixed inset-y-0 right-0 hidden w-[42vw] lg:block"
       >
         <div
           className={`absolute inset-0 transition-opacity duration-500 ${
