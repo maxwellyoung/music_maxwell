@@ -68,6 +68,16 @@ export default async function MinimalReleasePage({ params }: Props) {
 
       <div className="px-6 pb-20 pt-16 sm:px-12 lg:px-20">
       <article className="max-w-2xl">
+        {release.releaseDate && (
+          <p className="mb-4 font-mono text-xs tracking-tight text-[rgb(var(--ledger-ink-rgb)/0.40)]">
+            Aotearoa,{" "}
+            {new Date(release.releaseDate).toLocaleDateString("en-NZ", {
+              month: "long",
+              year: "numeric",
+            })}
+            .
+          </p>
+        )}
         <div className="flex items-start justify-between gap-8">
           <div>
             <h1 className="mb-0 text-2xl font-medium tracking-[-0.01em]">
@@ -156,11 +166,21 @@ export default async function MinimalReleasePage({ params }: Props) {
                   <span className="mr-2 inline-block text-[rgb(var(--ledger-ink-rgb)/0.30)] transition-transform group-open:rotate-90">
                     ›
                   </span>
-                  Credits
+                  Notes on the record
                 </summary>
-                <p className="mt-4 max-w-prose whitespace-pre-line pl-5 text-sm leading-7 text-[rgb(var(--ledger-ink-rgb)/0.70)]">
-                  {release.credits}
-                </p>
+                <ol className="mt-4 max-w-prose space-y-1 pl-5 font-mono text-xs leading-6 text-[rgb(var(--ledger-ink-rgb)/0.60)]">
+                  {release.credits
+                    .split("\n")
+                    .filter(Boolean)
+                    .map((line, index) => (
+                      <li key={index} className="flex gap-3">
+                        <span className="shrink-0 tabular-nums text-[rgb(var(--ledger-ink-rgb)/0.35)]">
+                          {index + 1}.
+                        </span>
+                        <span>{line}</span>
+                      </li>
+                    ))}
+                </ol>
               </details>
             )}
           </section>

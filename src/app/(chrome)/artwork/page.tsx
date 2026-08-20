@@ -33,7 +33,7 @@ export default function ArtworkIndexPage() {
         {years.map((year) => (
           <section key={year}>
             <div className="mb-6 flex items-baseline gap-4 border-b border-foreground/25 pb-3">
-              <h2 className="mb-0 text-2xl tracking-[-0.03em]">{year}</h2>
+              <h2 className="mb-0 text-2xl tracking-[-0.03em]">The Part About {year}</h2>
               <span className="text-xs font-bold uppercase tracking-[0.16em] text-foreground/40">
                 {(() => {
                   const count = covers.filter(

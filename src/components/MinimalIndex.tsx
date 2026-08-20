@@ -47,7 +47,7 @@ export default function MinimalIndex({
             >
               1kiss
             </Link>{" "}
-            <span className="text-[rgb(var(--ledger-ink-rgb)/0.45)]">
+            <span className="italic text-[rgb(var(--ledger-ink-rgb)/0.45)]">
               is out now.
             </span>
           </p>
@@ -89,13 +89,23 @@ export default function MinimalIndex({
         {notesSlot}
 
         {/* Colophon: one hairline, one quiet line. */}
-        <footer className="mt-24 max-w-2xl border-t border-[rgb(var(--ledger-ink-rgb)/0.12)] pt-4">
+        <footer className="mt-24 max-w-2xl pt-4">
+          <div
+            aria-hidden="true"
+            className="mb-4 h-px w-full bg-linear-to-r from-[rgb(var(--ledger-ink-rgb)/0.20)] via-[rgb(var(--ledger-ink-rgb)/0.10)] to-transparent"
+          />
           <div className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-3 text-xs text-[rgb(var(--ledger-ink-rgb)/0.35)]">
             <span className="tabular-nums">
               © 2026 Maxwell Young
               <span className="hidden text-[rgb(var(--ledger-ink-rgb)/0.20)] lg:inline">
                 {" "}
-                · ↑↓ browse · esc home
+                · ↑↓ browse · esc home ·{" "}
+                <Link
+                  href="/index-of-everything"
+                  className="transition hover:text-[rgb(var(--ledger-ink-rgb)/0.50)]"
+                >
+                  appendix
+                </Link>
               </span>
             </span>
             <span className="flex items-baseline gap-x-4">
