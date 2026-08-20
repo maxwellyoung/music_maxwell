@@ -93,7 +93,7 @@ export default function LedgerSkyTower() {
 
       const scene = new THREE.Scene();
       const camera = new THREE.PerspectiveCamera(40, 1, 0.1, 100);
-      camera.position.set(0, 0.3, 7.4);
+      camera.position.set(0, 0, 7.4);
 
       const renderer = new THREE.WebGLRenderer({
         antialias: true,
@@ -123,11 +123,26 @@ export default function LedgerSkyTower() {
       });
 
       const group = new THREE.Group();
-      group.scale.setScalar(0.82);
-      group.position.y = -0.25;
       scene.add(group);
 
       let mesh: InstanceType<typeof THREE.Mesh> | undefined;
+      let modelSize: InstanceType<typeof THREE.Vector3> | undefined;
+
+      // Scale so the whole silhouette fits the column at any aspect ratio —
+      // fitted, never cropped.
+      const fit = () => {
+        if (!modelSize) return;
+        const distance = camera.position.z;
+        const visibleH = 2 * distance * Math.tan((camera.fov * Math.PI) / 360);
+        const visibleW = visibleH * camera.aspect;
+        const scale = Math.min(
+          (visibleH * 0.92) / modelSize.y,
+          (visibleW * 0.86) / modelSize.x,
+        );
+        group.scale.setScalar(scale);
+        group.position.y = 0;
+      };
+
       new PLYLoader().load("/models/skytower.ply", (rawGeometry) => {
         if (disposed) return;
         const geometry = rawGeometry;
@@ -135,8 +150,11 @@ export default function LedgerSkyTower() {
         geometry.center();
         geometry.rotateX(-Math.PI / 2);
         geometry.center();
+        geometry.computeBoundingBox();
+        modelSize = geometry.boundingBox!.getSize(new THREE.Vector3());
         mesh = new THREE.Mesh(geometry, material);
         group.add(mesh);
+        fit();
       });
 
       const reduceMotion = window.matchMedia(
@@ -162,6 +180,7 @@ export default function LedgerSkyTower() {
         renderer.setSize(width, height, false);
         camera.aspect = width / height;
         camera.updateProjectionMatrix();
+        fit();
       };
       resize();
       const observer = new ResizeObserver(resize);
@@ -179,7 +198,7 @@ export default function LedgerSkyTower() {
           } else {
             mesh.rotation.y = t * 0.1 + pointer.x * 0.25;
             mesh.rotation.x = pointer.y * 0.08;
-            mesh.position.y = Math.sin(t * 0.6) * 0.05;
+            mesh.position.y = Math.sin(t * 0.6) * 0.02;
           }
         }
         material.uniforms.uMouse!.value.copy(pointer);
