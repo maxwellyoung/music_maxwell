@@ -494,8 +494,8 @@ html {
 @media (prefers-reduced-motion: no-preference) {
   .ledger ol li {
     transition:
-      opacity 0.45s ease,
-      transform 0.45s ease;
+      opacity 0.3s var(--ease-out-strong),
+      transform 0.3s var(--ease-out-strong);
     transition-delay: calc(var(--row, 0) * 22ms);
     @starting-style {
       opacity: 0;
@@ -518,4 +518,33 @@ html {
 
 :root[data-ledger="dark"] .ledger .ledger-wordmark {
   filter: invert(1);
+}
+
+/* ── Ledger motion vocabulary ─────────────────────────────────────
+   Strong curves (built-ins are too weak), asymmetric enter/exit,
+   transform+opacity only. All of it dies under prefers-reduced-motion
+   via the global override above. */
+:root {
+  --ease-out-strong: cubic-bezier(0.23, 1, 0.32, 1);
+  --ease-in-out-strong: cubic-bezier(0.77, 0, 0.175, 1);
+  interpolate-size: allow-keywords;
+}
+
+/* Lyrics/credits unfold instead of snapping (Chrome 131+; instant elsewhere). */
+.ledger details::details-content {
+  block-size: 0;
+  overflow: clip;
+  transition:
+    block-size 240ms var(--ease-out-strong),
+    content-visibility 240ms allow-discrete;
+}
+
+.ledger details[open]::details-content {
+  block-size: auto;
+}
+
+/* The shared cover element gets a deliberate curve on route changes. */
+::view-transition-group(release-cover) {
+  animation-duration: 320ms;
+  animation-timing-function: var(--ease-in-out-strong);
 }

@@ -25,13 +25,20 @@ export default function LedgerLightSwitch() {
     setScheme(next);
   };
 
+  const systemDark =
+    typeof window !== "undefined" &&
+    window.matchMedia?.("(prefers-color-scheme: dark)").matches;
+  const effectiveDark = scheme ? scheme === "dark" : systemDark;
+
   return (
     <button
       type="button"
       onClick={toggle}
       aria-label="Toggle ink mode"
       title="Ink mode"
-      className="transition hover:text-[var(--ledger-ink)]"
+      className={`inline-block transition-[color,transform] duration-300 [transition-timing-function:var(--ease-in-out-strong)] hover:text-(--ledger-ink) active:scale-90 ${
+        effectiveDark ? "rotate-180" : "rotate-0"
+      }`}
     >
       ◐
     </button>

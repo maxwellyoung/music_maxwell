@@ -71,10 +71,12 @@ export default function MinimalIndex({
                   onMouseLeave={() => setActive(null)}
                   onFocus={() => setActive(release.slug)}
                   onBlur={() => setActive(null)}
-                  className="group flex items-baseline justify-between gap-6 border-b border-[rgb(var(--ledger-ink-rgb)/0.10)] py-3 text-sm transition-colors hover:bg-(--ledger-ink) hover:px-3 hover:text-(--ledger-paper) focus-visible:bg-(--ledger-ink) focus-visible:px-3 focus-visible:text-(--ledger-paper) focus-visible:outline-hidden"
+                  className="group flex items-baseline justify-between gap-6 border-b border-[rgb(var(--ledger-ink-rgb)/0.10)] py-3 text-sm transition-colors duration-150 hover:bg-(--ledger-ink) hover:text-(--ledger-paper) focus-visible:bg-(--ledger-ink) focus-visible:text-(--ledger-paper) focus-visible:outline-hidden"
                 >
-                  <span className="font-medium">{release.title}</span>
-                  <span className="shrink-0 tabular-nums text-[rgb(var(--ledger-ink-rgb)/0.40)] group-hover:text-[rgb(var(--ledger-paper-rgb)/0.60)] group-focus-visible:text-[rgb(var(--ledger-paper-rgb)/0.60)]">
+                  <span className="font-medium transition-transform duration-200 [transition-timing-function:var(--ease-out-strong)] group-hover:translate-x-3 group-focus-visible:translate-x-3">
+                    {release.title}
+                  </span>
+                  <span className="shrink-0 tabular-nums text-[rgb(var(--ledger-ink-rgb)/0.40)] transition-[color,transform] duration-200 [transition-timing-function:var(--ease-out-strong)] group-hover:-translate-x-3 group-hover:text-[rgb(var(--ledger-paper-rgb)/0.60)] group-focus-visible:-translate-x-3 group-focus-visible:text-[rgb(var(--ledger-paper-rgb)/0.60)]">
                     {release.releaseType?.toLowerCase() ?? "release"} ·{" "}
                     {year(release.releaseDate)}
                   </span>
@@ -149,15 +151,17 @@ export default function MinimalIndex({
         className="pointer-events-none fixed inset-y-0 right-0 hidden w-[42vw] lg:block"
       >
         <div
-          className={`absolute inset-0 transition-opacity duration-500 ${
-            activeRelease ? "opacity-0" : "opacity-100"
+          className={`absolute inset-0 transition-opacity [transition-timing-function:var(--ease-out-strong)] ${
+            activeRelease ? "opacity-0 duration-150" : "opacity-100 duration-500"
           }`}
         >
           <LedgerSkyTower />
         </div>
         <div
-          className={`absolute left-1/2 top-1/2 h-[24rem] w-[24rem] max-w-[36vw] -translate-x-1/2 -translate-y-1/2 transition-opacity duration-200 xl:h-[28rem] xl:w-[28rem] ${
-            activeRelease ? "opacity-100" : "opacity-0"
+          className={`absolute left-1/2 top-1/2 h-[24rem] w-[24rem] max-w-[36vw] -translate-x-1/2 -translate-y-1/2 transition-[opacity,scale] [transition-timing-function:var(--ease-out-strong)] xl:h-[28rem] xl:w-[28rem] ${
+            activeRelease
+              ? "scale-100 opacity-100 duration-250"
+              : "scale-[0.985] opacity-0 duration-150"
           }`}
         >
           {activeRelease && (

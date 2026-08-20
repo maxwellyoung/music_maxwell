@@ -110,20 +110,36 @@ export default function MinimalExcerpt({
     }
   };
 
+  const progress = duration ? Math.min(time / duration, 1) : 0;
+
   return (
-    <div className="flex items-baseline gap-4 text-sm">
-      <button
-        type="button"
-        onClick={toggle}
-        aria-pressed={playing}
-        className="underline decoration-[rgb(var(--ledger-ink-rgb)/0.25)] underline-offset-4 transition hover:decoration-(--ledger-ink) focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-(--ledger-ink)"
+    <div className="max-w-sm">
+      <div className="flex items-baseline gap-4 text-sm">
+        <button
+          type="button"
+          onClick={toggle}
+          aria-pressed={playing}
+          className="underline decoration-[rgb(var(--ledger-ink-rgb)/0.25)] underline-offset-4 transition-[text-decoration-color,transform] duration-150 [transition-timing-function:var(--ease-out-strong)] hover:decoration-(--ledger-ink) focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-(--ledger-ink) active:scale-[0.97]"
+        >
+          {playing ? "❚❚ pause" : "▸ play excerpt"}
+        </button>
+        <span className="tabular-nums text-[rgb(var(--ledger-ink-rgb)/0.40)]" aria-hidden="true">
+          {format(time)}
+          {duration ? ` / ${format(duration)}` : ""}
+        </span>
+      </div>
+      {/* A hairline keeps the time; scaleX only, smoothed between ticks. */}
+      <div
+        aria-hidden="true"
+        className={`mt-3 h-px w-full overflow-hidden bg-[rgb(var(--ledger-ink-rgb)/0.12)] transition-opacity duration-300 ${
+          playing || time > 0 ? "opacity-100" : "opacity-0"
+        }`}
       >
-        {playing ? "❚❚ pause" : "▸ play excerpt"}
-      </button>
-      <span className="tabular-nums text-[rgb(var(--ledger-ink-rgb)/0.40)]" aria-hidden="true">
-        {format(time)}
-        {duration ? ` / ${format(duration)}` : ""}
-      </span>
+        <div
+          className="h-full w-full origin-left bg-(--ledger-ink) transition-transform duration-300 ease-linear"
+          style={{ transform: `scaleX(${progress})` }}
+        />
+      </div>
       {/* eslint-disable-next-line jsx-a11y/media-has-caption -- instrumental music excerpt */}
       <audio
         ref={audioRef}
