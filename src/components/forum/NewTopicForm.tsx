@@ -109,11 +109,11 @@ export function NewTopicForm({
     <div className="grid gap-12 lg:grid-cols-[0.58fr_0.42fr] lg:gap-16">
       <div>
         <div className="mb-10">
-          <p className="font-pixel-dot text-xs uppercase tracking-[0.12em] text-primary">
+          <p className="text-xs uppercase tracking-[0.12em] text-[rgb(var(--ledger-ink-rgb)/0.45)]">
             New fragment
           </p>
-          <h1 className="font-pixel-line mb-3 mt-3 text-4xl leading-[0.9] sm:text-6xl">
-            leave one<span className="font-pixel-dot text-primary">.</span>
+          <h1 className="font-medium mb-3 mt-3 text-4xl leading-[0.9] sm:text-6xl">
+            leave one<span className="text-[rgb(var(--ledger-ink-rgb)/0.45)]">.</span>
           </h1>
           <p className="max-w-lg text-base leading-relaxed text-foreground/55 sm:text-lg">
             A heading and whatever you want to leave behind.
@@ -125,7 +125,7 @@ export function NewTopicForm({
             <div className="mb-2 flex items-end justify-between gap-4">
               <label
                 htmlFor="title"
-                className="font-pixel-dot text-[11px] uppercase tracking-widest"
+                className="text-[11px] uppercase tracking-widest"
               >
                 Heading
               </label>
@@ -149,7 +149,7 @@ export function NewTopicForm({
               value={title}
               onChange={(event) => setTitle(event.target.value)}
               maxLength={MAX_TITLE_LENGTH}
-              className="h-16 w-full rounded-none border-0 border-b-2 border-foreground bg-transparent px-0 text-2xl shadow-none placeholder:text-foreground/20 focus:border-primary focus:ring-0"
+              className="h-16 w-full rounded-none border-0 border-b-2 border-foreground bg-transparent px-0 text-2xl shadow-none placeholder:text-foreground/20 focus:border-(--ledger-ink) focus:ring-0"
               aria-describedby="title-count"
             />
           </div>
@@ -158,7 +158,7 @@ export function NewTopicForm({
             <div className="mb-2 flex items-end justify-between gap-4">
               <label
                 htmlFor="content"
-                className="font-pixel-dot text-[11px] uppercase tracking-widest"
+                className="text-[11px] uppercase tracking-widest"
               >
                 Note
               </label>
@@ -183,14 +183,14 @@ export function NewTopicForm({
               value={content}
               onChange={(event) => setContent(event.target.value)}
               maxLength={MAX_CONTENT_LENGTH}
-              className="min-h-[260px] w-full resize-y rounded-none border border-foreground/25 bg-white/25 px-5 py-4 text-lg leading-relaxed shadow-none placeholder:text-foreground/20 focus:border-primary focus:ring-primary"
+              className="min-h-[260px] w-full resize-y rounded-none border border-foreground/25 bg-[rgb(var(--ledger-ink-rgb)/0.04)] px-5 py-4 text-lg leading-relaxed shadow-none placeholder:text-foreground/20 focus:border-(--ledger-ink) focus:ring-0"
               aria-describedby="content-count"
             />
           </div>
 
           {!session && status !== "loading" && (
-            <div className="flex gap-3 border-l-2 border-primary bg-primary/5 px-4 py-3 text-sm leading-relaxed text-foreground/65">
-              <LockKeyhole className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
+            <div className="flex gap-3 border-l-2 border-(--ledger-ink) bg-[rgb(var(--ledger-ink-rgb)/0.04)] px-4 py-3 text-sm leading-relaxed text-foreground/65">
+              <LockKeyhole className="mt-0.5 h-4 w-4 shrink-0 text-[rgb(var(--ledger-ink-rgb)/0.45)]" />
               Your draft will wait here while Google signs you in.
             </div>
           )}
@@ -200,14 +200,14 @@ export function NewTopicForm({
               type="button"
               onClick={() => router.back()}
               disabled={isLoading}
-              className="font-pixel-dot min-h-11 text-left text-[11px] uppercase tracking-widest text-foreground/45 transition hover:text-foreground"
+              className="min-h-11 text-left text-[11px] uppercase tracking-widest text-foreground/45 transition hover:text-foreground"
             >
               Keep it to myself
             </button>
             <button
               type="submit"
               disabled={isLoading || !isValid || status === "loading"}
-              className="font-pixel-dot group inline-flex min-h-12 items-center justify-center gap-3 border border-foreground bg-foreground px-6 text-[11px] uppercase tracking-widest text-background transition hover:border-primary hover:bg-primary disabled:cursor-not-allowed disabled:opacity-35"
+              className="group inline-flex min-h-12 items-center justify-center gap-3 border border-foreground bg-foreground px-6 text-[11px] uppercase tracking-widest text-background transition hover:border-(--ledger-ink) hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-35"
             >
               {isLoading
                 ? "Pinning..."
@@ -223,11 +223,11 @@ export function NewTopicForm({
       </div>
 
       <aside className="lg:sticky lg:top-32 lg:self-start">
-        <div className="relative mx-auto max-w-md border border-foreground/20 bg-white/45 px-7 pb-10 pt-8 shadow-[7px_9px_0_rgba(49,87,236,0.12)] sm:px-9 sm:pb-14">
-          <p className="font-pixel-dot mb-8 text-[10px] uppercase tracking-widest text-foreground/40">
+        <div className="relative mx-auto max-w-md border border-foreground/20 bg-[rgb(var(--ledger-ink-rgb)/0.04)] px-7 pb-10 pt-8 shadow-[7px_9px_0_rgba(49,87,236,0.12)] sm:px-9 sm:pb-14">
+          <p className="mb-8 text-[10px] uppercase tracking-widest text-foreground/40">
             a note from you
           </p>
-          <h2 className="font-pixel-line mb-5 wrap-break-word text-3xl leading-[0.94] text-foreground sm:text-4xl">
+          <h2 className="font-medium mb-5 wrap-break-word text-3xl leading-[0.94] text-foreground sm:text-4xl">
             {previewTitle}
           </h2>
           <p className="whitespace-pre-wrap wrap-break-word text-lg leading-relaxed text-foreground/60">

@@ -22,28 +22,28 @@ export default function ReplyForm({
 
   if (status === "loading") {
     return (
-      <div className="mt-10 flex items-center justify-center border-t border-white/20 py-10">
-        <div className="h-5 w-5 animate-spin rounded-full border-2 border-[#8ea6ff] border-t-transparent" />
+      <div className="mt-10 flex items-center justify-center border-t border-[rgb(var(--ledger-ink-rgb)/0.20)] py-10">
+        <div className="h-5 w-5 animate-spin rounded-full border-2 border-(--ledger-ink) border-t-transparent" />
       </div>
     );
   }
 
   if (!session) {
     return (
-      <div className="mt-12 border-t border-white/20 pt-10">
-        <p className="font-pixel-dot text-[11px] uppercase tracking-widest text-[#8ea6ff]">
+      <div className="mt-12 border-t border-[rgb(var(--ledger-ink-rgb)/0.20)] pt-10">
+        <p className="text-[11px] uppercase tracking-widest text-[rgb(var(--ledger-ink-rgb)/0.40)]">
           Add your voice
         </p>
-        <h3 className="font-pixel-line mb-3 mt-2 text-3xl text-white">
+        <h3 className="font-medium mb-3 mt-2 text-3xl text-(--ledger-ink)">
           leave an echo.
         </h3>
-        <p className="mb-6 max-w-lg text-sm leading-relaxed text-white/50">
+        <p className="mb-6 max-w-lg text-sm leading-relaxed text-[rgb(var(--ledger-ink-rgb)/0.50)]">
           Sign in to reply. Your username appears beside anything you leave on
           the wall.
         </p>
         <Button
           onClick={() => signIn()}
-          className="font-pixel-dot h-12 rounded-none bg-white px-6 text-[11px] uppercase tracking-widest text-black hover:bg-[#8ea6ff]"
+          className="h-12 rounded-none bg-(--ledger-ink) px-6 text-[11px] uppercase tracking-widest text-(--ledger-paper) hover:opacity-80"
           aria-label="Sign in to reply to this topic"
         >
           Sign in to reply
@@ -95,11 +95,11 @@ export default function ReplyForm({
   const maxChars = 5000;
 
   return (
-    <div className="mt-12 border-t border-white/20 pt-10">
-      <p className="font-pixel-dot text-[11px] uppercase tracking-widest text-[#8ea6ff]">
+    <div className="mt-12 border-t border-[rgb(var(--ledger-ink-rgb)/0.20)] pt-10">
+      <p className="text-[11px] uppercase tracking-widest text-[rgb(var(--ledger-ink-rgb)/0.40)]">
         Add your voice
       </p>
-      <h3 className="font-pixel-line mb-6 mt-2 text-3xl text-white">
+      <h3 className="font-medium mb-6 mt-2 text-3xl text-(--ledger-ink)">
         leave an echo.
       </h3>
       <form className="space-y-4" onSubmit={handleSubmit}>
@@ -111,7 +111,7 @@ export default function ReplyForm({
             required
             disabled={isLoading}
             aria-label="Reply content"
-            className="min-h-[150px] resize-y rounded-none border border-white/25 bg-white/5 text-white shadow-none placeholder:text-white/25 focus:border-[#8ea6ff] focus:ring-[#8ea6ff]"
+            className="min-h-[150px] resize-y rounded-none border border-[rgb(var(--ledger-ink-rgb)/0.25)] bg-[rgb(var(--ledger-ink-rgb)/0.04)] text-(--ledger-ink) shadow-none placeholder:text-[rgb(var(--ledger-ink-rgb)/0.25)] focus:border-(--ledger-ink) focus:ring-0"
             maxLength={maxChars}
           />
           <div className="flex justify-end">
@@ -119,7 +119,7 @@ export default function ReplyForm({
               className={`text-xs ${
                 charCount > maxChars * 0.9
                   ? "text-destructive"
-                  : "text-white/35"
+                  : "text-[rgb(var(--ledger-ink-rgb)/0.35)]"
               }`}
             >
               {charCount.toLocaleString()} / {maxChars.toLocaleString()}
@@ -132,7 +132,7 @@ export default function ReplyForm({
             size="lg"
             disabled={isLoading || !content.trim()}
             aria-label={isLoading ? "Posting reply" : "Post reply"}
-            className="font-pixel-dot rounded-none bg-white px-7 text-[11px] uppercase tracking-widest text-black hover:bg-[#8ea6ff]"
+            className="rounded-none bg-(--ledger-ink) px-7 text-[11px] uppercase tracking-widest text-(--ledger-paper) hover:opacity-80"
           >
             {isLoading ? (
               <>

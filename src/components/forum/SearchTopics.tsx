@@ -3,7 +3,7 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState, useTransition } from "react";
 import { useDebounce } from "~/hooks/useDebounce";
-import { Search, X } from "lucide-react";
+import { X } from "lucide-react";
 
 export function SearchTopics({ initialQuery }: { initialQuery?: string }) {
   const router = useRouter();
@@ -39,30 +39,26 @@ export function SearchTopics({ initialQuery }: { initialQuery?: string }) {
     <div className="relative min-w-0 max-w-full overflow-hidden">
       <label
         htmlFor="notes-search"
-        className="font-pixel-dot mb-2 block text-[11px] uppercase tracking-widest text-foreground/45"
+        className="mb-2 block text-sm text-[rgb(var(--ledger-ink-rgb)/0.40)]"
       >
         Search words or people
       </label>
       <input
         id="notes-search"
         type="search"
-        placeholder="bar lights..."
+        placeholder="bar lights…"
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        className="h-14 w-full rounded-none border-0 border-b-2 border-foreground bg-transparent px-0 pl-8 pr-9 text-lg shadow-none placeholder:text-foreground/25 focus:border-primary focus:ring-0"
-        aria-label="Search notes"
-      />
-      <Search
-        className={`absolute bottom-4 left-0 h-5 w-5 transition-opacity ${
-          isPending ? "animate-pulse opacity-40" : "opacity-65"
+        className={`h-10 w-full rounded-none border-0 border-b border-[rgb(var(--ledger-ink-rgb)/0.25)] bg-transparent px-0 pr-9 text-base text-(--ledger-ink) shadow-none transition-opacity placeholder:text-[rgb(var(--ledger-ink-rgb)/0.25)] focus:border-(--ledger-ink) focus:ring-0 ${
+          isPending ? "opacity-60" : ""
         }`}
-        aria-hidden="true"
+        aria-label="Search notes"
       />
       {query && (
         <button
           type="button"
           onClick={() => setQuery("")}
-          className="absolute bottom-3 right-0 flex h-8 w-8 items-center justify-center rounded-full text-foreground/45 transition hover:bg-foreground hover:text-background"
+          className="absolute bottom-2 right-0 flex h-7 w-7 items-center justify-center text-[rgb(var(--ledger-ink-rgb)/0.40)] transition hover:text-(--ledger-ink)"
           aria-label="Clear search"
         >
           <X className="h-4 w-4" />

@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import LedgerLightSwitch from "~/components/LedgerLightSwitch";
+import LedgerWordmark from "~/components/LedgerWordmark";
 import MinimalExcerpt from "~/components/MinimalExcerpt";
 import releases, { getReleaseBySlug } from "~/data/releases";
 
@@ -30,8 +31,9 @@ export default function MinimalIndex({
     <main className="ledger min-h-svh bg-(--ledger-paper) text-(--ledger-ink)">
       {/* Letterhead: the wordmark alone, two-tone, nothing else. */}
       <header className="px-6 pt-10 sm:px-12 lg:px-20">
-        <h1 className="mb-0 text-lg font-semibold leading-none tracking-[-0.02em]">
-          Maxwell<span className="text-[rgb(var(--ledger-ink-rgb)/0.35)]"> Young</span>
+        <h1 className="mb-0 leading-none">
+          <LedgerWordmark />
+          <span className="sr-only">Maxwell Young</span>
         </h1>
       </header>
 
@@ -95,6 +97,14 @@ export default function MinimalIndex({
               >
                 Notes
               </Link>
+              <a
+                href="https://birds.silk.cx/@maxwell"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="transition hover:text-(--ledger-ink)"
+              >
+                Silk
+              </a>
               <a
                 href="https://open.spotify.com/artist/5HONdRTLNvBjlD2LirKp0q"
                 target="_blank"

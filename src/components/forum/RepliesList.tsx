@@ -113,7 +113,7 @@ function renderRichContent(text: string) {
         parts.push(
           <div
             key={minIndex + "sc"}
-            className="my-5 overflow-hidden rounded-xl bg-white"
+            className="my-5 overflow-hidden rounded-xl bg-(--ledger-ink)"
           >
             <iframe
               width="100%"
@@ -157,7 +157,7 @@ function renderRichContent(text: string) {
             href={url || "#"}
             target="_blank"
             rel="noopener noreferrer"
-            className="break-all text-[#8ea6ff] underline decoration-white/25 underline-offset-4"
+            className="break-all text-[rgb(var(--ledger-ink-rgb)/0.40)] underline decoration-[rgb(var(--ledger-ink-rgb)/0.25)] underline-offset-4"
           >
             {url}
           </a>,
@@ -292,7 +292,7 @@ export default function RepliesList({
           <div className="w-[calc(100%-2rem)] max-w-sm bg-[#f2ede4] p-8 text-[#11100f] shadow-2xl">
             <div
               id="report-reply-title"
-              className="font-pixel-line mb-4 text-2xl"
+              className="font-medium mb-4 text-2xl"
             >
               report reply.
             </div>
@@ -313,7 +313,7 @@ export default function RepliesList({
                 Cancel
               </button>
               <button
-                className="bg-[#11100f] px-4 py-2 font-semibold text-white hover:bg-black/80"
+                className="bg-[#11100f] px-4 py-2 font-semibold text-(--ledger-ink) hover:bg-black/80"
                 onClick={submitReport}
                 disabled={reportLoading || !reportReason.trim()}
               >
@@ -324,11 +324,11 @@ export default function RepliesList({
         </div>
       )}
       {replies.length === 0 && (
-        <div className="border-b border-white/20 py-12">
-          <p className="font-pixel-line text-2xl leading-none text-white/65">
+        <div className="border-b border-[rgb(var(--ledger-ink-rgb)/0.20)] py-12">
+          <p className="font-medium text-2xl leading-none text-[rgb(var(--ledger-ink-rgb)/0.65)]">
             no echoes yet.
           </p>
-          <p className="mt-3 text-sm text-white/40">
+          <p className="mt-3 text-sm text-[rgb(var(--ledger-ink-rgb)/0.40)]">
             There is room for the first response.
           </p>
         </div>
@@ -336,23 +336,23 @@ export default function RepliesList({
       {replies.map((reply, index) => (
         <article
           key={reply.id}
-          className="group grid gap-5 border-b border-white/20 py-8 sm:grid-cols-[3.5rem_1fr] sm:gap-8 sm:py-10"
+          className="group grid gap-5 border-b border-[rgb(var(--ledger-ink-rgb)/0.20)] py-8 sm:grid-cols-[3.5rem_1fr] sm:gap-8 sm:py-10"
         >
-          <div className="font-pixel-dot text-sm leading-none text-[#8ea6ff]">
+          <div className="text-sm leading-none text-[rgb(var(--ledger-ink-rgb)/0.40)]">
             {String(index + 1).padStart(2, "0")}
           </div>
           <div>
             <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-              <div className="font-pixel-dot flex items-center gap-2 text-[11px] uppercase tracking-widest">
+              <div className="flex items-center gap-2 text-[11px] uppercase tracking-widest">
                 {reply.author?.username ? (
                   <Link
                     href={`/user/${reply.author.username}`}
-                    className="text-white transition hover:text-[#8ea6ff]"
+                    className="text-(--ledger-ink) transition hover:text-[rgb(var(--ledger-ink-rgb)/0.40)]"
                   >
                     @{reply.author.username}
                   </Link>
                 ) : (
-                  <span className="text-white/45">Unknown</span>
+                  <span className="text-[rgb(var(--ledger-ink-rgb)/0.45)]">Unknown</span>
                 )}
                 {reply.author?.role === "admin" && (
                   <Image
@@ -365,7 +365,7 @@ export default function RepliesList({
                   />
                 )}
               </div>
-              <span className="font-pixel-dot text-[11px] uppercase tracking-widest text-white/35">
+              <span className="text-[11px] uppercase tracking-widest text-[rgb(var(--ledger-ink-rgb)/0.35)]">
                 {new Date(reply.createdAt).toLocaleDateString("en-NZ", {
                   day: "numeric",
                   month: "short",
@@ -373,13 +373,13 @@ export default function RepliesList({
                 })}
               </span>
             </div>
-            <div className="text-white/72 whitespace-pre-wrap text-lg leading-relaxed">
+            <div className="text-[rgb(var(--ledger-ink-rgb)/0.72)] whitespace-pre-wrap text-lg leading-relaxed">
               {renderRichContent(reply.content)}
             </div>
             <div className="mt-6 flex gap-3">
               {(userRole === "admin" || userId === reply.authorId) && (
                 <button
-                  className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 text-white/35 transition-colors hover:border-red-400 hover:text-red-400"
+                  className="flex h-9 w-9 items-center justify-center rounded-full border border-[rgb(var(--ledger-ink-rgb)/0.15)] text-[rgb(var(--ledger-ink-rgb)/0.35)] transition-colors hover:border-red-400 hover:text-red-400"
                   onClick={() => handleDelete(reply.id)}
                   disabled={deletingId === reply.id}
                   title="Delete"
@@ -393,7 +393,7 @@ export default function RepliesList({
                 </button>
               )}
               <button
-                className="flex h-9 w-9 items-center justify-center rounded-full border border-white/15 text-white/35 transition-colors hover:border-[#8ea6ff] hover:text-[#8ea6ff]"
+                className="flex h-9 w-9 items-center justify-center rounded-full border border-[rgb(var(--ledger-ink-rgb)/0.15)] text-[rgb(var(--ledger-ink-rgb)/0.35)] transition-colors hover:border-(--ledger-ink) hover:text-[rgb(var(--ledger-ink-rgb)/0.40)]"
                 onClick={() => handleReport(reply.id)}
                 title="Report"
                 aria-label="Report reply"

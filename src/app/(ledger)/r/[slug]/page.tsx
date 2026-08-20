@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import LedgerLightSwitch from "~/components/LedgerLightSwitch";
+import LedgerWordmark from "~/components/LedgerWordmark";
 import MinimalExcerpt from "~/components/MinimalExcerpt";
 import releases, { getReleaseBySlug } from "~/data/releases";
 
@@ -52,9 +53,10 @@ export default async function MinimalReleasePage({ params }: Props) {
       <header className="flex items-baseline justify-between px-6 pt-10 sm:px-12 lg:px-20">
         <Link
           href="/"
-          className="text-lg font-semibold leading-none tracking-[-0.02em] transition hover:text-[rgb(var(--ledger-ink-rgb)/0.60)]"
+          className="leading-none transition hover:opacity-60"
+          aria-label="Maxwell Young — index"
         >
-          Maxwell<span className="text-[rgb(var(--ledger-ink-rgb)/0.35)]"> Young</span>
+          <LedgerWordmark />
         </Link>
         <Link
           href="/"

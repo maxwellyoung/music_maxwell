@@ -5,7 +5,7 @@ import Link from "next/link";
 import { useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
 import { subscribeToForumTopics } from "~/lib/pusherClient";
-import { ArrowUpRight, MessageCircle } from "lucide-react";
+
 
 const PAGE_SIZE = 10;
 
@@ -25,10 +25,9 @@ export type ForumTopic = {
 
 function ForumTopicSkeleton() {
   return (
-    <div className="animate-pulse border-t border-foreground/10 py-8">
-      <div className="mb-4 h-8 w-2/3 bg-foreground/10" />
-      <div className="mb-2 h-4 w-full bg-foreground/5" />
-      <div className="h-4 w-1/2 bg-foreground/5" />
+    <div className="animate-pulse border-t border-[rgb(var(--ledger-ink-rgb)/0.10)] py-6">
+      <div className="mb-3 h-5 w-2/3 bg-[rgb(var(--ledger-ink-rgb)/0.10)]" />
+      <div className="h-4 w-1/2 bg-[rgb(var(--ledger-ink-rgb)/0.06)]" />
     </div>
   );
 }
@@ -99,76 +98,63 @@ export default function ForumTopicsInfinite({
   }, [query]);
 
   return (
-    <section aria-label="Notes" className="min-w-0 overflow-hidden">
-      <div className="border-b border-foreground/15">
+    <section aria-label="Notes" className="min-w-0">
+      <div className="border-b border-[rgb(var(--ledger-ink-rgb)/0.10)]">
         {topics.length === 0 && (
-          <div className="border-t border-foreground/15 py-16">
-            <p className="font-pixel-line text-2xl leading-none text-foreground/65 sm:text-3xl">
-              {query ? "No notes matched." : "No notes yet."}
+          <div className="border-t border-[rgb(var(--ledger-ink-rgb)/0.10)] py-12">
+            <p className="text-base text-[rgb(var(--ledger-ink-rgb)/0.60)]">
+              {query ? "No notes matched." : "No notes yet — be first."}
             </p>
             {query && (
-              <p className="mt-3 max-w-md text-sm text-foreground/45">
+              <p className="mt-2 text-sm text-[rgb(var(--ledger-ink-rgb)/0.40)]">
                 Try a shorter word or username.
               </p>
             )}
           </div>
         )}
-        {topics.map((topic, index) => (
+        {topics.map((topic) => (
           <article
             key={topic.id}
-            className="wall-note group relative grid gap-5 border-t border-foreground/15 py-8 pl-5 sm:grid-cols-[3.5rem_1fr_auto] sm:gap-7 sm:py-10 sm:pl-7"
+            className="group relative border-t border-[rgb(var(--ledger-ink-rgb)/0.10)] py-5"
           >
-            <div className="font-pixel-dot text-sm leading-none text-primary/70">
-              {String(index + 1).padStart(2, "0")}
-            </div>
-            <div className="min-w-0">
+            <div className="flex items-start justify-between gap-4">
               <Link
                 href={`/forum/${topic.id}`}
-                className="block focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-primary"
+                className="min-w-0 flex-1 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-(--ledger-ink)"
               >
-                <h3 className="font-pixel-line mb-3 max-w-3xl text-3xl leading-[0.98] transition-colors group-hover:text-primary sm:text-4xl">
+                <h3 className="mb-1 text-base font-medium leading-snug transition-colors group-hover:text-[rgb(var(--ledger-ink-rgb)/0.60)]">
                   {topic.title}
                 </h3>
-                <p className="max-w-3xl whitespace-pre-line text-base leading-relaxed text-foreground/60">
-                  {topic.content.length > 240
-                    ? `${topic.content.slice(0, 240).trim()}…`
+                <p className="max-w-prose text-sm leading-relaxed text-[rgb(var(--ledger-ink-rgb)/0.55)]">
+                  {topic.content.length > 180
+                    ? `${topic.content.slice(0, 180).trim()}…`
                     : topic.content}
                 </p>
               </Link>
-              <div className="font-pixel-dot mt-5 flex flex-wrap items-center gap-x-5 gap-y-2 text-[11px] uppercase tracking-widest text-foreground/45">
-                {topic.author?.username ? (
-                  <Link
-                    href={`/user/${topic.author.username}`}
-                    className="relative z-10 transition-colors hover:text-accent"
-                  >
-                    @{topic.author.username}
-                  </Link>
-                ) : (
-                  <span>anonymous</span>
-                )}
-                <span>
-                  {new Date(topic.updatedAt).toLocaleDateString("en-NZ", {
-                    day: "numeric",
-                    month: "short",
-                    year: "numeric",
-                  })}
-                </span>
-                <span className="inline-flex items-center gap-1.5">
-                  <MessageCircle className="h-3.5 w-3.5" />
-                  {topic._count.replies}{" "}
-                  {topic._count.replies === 1 ? "echo" : "echoes"}
-                </span>
-              </div>
-            </div>
-            <div className="flex items-start gap-2">
-              <Link
-                href={`/forum/${topic.id}`}
-                className="flex h-12 w-12 items-center justify-center rounded-full border border-foreground/20 transition group-hover:-rotate-6 group-hover:border-primary group-hover:bg-primary group-hover:text-white"
-                aria-label={`Read ${topic.title}`}
-              >
-                <ArrowUpRight className="h-5 w-5" />
-              </Link>
               {userRole === "admin" && <TopicActions topicId={topic.id} />}
+            </div>
+            <div className="mt-2 flex flex-wrap items-baseline gap-x-4 gap-y-1 text-xs tabular-nums text-[rgb(var(--ledger-ink-rgb)/0.35)]">
+              {topic.author?.username ? (
+                <Link
+                  href={`/user/${topic.author.username}`}
+                  className="relative z-10 transition-colors hover:text-(--ledger-ink)"
+                >
+                  @{topic.author.username}
+                </Link>
+              ) : (
+                <span>anonymous</span>
+              )}
+              <span>
+                {new Date(topic.updatedAt).toLocaleDateString("en-NZ", {
+                  day: "numeric",
+                  month: "short",
+                  year: "numeric",
+                })}
+              </span>
+              <span>
+                {topic._count.replies}{" "}
+                {topic._count.replies === 1 ? "echo" : "echoes"}
+              </span>
             </div>
           </article>
         ))}
@@ -180,19 +166,17 @@ export default function ForumTopicsInfinite({
       </div>
       <div
         ref={loaderRef}
-        className="flex min-h-20 items-center justify-center"
+        className="flex min-h-16 items-center justify-center"
       >
         {loading && (
-          <span className="font-pixel-dot text-[11px] uppercase tracking-widest text-foreground/45">
+          <span className="text-xs text-[rgb(var(--ledger-ink-rgb)/0.40)]">
             loading more
           </span>
         )}
         {!hasMore && topics.length > 0 && (
-          <div className="font-pixel-dot flex items-center gap-3 text-[11px] uppercase tracking-widest text-foreground/35">
-            <span className="h-px w-8 bg-foreground/20" />
-            <span>End of the wall</span>
-            <span className="h-px w-8 bg-foreground/20" />
-          </div>
+          <span className="text-xs text-[rgb(var(--ledger-ink-rgb)/0.30)]">
+            — end of the wall —
+          </span>
         )}
       </div>
     </section>

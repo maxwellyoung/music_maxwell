@@ -508,3 +508,14 @@ html {
     animation-duration: 0.22s;
   }
 }
+
+/* The drawn-signature wordmark prints black; invert it with the ink. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-ledger="light"]) .ledger .ledger-wordmark {
+    filter: invert(1);
+  }
+}
+
+:root[data-ledger="dark"] .ledger .ledger-wordmark {
+  filter: invert(1);
+}
