@@ -3,8 +3,9 @@
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState, useTransition } from "react";
 import { useDebounce } from "~/hooks/useDebounce";
-import { X } from "lucide-react";
 
+// One ruled field, no label: it sits on the standfirst line beside the
+// count, and the count answers it.
 export function SearchTopics({ initialQuery }: { initialQuery?: string }) {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -36,34 +37,16 @@ export function SearchTopics({ initialQuery }: { initialQuery?: string }) {
   }, [debouncedQuery, createQueryString, router, initialQuery]);
 
   return (
-    <div className="relative min-w-0 max-w-full overflow-hidden">
-      <label
-        htmlFor="notes-search"
-        className="mb-2 block text-sm text-[rgb(var(--ledger-ink-rgb)/0.40)]"
-      >
-        Search words or people
-      </label>
-      <input
-        id="notes-search"
-        type="search"
-        placeholder="bar lights…"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        className={`h-10 w-full rounded-none border-0 border-b border-[rgb(var(--ledger-ink-rgb)/0.25)] bg-transparent px-0 pr-9 text-base text-(--ledger-ink) shadow-none transition-opacity placeholder:text-[rgb(var(--ledger-ink-rgb)/0.25)] focus:border-(--ledger-ink) focus:ring-0 ${
-          isPending ? "opacity-60" : ""
-        }`}
-        aria-label="Search notes"
-      />
-      {query && (
-        <button
-          type="button"
-          onClick={() => setQuery("")}
-          className="absolute bottom-2 right-0 flex h-7 w-7 items-center justify-center text-[rgb(var(--ledger-ink-rgb)/0.40)] transition hover:text-(--ledger-ink)"
-          aria-label="Clear search"
-        >
-          <X className="h-4 w-4" />
-        </button>
-      )}
-    </div>
+    <input
+      id="notes-search"
+      type="search"
+      placeholder="search"
+      value={query}
+      onChange={(e) => setQuery(e.target.value)}
+      aria-label="Search notes"
+      className={`h-8 w-full rounded-none border-0 border-b border-[rgb(var(--ledger-ink-rgb)/0.25)] bg-transparent px-0 text-sm text-(--ledger-ink) shadow-none transition-opacity placeholder:text-[rgb(var(--ledger-ink-rgb)/0.30)] focus:border-(--ledger-ink) focus:ring-0 sm:w-44 ${
+        isPending ? "opacity-60" : ""
+      }`}
+    />
   );
 }

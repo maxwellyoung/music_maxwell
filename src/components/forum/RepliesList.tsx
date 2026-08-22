@@ -1,16 +1,13 @@
 "use client";
 
-import type * as React from "react";
-
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
 import ConfirmModal from "./ConfirmModal";
 import { useToast } from "~/components/ui/use-toast";
-import { Trash, Flag } from "phosphor-react";
-import Image from "next/image";
 import Link from "next/link";
 import { pusherClient } from "~/lib/pusherClient";
+import { renderRichContent } from "./richContent";
 
 // Type for a reply
 type Reply = {
@@ -24,154 +21,6 @@ type Reply = {
     username?: string | null;
   };
 };
-
-// Utility to auto-link URLs and embed YouTube/SoundCloud
-function renderRichContent(text: string) {
-  if (!text) return null;
-  // YouTube (match full URL, including extra params)
-  const ytRegex =
-    /https?:\/\/(?:www\.)?(?:youtube\.com\/watch\?v=([\w-]{11})([^\s]*)?|youtu\.be\/([\w-]{11})([^\s]*)?)/g;
-  // SoundCloud
-  const scRegex = /https?:\/\/soundcloud\.com\/[\w\-\/]+/g;
-  // Spotify (track, album, playlist, episode)
-  const spotifyRegex =
-    /https?:\/\/(?:open\.)?spotify\.com\/(track|album|playlist|episode)\/([\w\d]+)(\?si=[\w\d]+)?/g;
-  // Generic URL
-  const urlRegex = /https?:\/\/[\w\-._~:/?#[\]@!$&'()*+,;=%]+/g;
-
-  const parts: (string | React.JSX.Element)[] = [];
-  const textCopy = text;
-
-  // Helper to push plain text
-  const pushText = (start: number, end: number) => {
-    if (start < end) parts.push(textCopy.slice(start, end));
-  };
-
-  // Find all YouTube, SoundCloud, Spotify links and replace with embeds
-  const regexes = [ytRegex, scRegex, spotifyRegex, urlRegex];
-  let minIndex = -1;
-  let minMatch: RegExpExecArray | null = null;
-  let minType = -1;
-  let cursor = 0;
-  while (cursor < textCopy.length) {
-    minIndex = -1;
-    minMatch = null;
-    minType = -1;
-    for (let i = 0; i < regexes.length; i++) {
-      const regex = regexes[i];
-      if (!regex) continue;
-      if (typeof regex.lastIndex === "number") {
-        regex.lastIndex = cursor;
-      }
-      const m = typeof regex.exec === "function" ? regex.exec(textCopy) : null;
-      if (
-        m &&
-        (minIndex === -1 || (typeof m.index === "number" && m.index < minIndex))
-      ) {
-        minIndex = m.index ?? -1;
-        minMatch = m;
-        minType = i;
-      }
-    }
-    if (!minMatch) {
-      pushText(cursor, textCopy.length);
-      break;
-    }
-    pushText(cursor, minIndex);
-    if (minMatch) {
-      const url = minMatch[0] ?? null;
-      if (!url) {
-        cursor = minIndex + 1;
-        continue;
-      }
-      if (minType === 0) {
-        // YouTube
-        let videoId: string | null = null;
-        if (minMatch[1])
-          videoId = minMatch[1]; // youtube.com/watch?v=...
-        else if (minMatch[3]) videoId = minMatch[3]; // youtu.be/...
-        if (videoId) {
-          parts.push(
-            <div
-              key={minIndex + "yt"}
-              className="my-5 overflow-hidden rounded-xl bg-black"
-            >
-              <iframe
-                width="100%"
-                height="315"
-                src={`https://www.youtube.com/embed/${videoId}`}
-                title="YouTube video player"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              />
-            </div>,
-          );
-        }
-      } else if (minType === 1) {
-        // SoundCloud
-        parts.push(
-          <div
-            key={minIndex + "sc"}
-            className="my-5 overflow-hidden rounded-xl bg-(--ledger-ink)"
-          >
-            <iframe
-              width="100%"
-              height="166"
-              scrolling="no"
-              frameBorder="no"
-              allow="autoplay"
-              title="SoundCloud player"
-              src={`https://w.soundcloud.com/player/?url=${encodeURIComponent(url)}&color=%23ff5500&auto_play=false&hide_related=false&show_comments=true&show_user=true&show_reposts=false&show_teaser=true`}
-            />
-          </div>,
-        );
-      } else if (minType === 2) {
-        // Spotify
-        const type = minMatch[1];
-        const id = minMatch[2];
-        if (type && id) {
-          parts.push(
-            <div
-              key={minIndex + "sp"}
-              className="my-5 overflow-hidden rounded-xl"
-            >
-              <iframe
-                src={`https://open.spotify.com/embed/${type}/${id}`}
-                width="100%"
-                height="152"
-                frameBorder="0"
-                allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
-                allowFullScreen
-                loading="lazy"
-                title="Spotify player"
-              />
-            </div>,
-          );
-        }
-      } else {
-        // Generic URL
-        parts.push(
-          <a
-            key={minIndex + "url"}
-            href={url || "#"}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="break-all text-[rgb(var(--ledger-ink-rgb)/0.40)] underline decoration-[rgb(var(--ledger-ink-rgb)/0.25)] underline-offset-4"
-          >
-            {url}
-          </a>,
-        );
-      }
-      cursor = minIndex + (url ? url.length : 1);
-    } else {
-      cursor = minIndex + 1;
-    }
-  }
-  return parts.map((part, i) =>
-    typeof part === "string" ? <span key={i}>{part}</span> : part,
-  );
-}
 
 export default function RepliesList({
   replies: initialReplies,
@@ -193,6 +42,12 @@ export default function RepliesList({
   const [reportReason, setReportReason] = useState("");
   const [reportLoading, setReportLoading] = useState(false);
   const [replies, setReplies] = useState<Reply[]>(initialReplies);
+
+  // router.refresh() re-renders the page with fresh replies; take them,
+  // otherwise a just-pinned echo only shows up via Pusher or a reload.
+  useEffect(() => {
+    setReplies(initialReplies);
+  }, [initialReplies]);
 
   useEffect(() => {
     // Subscribe to real-time new replies for this topic
@@ -274,136 +129,128 @@ export default function RepliesList({
     setReportReason("");
   }
 
+  const shortDate = (value: string | Date) =>
+    new Date(value).toLocaleDateString("en-NZ", {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+    });
+
   return (
-    <div className="space-y-8">
+    <div>
       <ConfirmModal
         open={confirmOpen}
         onConfirm={confirmDelete}
         onCancel={cancelDelete}
-        message="Are you sure you want to delete this reply?"
+        message="Take this echo down?"
+        confirmLabel="take down"
       />
       {reportOpen && (
         <div
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4"
+          className="ledger fixed inset-0 z-50 flex items-center justify-center bg-[rgb(var(--ledger-paper-rgb)/0.85)] px-6"
           role="dialog"
           aria-modal="true"
           aria-labelledby="report-reply-title"
         >
-          <div className="w-[calc(100%-2rem)] max-w-sm bg-[#f2ede4] p-8 text-[#11100f] shadow-2xl">
-            <div
+          <div className="w-full max-w-sm border border-[rgb(var(--ledger-ink-rgb)/0.20)] bg-(--ledger-paper) p-6 text-(--ledger-ink)">
+            <label
               id="report-reply-title"
-              className="font-medium mb-4 text-2xl"
+              htmlFor="report-reason"
+              className="mb-3 block text-base leading-snug"
             >
-              report reply.
-            </div>
+              Report this echo. Say why.
+            </label>
             <textarea
-              className="mb-4 w-full rounded-none border border-black/20 bg-transparent px-3 py-2 text-base text-[#11100f]"
+              id="report-reason"
+              className="w-full rounded-none border border-[rgb(var(--ledger-ink-rgb)/0.20)] bg-transparent px-3 py-2 text-sm leading-6 text-(--ledger-ink) shadow-none focus:border-(--ledger-ink) focus:ring-0"
               rows={3}
-              placeholder="Reason for reporting (required)"
               value={reportReason}
               onChange={(e) => setReportReason(e.target.value)}
               disabled={reportLoading}
             />
-            <div className="flex justify-end gap-4">
+            <div className="mt-5 flex items-center justify-end gap-6 text-sm">
               <button
-                className="border border-black/20 px-4 py-2 font-medium hover:bg-black/5"
+                type="button"
+                className="text-[rgb(var(--ledger-ink-rgb)/0.45)] transition hover:text-(--ledger-ink)"
                 onClick={cancelReport}
                 disabled={reportLoading}
               >
-                Cancel
+                cancel
               </button>
               <button
-                className="bg-[#11100f] px-4 py-2 font-semibold text-(--ledger-ink) hover:bg-black/80"
+                type="button"
+                className="min-h-10 border border-(--ledger-ink) px-4 transition hover:bg-(--ledger-ink) hover:text-(--ledger-paper) disabled:opacity-35 disabled:hover:bg-transparent disabled:hover:text-(--ledger-ink)"
                 onClick={submitReport}
                 disabled={reportLoading || !reportReason.trim()}
               >
-                {reportLoading ? "Reporting..." : "Report"}
+                {reportLoading ? "reporting" : "report"}
               </button>
             </div>
           </div>
         </div>
       )}
-      {replies.length === 0 && (
-        <div className="border-b border-[rgb(var(--ledger-ink-rgb)/0.20)] py-12">
-          <p className="font-medium text-2xl leading-none text-[rgb(var(--ledger-ink-rgb)/0.65)]">
-            no echoes yet.
-          </p>
-          <p className="mt-3 text-sm text-[rgb(var(--ledger-ink-rgb)/0.40)]">
-            There is room for the first response.
-          </p>
-        </div>
-      )}
-      {replies.map((reply, index) => (
-        <article
-          key={reply.id}
-          className="group grid gap-5 border-b border-[rgb(var(--ledger-ink-rgb)/0.20)] py-8 sm:grid-cols-[3.5rem_1fr] sm:gap-8 sm:py-10"
-        >
-          <div className="text-sm leading-none text-[rgb(var(--ledger-ink-rgb)/0.40)]">
-            {String(index + 1).padStart(2, "0")}
-          </div>
-          <div>
-            <div className="mb-5 flex flex-wrap items-center justify-between gap-3">
-              <div className="flex items-center gap-2 text-[11px] uppercase tracking-widest">
-                {reply.author?.username ? (
-                  <Link
-                    href={`/user/${reply.author.username}`}
-                    className="text-(--ledger-ink) transition hover:text-[rgb(var(--ledger-ink-rgb)/0.40)]"
-                  >
-                    @{reply.author.username}
-                  </Link>
-                ) : (
-                  <span className="text-[rgb(var(--ledger-ink-rgb)/0.45)]">Unknown</span>
-                )}
-                {reply.author?.role === "admin" && (
-                  <Image
-                    src="/icons/star.svg"
-                    alt="Admin"
-                    title="Admin"
-                    width={20}
-                    height={20}
-                    className="ml-1 inline-block invert"
-                  />
-                )}
-              </div>
-              <span className="text-[11px] uppercase tracking-widest text-[rgb(var(--ledger-ink-rgb)/0.35)]">
-                {new Date(reply.createdAt).toLocaleDateString("en-NZ", {
-                  day: "numeric",
-                  month: "short",
-                  year: "numeric",
-                })}
-              </span>
-            </div>
-            <div className="text-[rgb(var(--ledger-ink-rgb)/0.72)] whitespace-pre-wrap text-lg leading-relaxed">
-              {renderRichContent(reply.content)}
-            </div>
-            <div className="mt-6 flex gap-3">
-              {(userRole === "admin" || userId === reply.authorId) && (
-                <button
-                  className="flex h-9 w-9 items-center justify-center rounded-full border border-[rgb(var(--ledger-ink-rgb)/0.15)] text-[rgb(var(--ledger-ink-rgb)/0.35)] transition-colors hover:border-red-400 hover:text-red-400"
-                  onClick={() => handleDelete(reply.id)}
-                  disabled={deletingId === reply.id}
-                  title="Delete"
-                  aria-label="Delete reply"
-                >
-                  {deletingId === reply.id ? (
-                    <span className="text-xs">Deleting...</span>
-                  ) : (
-                    <Trash size={18} weight="regular" />
-                  )}
-                </button>
-              )}
-              <button
-                className="flex h-9 w-9 items-center justify-center rounded-full border border-[rgb(var(--ledger-ink-rgb)/0.15)] text-[rgb(var(--ledger-ink-rgb)/0.35)] transition-colors hover:border-(--ledger-ink) hover:text-[rgb(var(--ledger-ink-rgb)/0.40)]"
-                onClick={() => handleReport(reply.id)}
-                title="Report"
-                aria-label="Report reply"
+
+      {replies.length > 0 && (
+        <ol className="mt-4">
+          {replies.map((reply, index) => {
+            const mine = userRole === "admin" || userId === reply.authorId;
+            return (
+              <li
+                key={reply.id}
+                className="grid gap-x-6 gap-y-3 border-t border-[rgb(var(--ledger-ink-rgb)/0.10)] py-6 sm:grid-cols-[2.5rem_1fr]"
               >
-                <Flag size={18} weight="regular" />
-              </button>
-            </div>
-          </div>
-        </article>
-      ))}
+                <span className="text-sm tabular-nums leading-7 text-[rgb(var(--ledger-ink-rgb)/0.30)]">
+                  {String(index + 1).padStart(2, "0")}
+                </span>
+                <div className="min-w-0">
+                  <p className="mb-0 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 text-sm tabular-nums text-[rgb(var(--ledger-ink-rgb)/0.40)]">
+                    <span className="flex flex-wrap items-baseline gap-x-3">
+                      {reply.author?.username ? (
+                        <Link
+                          href={`/user/${reply.author.username}`}
+                          className="text-(--ledger-ink) transition hover:text-[rgb(var(--ledger-ink-rgb)/0.60)]"
+                        >
+                          {reply.author.username}
+                        </Link>
+                      ) : (
+                        <span>anonymous</span>
+                      )}
+                      {reply.author?.role === "admin" && (
+                        <span className="text-[rgb(var(--ledger-ink-rgb)/0.30)]">
+                          admin
+                        </span>
+                      )}
+                      <span>{shortDate(reply.createdAt)}</span>
+                    </span>
+                    <span className="flex items-baseline gap-x-3 text-xs">
+                      {mine && (
+                        <button
+                          type="button"
+                          className="underline decoration-[rgb(var(--ledger-ink-rgb)/0.20)] underline-offset-4 transition hover:text-(--ledger-ink) disabled:opacity-40"
+                          onClick={() => handleDelete(reply.id)}
+                          disabled={deletingId === reply.id}
+                        >
+                          {deletingId === reply.id ? "taking down" : "take down"}
+                        </button>
+                      )}
+                      <button
+                        type="button"
+                        className="underline decoration-[rgb(var(--ledger-ink-rgb)/0.20)] underline-offset-4 transition hover:text-(--ledger-ink)"
+                        onClick={() => handleReport(reply.id)}
+                      >
+                        report
+                      </button>
+                    </span>
+                  </p>
+                  <div className="mt-3 whitespace-pre-wrap text-base leading-7 text-[rgb(var(--ledger-ink-rgb)/0.85)] [overflow-wrap:anywhere]">
+                    {renderRichContent(reply.content)}
+                  </div>
+                </div>
+              </li>
+            );
+          })}
+        </ol>
+      )}
     </div>
   );
 }

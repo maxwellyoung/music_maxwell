@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { signIn, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { ArrowUpRight } from "lucide-react";
 import { useToast } from "~/components/ui/use-toast";
 
 interface TopicResponse {
@@ -13,6 +12,9 @@ interface TopicResponse {
 const MAX_TITLE_LENGTH = 200;
 const MAX_CONTENT_LENGTH = 10000;
 const DRAFT_KEY = "maxwell-notes-draft";
+
+const field =
+  "w-full rounded-none bg-transparent px-0 text-(--ledger-ink) shadow-none focus:ring-0 disabled:opacity-50";
 
 export function NewTopicForm({
   initialTitle = "",
@@ -59,11 +61,11 @@ export function NewTopicForm({
       if (!response.ok) {
         // The square explains itself (rate limits, busy wall, banned
         // words); relay that rather than a generic line.
-        let errorMsg = "Failed to pin this note. Please try again.";
+        let errorMsg = "The note did not go up. Try again.";
         try {
           const data = (await response.json()) as { error?: string };
           if (data.error?.toLowerCase().includes("inappropriate")) {
-            errorMsg = "This note contains language the wall cannot accept.";
+            errorMsg = "The wall does not take that language.";
           } else if (data.error && response.status !== 500) {
             errorMsg = data.error;
           }
@@ -73,18 +75,13 @@ export function NewTopicForm({
 
       const data = (await response.json()) as TopicResponse;
       window.sessionStorage.removeItem(DRAFT_KEY);
-      toast({
-        title: "Pinned in the square",
-        description: "Your note is live.",
-      });
+      toast({ title: "Pinned." });
       router.push(`/forum/${data.id}`);
     } catch (error) {
       toast({
-        title: "Could not pin note",
+        title: "Not pinned.",
         description:
-          error instanceof Error
-            ? error.message
-            : "Failed to create note. Please try again.",
+          error instanceof Error ? error.message : "The note did not go up.",
         variant: "destructive",
       });
     } finally {
@@ -93,148 +90,130 @@ export function NewTopicForm({
   }
 
   const isValid = title.trim().length > 0 && content.trim().length > 0;
-  const previewTitle = title.trim() || "your line goes here";
-  const previewContent = content.trim() || "something almost said...";
+  const signedOut = !session && status !== "loading";
 
   return (
-    <div className="grid gap-12 lg:grid-cols-[0.58fr_0.42fr] lg:gap-16">
-      <div>
-        <div className="mb-10">
-          <p className="text-xs uppercase tracking-[0.12em] text-[rgb(var(--ledger-ink-rgb)/0.45)]">
-            New fragment
-          </p>
-          <h1 className="font-medium mb-3 mt-3 text-4xl leading-[0.9] sm:text-6xl">
-            leave one<span className="text-[rgb(var(--ledger-ink-rgb)/0.45)]">.</span>
-          </h1>
-          <p className="max-w-lg text-base leading-relaxed text-foreground/55 sm:text-lg">
-            A heading and whatever you want to leave behind.
-          </p>
+    <>
+      <section aria-label="Leave a note">
+        <h1 className="mb-0 text-xl font-normal leading-snug sm:text-2xl">
+          <span className="font-semibold">Leave a note.</span>{" "}
+          <span className="text-[rgb(var(--ledger-ink-rgb)/0.45)]">
+            A heading, then whatever you want on the wall.
+          </span>
+        </h1>
+      </section>
+
+      <form onSubmit={onSubmit} className="mt-12 space-y-10">
+        <div>
+          <div className="flex items-baseline justify-between gap-4 text-sm">
+            <label
+              htmlFor="title"
+              className="text-[rgb(var(--ledger-ink-rgb)/0.40)]"
+            >
+              heading
+            </label>
+            <span
+              id="title-count"
+              className={`text-xs tabular-nums ${
+                title.length > MAX_TITLE_LENGTH * 0.9
+                  ? "text-(--ledger-ink)"
+                  : "text-[rgb(var(--ledger-ink-rgb)/0.30)]"
+              }`}
+            >
+              {title.length} / {MAX_TITLE_LENGTH}
+            </span>
+          </div>
+          <input
+            id="title"
+            name="title"
+            required
+            disabled={isLoading}
+            value={title}
+            onChange={(event) => setTitle(event.target.value)}
+            maxLength={MAX_TITLE_LENGTH}
+            autoComplete="off"
+            className={`${field} h-14 border-0 border-b border-[rgb(var(--ledger-ink-rgb)/0.25)] text-xl font-medium focus:border-(--ledger-ink) sm:text-2xl`}
+            aria-describedby="title-count"
+          />
         </div>
 
-        <form onSubmit={onSubmit} className="space-y-8">
-          <div>
-            <div className="mb-2 flex items-end justify-between gap-4">
-              <label
-                htmlFor="title"
-                className="text-[11px] uppercase tracking-widest"
-              >
-                Heading
-              </label>
-              <span
-                id="title-count"
-                className={`text-xs ${
-                  title.length > MAX_TITLE_LENGTH * 0.9
-                    ? "text-destructive"
-                    : "text-foreground/35"
-                }`}
-              >
-                {title.length} / {MAX_TITLE_LENGTH}
-              </span>
-            </div>
-            <input
-              id="title"
-              name="title"
-              placeholder="bar lights / field smoke / highlights"
-              required
-              disabled={isLoading}
-              value={title}
-              onChange={(event) => setTitle(event.target.value)}
-              maxLength={MAX_TITLE_LENGTH}
-              className="h-16 w-full rounded-none border-0 border-b-2 border-foreground bg-transparent px-0 text-2xl shadow-none placeholder:text-foreground/20 focus:border-(--ledger-ink) focus:ring-0"
-              aria-describedby="title-count"
-            />
+        <div>
+          <div className="flex items-baseline justify-between gap-4 text-sm">
+            <label
+              htmlFor="content"
+              className="text-[rgb(var(--ledger-ink-rgb)/0.40)]"
+            >
+              note
+            </label>
+            <span
+              id="content-count"
+              className={`text-xs tabular-nums ${
+                content.length > MAX_CONTENT_LENGTH * 0.9
+                  ? "text-(--ledger-ink)"
+                  : "text-[rgb(var(--ledger-ink-rgb)/0.30)]"
+              }`}
+            >
+              {content.length.toLocaleString()} /{" "}
+              {MAX_CONTENT_LENGTH.toLocaleString()}
+            </span>
           </div>
+          <textarea
+            id="content"
+            name="content"
+            required
+            disabled={isLoading}
+            value={content}
+            onChange={(event) => setContent(event.target.value)}
+            maxLength={MAX_CONTENT_LENGTH}
+            rows={9}
+            className={`${field} mt-3 resize-y border border-[rgb(var(--ledger-ink-rgb)/0.20)] px-4 py-3 text-base leading-7 focus:border-(--ledger-ink)`}
+            aria-describedby="content-count"
+          />
+        </div>
 
-          <div>
-            <div className="mb-2 flex items-end justify-between gap-4">
-              <label
-                htmlFor="content"
-                className="text-[11px] uppercase tracking-widest"
-              >
-                Note
-              </label>
-              <span
-                id="content-count"
-                className={`text-xs ${
-                  content.length > MAX_CONTENT_LENGTH * 0.9
-                    ? "text-destructive"
-                    : "text-foreground/35"
-                }`}
-              >
-                {content.length.toLocaleString()} /{" "}
-                {MAX_CONTENT_LENGTH.toLocaleString()}
-              </span>
-            </div>
-            <textarea
-              id="content"
-              name="content"
-              placeholder="leave it here..."
-              required
-              disabled={isLoading}
-              value={content}
-              onChange={(event) => setContent(event.target.value)}
-              maxLength={MAX_CONTENT_LENGTH}
-              className="min-h-[260px] w-full resize-y rounded-none border border-foreground/25 bg-[rgb(var(--ledger-ink-rgb)/0.04)] px-5 py-4 text-lg leading-relaxed shadow-none placeholder:text-foreground/20 focus:border-(--ledger-ink) focus:ring-0"
-              aria-describedby="content-count"
-            />
-          </div>
-
-          {!session && status !== "loading" && (
-            <p className="text-sm leading-relaxed text-[rgb(var(--ledger-ink-rgb)/0.45)]">
-              Pinned as anonymous.{" "}
-              <button
-                type="button"
-                onClick={() => {
-                  window.sessionStorage.setItem(
-                    DRAFT_KEY,
-                    JSON.stringify({ title, content }),
-                  );
-                  void signIn("google", { callbackUrl: "/forum/new" });
-                }}
-                className="underline decoration-[rgb(var(--ledger-ink-rgb)/0.25)] underline-offset-4 transition hover:decoration-(--ledger-ink)"
-              >
-                Sign in
-              </button>{" "}
-              to put your name on it — your draft waits.
-            </p>
-          )}
-
-          <div className="flex flex-col-reverse gap-3 border-t border-foreground/15 pt-6 sm:flex-row sm:items-center sm:justify-between">
+        <div className="flex flex-wrap items-center justify-between gap-x-8 gap-y-4 border-t border-[rgb(var(--ledger-ink-rgb)/0.10)] pt-6 text-sm">
+          <p className="mb-0 max-w-md leading-relaxed text-[rgb(var(--ledger-ink-rgb)/0.45)]">
+            {signedOut ? (
+              <>
+                Goes up unsigned.{" "}
+                <button
+                  type="button"
+                  onClick={() => {
+                    window.sessionStorage.setItem(
+                      DRAFT_KEY,
+                      JSON.stringify({ title, content }),
+                    );
+                    void signIn("google", { callbackUrl: "/forum/new" });
+                  }}
+                  className="underline decoration-[rgb(var(--ledger-ink-rgb)/0.25)] underline-offset-4 transition hover:text-(--ledger-ink) hover:decoration-(--ledger-ink)"
+                >
+                  Sign in
+                </button>{" "}
+                to put a name on it; the draft is kept.
+              </>
+            ) : session?.user ? (
+              <>Signed as {session.user.name ?? "you"}.</>
+            ) : null}
+          </p>
+          <span className="flex items-center gap-6">
             <button
               type="button"
-              onClick={() => router.back()}
+              onClick={() => router.push("/forum")}
               disabled={isLoading}
-              className="min-h-11 text-left text-[11px] uppercase tracking-widest text-foreground/45 transition hover:text-foreground"
+              className="text-[rgb(var(--ledger-ink-rgb)/0.45)] transition hover:text-(--ledger-ink)"
             >
-              Keep it to myself
+              cancel
             </button>
             <button
               type="submit"
               disabled={isLoading || !isValid || status === "loading"}
-              className="group inline-flex min-h-12 items-center justify-center gap-3 border border-foreground bg-foreground px-6 text-[11px] uppercase tracking-widest text-background transition hover:border-(--ledger-ink) hover:opacity-80 disabled:cursor-not-allowed disabled:opacity-35"
+              className="min-h-11 border border-(--ledger-ink) px-5 transition hover:bg-(--ledger-ink) hover:text-(--ledger-paper) disabled:cursor-not-allowed disabled:opacity-35 disabled:hover:bg-transparent disabled:hover:text-(--ledger-ink)"
             >
-              {isLoading ? "Pinning..." : "Pin it up"}
-              {!isLoading && (
-                <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-              )}
+              {isLoading ? "pinning" : "pin it"}
             </button>
-          </div>
-        </form>
-      </div>
-
-      <aside className="lg:sticky lg:top-32 lg:self-start">
-        <div className="relative mx-auto max-w-md border border-foreground/20 bg-[rgb(var(--ledger-ink-rgb)/0.04)] px-7 pb-10 pt-8 shadow-[7px_9px_0_rgba(49,87,236,0.12)] sm:px-9 sm:pb-14">
-          <p className="mb-8 text-[10px] uppercase tracking-widest text-foreground/40">
-            a note from you
-          </p>
-          <h2 className="font-medium mb-5 wrap-break-word text-3xl leading-[0.94] text-foreground sm:text-4xl">
-            {previewTitle}
-          </h2>
-          <p className="whitespace-pre-wrap wrap-break-word text-lg leading-relaxed text-foreground/60">
-            {previewContent}
-          </p>
+          </span>
         </div>
-      </aside>
-    </div>
+      </form>
+    </>
   );
 }

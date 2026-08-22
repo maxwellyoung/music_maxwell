@@ -6,7 +6,6 @@ import { useSession } from "next-auth/react";
 import dynamic from "next/dynamic";
 import { subscribeToForumTopics } from "~/lib/pusherClient";
 
-
 const PAGE_SIZE = 10;
 
 const TopicActions = dynamic(() => import("~/components/forum/TopicActions"), {
@@ -23,15 +22,23 @@ export type ForumTopic = {
   _count: { replies: number };
 };
 
+const shortDate = (iso: string) =>
+  new Date(iso).toLocaleDateString("en-NZ", {
+    day: "numeric",
+    month: "short",
+    year: "numeric",
+  });
+
 function ForumTopicSkeleton() {
   return (
-    <div className="animate-pulse border-t border-[rgb(var(--ledger-ink-rgb)/0.10)] py-6">
-      <div className="mb-3 h-5 w-2/3 bg-[rgb(var(--ledger-ink-rgb)/0.10)]" />
-      <div className="h-4 w-1/2 bg-[rgb(var(--ledger-ink-rgb)/0.06)]" />
+    <div className="animate-pulse border-b border-[rgb(var(--ledger-ink-rgb)/0.10)] py-3">
+      <div className="h-4 w-1/2 bg-[rgb(var(--ledger-ink-rgb)/0.08)]" />
     </div>
   );
 }
 
+// The wall is ruled like the discography: one row per note, title on
+// the left, who and when on the right, the whole row inverting on hover.
 export default function ForumTopicsInfinite({
   initialTopics,
   total,
@@ -61,7 +68,7 @@ export default function ForumTopicsInfinite({
       setTopics((prev) => [...prev, ...data.topics]);
       setHasMore(topics.length + data.topics.length < data.total);
     } catch {
-      // Optionally handle error
+      // The rule at the bottom simply stays; a retry comes with the next scroll.
     } finally {
       setLoading(false);
     }
@@ -84,10 +91,8 @@ export default function ForumTopicsInfinite({
     return () => observer.disconnect();
   }, [loadMore, hasMore]);
 
-  // Real-time updates
   useEffect(() => {
     if (query) return;
-
     const unsubscribe = subscribeToForumTopics((newTopic: ForumTopic) => {
       setTopics((prev) => {
         if (prev.some((t) => t.id === newTopic.id)) return prev;
@@ -99,86 +104,56 @@ export default function ForumTopicsInfinite({
 
   return (
     <section aria-label="Notes" className="min-w-0">
-      <div className="border-b border-[rgb(var(--ledger-ink-rgb)/0.10)]">
-        {topics.length === 0 && (
-          <div className="border-t border-[rgb(var(--ledger-ink-rgb)/0.10)] py-12">
-            <p className="text-base text-[rgb(var(--ledger-ink-rgb)/0.60)]">
-              {query ? "No notes matched." : "No notes yet — be first."}
-            </p>
-            {query && (
-              <p className="mt-2 text-sm text-[rgb(var(--ledger-ink-rgb)/0.40)]">
-                Try a shorter word or username.
-              </p>
-            )}
-          </div>
-        )}
-        {topics.map((topic) => (
-          <article
-            key={topic.id}
-            className="group relative border-t border-[rgb(var(--ledger-ink-rgb)/0.10)] py-5"
-          >
-            <div className="flex items-start justify-between gap-4">
+      {topics.length === 0 && !loading && (
+        <p className="border-t border-[rgb(var(--ledger-ink-rgb)/0.10)] pt-4 text-sm text-[rgb(var(--ledger-ink-rgb)/0.45)]">
+          {query ? "Nothing matched." : "Nothing on the wall yet."}
+        </p>
+      )}
+      {topics.length > 0 && (
+        <ol className="border-t border-[rgb(var(--ledger-ink-rgb)/0.10)]">
+          {topics.map((topic) => (
+            <li key={topic.id} className="flex items-stretch">
               <Link
                 href={`/forum/${topic.id}`}
-                className="min-w-0 flex-1 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-(--ledger-ink)"
+                className="group flex min-w-0 flex-1 items-baseline justify-between gap-6 border-b border-[rgb(var(--ledger-ink-rgb)/0.10)] py-3 text-sm transition-colors duration-150 hover:bg-(--ledger-ink) hover:text-(--ledger-paper) focus-visible:bg-(--ledger-ink) focus-visible:text-(--ledger-paper) focus-visible:outline-hidden"
               >
-                <h3 className="mb-1 text-base font-medium leading-snug transition-colors group-hover:text-[rgb(var(--ledger-ink-rgb)/0.60)]">
-                  {topic.title}
-                </h3>
-                <p className="max-w-prose text-sm leading-relaxed text-[rgb(var(--ledger-ink-rgb)/0.55)]">
-                  {topic.content.length > 180
-                    ? `${topic.content.slice(0, 180).trim()}…`
-                    : topic.content}
-                </p>
+                <span className="min-w-0 transition-transform duration-200 [transition-timing-function:var(--ease-out-strong)] group-hover:translate-x-3 group-focus-visible:translate-x-3">
+                  <span className="block truncate font-medium">
+                    {topic.title}
+                  </span>
+                  <span className="mt-0.5 hidden truncate text-[rgb(var(--ledger-ink-rgb)/0.45)] transition-colors group-hover:text-[rgb(var(--ledger-paper-rgb)/0.60)] group-focus-visible:text-[rgb(var(--ledger-paper-rgb)/0.60)] sm:block">
+                    {topic.content}
+                  </span>
+                </span>
+                <span className="shrink-0 whitespace-nowrap tabular-nums text-[rgb(var(--ledger-ink-rgb)/0.40)] transition-[color,transform] duration-200 [transition-timing-function:var(--ease-out-strong)] group-hover:-translate-x-3 group-hover:text-[rgb(var(--ledger-paper-rgb)/0.60)] group-focus-visible:-translate-x-3 group-focus-visible:text-[rgb(var(--ledger-paper-rgb)/0.60)]">
+                  {topic.author?.username ?? "anonymous"} ·{" "}
+                  {shortDate(topic.createdAt)}
+                  {topic._count.replies > 0 && (
+                    <>
+                      {" · "}
+                      {topic._count.replies}{" "}
+                      {topic._count.replies === 1 ? "echo" : "echoes"}
+                    </>
+                  )}
+                </span>
               </Link>
-              {userRole === "admin" && <TopicActions topicId={topic.id} />}
-            </div>
-            <div className="mt-2 flex flex-wrap items-baseline gap-x-4 gap-y-1 text-xs tabular-nums text-[rgb(var(--ledger-ink-rgb)/0.35)]">
-              {topic.author?.username ? (
-                <Link
-                  href={`/user/${topic.author.username}`}
-                  className="relative z-10 transition-colors hover:text-(--ledger-ink)"
-                >
-                  @{topic.author.username}
-                </Link>
-              ) : (
-                <span>anonymous</span>
+              {userRole === "admin" && (
+                <span className="flex items-center border-b border-[rgb(var(--ledger-ink-rgb)/0.10)] pl-4">
+                  <TopicActions topicId={topic.id} />
+                </span>
               )}
-              <span>
-                {new Date(topic.updatedAt).toLocaleDateString("en-NZ", {
-                  day: "numeric",
-                  month: "short",
-                  year: "numeric",
-                })}
-              </span>
-              <span>
-                {topic._count.replies}{" "}
-                {topic._count.replies === 1 ? "echo" : "echoes"}
-              </span>
-            </div>
-          </article>
-        ))}
-        {loading &&
-          hasMore &&
-          Array.from({ length: 2 }).map((_, i) => (
-            <ForumTopicSkeleton key={i} />
+            </li>
           ))}
-      </div>
-      <div
-        ref={loaderRef}
-        className="flex min-h-16 items-center justify-center"
-      >
-        {loading && (
-          <span className="text-xs text-[rgb(var(--ledger-ink-rgb)/0.40)]">
-            loading more
-          </span>
-        )}
-        {!hasMore && topics.length > 0 && (
-          <span className="text-xs text-[rgb(var(--ledger-ink-rgb)/0.30)]">
-            — end of the square —
-          </span>
-        )}
-      </div>
+          {loading &&
+            hasMore &&
+            Array.from({ length: 2 }).map((_, i) => (
+              <li key={i}>
+                <ForumTopicSkeleton />
+              </li>
+            ))}
+        </ol>
+      )}
+      <div ref={loaderRef} className="min-h-12" aria-hidden="true" />
     </section>
   );
 }

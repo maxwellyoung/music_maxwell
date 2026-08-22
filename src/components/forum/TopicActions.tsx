@@ -4,7 +4,6 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useToast } from "~/components/ui/use-toast";
 import ConfirmModal from "./ConfirmModal";
-import { Trash } from "phosphor-react";
 
 interface TopicActionsProps {
   topicId: string;
@@ -16,10 +15,6 @@ export default function TopicActions({ topicId }: TopicActionsProps) {
   const [isDeleting, setIsDeleting] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
 
-  async function handleDelete() {
-    setConfirmOpen(true);
-  }
-
   async function confirmDelete() {
     setIsDeleting(true);
     try {
@@ -29,12 +24,12 @@ export default function TopicActions({ topicId }: TopicActionsProps) {
         body: JSON.stringify({ topicId }),
       });
       if (!res.ok) throw new Error("Failed to delete topic");
-      toast({ title: "Topic deleted successfully" });
+      toast({ title: "Note taken down." });
       router.push("/forum");
+      router.refresh();
     } catch {
       toast({
-        title: "Error",
-        description: "Failed to delete topic. Please try again.",
+        title: "Could not take the note down.",
         variant: "destructive",
       });
     } finally {
@@ -43,31 +38,23 @@ export default function TopicActions({ topicId }: TopicActionsProps) {
     }
   }
 
-  function cancelDelete() {
-    setConfirmOpen(false);
-  }
-
   return (
     <>
       <button
-        onClick={handleDelete}
+        type="button"
+        onClick={() => setConfirmOpen(true)}
         disabled={isDeleting}
-        className="group ml-2 flex h-10 w-10 items-center justify-center rounded-full border border-transparent bg-transparent p-0 text-muted-foreground transition hover:border-destructive hover:bg-destructive/10 hover:text-destructive focus:outline-hidden focus:ring-2 focus:ring-destructive/40"
-        aria-label="Delete Topic"
-        title="Delete Topic"
+        className="text-xs text-[rgb(var(--ledger-ink-rgb)/0.40)] underline decoration-[rgb(var(--ledger-ink-rgb)/0.20)] underline-offset-4 transition hover:text-(--ledger-ink) disabled:opacity-40"
       >
-        {isDeleting ? (
-          <span className="h-5 w-5 animate-spin rounded-full border-2 border-destructive border-t-transparent" />
-        ) : (
-          <Trash size={20} weight="regular" />
-        )}
+        {isDeleting ? "taking down" : "take down"}
       </button>
 
       <ConfirmModal
         open={confirmOpen}
         onConfirm={confirmDelete}
-        onCancel={cancelDelete}
-        message="Are you sure you want to delete this topic? This action cannot be undone."
+        onCancel={() => setConfirmOpen(false)}
+        message="Take this note down? Its echoes go with it."
+        confirmLabel="take down"
       />
     </>
   );
