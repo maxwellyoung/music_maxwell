@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { getServerSession } from "next-auth";
+import { notFound } from "next/navigation";
 import Link from "next/link";
 import NoteBody from "~/components/forum/NoteBody";
 import RepliesList from "~/components/forum/RepliesList";
@@ -36,26 +37,7 @@ export default async function TopicPage({
     },
   });
 
-  if (!topic) {
-    return (
-      <SquareShell back={{ href: "/forum", label: "the square" }}>
-        <p className="max-w-2xl text-xl leading-snug sm:text-2xl">
-          <span className="font-semibold">Gone.</span>{" "}
-          <span className="text-[rgb(var(--ledger-ink-rgb)/0.45)]">
-            This note is no longer in the square.
-          </span>
-        </p>
-        <p className="mt-5 text-sm">
-          <Link
-            href="/forum"
-            className="underline decoration-[rgb(var(--ledger-ink-rgb)/0.25)] underline-offset-4 transition hover:decoration-(--ledger-ink)"
-          >
-            back to the wall
-          </Link>
-        </p>
-      </SquareShell>
-    );
-  }
+  if (!topic) notFound();
 
   const user = session?.user as { id: string; role?: string } | undefined;
   const canModify = user?.id === topic.authorId || user?.role === "admin";

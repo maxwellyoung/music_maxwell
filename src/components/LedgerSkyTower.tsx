@@ -1,8 +1,9 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import type * as Three from "three";
 
-type ThreeModule = typeof import("three");
+type ThreeModule = typeof Three;
 
 // The dithered Sky Tower from ninetynine.digital, ported to vanilla three
 // and re-cut for the ledger: only the dark dither dots are drawn, in the

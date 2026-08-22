@@ -472,6 +472,19 @@ html {
 }
 
 /* Ledger typography: selection in ink, balanced headings, calm prose. */
+/* The ink switch glyph turns with the scheme; same selectors as the palette. */
+.ledger-switch {
+  transform: rotate(0deg);
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-ledger="light"]) .ledger-switch {
+    transform: rotate(180deg);
+  }
+}
+:root[data-ledger="dark"] .ledger-switch {
+  transform: rotate(180deg);
+}
+
 .ledger ::selection {
   background: var(--ledger-ink);
   color: var(--ledger-paper);
