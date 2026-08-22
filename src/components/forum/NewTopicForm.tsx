@@ -57,17 +57,17 @@ export function NewTopicForm({
       });
 
       if (!response.ok) {
+        // The square explains itself (rate limits, busy wall, banned
+        // words); relay that rather than a generic line.
         let errorMsg = "Failed to pin this note. Please try again.";
-        if (response.status === 400) {
-          try {
-            const data = await response.json();
-            if (data.error?.toLowerCase().includes("inappropriate")) {
-              errorMsg = "This note contains language the wall cannot accept.";
-            } else {
-              errorMsg = data.error ?? errorMsg;
-            }
-          } catch {}
-        }
+        try {
+          const data = (await response.json()) as { error?: string };
+          if (data.error?.toLowerCase().includes("inappropriate")) {
+            errorMsg = "This note contains language the wall cannot accept.";
+          } else if (data.error && response.status !== 500) {
+            errorMsg = data.error;
+          }
+        } catch {}
         throw new Error(errorMsg);
       }
 
