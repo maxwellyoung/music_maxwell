@@ -226,15 +226,22 @@ export default function LedgerSkyTower({
       let modelSize: InstanceType<typeof THREE.Vector3> | undefined;
 
       // Scale so the whole silhouette fits the column at any aspect ratio —
-      // fitted, never cropped.
+      // fitted, never cropped. The frustum is measured at the model's near
+      // face, not at the origin: a deep model (the Beehive's plinth) sits
+      // closer to the camera than its centre, where less is visible, and
+      // fitting at z = 0 let its bottom rim run off the column.
       const fit = () => {
         if (!modelSize) return;
+        const margin = 0.86;
         const distance = camera.position.z;
-        const visibleH = 2 * distance * Math.tan((camera.fov * Math.PI) / 360);
-        const visibleW = visibleH * camera.aspect;
+        const tan = Math.tan((camera.fov * Math.PI) / 360);
+        // scale * size <= margin * 2 * tan * a * (distance - scale * depth / 2)
+        const along = (size: number, a: number) =>
+          (margin * 2 * tan * a * distance) /
+          (size + margin * tan * a * modelSize!.z);
         const scale = Math.min(
-          (visibleH * 0.86) / modelSize.y,
-          (visibleW * 0.86) / modelSize.x,
+          along(modelSize.y, 1),
+          along(modelSize.x, camera.aspect),
         );
         group.scale.setScalar(scale);
         group.position.y = 0;
@@ -351,7 +358,8 @@ export default function LedgerSkyTower({
         material.uniforms.uAudio!.value = audioLevel;
         material.uniforms.uTime!.value = t;
         if (mesh) {
-          const scrollTilt = window.scrollY * 0.00035;
+          // Capped: a long wall would otherwise tip the monument out of frame.
+          const scrollTilt = Math.min(window.scrollY * 0.00035, 0.12);
           if (reduceMotion.matches) {
             mesh.rotation.set(0, 0.6 + dragOffset, 0);
           } else {
