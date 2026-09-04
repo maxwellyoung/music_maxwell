@@ -24,16 +24,9 @@ const replyRateLimiter = rateLimit({
 export async function POST(request: Request) {
   const session = await getServerSession(authOptions);
   // Unsigned echoes are allowed for now; anonymous callers rate-limit
-  // by address instead of account.
-  if (!session?.user?.id && !(await anonymousWallCeiling(6))) {
-    return NextResponse.json(
-      { error: "The square is busy — try again in a minute." },
-      { status: 429 },
-    );
-  }
-  const authorId = session?.user?.id ?? (await anonymousAuthorId());
+  // by address instead of account. The in-memory limiter runs before
+  // anything touches the database.
   const limiterToken = session?.user?.id ?? `anon-reply:${requestIp(request)}`;
-
   const rateLimitResult = await replyRateLimiter.check(
     RATE_LIMITS.REPLY_MAX_PER_INTERVAL,
     limiterToken,
@@ -63,11 +56,33 @@ export async function POST(request: Request) {
       );
     }
 
+    // A missing note is a 404, not a foreign-key failure dressed as a 500.
+    const topic = await prisma.topic.findUnique({
+      where: { id: topicId },
+      select: { id: true },
+    });
+    if (!topic) {
+      return NextResponse.json({ error: "Note not found" }, { status: 404 });
+    }
+
+    if (!session?.user?.id && !(await anonymousWallCeiling(6))) {
+      return NextResponse.json(
+        { error: "The square is busy — try again in a minute." },
+        { status: 429 },
+      );
+    }
+    const authorId = session?.user?.id ?? (await anonymousAuthorId());
+
+    // The broadcast payload carries the author, so other readers see the
+    // name on a signed echo rather than "anonymous" until they reload.
     const reply = await prisma.reply.create({
       data: {
         content,
         topicId,
         authorId,
+      },
+      include: {
+        author: { select: { name: true, role: true, username: true } },
       },
     });
 
@@ -115,7 +130,13 @@ export async function DELETE(request: Request) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    await prisma.reply.delete({ where: { id: replyId } });
+    // Report.replyId is ON DELETE RESTRICT, so the reports on an echo go
+    // with it — otherwise the one echo someone reported is the one echo
+    // that can never be taken down.
+    await prisma.$transaction([
+      prisma.report.deleteMany({ where: { replyId } }),
+      prisma.reply.delete({ where: { id: replyId } }),
+    ]);
     return NextResponse.json({ success: true });
   } catch {
     return NextResponse.json(

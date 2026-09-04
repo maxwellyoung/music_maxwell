@@ -37,13 +37,6 @@ export async function POST(request: Request) {
         { status: 429 },
       );
     }
-    if (!(await anonymousWallCeiling(6))) {
-      return NextResponse.json(
-        { error: "The square is busy — try again in a minute." },
-        { status: 429 },
-      );
-    }
-    authorId = await anonymousAuthorId();
   }
 
   try {
@@ -62,6 +55,17 @@ export async function POST(request: Request) {
         { error: "Your topic contains inappropriate language." },
         { status: 400 },
       );
+    }
+
+    // The database is only consulted once the note itself has passed.
+    if (!authorId) {
+      if (!(await anonymousWallCeiling(6))) {
+        return NextResponse.json(
+          { error: "The square is busy — try again in a minute." },
+          { status: 429 },
+        );
+      }
+      authorId = await anonymousAuthorId();
     }
 
     const topic = await prisma.topic.create({
@@ -136,15 +140,14 @@ export async function DELETE(request: Request) {
       return NextResponse.json({ error: "Forbidden" }, { status: 403 });
     }
 
-    // Delete all replies first (due to foreign key constraints)
-    await prisma.reply.deleteMany({
-      where: { topicId },
-    });
-
-    // Then delete the topic
-    await prisma.topic.delete({
-      where: { id: topicId },
-    });
+    // Reports → replies → topic, in one transaction: both foreign keys
+    // are ON DELETE RESTRICT, so a half-finished delete would leave a
+    // note with no echoes rather than no note.
+    await prisma.$transaction([
+      prisma.report.deleteMany({ where: { reply: { topicId } } }),
+      prisma.reply.deleteMany({ where: { topicId } }),
+      prisma.topic.delete({ where: { id: topicId } }),
+    ]);
 
     return NextResponse.json({ success: true });
   } catch {

@@ -6,7 +6,7 @@ import { useState, useEffect } from "react";
 import ConfirmModal from "./ConfirmModal";
 import { useToast } from "~/components/ui/use-toast";
 import Link from "next/link";
-import { pusherClient } from "~/lib/pusherClient";
+import { subscribe } from "~/lib/pusherClient";
 import { renderRichContent } from "./richContent";
 
 // Type for a reply
@@ -51,20 +51,13 @@ export default function RepliesList({
 
   useEffect(() => {
     // Subscribe to real-time new replies for this topic
-    const channelName = `forum-replies-${topicId}`;
-    const channel = pusherClient.subscribe(channelName);
-    const handleNewReply = (reply: Reply) => {
+    return subscribe<Reply>(`forum-replies-${topicId}`, "new-reply", (reply) => {
       setReplies((prev) => {
         // Avoid duplicates
         if (prev.some((r) => r.id === reply.id)) return prev;
         return [...prev, reply];
       });
-    };
-    channel.bind("new-reply", handleNewReply);
-    return () => {
-      channel.unbind("new-reply", handleNewReply);
-      pusherClient.unsubscribe(channelName);
-    };
+    });
   }, [topicId]);
 
   async function handleDelete(replyId: string) {
@@ -109,16 +102,24 @@ export default function RepliesList({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ replyId: toReportId, reason: reportReason }),
       });
-      if (!res.ok) throw new Error("Failed to report reply");
+      if (res.status === 401) {
+        throw new Error("Sign in to report an echo.");
+      }
+      if (!res.ok) throw new Error("The report did not go through.");
       toast({
-        title: "Reply reported",
-        description: "Thank you for your feedback.",
+        title: "Reported.",
+        description: "Thank you — it will be looked at.",
       });
       setReportOpen(false);
       setToReportId(null);
       setReportReason("");
-    } catch {
-      toast({ title: "Failed to report reply", variant: "destructive" });
+    } catch (err) {
+      toast({
+        title: "Not reported.",
+        description:
+          err instanceof Error ? err.message : "The report did not go through.",
+        variant: "destructive",
+      });
     } finally {
       setReportLoading(false);
     }

@@ -43,8 +43,11 @@ export default async function ForumPage({
       }),
       prisma.topic.count({ where }),
     ]);
+    // The row shows one truncated line; a 10,000-character note need
+    // not ride along in the HTML for it.
     topics = topicsRes.map((topic) => ({
       ...topic,
+      content: topic.content.slice(0, 240),
       createdAt: topic.createdAt.toISOString(),
       updatedAt: topic.updatedAt.toISOString(),
     }));

@@ -1,13 +1,19 @@
+"use client";
+
 import Pusher from "pusher-js";
 
-// These should be set in your .env file
-const key = process.env.NEXT_PUBLIC_PUSHER_KEY!;
-const cluster = process.env.NEXT_PUBLIC_PUSHER_CLUSTER!;
+// Realtime is a nicety on the client as on the server: with no key the
+// wall simply does not update live, instead of throwing during import
+// and taking the whole square down with it.
+const key = process.env.NEXT_PUBLIC_PUSHER_KEY;
+const cluster = process.env.NEXT_PUBLIC_PUSHER_CLUSTER;
 
-export const pusherClient = new Pusher(key, {
-  cluster,
-  forceTLS: true,
-});
+let client: Pusher | null = null;
+function getClient(): Pusher | null {
+  if (typeof window === "undefined" || !key || !cluster) return null;
+  client ??= new Pusher(key, { cluster, forceTLS: true });
+  return client;
+}
 
 // Define ForumTopic type (should match your backend)
 export type ForumTopic = {
@@ -20,11 +26,23 @@ export type ForumTopic = {
   _count: { replies: number };
 };
 
-export function subscribeToForumTopics(callback: (data: ForumTopic) => void) {
-  const channel = pusherClient.subscribe("forum-topics");
-  channel.bind("new-topic", callback);
+// Bind one handler to one event on one channel; the returned function
+// unbinds and unsubscribes. A no-op when realtime is not configured.
+export function subscribe<T>(
+  channelName: string,
+  event: string,
+  callback: (data: T) => void,
+): () => void {
+  const pusher = getClient();
+  if (!pusher) return () => undefined;
+  const channel = pusher.subscribe(channelName);
+  channel.bind(event, callback);
   return () => {
-    channel.unbind("new-topic", callback);
-    pusherClient.unsubscribe("forum-topics");
+    channel.unbind(event, callback);
+    pusher.unsubscribe(channelName);
   };
+}
+
+export function subscribeToForumTopics(callback: (data: ForumTopic) => void) {
+  return subscribe<ForumTopic>("forum-topics", "new-topic", callback);
 }

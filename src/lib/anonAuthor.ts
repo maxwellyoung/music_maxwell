@@ -29,10 +29,10 @@ export async function anonymousWallCeiling(
   const since = new Date(Date.now() - 60_000);
   const [topics, replies] = await Promise.all([
     prisma.topic.count({
-      where: { authorId: "anonymous-wall", createdAt: { gte: since } },
+      where: { authorId: ANON_ID, createdAt: { gte: since } },
     }),
     prisma.reply.count({
-      where: { authorId: "anonymous-wall", createdAt: { gte: since } },
+      where: { authorId: ANON_ID, createdAt: { gte: since } },
     }),
   ]);
   return topics + replies < perMinute;

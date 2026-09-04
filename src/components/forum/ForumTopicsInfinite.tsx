@@ -64,6 +64,7 @@ export default function ForumTopicsInfinite({
           query ? `&q=${encodeURIComponent(query)}` : ""
         }`,
       );
+      if (!res.ok) throw new Error(String(res.status));
       const data: { topics: ForumTopic[]; total: number } = await res.json();
       setTopics((prev) => [...prev, ...data.topics]);
       setHasMore(topics.length + data.topics.length < data.total);

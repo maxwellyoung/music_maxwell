@@ -23,6 +23,14 @@ export async function POST(request: Request) {
     }
     const { replyId, reason } = parseResult.data;
 
+    const reply = await prisma.reply.findUnique({
+      where: { id: replyId },
+      select: { id: true },
+    });
+    if (!reply) {
+      return NextResponse.json({ error: "Reply not found" }, { status: 404 });
+    }
+
     // Create the report in the database
     const report = await prisma.report.create({
       data: {

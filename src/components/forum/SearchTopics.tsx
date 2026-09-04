@@ -1,40 +1,41 @@
 "use client";
 
-import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { useDebounce } from "~/hooks/useDebounce";
 
 // One ruled field, no label: it sits on the standfirst line beside the
-// count, and the count answers it.
+// count, and the count answers it. The URL is the source of truth; the
+// field only pushes once its debounce has settled on something else.
 export function SearchTopics({ initialQuery }: { initialQuery?: string }) {
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const [query, setQuery] = useState(initialQuery ?? "");
+  const current = initialQuery ?? "";
+  const [query, setQuery] = useState(current);
   const [isPending, startTransition] = useTransition();
   const debouncedQuery = useDebounce(query, 300);
+  const lastServer = useRef(current);
 
-  const createQueryString = useCallback(
-    (name: string, value: string) => {
-      const params = new URLSearchParams(searchParams.toString());
-      if (value) {
-        params.set(name, value);
-      } else {
-        params.delete(name);
-      }
-      return params.toString();
-    },
-    [searchParams],
-  );
-
+  // One pass, two jobs, never both. When the URL changes underneath the
+  // field (the clear link, back and forward) and the field still shows
+  // the previous URL's query, the field follows and nothing is pushed.
+  // Otherwise the field pushes once its debounce has settled on
+  // something other than the URL. Text typed mid-flight is left alone.
   useEffect(() => {
-    if (debouncedQuery !== initialQuery) {
-      startTransition(() => {
-        router.push(
-          `/forum${debouncedQuery ? `?${createQueryString("q", debouncedQuery)}` : ""}`,
-        );
-      });
+    if (current !== lastServer.current) {
+      const previous = lastServer.current;
+      lastServer.current = current;
+      if (query === previous) setQuery(current);
+      return;
     }
-  }, [debouncedQuery, createQueryString, router, initialQuery]);
+    if (debouncedQuery !== query || debouncedQuery === current) return;
+    startTransition(() => {
+      router.push(
+        debouncedQuery
+          ? `/forum?q=${encodeURIComponent(debouncedQuery)}`
+          : "/forum",
+      );
+    });
+  }, [current, debouncedQuery, query, router]);
 
   return (
     <input

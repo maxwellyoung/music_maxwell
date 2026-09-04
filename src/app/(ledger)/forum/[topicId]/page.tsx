@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { getServerSession } from "next-auth";
 import { notFound } from "next/navigation";
 import Link from "next/link";
+import { cache } from "react";
 import NoteBody from "~/components/forum/NoteBody";
 import RepliesList from "~/components/forum/RepliesList";
 import ReplyForm from "~/components/forum/ReplyForm";
@@ -10,21 +11,11 @@ import TopicActions from "~/components/forum/TopicActions";
 import { authOptions } from "~/lib/auth";
 import { prisma } from "~/lib/prisma";
 
-export const metadata: Metadata = {
-  title: "Note — Maxwell Young",
-  description: "A note from the town square.",
-};
-
 export const dynamic = "force-dynamic";
 
-export default async function TopicPage({
-  params,
-}: {
-  params: Promise<{ topicId: string }>;
-}) {
-  const { topicId } = await params;
-  const session = await getServerSession(authOptions);
-  const topic = await prisma.topic.findUnique({
+// One query serves both the metadata and the page within a request.
+const getTopic = cache((topicId: string) =>
+  prisma.topic.findUnique({
     where: { id: topicId },
     include: {
       author: { select: { name: true, id: true, username: true } },
@@ -35,7 +26,37 @@ export default async function TopicPage({
         orderBy: { createdAt: "asc" },
       },
     },
-  });
+  }),
+);
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ topicId: string }>;
+}): Promise<Metadata> {
+  const topic = await getTopic((await params).topicId);
+  if (!topic) {
+    return { title: "Note — Maxwell Young", robots: { index: false } };
+  }
+  const excerpt = topic.content.replace(/\s+/g, " ").trim();
+  return {
+    title: `${topic.title} — Maxwell Young`,
+    description:
+      excerpt.length > 160 ? `${excerpt.slice(0, 157).trimEnd()}…` : excerpt,
+    alternates: { canonical: `/forum/${topic.id}` },
+  };
+}
+
+export default async function TopicPage({
+  params,
+}: {
+  params: Promise<{ topicId: string }>;
+}) {
+  const { topicId } = await params;
+  const [session, topic] = await Promise.all([
+    getServerSession(authOptions),
+    getTopic(topicId),
+  ]);
 
   if (!topic) notFound();
 
