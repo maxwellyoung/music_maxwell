@@ -51,13 +51,17 @@ export default function RepliesList({
 
   useEffect(() => {
     // Subscribe to real-time new replies for this topic
-    return subscribe<Reply>(`forum-replies-${topicId}`, "new-reply", (reply) => {
-      setReplies((prev) => {
-        // Avoid duplicates
-        if (prev.some((r) => r.id === reply.id)) return prev;
-        return [...prev, reply];
-      });
-    });
+    return subscribe<Reply>(
+      `forum-replies-${topicId}`,
+      "new-reply",
+      (reply) => {
+        setReplies((prev) => {
+          // Avoid duplicates
+          if (prev.some((r) => r.id === reply.id)) return prev;
+          return [...prev, reply];
+        });
+      },
+    );
   }, [topicId]);
 
   async function handleDelete(replyId: string) {
@@ -172,7 +176,7 @@ export default function RepliesList({
             <div className="mt-5 flex items-center justify-end gap-6 text-sm">
               <button
                 type="button"
-                className="text-[rgb(var(--ledger-ink-rgb)/0.45)] transition hover:text-(--ledger-ink)"
+                className="text-(--ledger-secondary) transition hover:text-(--ledger-ink)"
                 onClick={cancelReport}
                 disabled={reportLoading}
               >
@@ -200,11 +204,11 @@ export default function RepliesList({
                 key={reply.id}
                 className="grid gap-x-6 gap-y-3 border-t border-[rgb(var(--ledger-ink-rgb)/0.10)] py-6 sm:grid-cols-[2.5rem_1fr]"
               >
-                <span className="text-sm tabular-nums leading-7 text-[rgb(var(--ledger-ink-rgb)/0.30)]">
+                <span className="text-sm leading-7 text-(--ledger-secondary) tabular-nums">
                   {String(index + 1).padStart(2, "0")}
                 </span>
                 <div className="min-w-0">
-                  <p className="mb-0 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 text-sm tabular-nums text-[rgb(var(--ledger-ink-rgb)/0.40)]">
+                  <p className="mb-0 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1 text-sm text-(--ledger-secondary) tabular-nums">
                     <span className="flex flex-wrap items-baseline gap-x-3">
                       {reply.author?.username ? (
                         <Link
@@ -217,9 +221,7 @@ export default function RepliesList({
                         <span>anonymous</span>
                       )}
                       {reply.author?.role === "admin" && (
-                        <span className="text-[rgb(var(--ledger-ink-rgb)/0.30)]">
-                          admin
-                        </span>
+                        <span className="text-(--ledger-secondary)">admin</span>
                       )}
                       <span>{shortDate(reply.createdAt)}</span>
                     </span>
@@ -231,7 +233,9 @@ export default function RepliesList({
                           onClick={() => handleDelete(reply.id)}
                           disabled={deletingId === reply.id}
                         >
-                          {deletingId === reply.id ? "taking down" : "take down"}
+                          {deletingId === reply.id
+                            ? "taking down"
+                            : "take down"}
                         </button>
                       )}
                       <button
@@ -243,7 +247,7 @@ export default function RepliesList({
                       </button>
                     </span>
                   </p>
-                  <div className="mt-3 whitespace-pre-wrap text-base leading-7 text-[rgb(var(--ledger-ink-rgb)/0.85)] [overflow-wrap:anywhere]">
+                  <div className="mt-3 text-base leading-7 [overflow-wrap:anywhere] whitespace-pre-wrap text-[rgb(var(--ledger-ink-rgb)/0.85)]">
                     {renderRichContent(reply.content)}
                   </div>
                 </div>

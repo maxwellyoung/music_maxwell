@@ -71,7 +71,7 @@ const BlurImage = ({
         "object-cover duration-700 ease-in-out",
         isLoading
           ? "scale-105 blur-2xl grayscale"
-          : "scale-100 blur-0 grayscale-0",
+          : "blur-0 scale-100 grayscale-0",
         className,
       )}
       onLoad={() => setLoading(false)}
@@ -118,7 +118,7 @@ const renderTextWithEmbeds = (text: string) => {
           href={part}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-primary underline decoration-primary/30 underline-offset-4 transition-colors hover:text-accent hover:decoration-accent"
+          className="text-primary decoration-primary/30 hover:text-accent hover:decoration-accent underline underline-offset-4 transition-colors"
         >
           {part}
         </a>
@@ -155,7 +155,7 @@ const YouTubeThumbnail = ({
           "object-cover duration-700 ease-in-out",
           isLoading
             ? "scale-105 blur-2xl grayscale"
-            : "scale-100 blur-0 grayscale-0",
+            : "blur-0 scale-100 grayscale-0",
         )}
         onLoad={() => setLoading(false)}
         placeholder="blur"
@@ -210,7 +210,7 @@ const PressPhotoCarousel = () => {
                   sizes="(max-width: 640px) 100vw, (max-width: 768px) 50vw, 33vw"
                   loading="lazy"
                 />
-                <div className="absolute inset-0 ring-1 ring-inset ring-foreground/15" />
+                <div className="ring-foreground/15 absolute inset-0 ring-1 ring-inset" />
               </div>
             </motion.div>
           </CarouselItem>
@@ -222,7 +222,7 @@ const PressPhotoCarousel = () => {
             vibrate(2);
             api?.scrollPrev();
           }}
-          className="border-foreground/20 bg-foreground text-background transition hover:bg-accent"
+          className="border-foreground/20 bg-foreground text-background hover:bg-accent transition"
         />
         <div className="flex gap-1">
           {Array.from({ length: count }).map((_, index) => (
@@ -235,8 +235,8 @@ const PressPhotoCarousel = () => {
               className={cn(
                 "h-1.5 rounded-full transition-all",
                 index === current
-                  ? "w-6 bg-foreground"
-                  : "w-1.5 bg-foreground/20",
+                  ? "bg-foreground w-6"
+                  : "bg-foreground/20 w-1.5",
               )}
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
@@ -248,7 +248,7 @@ const PressPhotoCarousel = () => {
             vibrate(2);
             api?.scrollNext();
           }}
-          className="border-foreground/20 bg-foreground text-background transition hover:bg-accent"
+          className="border-foreground/20 bg-foreground text-background hover:bg-accent transition"
         />
       </div>
     </Carousel>
@@ -411,7 +411,7 @@ const StreamingLinks = ({ song }: { song: Song }) => {
           target="_blank"
           rel="noopener noreferrer"
           className={cn(
-            "inline-flex min-h-11 items-center border-b border-current text-sm font-semibold transition hover:opacity-55 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-(--sheet-accent)",
+            "inline-flex min-h-11 items-center border-b border-current text-sm font-semibold transition hover:opacity-55 focus-visible:ring-2 focus-visible:ring-(--sheet-accent) focus-visible:outline-hidden",
             link.className,
           )}
           onClick={() => {
@@ -620,11 +620,11 @@ const ArchivePlayer = ({
   return createPortal(
     <aside
       aria-label={`Now playing ${song.title}`}
-      className="pointer-events-auto fixed inset-x-0 bottom-0 z-100 border-t border-current px-4 py-3 shadow-[0_-18px_45px_rgba(0,0,0,0.18)] sm:bottom-5 sm:left-1/2 sm:right-auto sm:w-[min(760px,calc(100vw-2.5rem))] sm:-translate-x-1/2 sm:border"
+      className="pointer-events-auto fixed inset-x-0 bottom-0 z-100 border-t border-current px-4 py-3 shadow-[0_-18px_45px_rgba(0,0,0,0.18)] sm:right-auto sm:bottom-5 sm:left-1/2 sm:w-[min(760px,calc(100vw-2.5rem))] sm:-translate-x-1/2 sm:border"
       style={{ backgroundColor: palette.paper, color: palette.ink }}
     >
       <div className="flex items-center gap-3 sm:gap-4">
-        <div className="border-current/20 relative h-11 w-11 shrink-0 overflow-hidden border">
+        <div className="relative h-11 w-11 shrink-0 overflow-hidden border border-current/20">
           <Image
             src={song.artwork}
             alt=""
@@ -634,7 +634,7 @@ const ArchivePlayer = ({
           />
         </div>
         <div className="hidden min-w-0 sm:block sm:w-36">
-          <p className="truncate text-sm font-bold leading-tight">
+          <p className="truncate text-sm leading-tight font-bold">
             {song.title}
           </p>
           <p className="mt-1 text-xs opacity-55">excerpt</p>
@@ -649,7 +649,6 @@ const ArchivePlayer = ({
           key={song.previewUrl}
           className="h-10 min-w-0 flex-1"
           controls
-          autoPlay
           preload="metadata"
           src={song.previewUrl}
         >
@@ -658,7 +657,7 @@ const ArchivePlayer = ({
         <button
           type="button"
           onClick={onClose}
-          className="border-current/20 grid h-11 w-11 shrink-0 place-items-center border-l transition hover:opacity-55 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-current"
+          className="grid h-11 w-11 shrink-0 place-items-center border-l border-current/20 transition hover:opacity-55 focus-visible:ring-2 focus-visible:ring-current focus-visible:outline-hidden"
           aria-label="Close player"
         >
           <XIcon className="h-4 w-4" />
@@ -689,7 +688,7 @@ const SongSheet = ({
   reduceMotion: boolean;
 }) => {
   const [selectedVersion, setSelectedVersion] = useState<string>(
-    song.lyrics ? Object.keys(song.lyrics)[0] ?? song.title : song.title,
+    song.lyrics ? (Object.keys(song.lyrics)[0] ?? song.title) : song.title,
   );
 
   useEffect(() => {
@@ -700,7 +699,7 @@ const SongSheet = ({
 
   useEffect(() => {
     setSelectedVersion(
-      song.lyrics ? Object.keys(song.lyrics)[0] ?? song.title : song.title,
+      song.lyrics ? (Object.keys(song.lyrics)[0] ?? song.title) : song.title,
     );
   }, [song]);
 
@@ -741,7 +740,7 @@ const SongSheet = ({
     >
       <DialogContent
         aria-describedby={undefined}
-        className="left-0! top-0! h-dvh! max-w-none! translate-x-0! translate-y-0! gap-0! overflow-hidden! rounded-none! border-0! bg-transparent! p-0! shadow-none! [&>button]:hidden"
+        className="top-0! left-0! h-dvh! max-w-none! translate-x-0! translate-y-0! gap-0! overflow-hidden! rounded-none! border-0! bg-transparent! p-0! shadow-none! [&>button]:hidden"
       >
         <div
           className="release-sheet relative isolate h-full overflow-y-auto overscroll-contain bg-(--sheet-paper) text-(--sheet-ink)"
@@ -751,7 +750,7 @@ const SongSheet = ({
           {palette.texture && (
             <div className="release-material-layer" aria-hidden="true" />
           )}
-          <header className="border-current/20 bg-(--sheet-paper)/95 sticky top-0 z-30 border-b backdrop-blur-md">
+          <header className="sticky top-0 z-30 border-b border-current/20 bg-(--sheet-paper)/95 backdrop-blur-md">
             <div className="mx-auto grid min-h-16 max-w-[1280px] grid-cols-[1fr_auto] items-center gap-4 px-4 sm:min-h-20 sm:grid-cols-[1fr_auto_1fr] sm:px-8 lg:px-12">
               <div className="flex min-w-0 items-baseline gap-3">
                 <span className="text-xs font-semibold tabular-nums opacity-45">
@@ -767,7 +766,7 @@ const SongSheet = ({
                   <button
                     type="button"
                     onClick={() => onNavigate(newerSong)}
-                    className="min-h-11 text-sm font-semibold transition hover:opacity-50 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-(--sheet-accent)"
+                    className="min-h-11 text-sm font-semibold transition hover:opacity-50 focus-visible:ring-2 focus-visible:ring-(--sheet-accent) focus-visible:outline-hidden"
                   >
                     ← newer
                   </button>
@@ -778,7 +777,7 @@ const SongSheet = ({
                   <button
                     type="button"
                     onClick={() => onNavigate(olderSong)}
-                    className="min-h-11 text-sm font-semibold transition hover:opacity-50 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-(--sheet-accent)"
+                    className="min-h-11 text-sm font-semibold transition hover:opacity-50 focus-visible:ring-2 focus-visible:ring-(--sheet-accent) focus-visible:outline-hidden"
                   >
                     older →
                   </button>
@@ -789,7 +788,7 @@ const SongSheet = ({
               <button
                 type="button"
                 onClick={onClose}
-                className="border-current/20 grid h-11 w-11 place-items-center justify-self-end border-l transition hover:opacity-50 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-(--sheet-accent)"
+                className="grid h-11 w-11 place-items-center justify-self-end border-l border-current/20 transition hover:opacity-50 focus-visible:ring-2 focus-visible:ring-(--sheet-accent) focus-visible:outline-hidden"
                 aria-label="Close song sheet"
               >
                 <XIcon className="h-5 w-5" />
@@ -797,7 +796,7 @@ const SongSheet = ({
             </div>
           </header>
 
-          <article className="relative z-1 mx-auto max-w-[1280px] px-4 pb-36 pt-8 sm:px-8 sm:pt-12 lg:px-12">
+          <article className="relative z-1 mx-auto max-w-[1280px] px-4 pt-8 pb-36 sm:px-8 sm:pt-12 lg:px-12">
             <div className="grid gap-10 lg:grid-cols-[0.88fr_1.12fr] lg:gap-16">
               <div className="lg:sticky lg:top-28 lg:self-start">
                 <motion.div
@@ -812,7 +811,7 @@ const SongSheet = ({
                       ease: [0.22, 1, 0.36, 1],
                     },
                   }}
-                  className="border-current/25 relative aspect-square overflow-hidden border bg-black"
+                  className="relative aspect-square overflow-hidden border border-current/25 bg-black"
                 >
                   <BlurImage
                     src={song.artwork}
@@ -831,7 +830,7 @@ const SongSheet = ({
                 </p>
 
                 {releaseFacts(song).length > 0 && (
-                  <dl className="border-current/20 bg-current/20 mt-10 grid gap-px border-y sm:grid-cols-2 xl:grid-cols-3">
+                  <dl className="mt-10 grid gap-px border-y border-current/20 bg-current/20 sm:grid-cols-2 xl:grid-cols-3">
                     {releaseFacts(song).map((fact) => (
                       <div
                         key={fact.label}
@@ -854,7 +853,7 @@ const SongSheet = ({
                     (timedLyrics ? (
                       <a
                         href={`#${timedLyricsId}`}
-                        className="inline-flex min-h-12 items-center gap-3 border border-current px-5 text-sm font-bold transition hover:bg-(--sheet-ink) hover:text-(--sheet-paper) focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-(--sheet-accent)"
+                        className="inline-flex min-h-12 items-center gap-3 border border-current px-5 text-sm font-bold transition hover:bg-(--sheet-ink) hover:text-(--sheet-paper) focus-visible:ring-2 focus-visible:ring-(--sheet-accent) focus-visible:outline-hidden"
                       >
                         <span aria-hidden="true">↓</span> hear with lyrics
                       </a>
@@ -868,7 +867,7 @@ const SongSheet = ({
                           });
                           onPreview(song);
                         }}
-                        className="inline-flex min-h-12 items-center gap-3 border border-current px-5 text-sm font-bold transition hover:bg-(--sheet-ink) hover:text-(--sheet-paper) focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-(--sheet-accent)"
+                        className="inline-flex min-h-12 items-center gap-3 border border-current px-5 text-sm font-bold transition hover:bg-(--sheet-ink) hover:text-(--sheet-paper) focus-visible:ring-2 focus-visible:ring-(--sheet-accent) focus-visible:outline-hidden"
                       >
                         <span aria-hidden="true">▶</span> play excerpt
                       </button>
@@ -882,7 +881,7 @@ const SongSheet = ({
                           location: "archive_sheet",
                         })
                       }
-                      className="inline-flex min-h-12 items-center border-b border-current text-sm font-bold transition hover:opacity-50 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-(--sheet-accent)"
+                      className="inline-flex min-h-12 items-center border-b border-current text-sm font-bold transition hover:opacity-50 focus-visible:ring-2 focus-visible:ring-(--sheet-accent) focus-visible:outline-hidden"
                     >
                       {song.world
                         ? "enter the release room ↗"
@@ -892,7 +891,7 @@ const SongSheet = ({
                 </div>
 
                 {streamingLinks(song).length > 0 && (
-                  <section className="border-current/20 mt-12 border-t pt-5">
+                  <section className="mt-12 border-t border-current/20 pt-5">
                     <h3 className="mb-4 text-sm font-bold text-current!">
                       Listen
                     </h3>
@@ -901,7 +900,7 @@ const SongSheet = ({
                 )}
 
                 {song.videoLink && (
-                  <section className="border-current/20 mt-12 border-t pt-5">
+                  <section className="mt-12 border-t border-current/20 pt-5">
                     <h3 className="mb-4 text-sm font-bold text-current!">
                       Film
                     </h3>
@@ -909,7 +908,7 @@ const SongSheet = ({
                       href={song.videoLink}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="border-current/25 group relative block w-full overflow-hidden border focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-(--sheet-accent)"
+                      className="group relative block w-full overflow-hidden border border-current/25 focus-visible:ring-2 focus-visible:ring-(--sheet-accent) focus-visible:outline-hidden"
                     >
                       <div className="absolute inset-0 z-10 grid place-items-center bg-black/10 transition group-hover:bg-black/25">
                         <span className="grid h-14 w-14 place-items-center border border-white/60 bg-black/55 text-white transition group-hover:scale-105">
@@ -925,7 +924,7 @@ const SongSheet = ({
                 )}
 
                 {song.lyrics && (
-                  <section className="border-current/20 mt-12 border-t pt-5">
+                  <section className="mt-12 border-t border-current/20 pt-5">
                     <div className="mb-6 flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between">
                       <div>
                         <h3 className="mb-0 text-2xl font-bold tracking-[-0.03em] text-current!">
@@ -955,7 +954,7 @@ const SongSheet = ({
                               vibrate(3);
                               setSelectedVersion(event.currentTarget.value);
                             }}
-                            className="border-current/40 h-11 w-full appearance-none rounded-none border-x-0 border-b border-t-0 bg-transparent px-0 pr-8 text-sm font-semibold text-current shadow-none outline-hidden focus:border-current focus:ring-0"
+                            className="h-11 w-full appearance-none rounded-none border-x-0 border-t-0 border-b border-current/40 bg-transparent px-0 pr-8 text-sm font-semibold text-current shadow-none outline-hidden focus:border-current focus:ring-0"
                           >
                             {Object.keys(song.lyrics).map((version) => (
                               <option
@@ -972,7 +971,7 @@ const SongSheet = ({
                           </select>
                           <ChevronDown
                             aria-hidden="true"
-                            className="pointer-events-none absolute right-0 top-1/2 h-4 w-4 -translate-y-1/2 opacity-50"
+                            className="pointer-events-none absolute top-1/2 right-0 h-4 w-4 -translate-y-1/2 opacity-50"
                           />
                         </div>
                       )}
@@ -986,18 +985,18 @@ const SongSheet = ({
                         />
                       </div>
                     )}
-                    <div className="border-current/15 opacity-78 whitespace-pre-wrap border-y py-7 text-[1.05rem] font-medium leading-[1.75] sm:columns-2 sm:gap-12">
+                    <div className="border-y border-current/15 py-7 text-[1.05rem] leading-[1.75] font-medium whitespace-pre-wrap opacity-78 sm:columns-2 sm:gap-12">
                       {renderTextWithEmbeds(formatText(getLyrics()))}
                     </div>
                   </section>
                 )}
 
                 {song.credits && (
-                  <section className="border-current/20 mt-12 border-t pt-5">
+                  <section className="mt-12 border-t border-current/20 pt-5">
                     <h3 className="mb-5 text-2xl font-bold tracking-[-0.03em] text-current!">
                       Credits
                     </h3>
-                    <div className="whitespace-pre-wrap text-base font-semibold leading-relaxed opacity-65">
+                    <div className="text-base leading-relaxed font-semibold whitespace-pre-wrap opacity-65">
                       {renderTextWithEmbeds(formatText(song.credits))}
                     </div>
                   </section>
@@ -1005,13 +1004,13 @@ const SongSheet = ({
 
                 <nav
                   aria-label="Move through the archive"
-                  className="border-current/20 mt-14 grid grid-cols-2 border-y sm:hidden"
+                  className="mt-14 grid grid-cols-2 border-y border-current/20 sm:hidden"
                 >
                   {newerSong ? (
                     <button
                       type="button"
                       onClick={() => onNavigate(newerSong)}
-                      className="border-current/20 min-h-14 border-r text-left text-sm font-bold"
+                      className="min-h-14 border-r border-current/20 text-left text-sm font-bold"
                     >
                       ← newer
                     </button>
@@ -1129,7 +1128,7 @@ const CollectableGrid: React.FC<CollectableGridProps> = ({
             <rect width="100%" height="100%" filter="url(#noiseFilter)" />
           </svg>
         </div>
-        <div className="container relative z-10 mx-auto px-2 sm:px-4 md:px-8">
+        <div className="relative z-10 container mx-auto px-2 sm:px-4 md:px-8">
           {error && error !== "NO_PRODUCTS" && (
             <div className="mb-4 rounded-lg bg-red-500/10 p-4 text-red-500">
               {error}
@@ -1141,15 +1140,15 @@ const CollectableGrid: React.FC<CollectableGridProps> = ({
               initial={{ opacity: 0, y: 18 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
-              className="mb-10 overflow-hidden border-y border-foreground/10 bg-[#f1eadf]/55 p-4 shadow-xs shadow-foreground/5 backdrop-blur-xl sm:p-6 md:mb-14"
+              className="border-foreground/10 shadow-foreground/5 mb-10 overflow-hidden border-y bg-[#f1eadf]/55 p-4 shadow-xs backdrop-blur-xl sm:p-6 md:mb-14"
             >
               <div className="grid gap-6 md:grid-cols-[1.08fr_0.92fr] md:items-center">
                 <div className="relative z-10 space-y-5">
-                  <div className="inline-flex border border-foreground/10 bg-background/45 px-3 py-1 text-xs font-bold uppercase tracking-[0.18em] text-foreground/55">
+                  <div className="border-foreground/10 bg-background/45 text-foreground/55 inline-flex border px-3 py-1 text-xs font-bold tracking-[0.18em] uppercase">
                     Out Thursday
                   </div>
                   <div>
-                    <h1 className="mb-3 text-5xl leading-[0.9] tracking-tighter text-foreground sm:text-7xl md:text-8xl">
+                    <h1 className="text-foreground mb-3 text-5xl leading-[0.9] tracking-tighter sm:text-7xl md:text-8xl">
                       {featuredSong.title}
                     </h1>
                   </div>
@@ -1158,7 +1157,7 @@ const CollectableGrid: React.FC<CollectableGridProps> = ({
                       {releaseFacts(featuredSong).map((fact) => (
                         <div
                           key={fact.label}
-                          className="rounded-full border border-foreground/10 bg-background/45 px-3 py-1.5 text-xs font-bold uppercase tracking-[0.14em] text-foreground/55"
+                          className="border-foreground/10 bg-background/45 text-foreground/55 rounded-full border px-3 py-1.5 text-xs font-bold tracking-[0.14em] uppercase"
                         >
                           {fact.label}:{" "}
                           <span className="text-foreground">{fact.value}</span>
@@ -1172,7 +1171,7 @@ const CollectableGrid: React.FC<CollectableGridProps> = ({
                         href={featuredSong.links.smartLink}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="rounded-full bg-primary px-5 py-3 text-sm font-bold uppercase tracking-[0.18em] text-primary-foreground shadow-lg shadow-primary/20 transition hover:-translate-y-0.5 hover:bg-accent focus:outline-hidden focus:ring-2 focus:ring-primary focus:ring-offset-2"
+                        className="bg-primary text-primary-foreground shadow-primary/20 hover:bg-accent focus:ring-primary rounded-full px-5 py-3 text-sm font-bold tracking-[0.18em] uppercase shadow-lg transition hover:-translate-y-0.5 focus:ring-2 focus:ring-offset-2 focus:outline-hidden"
                       >
                         Listen Now
                       </a>
@@ -1180,7 +1179,7 @@ const CollectableGrid: React.FC<CollectableGridProps> = ({
                     <button
                       type="button"
                       onClick={() => openDrawer(featuredSong)}
-                      className="rounded-full bg-foreground px-5 py-3 text-sm font-bold uppercase tracking-[0.14em] text-background transition hover:-translate-y-0.5 hover:bg-foreground/85 focus:outline-hidden focus:ring-2 focus:ring-accent focus:ring-offset-2"
+                      className="bg-foreground text-background hover:bg-foreground/85 focus:ring-accent rounded-full px-5 py-3 text-sm font-bold tracking-[0.14em] uppercase transition hover:-translate-y-0.5 focus:ring-2 focus:ring-offset-2 focus:outline-hidden"
                     >
                       {featuredSong.previewUrl ? "Preview" : "Lyrics"}
                     </button>
@@ -1189,7 +1188,7 @@ const CollectableGrid: React.FC<CollectableGridProps> = ({
                         href={featuredSong.links.microsite}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="rounded-full bg-primary/10 px-5 py-3 text-sm font-bold uppercase tracking-[0.14em] text-primary transition hover:-translate-y-0.5 hover:text-accent focus:outline-hidden focus:ring-2 focus:ring-accent focus:ring-offset-2"
+                        className="bg-primary/10 text-primary hover:text-accent focus:ring-accent rounded-full px-5 py-3 text-sm font-bold tracking-[0.14em] uppercase transition hover:-translate-y-0.5 focus:ring-2 focus:ring-offset-2 focus:outline-hidden"
                       >
                         Release Site
                       </a>
@@ -1212,7 +1211,7 @@ const CollectableGrid: React.FC<CollectableGridProps> = ({
                       current?.slug === featuredSong.slug ? null : current,
                     )
                   }
-                  className="group relative aspect-square overflow-hidden bg-black shadow-xl shadow-accent/10 outline-hidden transition hover:-rotate-1 hover:scale-[1.015] focus-visible:ring-2 focus-visible:ring-accent focus-visible:ring-offset-4"
+                  className="group shadow-accent/10 focus-visible:ring-accent relative aspect-square overflow-hidden bg-black shadow-xl outline-hidden transition hover:scale-[1.015] hover:-rotate-1 focus-visible:ring-2 focus-visible:ring-offset-4"
                   aria-label={`Open ${featuredSong.title}`}
                 >
                   <motion.div
@@ -1233,11 +1232,11 @@ const CollectableGrid: React.FC<CollectableGridProps> = ({
                     />
                   </motion.div>
                   <div className="absolute inset-0 bg-linear-to-t from-black/70 via-black/10 to-transparent" />
-                  <div className="absolute bottom-4 left-4 right-4 text-left">
-                    <p className="text-xs font-bold uppercase tracking-[0.28em] text-white/70">
+                  <div className="absolute right-4 bottom-4 left-4 text-left">
+                    <p className="text-xs font-bold tracking-[0.28em] text-white/70 uppercase">
                       Apr 30
                     </p>
-                    <p className="mt-1 text-3xl font-bold leading-none text-white sm:text-5xl">
+                    <p className="mt-1 text-3xl leading-none font-bold text-white sm:text-5xl">
                       {featuredSong.title}
                     </p>
                   </div>
@@ -1285,7 +1284,7 @@ const CollectableGrid: React.FC<CollectableGridProps> = ({
                   }}
                 />
               )}
-              <div className="absolute inset-x-0 top-0 h-px overflow-hidden bg-foreground/10">
+              <div className="bg-foreground/10 absolute inset-x-0 top-0 h-px overflow-hidden">
                 <div
                   className="h-full w-full origin-left will-change-transform"
                   style={{
@@ -1295,9 +1294,9 @@ const CollectableGrid: React.FC<CollectableGridProps> = ({
                 />
               </div>
             </div>
-            <div className="relative z-10 mb-8 grid gap-5 border-b border-foreground/25 pb-6 sm:grid-cols-[1fr_auto] sm:items-end md:mb-12">
+            <div className="border-foreground/25 relative z-10 mb-8 grid gap-5 border-b pb-6 sm:grid-cols-[1fr_auto] sm:items-end md:mb-12">
               <div>
-                <p className="mb-2 text-[11px] font-bold uppercase tracking-[0.26em] text-accent">
+                <p className="text-accent mb-2 text-[11px] font-bold tracking-[0.26em] uppercase">
                   01 · Discography
                 </p>
                 <h2 className="mb-0 text-5xl leading-[0.82] tracking-[-0.055em] sm:text-7xl md:text-8xl">
@@ -1312,7 +1311,7 @@ const CollectableGrid: React.FC<CollectableGridProps> = ({
 
             <nav
               aria-label="Filter releases by year"
-              className="release-rail relative z-10 mb-8 flex overflow-x-auto border-y border-foreground/20 sm:mb-11"
+              className="release-rail border-foreground/20 relative z-10 mb-8 flex overflow-x-auto border-y sm:mb-11"
             >
               {["all", ...archiveYears].map((year) => {
                 const isActive = activeYear === year;
@@ -1334,9 +1333,9 @@ const CollectableGrid: React.FC<CollectableGridProps> = ({
                       setActiveYear(year);
                     }}
                     className={cn(
-                      "flex min-h-12 min-w-24 shrink-0 items-center justify-between gap-5 border-r border-foreground/20 px-4 text-sm font-bold tabular-nums transition-[min-width,background-color,color] duration-200 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-primary",
+                      "border-foreground/20 focus-visible:ring-primary flex min-h-12 min-w-24 shrink-0 items-center justify-between gap-5 border-r px-4 text-sm font-bold tabular-nums transition-[min-width,background-color,color] duration-200 focus-visible:ring-2 focus-visible:outline-hidden focus-visible:ring-inset",
                       isActive
-                        ? "min-w-36 bg-foreground text-background"
+                        ? "bg-foreground text-background min-w-36"
                         : "text-foreground/55 hover:bg-foreground hover:text-background",
                     )}
                   >
@@ -1401,7 +1400,7 @@ const CollectableGrid: React.FC<CollectableGridProps> = ({
                     >
                       <div
                         className={cn(
-                          "relative overflow-hidden bg-black transition duration-500 ease-out group-hover:rotate-[-0.6deg] group-hover:scale-[1.01] group-focus-visible:ring-4 group-focus-visible:ring-[#3157ec]",
+                          "relative overflow-hidden bg-black transition duration-500 ease-out group-hover:scale-[1.01] group-hover:rotate-[-0.6deg] group-focus-visible:ring-4 group-focus-visible:ring-[#3157ec]",
                           isWide
                             ? "aspect-2/1"
                             : isPortrait
@@ -1432,19 +1431,19 @@ const CollectableGrid: React.FC<CollectableGridProps> = ({
                             className="transition-transform duration-700 group-hover:scale-[1.035]"
                           />
                         </motion.div>
-                        <div className="absolute inset-0 ring-1 ring-inset ring-black/15" />
+                        <div className="absolute inset-0 ring-1 ring-black/15 ring-inset" />
                         {song.world && song.releasePath ? (
-                          <span className="absolute bottom-3 right-3 border-t border-white/55 bg-black/70 px-2 py-1 text-[9px] font-bold uppercase tracking-[0.14em] text-white backdrop-blur-xs">
+                          <span className="absolute right-3 bottom-3 border-t border-white/55 bg-black/70 px-2 py-1 text-[9px] font-bold tracking-[0.14em] text-white uppercase backdrop-blur-xs">
                             world ↗
                           </span>
                         ) : (
-                          <span className="absolute right-3 top-3 grid h-8 w-8 translate-y-2 place-items-center border border-white/30 bg-black/65 text-[10px] font-bold text-white opacity-0 transition duration-300 group-hover:translate-y-0 group-hover:opacity-100">
+                          <span className="absolute top-3 right-3 grid h-8 w-8 translate-y-2 place-items-center border border-white/30 bg-black/65 text-[10px] font-bold text-white opacity-0 transition duration-300 group-hover:translate-y-0 group-hover:opacity-100">
                             ↗
                           </span>
                         )}
                       </div>
-                      <div className="mt-3 flex gap-3 border-t border-foreground/20 pt-2 sm:mt-4">
-                        <span className="text-[10px] font-bold tracking-[0.12em] text-foreground/45">
+                      <div className="border-foreground/20 mt-3 flex gap-3 border-t pt-2 sm:mt-4">
+                        <span className="text-foreground/45 text-[10px] font-bold tracking-[0.12em]">
                           {String(
                             archiveIndex + (hideFeaturedInGrid ? 2 : 1),
                           ).padStart(2, "0")}
@@ -1458,7 +1457,7 @@ const CollectableGrid: React.FC<CollectableGridProps> = ({
                           >
                             {song.title}
                           </h3>
-                          <p className="mt-1 text-[11px] font-semibold text-foreground/45">
+                          <p className="text-foreground/45 mt-1 text-[11px] font-semibold">
                             {song.releaseDate}
                           </p>
                         </div>
@@ -1470,9 +1469,9 @@ const CollectableGrid: React.FC<CollectableGridProps> = ({
             </motion.div>
           </section>
 
-          <section className="mt-24 grid gap-10 border-t border-foreground/25 pt-7 md:mt-36 md:grid-cols-12 md:gap-8">
+          <section className="border-foreground/25 mt-24 grid gap-10 border-t pt-7 md:mt-36 md:grid-cols-12 md:gap-8">
             <div className="md:col-span-2">
-              <p className="text-[11px] font-bold uppercase tracking-[0.26em] text-accent">
+              <p className="text-accent text-[11px] font-bold tracking-[0.26em] uppercase">
                 02 · Maxwell
               </p>
             </div>
@@ -1481,7 +1480,7 @@ const CollectableGrid: React.FC<CollectableGridProps> = ({
             </div>
             <div className="flex flex-col justify-between md:col-span-5 md:pl-6">
               <div>
-                <p className="font-reenie mb-8 text-4xl leading-[0.9] text-foreground/65 sm:text-5xl">
+                <p className="font-reenie text-foreground/65 mb-8 text-4xl leading-[0.9] sm:text-5xl">
                   Pop because it&apos;s for people. Alternative because it has
                   to be new.
                 </p>
@@ -1499,7 +1498,7 @@ const CollectableGrid: React.FC<CollectableGridProps> = ({
                   </p>
                 </div>
               </div>
-              <p className="mt-10 border-t border-foreground/20 pt-3 text-[10px] font-bold uppercase tracking-[0.2em] text-foreground/40">
+              <p className="border-foreground/20 text-foreground/40 mt-10 border-t pt-3 text-[10px] font-bold tracking-[0.2em] uppercase">
                 Wellington / Tāmaki Makaurau / wherever the song goes
               </p>
             </div>

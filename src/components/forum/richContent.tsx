@@ -72,6 +72,7 @@ export function renderRichContent(text: string) {
               className="my-5 overflow-hidden bg-black"
             >
               <iframe
+                loading="lazy"
                 width="100%"
                 height="315"
                 src={`https://www.youtube.com/embed/${videoId}`}
@@ -86,11 +87,9 @@ export function renderRichContent(text: string) {
       } else if (minType === 1) {
         // SoundCloud
         parts.push(
-          <div
-            key={minIndex + "sc"}
-            className="my-5 overflow-hidden"
-          >
+          <div key={minIndex + "sc"} className="my-5 overflow-hidden">
             <iframe
+              loading="lazy"
               width="100%"
               height="166"
               scrolling="no"
@@ -107,18 +106,15 @@ export function renderRichContent(text: string) {
         const id = minMatch[2];
         if (type && id) {
           parts.push(
-            <div
-              key={minIndex + "sp"}
-              className="my-5 overflow-hidden"
-            >
+            <div key={minIndex + "sp"} className="my-5 overflow-hidden">
               <iframe
+                loading="lazy"
                 src={`https://open.spotify.com/embed/${type}/${id}`}
                 width="100%"
                 height="152"
                 frameBorder="0"
                 allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
                 allowFullScreen
-                loading="lazy"
                 title="Spotify player"
               />
             </div>,

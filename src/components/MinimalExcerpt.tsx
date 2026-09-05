@@ -1,7 +1,14 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { pause, play, state } from "~/lib/ledgerPlayer";
+import { useEffect, useSyncExternalStore } from "react";
+import {
+  pause,
+  play,
+  state,
+  serverState,
+  stop,
+  subscribe,
+} from "~/lib/ledgerPlayer";
 
 const format = (seconds: number) => {
   const whole = Math.max(0, Math.floor(seconds));
@@ -16,45 +23,16 @@ export default function MinimalExcerpt({
   src: string;
   title?: string;
 }) {
-  const [playing, setPlaying] = useState(false);
-  const [time, setTime] = useState(0);
-  const [duration, setDuration] = useState<number | null>(null);
-  const frame = useRef(0);
+  const player = useSyncExternalStore(subscribe, state, serverState);
+  const ownsSource = player.src === src;
+  const playing = ownsSource && player.playing;
+  const time = ownsSource ? player.time : 0;
+  const duration = ownsSource ? player.duration : null;
+  const error = ownsSource ? player.error : null;
 
-  // Track the shared player; this control only owns its own src.
-  useEffect(() => {
-    const onPlayer = (event: Event) => {
-      const detail = (event as CustomEvent<{ src: string; playing: boolean }>)
-        .detail;
-      setPlaying(detail.playing && detail.src === src);
-    };
-    window.addEventListener("ledger:player", onPlayer);
-    return () => window.removeEventListener("ledger:player", onPlayer);
-  }, [src]);
-
-  useEffect(() => {
-    if (!playing) return;
-    const tick = () => {
-      const s = state();
-      if (s.src === src) {
-        setTime(s.time);
-        if (s.duration) setDuration(s.duration);
-      }
-      frame.current = window.requestAnimationFrame(tick);
-    };
-    frame.current = window.requestAnimationFrame(tick);
-    return () => window.cancelAnimationFrame(frame.current);
-  }, [playing, src]);
-
-  // The tab title plays along while this excerpt sounds.
-  useEffect(() => {
-    if (!title || !playing) return;
-    const original = document.title;
-    document.title = `▶ ${title} — Maxwell Young`;
-    return () => {
-      document.title = original;
-    };
-  }, [playing, title]);
+  // Leaving this control stops its excerpt. There is no invisible player
+  // continuing on another page, and focus/hover never starts a new source.
+  useEffect(() => () => stop(src), [src]);
 
   const toggle = () => {
     const s = state();
@@ -74,7 +52,8 @@ export default function MinimalExcerpt({
           type="button"
           onClick={toggle}
           aria-pressed={playing}
-          className="underline decoration-[rgb(var(--ledger-ink-rgb)/0.25)] underline-offset-4 transition-[text-decoration-color,transform] duration-150 [transition-timing-function:var(--ease-out-strong)] hover:decoration-(--ledger-ink) focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-(--ledger-ink) active:scale-[0.97]"
+          aria-label={`${playing ? "Pause" : "Play"} ${title ?? "audio"} excerpt`}
+          className="underline decoration-[rgb(var(--ledger-ink-rgb)/0.25)] underline-offset-4 transition-[text-decoration-color,transform] duration-150 [transition-timing-function:var(--ease-out-strong)] hover:decoration-(--ledger-ink) focus-visible:ring-2 focus-visible:ring-(--ledger-ink) focus-visible:outline-hidden active:scale-[0.97]"
         >
           <span
             key={playing ? "pause" : "play"}
@@ -84,14 +63,19 @@ export default function MinimalExcerpt({
           </span>
         </button>
         <span
-          className="tabular-nums text-[rgb(var(--ledger-ink-rgb)/0.40)]"
+          className="text-(--ledger-secondary) tabular-nums"
           aria-hidden="true"
         >
           {format(time)}
           {duration ? ` / ${format(duration)}` : ""}
         </span>
       </div>
-      {/* A hairline keeps the time; scaleX only, smoothed between ticks. */}
+      {error && (
+        <p role="status" className="mt-3 text-sm text-(--ledger-secondary)">
+          {error}
+        </p>
+      )}
+      {/* Media timeupdate events keep the control out of the animation loop. */}
       <div
         aria-hidden="true"
         className={`mt-3 h-px w-full overflow-hidden bg-[rgb(var(--ledger-ink-rgb)/0.12)] transition-opacity duration-300 ${
@@ -99,7 +83,7 @@ export default function MinimalExcerpt({
         }`}
       >
         <div
-          className="h-full w-full origin-left bg-(--ledger-ink)"
+          className="h-full w-full origin-left bg-(--ledger-ink) transition-transform duration-200 motion-reduce:transition-none"
           style={{ transform: `scaleX(${progress})` }}
         />
       </div>

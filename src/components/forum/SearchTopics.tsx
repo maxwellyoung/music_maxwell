@@ -45,7 +45,7 @@ export function SearchTopics({ initialQuery }: { initialQuery?: string }) {
       value={query}
       onChange={(e) => setQuery(e.target.value)}
       aria-label="Search notes"
-      className={`h-8 w-full rounded-none border-0 border-b border-[rgb(var(--ledger-ink-rgb)/0.25)] bg-transparent px-0 text-sm text-(--ledger-ink) shadow-none transition-opacity placeholder:text-[rgb(var(--ledger-ink-rgb)/0.30)] focus:border-(--ledger-ink) focus:ring-0 sm:w-44 ${
+      className={`h-8 w-full rounded-none border-0 border-b border-[rgb(var(--ledger-ink-rgb)/0.25)] bg-transparent px-0 text-sm text-(--ledger-ink) shadow-none transition-opacity placeholder:text-(--ledger-secondary) focus:border-(--ledger-ink) focus:ring-0 sm:w-44 ${
         isPending ? "opacity-60" : ""
       }`}
     />

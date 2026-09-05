@@ -1,118 +1,171 @@
 "use client";
 
-// One audio voice for the whole ledger. Whatever asks to play silences
-// whatever was playing; the analyser feeds ledger:audio-level so the
-// tower and bloom always follow the current sound.
+// One voice, started only by an explicit play control. Snapshots let newly
+// mounted controls observe the current state without waiting for an event.
+export type PlayerState = {
+  src: string | null;
+  playing: boolean;
+  time: number;
+  duration: number | null;
+  error: string | null;
+};
+const initialState: PlayerState = {
+  src: null,
+  playing: false,
+  time: 0,
+  duration: null,
+  error: null,
+};
+let snapshot = initialState;
 let audio: HTMLAudioElement | null = null;
+let context: AudioContext | null = null;
 let analyser: AnalyserNode | null = null;
 let meterFrame = 0;
-let currentSrc: string | null = null;
+let generation = 0;
+const listeners = new Set<() => void>();
 
-const emit = (level: number) =>
-  window.dispatchEvent(new CustomEvent("ledger:audio-level", { detail: level }));
-
-const emitState = () =>
+const emitLevel = (level: number) =>
   window.dispatchEvent(
-    new CustomEvent("ledger:player", {
-      detail: { src: currentSrc, playing: !!audio && !audio.paused },
-    }),
+    new CustomEvent("ledger:audio-level", { detail: level }),
   );
+function update(patch: Partial<PlayerState> = {}) {
+  const next = {
+    ...snapshot,
+    playing: !!audio && !audio.paused && !audio.ended,
+    time: audio?.currentTime ?? 0,
+    duration: audio && Number.isFinite(audio.duration) ? audio.duration : null,
+    ...patch,
+  };
+  if (
+    Object.keys(next).every(
+      (key) =>
+        next[key as keyof PlayerState] === snapshot[key as keyof PlayerState],
+    )
+  )
+    return;
+  snapshot = next;
+  listeners.forEach((listener) => listener());
+}
+
+function endMeter() {
+  window.cancelAnimationFrame(meterFrame);
+  meterFrame = 0;
+  emitLevel(0);
+}
 
 function ensure() {
   if (audio) return audio;
   audio = new Audio();
   audio.preload = "none";
-  // Cross-origin previews feed a MediaElementSourceNode; without CORS
-  // mode Chromium routes silence through the analyser. Apple's preview
-  // CDN sends Access-Control-Allow-Origin: * (verified 2026-08-20).
   audio.crossOrigin = "anonymous";
-  audio.addEventListener("ended", () => {
-    emit(0);
-    emitState();
-  });
-  audio.addEventListener("pause", () => {
-    emit(0);
-    emitState();
+  for (const event of [
+    "timeupdate",
+    "durationchange",
+    "loadedmetadata",
+    "play",
+    "seeking",
+    "seeked",
+  ]) {
+    audio.addEventListener(event, () => update());
+  }
+  for (const event of ["pause", "ended"]) {
+    audio.addEventListener(event, () => {
+      endMeter();
+      update();
+    });
+  }
+  audio.addEventListener("error", () => {
+    endMeter();
+    update({
+      playing: false,
+      error: "This excerpt could not load. Try again or use a listening link.",
+    });
   });
   return audio;
 }
 
-function startMeter() {
-  const element = audio;
-  if (!element) return;
-  if (!analyser) {
-    try {
+function startMeter(element: HTMLAudioElement) {
+  try {
+    if (!context) {
       const Ctor =
         window.AudioContext ??
         (window as unknown as { webkitAudioContext?: typeof AudioContext })
           .webkitAudioContext;
       if (!Ctor) return;
-      const context = new Ctor();
-      const source = context.createMediaElementSource(element);
+      context = new Ctor();
       analyser = context.createAnalyser();
       analyser.fftSize = 256;
-      source.connect(analyser);
+      context.createMediaElementSource(element).connect(analyser);
       analyser.connect(context.destination);
-    } catch {
-      return; // metering is decoration; playback never depends on it
     }
-  }
-  const data = new Uint8Array(analyser.fftSize);
-  const tick = () => {
-    if (!analyser || !audio) return;
-    analyser.getByteTimeDomainData(data);
-    let sum = 0;
-    for (const value of data) {
-      const centered = (value - 128) / 128;
-      sum += centered * centered;
-    }
-    emit(Math.min(1, Math.sqrt(sum / data.length) * 3));
-    if (!audio.paused && !audio.ended) {
+    if (context.state === "suspended")
+      void context.resume().catch(() => undefined);
+    if (!analyser) return;
+    const data = new Uint8Array(analyser.fftSize);
+    const tick = () => {
+      if (!analyser || element.paused || element.ended) {
+        endMeter();
+        return;
+      }
+      analyser.getByteTimeDomainData(data);
+      let sum = 0;
+      for (const value of data) sum += ((value - 128) / 128) ** 2;
+      emitLevel(Math.min(1, Math.sqrt(sum / data.length) * 3));
       meterFrame = window.requestAnimationFrame(tick);
-    } else {
-      emit(0);
-    }
-  };
-  window.cancelAnimationFrame(meterFrame);
-  meterFrame = window.requestAnimationFrame(tick);
+    };
+    window.cancelAnimationFrame(meterFrame);
+    meterFrame = window.requestAnimationFrame(tick);
+  } catch {
+    // The visual meter is optional; an unsupported audio graph must not
+    // turn a successful play action into a UI error.
+  }
 }
 
 export async function play(src: string) {
   const element = ensure();
-  if (currentSrc !== src) {
+  const request = ++generation;
+  if (snapshot.src !== src) {
+    element.pause();
     element.src = src;
-    currentSrc = src;
-  }
+    update({ src, time: 0, duration: null, error: null });
+  } else update({ error: null });
   try {
+    // Resume the graph while the click still supplies user activation.
+    startMeter(element);
     await element.play();
-    emitState();
-    startMeter();
+    if (request !== generation) return;
+    update();
+    startMeter(element);
   } catch {
-    // no user activation yet — stay silent
+    if (request !== generation) return;
+    endMeter();
+    update({
+      playing: false,
+      error: "This excerpt could not play. Try again or use a listening link.",
+    });
   }
 }
 
 export function pause() {
+  generation++;
   audio?.pause();
+  endMeter();
+  update();
 }
 
 export function stop(src?: string) {
-  if (src && currentSrc !== src) return;
-  if (audio) {
-    audio.pause();
-    audio.currentTime = 0;
-  }
+  if (src && snapshot.src !== src) return;
+  pause();
+  if (audio) audio.currentTime = 0;
+  update({ time: 0 });
 }
 
-export function state() {
-  return {
-    src: currentSrc,
-    playing: !!audio && !audio.paused,
-    time: audio?.currentTime ?? 0,
-    duration: audio?.duration || null,
+export const state = () => snapshot;
+export const serverState = () => initialState;
+export function subscribe(listener: () => void) {
+  listeners.add(listener);
+  return () => {
+    listeners.delete(listener);
   };
 }
-
-export function element() {
-  return audio;
-}
+export const element = () => audio;

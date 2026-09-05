@@ -3,12 +3,11 @@
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import LedgerLightSwitch from "~/components/LedgerLightSwitch";
 import LedgerWordmark from "~/components/LedgerWordmark";
 import MinimalExcerpt from "~/components/MinimalExcerpt";
-import releases, { getReleaseBySlug } from "~/data/releases";
-import { play, stop } from "~/lib/ledgerPlayer";
+import type { ReleaseSummary } from "~/lib/releaseSummary";
 
 // Loads three.js after paint, desktop only; never blocks the ledger text.
 const LedgerSkyTower = dynamic(() => import("~/components/LedgerSkyTower"), {
@@ -21,30 +20,16 @@ const year = (date?: string) => date?.match(/\d{4}$/)?.[0] ?? "";
 // streams in through notesSlot so the index never waits on the database.
 export default function MinimalIndex({
   notesSlot,
+  releases,
 }: {
+  releases: ReleaseSummary[];
   notesSlot?: React.ReactNode;
 }) {
   const [active, setActive] = useState<string | null>(null);
-  const dwell = useRef<number | undefined>(undefined);
   const activeRelease = releases.find((r) => r.slug === active);
-  const featured = getReleaseBySlug("1kiss");
+  const featured = releases.find((r) => r.slug === "1kiss");
 
-  // Holding a row plays it: 250ms dwell so a pass over the list stays
-  // silent, then the shared voice takes the row's excerpt. Leaving stops
-  // only what this row started. Browsers gate audio until the first real
-  // gesture; keyboard focus counts, a virgin mouse pass may stay quiet.
-  const enter = (slug: string, previewUrl?: string) => {
-    setActive(slug);
-    window.clearTimeout(dwell.current);
-    if (previewUrl) {
-      dwell.current = window.setTimeout(() => void play(previewUrl), 250);
-    }
-  };
-  const leave = (previewUrl?: string) => {
-    setActive(null);
-    window.clearTimeout(dwell.current);
-    if (previewUrl) stop(previewUrl);
-  };
+  // Hover and keyboard focus reveal artwork; only the play control starts audio.
 
   return (
     <main className="ledger min-h-svh bg-(--ledger-paper) text-(--ledger-ink)">
@@ -52,13 +37,32 @@ export default function MinimalIndex({
       <header className="px-6 pt-10 sm:px-12 lg:px-20">
         <h1 className="mb-0 leading-none">
           <LedgerWordmark />
-          <span className="sr-only">Maxwell Young</span>
         </h1>
       </header>
 
-      <div className="px-6 pb-20 pt-16 sm:px-12 lg:px-20 lg:pr-[46vw]">
+      <div className="px-6 pt-16 pb-20 sm:px-12 lg:px-20 lg:pr-[46vw]">
         {/* Standfirst: the current record, playable in place. */}
-        <section className="max-w-2xl" aria-label="Now playing">
+        <section
+          className="relative max-w-2xl pr-24 lg:pr-0"
+          aria-label="Latest release"
+        >
+          {featured && (
+            <Link
+              href={`/r/${featured.slug}`}
+              aria-label={`${featured.title} — release details`}
+              className="absolute top-0 right-0 lg:hidden"
+            >
+              <Image
+                src={featured.artwork}
+                alt={`${featured.title} artwork`}
+                width={72}
+                height={72}
+                sizes="72px"
+                priority
+                className="h-[72px] w-[72px] object-cover"
+              />
+            </Link>
+          )}
           <p className="text-xl leading-snug sm:text-2xl">
             <Link
               href="/r/1kiss"
@@ -66,13 +70,16 @@ export default function MinimalIndex({
             >
               1kiss
             </Link>{" "}
-            <span className="italic text-[rgb(var(--ledger-ink-rgb)/0.45)]">
+            <span className="text-(--ledger-secondary) italic">
               is out now.
             </span>
           </p>
           {featured?.previewUrl && (
             <div className="mt-4">
-              <MinimalExcerpt src={featured.previewUrl} title={featured.title} />
+              <MinimalExcerpt
+                src={featured.previewUrl}
+                title={featured.title}
+              />
             </div>
           )}
         </section>
@@ -86,16 +93,16 @@ export default function MinimalIndex({
               >
                 <Link
                   href={`/r/${release.slug}`}
-                  onMouseEnter={() => enter(release.slug, release.previewUrl)}
-                  onMouseLeave={() => leave(release.previewUrl)}
-                  onFocus={() => enter(release.slug, release.previewUrl)}
-                  onBlur={() => leave(release.previewUrl)}
+                  onMouseEnter={() => setActive(release.slug)}
+                  onMouseLeave={() => setActive(null)}
+                  onFocus={() => setActive(release.slug)}
+                  onBlur={() => setActive(null)}
                   className="group flex items-baseline justify-between gap-6 border-b border-[rgb(var(--ledger-ink-rgb)/0.10)] py-3 text-sm transition-colors duration-150 hover:bg-(--ledger-ink) hover:text-(--ledger-paper) focus-visible:bg-(--ledger-ink) focus-visible:text-(--ledger-paper) focus-visible:outline-hidden"
                 >
                   <span className="font-medium transition-transform duration-200 [transition-timing-function:var(--ease-out-strong)] group-hover:translate-x-3 group-focus-visible:translate-x-3">
                     {release.title}
                   </span>
-                  <span className="shrink-0 tabular-nums text-[rgb(var(--ledger-ink-rgb)/0.40)] transition-[color,transform] duration-200 [transition-timing-function:var(--ease-out-strong)] group-hover:-translate-x-3 group-hover:text-[rgb(var(--ledger-paper-rgb)/0.60)] group-focus-visible:-translate-x-3 group-focus-visible:text-[rgb(var(--ledger-paper-rgb)/0.60)]">
+                  <span className="shrink-0 text-(--ledger-secondary) tabular-nums transition-[color,transform] duration-200 [transition-timing-function:var(--ease-out-strong)] group-hover:-translate-x-3 group-hover:text-[rgb(var(--ledger-paper-rgb)/0.60)] group-focus-visible:-translate-x-3 group-focus-visible:text-[rgb(var(--ledger-paper-rgb)/0.60)]">
                     {release.releaseType?.toLowerCase() ?? "release"} ·{" "}
                     {year(release.releaseDate)}
                   </span>
@@ -113,15 +120,15 @@ export default function MinimalIndex({
             aria-hidden="true"
             className="mb-4 h-px w-full bg-linear-to-r from-[rgb(var(--ledger-ink-rgb)/0.20)] via-[rgb(var(--ledger-ink-rgb)/0.10)] to-transparent"
           />
-          <div className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-3 text-xs text-[rgb(var(--ledger-ink-rgb)/0.35)]">
+          <div className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-3 text-xs text-(--ledger-secondary)">
             <span className="tabular-nums">
               © 2026 Maxwell Young
-              <span className="hidden text-[rgb(var(--ledger-ink-rgb)/0.20)] lg:inline">
+              <span className="hidden text-(--ledger-secondary) lg:inline">
                 {" "}
                 · ↑↓ browse · esc home ·{" "}
                 <Link
                   href="/index-of-everything"
-                  className="transition hover:text-[rgb(var(--ledger-ink-rgb)/0.50)]"
+                  className="transition hover:text-(--ledger-secondary)"
                 >
                   appendix
                 </Link>
@@ -175,20 +182,25 @@ export default function MinimalIndex({
       >
         <div
           className={`absolute inset-0 transition-opacity [transition-timing-function:var(--ease-out-strong)] ${
-            activeRelease ? "opacity-0 duration-150" : "opacity-100 duration-500"
+            activeRelease
+              ? "opacity-0 duration-150"
+              : "opacity-100 duration-500"
           }`}
         >
-          <LedgerSkyTower />
+          <LedgerSkyTower active={!activeRelease} />
         </div>
         <div
-          className={`absolute left-1/2 top-1/2 h-[24rem] w-[24rem] max-w-[36vw] -translate-x-1/2 -translate-y-1/2 transition-[opacity,scale] [transition-timing-function:var(--ease-out-strong)] xl:h-[28rem] xl:w-[28rem] ${
+          className={`absolute top-1/2 left-1/2 h-[24rem] w-[24rem] max-w-[36vw] -translate-x-1/2 -translate-y-1/2 transition-[opacity,scale] [transition-timing-function:var(--ease-out-strong)] xl:h-[28rem] xl:w-[28rem] ${
             activeRelease
               ? "scale-100 opacity-100 duration-250"
               : "scale-[0.985] opacity-0 duration-150"
           }`}
         >
           {activeRelease && (
-            <div key={activeRelease.slug} className="cover-condense absolute inset-0">
+            <div
+              key={activeRelease.slug}
+              className="cover-condense absolute inset-0"
+            >
               <Image
                 src={activeRelease.artwork}
                 alt=""

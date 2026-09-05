@@ -67,10 +67,10 @@ export default async function TopicPage({
   return (
     <SquareShell back={{ href: "/forum", label: "the square" }}>
       <article className="max-w-2xl">
-        <h1 className="mb-0 text-xl font-semibold leading-snug [overflow-wrap:anywhere] sm:text-2xl">
+        <h1 className="mb-0 text-xl leading-snug font-semibold [overflow-wrap:anywhere] sm:text-2xl">
           {topic.title}
         </h1>
-        <p className="mb-0 mt-3 flex flex-wrap items-baseline gap-x-4 gap-y-1 text-sm tabular-nums text-[rgb(var(--ledger-ink-rgb)/0.40)]">
+        <p className="mt-3 mb-0 flex flex-wrap items-baseline gap-x-4 gap-y-1 text-sm text-(--ledger-secondary) tabular-nums">
           {topic.author?.username ? (
             <Link
               href={`/user/${topic.author.username}`}
@@ -95,13 +95,10 @@ export default async function TopicPage({
           <NoteBody content={topic.content} />
         </div>
 
-        <section
-          className="mt-16"
-          aria-label="Echoes"
-        >
+        <section className="mt-16" aria-label="Echoes">
           <p className="mb-0 flex items-baseline justify-between text-sm">
             <span className="font-semibold">Echoes.</span>
-            <span className="tabular-nums text-[rgb(var(--ledger-ink-rgb)/0.40)]">
+            <span className="text-(--ledger-secondary) tabular-nums">
               {replyCount === 0 ? "none yet" : replyCount}
             </span>
           </p>

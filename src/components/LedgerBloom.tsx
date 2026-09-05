@@ -2,46 +2,60 @@
 
 import { useEffect, useRef, useState } from "react";
 
-// Jeremy Blake rule: colour enters the ledger only through sound.
-// The page stays paper until an excerpt plays; then the release's own
-// bloom washes the viewport at a few percent, breathing with the level.
+// Sound adds a faint wash. No loop or image is needed while the page is quiet.
 export default function LedgerBloom() {
   const [visible, setVisible] = useState(false);
-  const levelRef = useRef(0);
-  const targetRef = useRef(0);
-  const rafRef = useRef(0);
   const washRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
+    const motion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let level = 0;
+    let target = 0;
+    let frame = 0;
+    const stop = () => {
+      window.cancelAnimationFrame(frame);
+      frame = 0;
+      level = 0;
+      setVisible(false);
+    };
+    const tick = () => {
+      level += (target - level) * 0.06;
+      if (washRef.current) washRef.current.style.opacity = String(level * 0.09);
+      if (level < 0.003 && target === 0) {
+        stop();
+        return;
+      }
+      frame = window.requestAnimationFrame(tick);
+    };
+    const sync = () => {
+      if (motion.matches || document.visibilityState !== "visible") {
+        stop();
+        return;
+      }
+      if (target > 0 && !frame) {
+        setVisible(true);
+        frame = window.requestAnimationFrame(tick);
+      }
+    };
     const onLevel = (event: Event) => {
-      targetRef.current = Math.min(
+      target = Math.min(
         1,
-        (event as CustomEvent<number>).detail ?? 0,
+        Math.max(0, (event as CustomEvent<number>).detail ?? 0),
       );
-      if (targetRef.current > 0) setVisible(true);
+      sync();
     };
     window.addEventListener("ledger:audio-level", onLevel);
-
-    const tick = () => {
-      rafRef.current = window.requestAnimationFrame(tick);
-      const level = levelRef.current;
-      const next = level + (targetRef.current - level) * 0.06;
-      levelRef.current = next;
-      if (washRef.current) {
-        washRef.current.style.opacity = String(next * 0.09);
-      }
-      if (next < 0.003 && targetRef.current === 0) setVisible(false);
-    };
-    rafRef.current = window.requestAnimationFrame(tick);
-
+    document.addEventListener("visibilitychange", sync);
+    motion.addEventListener("change", sync);
     return () => {
+      window.cancelAnimationFrame(frame);
       window.removeEventListener("ledger:audio-level", onLevel);
-      window.cancelAnimationFrame(rafRef.current);
+      document.removeEventListener("visibilitychange", sync);
+      motion.removeEventListener("change", sync);
     };
   }, []);
 
   if (!visible) return null;
-
   return (
     <div
       ref={washRef}

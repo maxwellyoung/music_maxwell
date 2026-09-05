@@ -29,14 +29,14 @@ export default function SquareShell({
         </Link>
         <Link
           href={back.href}
-          className="text-sm leading-none text-[rgb(var(--ledger-ink-rgb)/0.40)] transition hover:text-(--ledger-ink)"
+          className="text-sm leading-none text-(--ledger-secondary) transition hover:text-(--ledger-ink)"
         >
           ← {back.label}
         </Link>
       </header>
 
       <div
-        className={`px-6 pb-20 pt-16 sm:px-12 lg:px-20 ${
+        className={`px-6 pt-16 pb-20 sm:px-12 lg:px-20 ${
           monument ? "lg:pr-[46vw]" : ""
         }`}
       >
@@ -47,7 +47,7 @@ export default function SquareShell({
             aria-hidden="true"
             className="mb-4 h-px w-full bg-linear-to-r from-[rgb(var(--ledger-ink-rgb)/0.20)] via-[rgb(var(--ledger-ink-rgb)/0.10)] to-transparent"
           />
-          <div className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-3 text-xs text-[rgb(var(--ledger-ink-rgb)/0.35)]">
+          <div className="flex flex-wrap items-baseline justify-between gap-x-8 gap-y-3 text-xs text-(--ledger-secondary)">
             <span className="tabular-nums">© 2026 Maxwell Young</span>
             <span className="flex flex-wrap items-baseline gap-x-4 gap-y-2">
               <Link href="/" className="transition hover:text-(--ledger-ink)">

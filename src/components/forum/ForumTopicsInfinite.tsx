@@ -106,7 +106,7 @@ export default function ForumTopicsInfinite({
   return (
     <section aria-label="Notes" className="min-w-0">
       {topics.length === 0 && !loading && (
-        <p className="border-t border-[rgb(var(--ledger-ink-rgb)/0.10)] pt-4 text-sm text-[rgb(var(--ledger-ink-rgb)/0.45)]">
+        <p className="border-t border-[rgb(var(--ledger-ink-rgb)/0.10)] pt-4 text-sm text-(--ledger-secondary)">
           {query ? "Nothing matched." : "Nothing on the wall yet."}
         </p>
       )}
@@ -122,11 +122,11 @@ export default function ForumTopicsInfinite({
                   <span className="block truncate font-medium">
                     {topic.title}
                   </span>
-                  <span className="mt-0.5 hidden truncate text-[rgb(var(--ledger-ink-rgb)/0.45)] transition-colors group-hover:text-[rgb(var(--ledger-paper-rgb)/0.60)] group-focus-visible:text-[rgb(var(--ledger-paper-rgb)/0.60)] sm:block">
+                  <span className="mt-0.5 hidden truncate text-(--ledger-secondary) transition-colors group-hover:text-[rgb(var(--ledger-paper-rgb)/0.60)] group-focus-visible:text-[rgb(var(--ledger-paper-rgb)/0.60)] sm:block">
                     {topic.content}
                   </span>
                 </span>
-                <span className="shrink-0 whitespace-nowrap tabular-nums text-[rgb(var(--ledger-ink-rgb)/0.40)] transition-[color,transform] duration-200 [transition-timing-function:var(--ease-out-strong)] group-hover:-translate-x-3 group-hover:text-[rgb(var(--ledger-paper-rgb)/0.60)] group-focus-visible:-translate-x-3 group-focus-visible:text-[rgb(var(--ledger-paper-rgb)/0.60)]">
+                <span className="shrink-0 whitespace-nowrap text-(--ledger-secondary) tabular-nums transition-[color,transform] duration-200 [transition-timing-function:var(--ease-out-strong)] group-hover:-translate-x-3 group-hover:text-[rgb(var(--ledger-paper-rgb)/0.60)] group-focus-visible:-translate-x-3 group-focus-visible:text-[rgb(var(--ledger-paper-rgb)/0.60)]">
                   {topic.author?.username ?? "anonymous"} ·{" "}
                   {shortDate(topic.createdAt)}
                   {topic._count.replies > 0 && (

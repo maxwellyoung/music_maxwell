@@ -1,4 +1,4 @@
-@import 'tailwindcss';
+@import "tailwindcss";
 
 @custom-variant dark (&:is(.dark *));
 
@@ -198,7 +198,7 @@
 
   input,
   textarea {
-    @apply rounded-lg border border-input bg-background px-4 py-3 text-base text-foreground shadow-xs transition focus:border-primary focus:outline-hidden focus:ring-2 focus:ring-primary;
+    @apply border-input bg-background text-foreground focus:border-primary focus:ring-primary rounded-lg border px-4 py-3 text-base shadow-xs transition focus:ring-2 focus:outline-hidden;
   }
 
   /* button {
@@ -284,7 +284,8 @@ input[type="search"]::-webkit-search-cancel-button {
   content: "";
   position: absolute;
   inset: 0;
-  background: radial-gradient(
+  background:
+    radial-gradient(
       circle at 50% 38%,
       transparent 0 23%,
       rgb(0 0 0 / 0.42) 56%
@@ -320,7 +321,8 @@ input[type="search"]::-webkit-search-cancel-button {
 }
 
 [data-release-material="signal"] > .release-material-layer {
-  background: radial-gradient(
+  background:
+    radial-gradient(
       circle at 74% 9%,
       rgb(142 166 255 / 0.16),
       transparent 23rem
@@ -349,10 +351,8 @@ input[type="search"]::-webkit-search-cancel-button {
 }
 
 [data-release-material="cart-grid"] > .release-material-layer {
-  background-image: linear-gradient(
-      rgb(111 132 104 / 0.075) 1px,
-      transparent 1px
-    ),
+  background-image:
+    linear-gradient(rgb(111 132 104 / 0.075) 1px, transparent 1px),
     linear-gradient(90deg, rgb(111 132 104 / 0.075) 1px, transparent 1px);
   background-size: 3.5rem 3.5rem;
   mask-image: linear-gradient(to bottom, black, transparent 68rem);
@@ -448,6 +448,7 @@ html {
 
 /* Ledger surfaces: paper by day, ink by night. */
 .ledger {
+  --ledger-secondary: rgb(var(--ledger-ink-rgb) / 0.65);
   --ledger-paper: #fafaf7;
   --ledger-ink: #111111;
   --ledger-ink-rgb: 17 17 17;

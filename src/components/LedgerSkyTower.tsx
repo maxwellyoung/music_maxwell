@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import type * as Three from "three";
 
 type ThreeModule = typeof Three;
@@ -149,18 +149,35 @@ function beehiveGeometry(THREE: ThreeModule) {
 
 export default function LedgerSkyTower({
   monument = "skytower",
+  active = true,
 }: {
   monument?: "skytower" | "beehive";
+  active?: boolean;
 }) {
   const mountRef = useRef<HTMLDivElement>(null);
+  const activeRef = useRef(active);
+  const syncRef = useRef<(() => void) | null>(null);
+  const [desktop, setDesktop] = useState(false);
+
+  useEffect(() => {
+    const media = window.matchMedia("(min-width: 1024px)");
+    const sync = () => setDesktop(media.matches);
+    sync();
+    media.addEventListener("change", sync);
+    return () => media.removeEventListener("change", sync);
+  }, []);
+
+  useEffect(() => {
+    activeRef.current = active;
+    syncRef.current?.();
+  }, [active]);
 
   useEffect(() => {
     const mount = mountRef.current;
-    if (!mount) return;
+    if (!mount || !desktop) return;
     // The monument is desktop decoration: below lg the wrapper is hidden
     // but children still mount, so bail before pulling three.js onto
     // phones — and before creating a renderer without WebGL support.
-    if (!window.matchMedia("(min-width: 1024px)").matches) return;
     try {
       const probe = document.createElement("canvas");
       if (!probe.getContext("webgl2") && !probe.getContext("webgl")) return;
@@ -171,12 +188,12 @@ export default function LedgerSkyTower({
     let disposed = false;
     let frame = 0;
     let cleanup: (() => void) | undefined;
+    let invalidate: () => void = () => undefined;
 
     void (async () => {
       const THREE = await import("three");
-      const { PLYLoader } = await import(
-        "three/examples/jsm/loaders/PLYLoader.js"
-      );
+      const { PLYLoader } =
+        await import("three/examples/jsm/loaders/PLYLoader.js");
       if (disposed || !mount) return;
 
       const scene = new THREE.Scene();
@@ -221,7 +238,6 @@ export default function LedgerSkyTower({
       const group = new THREE.Group();
       scene.add(group);
 
-
       let mesh: InstanceType<typeof THREE.Mesh> | undefined;
       let modelSize: InstanceType<typeof THREE.Vector3> | undefined;
 
@@ -255,7 +271,10 @@ export default function LedgerSkyTower({
         fit();
       } else {
         new PLYLoader().load("/models/skytower.ply", (rawGeometry) => {
-          if (disposed) return;
+          if (disposed) {
+            rawGeometry.dispose();
+            return;
+          }
           const geometry = rawGeometry;
           geometry.computeVertexNormals();
           geometry.center();
@@ -266,6 +285,7 @@ export default function LedgerSkyTower({
           mesh = new THREE.Mesh(geometry, material);
           group.add(mesh);
           fit();
+          invalidate();
         });
       }
 
@@ -273,7 +293,10 @@ export default function LedgerSkyTower({
         "(prefers-reduced-motion: reduce)",
       );
       const scheme = window.matchMedia("(prefers-color-scheme: dark)");
-      const onScheme = () => material.uniforms.uInk!.value.copy(inkOf());
+      const onScheme = () => {
+        material.uniforms.uInk!.value.copy(inkOf());
+        invalidate();
+      };
       scheme.addEventListener("change", onScheme);
       // The ◐ switch flips data-ledger on <html>; follow it without reload.
       const attrObserver = new MutationObserver(onScheme);
@@ -285,6 +308,7 @@ export default function LedgerSkyTower({
       const pointer = new THREE.Vector2(0, 0);
       const pointerTarget = new THREE.Vector2(0, 0);
       const onPointer = (event: PointerEvent) => {
+        if (reduceMotion.matches) return;
         pointerTarget.set(
           (event.clientX / window.innerWidth) * 2 - 1,
           -(event.clientY / window.innerHeight) * 2 + 1,
@@ -313,7 +337,8 @@ export default function LedgerSkyTower({
         const dx = event.clientX - lastX;
         lastX = event.clientX;
         dragOffset += dx * 0.008;
-        dragVelocity = dx * 0.008;
+        dragVelocity = reduceMotion.matches ? 0 : dx * 0.008;
+        invalidate();
       };
       const onUp = () => {
         dragging = false;
@@ -328,6 +353,7 @@ export default function LedgerSkyTower({
       let audioLevel = 0;
       let audioTarget = 0;
       const onAudio = (event: Event) => {
+        if (reduceMotion.matches) return;
         audioTarget = Math.min(1, (event as CustomEvent<number>).detail ?? 0);
       };
       window.addEventListener("ledger:audio-level", onAudio);
@@ -339,37 +365,44 @@ export default function LedgerSkyTower({
         camera.aspect = width / height;
         camera.updateProjectionMatrix();
         fit();
+        invalidate();
       };
       resize();
       const observer = new ResizeObserver(resize);
       observer.observe(mount);
 
-      const clock = new THREE.Clock();
-      const tick = () => {
-        frame = window.requestAnimationFrame(tick);
-        if (document.visibilityState !== "visible") return;
-        const t = clock.getElapsedTime();
-        pointer.lerp(pointerTarget, 0.04);
-        if (!dragging) {
-          dragOffset += dragVelocity;
-          dragVelocity *= 0.95;
+      const startedAt = performance.now();
+      const canRender = () =>
+        activeRef.current && document.visibilityState === "visible";
+      const render = () => {
+        const reduced = reduceMotion.matches;
+        const t = reduced ? 0 : (performance.now() - startedAt) / 1000;
+        if (!reduced) {
+          pointer.lerp(pointerTarget, 0.04);
+          if (!dragging) {
+            dragOffset += dragVelocity;
+            dragVelocity *= 0.95;
+          }
+          audioLevel += (audioTarget - audioLevel) * 0.18;
         }
-        audioLevel += (audioTarget - audioLevel) * 0.18;
-        material.uniforms.uAudio!.value = audioLevel;
+        material.uniforms.uAudio!.value = reduced ? 0 : audioLevel;
         material.uniforms.uTime!.value = t;
         if (mesh) {
-          // Capped: a long wall would otherwise tip the monument out of frame.
-          const scrollTilt = Math.min(window.scrollY * 0.00035, 0.12);
-          if (reduceMotion.matches) {
+          if (reduced) {
             mesh.rotation.set(0, 0.6 + dragOffset, 0);
+            mesh.position.y = 0;
           } else {
+            const scrollTilt = Math.min(window.scrollY * 0.00035, 0.12);
             mesh.rotation.y =
               t * (0.1 + audioLevel * 0.25) + pointer.x * 0.25 + dragOffset;
             mesh.rotation.x = pointer.y * 0.08 + scrollTilt;
             mesh.position.y = Math.sin(t * 0.6) * 0.02;
           }
         }
-        material.uniforms.uMouse!.value.copy(pointer);
+        material.uniforms.uMouse!.value.set(
+          reduced ? 0 : pointer.x,
+          reduced ? 0 : pointer.y,
+        );
         material.uniforms.uLightPos!.value.set(
           5 + Math.sin(t * 0.4) * 3,
           10 + Math.cos(t * 0.25) * 2,
@@ -377,10 +410,27 @@ export default function LedgerSkyTower({
         );
         renderer.render(scene, camera);
       };
-      tick();
+      const tick = () => {
+        frame = 0;
+        if (!canRender()) return;
+        render();
+        if (!reduceMotion.matches) frame = window.requestAnimationFrame(tick);
+      };
+      invalidate = () => {
+        window.cancelAnimationFrame(frame);
+        frame = 0;
+        if (canRender()) tick();
+      };
+      syncRef.current = invalidate;
+      document.addEventListener("visibilitychange", invalidate);
+      reduceMotion.addEventListener("change", invalidate);
+      invalidate();
 
       cleanup = () => {
         window.cancelAnimationFrame(frame);
+        syncRef.current = null;
+        document.removeEventListener("visibilitychange", invalidate);
+        reduceMotion.removeEventListener("change", invalidate);
         observer.disconnect();
         attrObserver.disconnect();
         window.removeEventListener("pointermove", onPointer);
@@ -401,7 +451,7 @@ export default function LedgerSkyTower({
       disposed = true;
       cleanup?.();
     };
-  }, [monument]);
+  }, [monument, desktop]);
 
   return (
     <div
