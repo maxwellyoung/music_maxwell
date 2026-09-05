@@ -18,6 +18,7 @@ function Nav() {
       <Link href="/">Maxwell Young</Link>
       <span>
         <a href="#records">Records</a>
+        <Link href="/questions">A few questions</Link>
         <Link href="/forum">Town square ↗</Link>
       </span>
     </nav>

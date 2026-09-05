@@ -105,3 +105,9 @@ pnpm build
 MIT
 
 Playback starts only from a play control. Hover and keyboard focus reveal artwork without sound; leaving the player stops its excerpt. Reduced motion keeps decoration still.
+
+## Listener questionnaire
+
+`/questions` is an optional, anonymous questionnaire. `POST /api/questions` validates bounded answers and saves a private `ListenerResponse`; there is no public read endpoint. Submission IDs make retries idempotent. The existing in-memory rate limiter provides a per-instance abuse limit, not a global limit across Vercel instances.
+
+Apply the checked-in `20260905060000_add_listener_responses` migration through the approved database release workflow before publishing this page. Do not run migrations against production as part of local development. Responses can be read through the existing private database tooling in the `ListenerResponse` table; keep exports out of the repository.

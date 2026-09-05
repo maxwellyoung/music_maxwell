@@ -136,6 +136,12 @@ export default function MinimalIndex({
             </span>
             <span className="flex flex-wrap items-baseline gap-x-4 gap-y-2">
               <Link
+                href="/questions"
+                className="transition hover:text-(--ledger-ink)"
+              >
+                A few questions
+              </Link>
+              <Link
                 href="/forum"
                 className="transition hover:text-(--ledger-ink)"
               >

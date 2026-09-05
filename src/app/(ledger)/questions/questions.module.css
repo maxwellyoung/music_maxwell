@@ -1,0 +1,166 @@
+.page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 32px 28px 48px;
+  color: var(--ledger-ink);
+}
+.header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 12px;
+  font-size: 12px;
+  color: var(--ledger-secondary);
+}
+.header a,
+.footer a {
+  text-decoration: none;
+}
+.header a:hover,
+.footer a:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.intro {
+  margin: 88px 0 48px;
+  max-width: 510px;
+}
+.eyebrow {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: var(--ledger-secondary);
+}
+.intro h1 {
+  font-family: Georgia, serif;
+  font-size: clamp(36px, 7vw, 54px);
+  font-weight: 400;
+  letter-spacing: -0.04em;
+  line-height: 1.15;
+  margin: 18px 0 28px;
+}
+.intro p:not(.eyebrow) {
+  line-height: 1.7;
+  margin-top: 16px;
+}
+.note,
+.hint {
+  font-size: 13px;
+  line-height: 1.65;
+  color: var(--ledger-secondary);
+}
+.fields {
+  border: 0;
+  padding: 0;
+  margin: 32px 0 0;
+  min-width: 0;
+}
+.question {
+  border: 0;
+  border-top: 1px solid rgb(var(--ledger-ink-rgb) / 0.18);
+  padding: 24px 0 40px;
+  margin: 0;
+  min-width: 0;
+}
+.question legend {
+  float: left;
+  width: 100%;
+  font-size: 17px;
+  line-height: 1.5;
+  margin-bottom: 18px;
+}
+.question legend + * {
+  clear: both;
+}
+.number {
+  display: inline-block;
+  margin-right: 14px;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+  color: var(--ledger-secondary);
+}
+.hint {
+  margin: 0 0 16px;
+}
+.options {
+  display: grid;
+  gap: 0;
+}
+.options label {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 11px 0;
+  font-size: 15px;
+  line-height: 1.5;
+  cursor: pointer;
+}
+.options input {
+  flex: 0 0 auto;
+  accent-color: var(--ledger-ink);
+  width: 15px;
+  height: 15px;
+}
+.question textarea {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  border: 1px solid rgb(var(--ledger-ink-rgb) / 0.3);
+  border-radius: 0;
+  background: transparent;
+  color: inherit;
+  padding: 12px;
+  font: inherit;
+  font-size: 16px;
+  line-height: 1.6;
+  resize: vertical;
+}
+.page :is(a, input, textarea, button):focus-visible {
+  outline: 2px solid var(--ledger-ink);
+  outline-offset: 4px;
+}
+.send {
+  border-top: 1px solid rgb(var(--ledger-ink-rgb) / 0.18);
+  padding-top: 28px;
+}
+.send button {
+  margin-top: 24px;
+  padding: 14px 22px;
+  background: var(--ledger-ink);
+  color: var(--ledger-paper);
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+  border: 1px solid var(--ledger-ink);
+}
+.send button:disabled {
+  opacity: 0.6;
+  cursor: wait;
+}
+.error {
+  margin-top: 16px;
+  font-size: 14px;
+}
+.thanks {
+  border-top: 1px solid rgb(var(--ledger-ink-rgb) / 0.18);
+  padding: 40px 0;
+}
+.thanks h2 {
+  font:
+    32px Georgia,
+    serif;
+  margin-bottom: 16px;
+}
+.footer {
+  margin-top: 64px;
+  font-size: 12px;
+  color: var(--ledger-secondary);
+}
+@media (max-width: 480px) {
+  .page {
+    padding: 24px 22px 40px;
+  }
+  .intro {
+    margin-top: 56px;
+  }
+}

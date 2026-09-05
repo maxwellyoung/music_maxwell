@@ -237,3 +237,13 @@ model Marginalia {
   @@index([trackId, timestamp])
   @@index([sessionId])
 }
+
+model ListenerResponse {
+  id        String   @id @default(cuid())
+  submissionId String @unique
+  version   Int      @default(1)
+  answers   Json
+  createdAt DateTime @default(now())
+
+  @@index([createdAt])
+}
