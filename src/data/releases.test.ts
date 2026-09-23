@@ -29,6 +29,29 @@ test("the public catalogue has stable unique release identities", () => {
   assert.deepEqual(validateReleaseCatalogue(), []);
 });
 
+test("the public catalogue is ordered newest first", () => {
+  const releaseTime = (releaseDate: string | undefined) => {
+    assert.ok(releaseDate, "every public release has a release date");
+    const preciseDate = /^\d{4}$/.test(releaseDate)
+      ? `December 31, ${releaseDate}`
+      : releaseDate;
+    const time = Date.parse(preciseDate);
+    assert.ok(Number.isFinite(time), `invalid release date: ${releaseDate}`);
+    return time;
+  };
+  const releaseTimes = releases.map((release) =>
+    releaseTime(release.releaseDate),
+  );
+
+  for (let index = 1; index < releaseTimes.length; index += 1) {
+    assert.ok(
+      releaseTimes[index - 1]! >= releaseTimes[index]!,
+      `${releases[index - 1]!.slug} must not precede a newer release`,
+    );
+  }
+  assert.equal(releaseTimes[0], Math.max(...releaseTimes));
+});
+
 test("only releases with an earned interaction are promoted as worlds", () => {
   assert.deepEqual(
     releaseRooms.map((release) => release.slug),

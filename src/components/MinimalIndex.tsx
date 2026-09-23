@@ -27,7 +27,7 @@ export default function MinimalIndex({
 }) {
   const [active, setActive] = useState<string | null>(null);
   const activeRelease = releases.find((r) => r.slug === active);
-  const featured = releases.find((r) => r.slug === "1kiss");
+  const featured = releases[0];
 
   // Hover and keyboard focus reveal artwork; only the play control starts audio.
 
@@ -42,11 +42,11 @@ export default function MinimalIndex({
 
       <div className="px-6 pt-16 pb-20 sm:px-12 lg:px-20 lg:pr-[46vw]">
         {/* Standfirst: the current record, playable in place. */}
-        <section
-          className="relative max-w-2xl pr-24 lg:pr-0"
-          aria-label="Latest release"
-        >
-          {featured && (
+        {featured && (
+          <section
+            className="relative max-w-2xl pr-24 lg:pr-0"
+            aria-label="Latest release"
+          >
             <Link
               href={`/r/${featured.slug}`}
               aria-label={`${featured.title} — release details`}
@@ -62,27 +62,27 @@ export default function MinimalIndex({
                 className="h-[72px] w-[72px] object-cover"
               />
             </Link>
-          )}
-          <p className="text-xl leading-snug sm:text-2xl">
-            <Link
-              href="/r/1kiss"
-              className="font-semibold underline decoration-[rgb(var(--ledger-ink-rgb)/0.25)] underline-offset-[6px] transition hover:decoration-(--ledger-ink)"
-            >
-              1kiss
-            </Link>{" "}
-            <span className="text-(--ledger-secondary) italic">
-              is out now.
-            </span>
-          </p>
-          {featured?.previewUrl && (
-            <div className="mt-4">
-              <MinimalExcerpt
-                src={featured.previewUrl}
-                title={featured.title}
-              />
-            </div>
-          )}
-        </section>
+            <p className="text-xl leading-snug sm:text-2xl">
+              <Link
+                href={`/r/${featured.slug}`}
+                className="font-semibold underline decoration-[rgb(var(--ledger-ink-rgb)/0.25)] underline-offset-[6px] transition hover:decoration-(--ledger-ink)"
+              >
+                {featured.title}
+              </Link>{" "}
+              <span className="text-(--ledger-secondary) italic">
+                is out now.
+              </span>
+            </p>
+            {featured.previewUrl && (
+              <div className="mt-4">
+                <MinimalExcerpt
+                  src={featured.previewUrl}
+                  title={featured.title}
+                />
+              </div>
+            )}
+          </section>
+        )}
 
         <section className="mt-14 max-w-2xl" aria-label="Discography">
           <ol className="border-t border-[rgb(var(--ledger-ink-rgb)/0.10)]">

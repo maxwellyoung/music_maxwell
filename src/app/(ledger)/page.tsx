@@ -24,7 +24,7 @@ export default async function Home({
   // page dynamic, which defeats `revalidate` and runs the notes query per hit.
   if (process.env.NODE_ENV !== "production") {
     const { variant } = await searchParams;
-    if (variant !== "original") {
+    if (variant === "A" || variant === "B" || variant === "C") {
       return (
         <Suspense fallback={null}>
           <DesignPrototype releases={releases.map(summarizeRelease)} />
