@@ -28,6 +28,7 @@ export default function MinimalIndex({
   const [active, setActive] = useState<string | null>(null);
   const activeRelease = releases.find((r) => r.slug === active);
   const featured = releases[0];
+  const recentReleases = releases.slice(0, 6);
 
   // Hover and keyboard focus reveal artwork; only the play control starts audio.
 
@@ -45,24 +46,9 @@ export default function MinimalIndex({
         {/* Standfirst: the current record, playable in place. */}
         {featured && (
           <section
-            className="relative max-w-2xl pr-24 lg:pr-0"
+            className="max-w-2xl"
             aria-label="Latest release"
           >
-            <Link
-              href={`/r/${featured.slug}`}
-              aria-label={`${featured.title} — release details`}
-              className="absolute top-0 right-0 lg:hidden"
-            >
-              <Image
-                src={featured.artwork}
-                alt={`${featured.title} artwork`}
-                width={72}
-                height={72}
-                sizes="72px"
-                priority
-                className="h-[72px] w-[72px] object-cover"
-              />
-            </Link>
             <p className="text-xl leading-snug sm:text-2xl">
               <Link
                 href={`/r/${featured.slug}`}
@@ -82,6 +68,62 @@ export default function MinimalIndex({
                 />
               </div>
             )}
+          </section>
+        )}
+
+        {recentReleases.length > 0 && (
+          <section
+            className="mt-12 lg:hidden"
+            aria-labelledby="recent-releases-heading"
+          >
+            <div className="flex max-w-2xl items-baseline justify-between gap-6">
+              <h2
+                id="recent-releases-heading"
+                className="mb-0 text-sm leading-none font-medium"
+              >
+                Recent releases
+              </h2>
+              <Link
+                href="/artwork"
+                className="text-xs text-(--ledger-secondary) underline decoration-[rgb(var(--ledger-ink-rgb)/0.20)] underline-offset-4 transition hover:text-(--ledger-ink) focus-visible:ring-2 focus-visible:ring-(--ledger-ink) focus-visible:outline-hidden"
+              >
+                All artwork
+              </Link>
+            </div>
+            <div
+              className="-mx-6 mt-4 overflow-x-auto px-6 pb-3 sm:-mx-12 sm:px-12"
+              data-recent-sleeves
+            >
+              <ol className="flex w-max gap-3">
+                {recentReleases.map((release) => (
+                  <li
+                    key={release.slug}
+                    className="w-[36vw] min-w-34 max-w-40 shrink-0"
+                  >
+                    <Link
+                      href={`/r/${release.slug}`}
+                      className="group block focus-visible:ring-2 focus-visible:ring-(--ledger-ink) focus-visible:ring-offset-4 focus-visible:ring-offset-(--ledger-paper) focus-visible:outline-hidden"
+                    >
+                      <div className="relative aspect-square overflow-hidden bg-[rgb(var(--ledger-ink-rgb)/0.04)]">
+                        <Image
+                          src={release.artwork}
+                          alt={`${release.title} artwork`}
+                          fill
+                          sizes="(max-width: 377px) 136px, (max-width: 444px) 36vw, 160px"
+                          className="object-cover"
+                        />
+                      </div>
+                      <span className="mt-2 block text-sm leading-snug font-medium">
+                        {release.title}
+                      </span>
+                      <span className="mt-0.5 block text-xs text-(--ledger-secondary) tabular-nums">
+                        {year(release.releaseDate)}
+                      </span>
+                    </Link>
+                  </li>
+                ))}
+              </ol>
+            </div>
           </section>
         )}
 
