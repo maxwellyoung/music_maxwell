@@ -95,9 +95,9 @@ export function NewTopicForm({
   return (
     <>
       <section aria-label="Leave a note">
-        <h1 className="mb-0 text-xl font-normal leading-snug sm:text-2xl">
+        <h1 className="mb-0 text-xl leading-snug font-normal sm:text-2xl">
           <span className="font-semibold">Leave a note.</span>{" "}
-          <span className="text-[rgb(var(--ledger-ink-rgb)/0.45)]">
+          <span className="text-(--ledger-secondary)">
             A heading, then whatever you want on the wall.
           </span>
         </h1>
@@ -106,10 +106,7 @@ export function NewTopicForm({
       <form onSubmit={onSubmit} className="mt-12 space-y-10">
         <div>
           <div className="flex items-baseline justify-between gap-4 text-sm">
-            <label
-              htmlFor="title"
-              className="text-[rgb(var(--ledger-ink-rgb)/0.40)]"
-            >
+            <label htmlFor="title" className="text-(--ledger-secondary)">
               heading
             </label>
             <span
@@ -117,7 +114,7 @@ export function NewTopicForm({
               className={`text-xs tabular-nums ${
                 title.length > MAX_TITLE_LENGTH * 0.9
                   ? "text-(--ledger-ink)"
-                  : "text-[rgb(var(--ledger-ink-rgb)/0.30)]"
+                  : "text-(--ledger-secondary)"
               }`}
             >
               {title.length} / {MAX_TITLE_LENGTH}
@@ -139,10 +136,7 @@ export function NewTopicForm({
 
         <div>
           <div className="flex items-baseline justify-between gap-4 text-sm">
-            <label
-              htmlFor="content"
-              className="text-[rgb(var(--ledger-ink-rgb)/0.40)]"
-            >
+            <label htmlFor="content" className="text-(--ledger-secondary)">
               note
             </label>
             <span
@@ -150,7 +144,7 @@ export function NewTopicForm({
               className={`text-xs tabular-nums ${
                 content.length > MAX_CONTENT_LENGTH * 0.9
                   ? "text-(--ledger-ink)"
-                  : "text-[rgb(var(--ledger-ink-rgb)/0.30)]"
+                  : "text-(--ledger-secondary)"
               }`}
             >
               {content.length.toLocaleString()} /{" "}
@@ -172,7 +166,7 @@ export function NewTopicForm({
         </div>
 
         <div className="flex flex-wrap items-center justify-between gap-x-8 gap-y-4 border-t border-[rgb(var(--ledger-ink-rgb)/0.10)] pt-6 text-sm">
-          <p className="mb-0 max-w-md leading-relaxed text-[rgb(var(--ledger-ink-rgb)/0.45)]">
+          <p className="mb-0 max-w-md leading-relaxed text-(--ledger-secondary)">
             {signedOut ? (
               <>
                 Goes up unsigned.{" "}
@@ -200,7 +194,7 @@ export function NewTopicForm({
               type="button"
               onClick={() => router.push("/forum")}
               disabled={isLoading}
-              className="text-[rgb(var(--ledger-ink-rgb)/0.45)] transition hover:text-(--ledger-ink)"
+              className="text-(--ledger-secondary) transition hover:text-(--ledger-ink)"
             >
               cancel
             </button>

@@ -27,21 +27,21 @@ export default function AppendixPage() {
         </Link>
         <Link
           href="/"
-          className="text-sm leading-none text-[rgb(var(--ledger-ink-rgb)/0.40)] transition hover:text-(--ledger-ink)"
+          className="text-sm leading-none text-(--ledger-secondary) transition hover:text-(--ledger-ink)"
         >
           ← index
         </Link>
       </header>
 
-      <div className="px-6 pb-20 pt-16 sm:px-12 lg:px-20">
-        <p className="mb-10 font-mono text-xs text-[rgb(var(--ledger-ink-rgb)/0.40)]">
+      <div className="px-6 pt-16 pb-20 sm:px-12 lg:px-20">
+        <p className="mb-10 font-mono text-xs text-(--ledger-secondary)">
           Appendix. The part about the archive.
         </p>
 
         <div className="overflow-x-auto">
           <table className="w-full max-w-5xl border-collapse font-mono text-xs leading-6">
             <thead>
-              <tr className="border-b border-[rgb(var(--ledger-ink-rgb)/0.25)] text-left text-[rgb(var(--ledger-ink-rgb)/0.40)]">
+              <tr className="border-b border-[rgb(var(--ledger-ink-rgb)/0.25)] text-left text-(--ledger-secondary)">
                 <th className="py-2 pr-4 font-normal">nº</th>
                 <th className="py-2 pr-4 font-normal">title</th>
                 <th className="py-2 pr-4 font-normal">form</th>
@@ -58,33 +58,33 @@ export default function AppendixPage() {
                   key={release.slug}
                   className="border-b border-[rgb(var(--ledger-ink-rgb)/0.10)] align-top"
                 >
-                  <td className="py-2 pr-4 text-[rgb(var(--ledger-ink-rgb)/0.35)]">
+                  <td className="py-2 pr-4 text-(--ledger-secondary)">
                     {String(index + 1).padStart(2, "0")}
                   </td>
                   <td className="py-2 pr-4">
                     <Link
                       href={`/r/${release.slug}`}
-                      className="transition hover:text-[rgb(var(--ledger-ink-rgb)/0.55)]"
+                      className="transition hover:text-(--ledger-secondary)"
                     >
                       {release.title}
                     </Link>
                   </td>
-                  <td className="py-2 pr-4 lowercase text-[rgb(var(--ledger-ink-rgb)/0.55)]">
+                  <td className="py-2 pr-4 text-(--ledger-secondary) lowercase">
                     {release.releaseType ?? "release"}
                   </td>
-                  <td className="py-2 pr-4 text-[rgb(var(--ledger-ink-rgb)/0.55)]">
+                  <td className="py-2 pr-4 text-(--ledger-secondary)">
                     {release.releaseDate ?? "—"}
                   </td>
-                  <td className="py-2 pr-4 text-[rgb(var(--ledger-ink-rgb)/0.55)]">
+                  <td className="py-2 pr-4 text-(--ledger-secondary)">
                     {release.duration ?? "—"}
                   </td>
-                  <td className="py-2 pr-4 text-[rgb(var(--ledger-ink-rgb)/0.55)]">
+                  <td className="py-2 pr-4 text-(--ledger-secondary)">
                     {detail(release, "Tempo")}
                   </td>
-                  <td className="py-2 pr-4 text-[rgb(var(--ledger-ink-rgb)/0.55)]">
+                  <td className="py-2 pr-4 text-(--ledger-secondary)">
                     {detail(release, "Key")}
                   </td>
-                  <td className="py-2 text-[rgb(var(--ledger-ink-rgb)/0.55)]">
+                  <td className="py-2 text-(--ledger-secondary)">
                     {release.lyrics ? Object.keys(release.lyrics).length : 0}
                   </td>
                 </tr>
@@ -93,7 +93,7 @@ export default function AppendixPage() {
           </table>
         </div>
 
-        <p className="mt-10 max-w-prose font-mono text-xs leading-6 text-[rgb(var(--ledger-ink-rgb)/0.35)]">
+        <p className="mt-10 max-w-prose font-mono text-xs leading-6 text-(--ledger-secondary)">
           {releases.length} entries. Compiled from the official catalogue.
           Fields not on record are marked —.
         </p>

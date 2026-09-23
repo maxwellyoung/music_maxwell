@@ -66,7 +66,7 @@ export default async function ForumPage({
       <section className="max-w-2xl" aria-label="Town square">
         <p className="text-xl leading-snug sm:text-2xl">
           <span className="font-semibold">Town square.</span>{" "}
-          <span className="text-[rgb(var(--ledger-ink-rgb)/0.45)]">
+          <span className="text-(--ledger-secondary)">
             Notes left around the releases.
           </span>
         </p>
@@ -78,7 +78,7 @@ export default async function ForumPage({
             >
               leave a note
             </Link>
-            <span className="tabular-nums text-[rgb(var(--ledger-ink-rgb)/0.40)]">
+            <span className="text-(--ledger-secondary) tabular-nums">
               {count}
               {query && (
                 <>

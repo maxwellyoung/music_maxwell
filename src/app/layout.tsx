@@ -4,8 +4,6 @@ import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next";
 import JsonLd from "~/components/JsonLd";
-import { SessionProvider } from "~/components/providers/SessionProvider";
-import { Toaster } from "~/components/ui/toaster";
 
 const appUrl =
   process.env.NEXT_PUBLIC_APP_URL ?? "https://www.maxwellyoung.info";
@@ -104,15 +102,12 @@ export default function RootLayout({
         />
         <a
           href="#main-content"
-          className="fixed left-4 top-4 z-100 -translate-y-24 bg-[#f2ede4] px-4 py-3 text-sm font-bold text-[#07090d] transition focus:translate-y-0"
+          className="fixed top-4 left-4 z-100 -translate-y-24 bg-[#f2ede4] px-4 py-3 text-sm font-bold text-[#07090d] transition focus:translate-y-0"
         >
           Skip to content
         </a>
-        <SessionProvider>
-          {children}
-          <Toaster />
-          <Analytics />
-        </SessionProvider>
+        {children}
+        <Analytics />
       </body>
     </html>
   );

@@ -20,9 +20,7 @@ export default async function MarginNotes() {
 
     return (
       <section className="mt-16 max-w-2xl" aria-label="Latest from the square">
-        <p className="text-sm text-[rgb(var(--ledger-ink-rgb)/0.40)]">
-          from the square —
-        </p>
+        <p className="text-sm text-(--ledger-secondary)">from the square —</p>
         <ul className="hang mt-2 space-y-1">
           {topics.map((topic) => (
             <li key={topic.id} className="text-sm leading-relaxed">
@@ -31,7 +29,7 @@ export default async function MarginNotes() {
                 className="text-[rgb(var(--ledger-ink-rgb)/0.70)] transition hover:text-[var(--ledger-ink)]"
               >
                 “{topic.title}”
-                <span className="text-[rgb(var(--ledger-ink-rgb)/0.35)]">
+                <span className="text-(--ledger-secondary)">
                   {" "}
                   — {topic.author.username ?? topic.author.name ?? "someone"}
                 </span>
@@ -42,7 +40,7 @@ export default async function MarginNotes() {
         <p className="mt-3 text-sm">
           <Link
             href="/forum"
-            className="text-[rgb(var(--ledger-ink-rgb)/0.40)] underline decoration-[rgb(var(--ledger-ink-rgb)/0.20)] underline-offset-4 transition hover:text-[var(--ledger-ink)] hover:decoration-[var(--ledger-ink)]"
+            className="text-(--ledger-secondary) underline decoration-[rgb(var(--ledger-ink-rgb)/0.20)] underline-offset-4 transition hover:text-[var(--ledger-ink)] hover:decoration-[var(--ledger-ink)]"
           >
             leave something behind
           </Link>

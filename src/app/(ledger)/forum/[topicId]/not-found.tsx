@@ -8,7 +8,7 @@ export default function NoteNotFound() {
     <SquareShell back={{ href: "/forum", label: "the square" }}>
       <p className="max-w-2xl text-xl leading-snug sm:text-2xl">
         <span className="font-semibold">Gone.</span>{" "}
-        <span className="text-[rgb(var(--ledger-ink-rgb)/0.45)]">
+        <span className="text-(--ledger-secondary)">
           This note is no longer in the square.
         </span>
       </p>

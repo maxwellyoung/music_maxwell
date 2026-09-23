@@ -1,7 +1,7 @@
 import { hash, compare } from "bcryptjs";
 import { render } from "@react-email/render";
 import ResetPasswordEmail from "~/emails/ResetPasswordEmail";
-import { resend } from "~/lib/resend";
+import { getResend } from "~/lib/resend";
 
 const HASH_ROUNDS = 12;
 
@@ -38,7 +38,7 @@ export async function sendResetEmail({
   const url = `${baseUrl}/reset-password?token=${token}`;
   const html = await render(<ResetPasswordEmail url={url} />);
 
-  const res = await resend.emails.send({
+  const res = await getResend().emails.send({
     from: sender,
     to,
     subject: "Reset your password",

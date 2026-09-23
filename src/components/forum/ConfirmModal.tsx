@@ -55,7 +55,7 @@ export default function ConfirmModal({
           <button
             ref={cancelRef}
             type="button"
-            className="text-[rgb(var(--ledger-ink-rgb)/0.45)] transition hover:text-(--ledger-ink)"
+            className="text-(--ledger-secondary) transition hover:text-(--ledger-ink)"
             onClick={onCancel}
           >
             cancel

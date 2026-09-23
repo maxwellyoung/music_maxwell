@@ -7,12 +7,12 @@ export default function NoteBody({ content }: { content: string }) {
   return (
     <>
       {content.split("\n\n").map((paragraph, index) => (
-        <p
+        <div
           key={index}
-          className="mb-5 max-w-prose whitespace-pre-line text-base leading-7 text-[rgb(var(--ledger-ink-rgb)/0.85)] [overflow-wrap:anywhere]"
+          className="mb-5 max-w-prose text-base leading-7 [overflow-wrap:anywhere] whitespace-pre-line text-[rgb(var(--ledger-ink-rgb)/0.85)]"
         >
           {renderRichContent(paragraph)}
-        </p>
+        </div>
       ))}
     </>
   );

@@ -63,17 +63,14 @@ export default function ReplyForm({
       onSubmit={handleSubmit}
     >
       <div className="flex items-baseline justify-between gap-4 text-sm">
-        <label
-          htmlFor="reply-content"
-          className="text-[rgb(var(--ledger-ink-rgb)/0.40)]"
-        >
+        <label htmlFor="reply-content" className="text-(--ledger-secondary)">
           leave an echo
         </label>
         <span
           className={`text-xs tabular-nums ${
             content.length > MAX_CHARS * 0.9
               ? "text-(--ledger-ink)"
-              : "text-[rgb(var(--ledger-ink-rgb)/0.30)]"
+              : "text-(--ledger-secondary)"
           }`}
         >
           {content.length.toLocaleString()} / {MAX_CHARS.toLocaleString()}

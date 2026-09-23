@@ -2,15 +2,15 @@
 
 Public music archive and release surface for Maxwell Young.
 
-The public hierarchy is deliberately simple: a calm release archive, factual artefact sheets, and a small number of release worlds with song-specific interactions.
+The public hierarchy is deliberately simple: a calm release archive, factual release sheets, and a listener town square.
 
 ## What it demonstrates
 
 - Next.js app structure for a real personal/music product.
-- A typed release catalogue for archive, sheet, room, metadata, and sitemap identity.
-- Public artwork, lyrics, credits, films, audio excerpts, and verified listening links.
-- Bespoke worlds for 1kiss, Turn It Up, and Wintour.
-- Optional account and listener-note foundations kept outside the primary archive path.
+- A typed release catalogue for archive, release-sheet, metadata, and sitemap identity.
+- Public artwork, lyrics, credits, explicitly played audio excerpts, and listening links.
+- Canonical `/r/[slug]` sheets; older campaign URLs redirect to the matching release.
+- Optional Google sign-in and listener notes kept outside the primary archive path.
 
 ## Tech stack
 
@@ -30,6 +30,8 @@ The public hierarchy is deliberately simple: a calm release archive, factual art
 git clone https://github.com/maxwellyoung/music_maxwell.git
 cd music_maxwell
 ```
+
+Requires Node 24 and the pinned pnpm 9.1.1.
 
 ### 2. Install dependencies
 
@@ -78,6 +80,7 @@ The app will be available at [http://localhost:3000](http://localhost:3000) (or 
 
 ```bash
 pnpm test
+pnpm audit:quiz
 pnpm typecheck
 pnpm lint
 pnpm build
@@ -100,3 +103,11 @@ pnpm build
 ## License
 
 MIT
+
+Playback starts only from a play control. Hover and keyboard focus reveal artwork without sound; leaving the player stops its excerpt. Reduced motion keeps decoration still.
+
+## Listener questionnaire
+
+`/questions` is an optional, anonymous questionnaire. `POST /api/questions` validates bounded answers and saves a private `ListenerResponse`; there is no public read endpoint. Submission IDs make retries idempotent. The existing in-memory rate limiter provides a per-instance abuse limit, not a global limit across Vercel instances.
+
+Apply the checked-in `20260905060000_add_listener_responses` migration through the approved database release workflow before publishing this page. Do not run migrations against production as part of local development. Responses can be read through the existing private database tooling in the `ListenerResponse` table; keep exports out of the repository.

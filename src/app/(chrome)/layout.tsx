@@ -1,3 +1,5 @@
+import { SessionProvider } from "~/components/providers/SessionProvider";
+import { Toaster } from "~/components/ui/toaster";
 import Footer from "~/components/Footer";
 import Navbar from "~/components/Navbar";
 
@@ -10,12 +12,13 @@ export default function ChromeLayout({
   children: React.ReactNode;
 }) {
   return (
-    <>
+    <SessionProvider>
       <Navbar />
       <div id="main-content" tabIndex={-1} className="flex-1 outline-hidden">
         {children}
       </div>
       <Footer />
-    </>
+      <Toaster />
+    </SessionProvider>
   );
 }

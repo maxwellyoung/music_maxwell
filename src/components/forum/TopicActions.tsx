@@ -44,7 +44,7 @@ export default function TopicActions({ topicId }: TopicActionsProps) {
         type="button"
         onClick={() => setConfirmOpen(true)}
         disabled={isDeleting}
-        className="text-xs text-[rgb(var(--ledger-ink-rgb)/0.40)] underline decoration-[rgb(var(--ledger-ink-rgb)/0.20)] underline-offset-4 transition hover:text-(--ledger-ink) disabled:opacity-40"
+        className="text-xs text-(--ledger-secondary) underline decoration-[rgb(var(--ledger-ink-rgb)/0.20)] underline-offset-4 transition hover:text-(--ledger-ink) disabled:opacity-40"
       >
         {isDeleting ? "taking down" : "take down"}
       </button>

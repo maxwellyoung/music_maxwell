@@ -60,169 +60,174 @@ export default async function MinimalReleasePage({ params }: Props) {
         </Link>
         <Link
           href="/"
-          className="text-sm leading-none text-[rgb(var(--ledger-ink-rgb)/0.40)] transition hover:text-(--ledger-ink)"
+          className="text-sm leading-none text-(--ledger-secondary) transition hover:text-(--ledger-ink)"
         >
           ← index
         </Link>
       </header>
 
-      <div className="px-6 pb-20 pt-16 sm:px-12 lg:px-20">
-      <article className="max-w-2xl">
-        {release.releaseDate && (
-          <p className="mb-4 font-mono text-xs tracking-tight text-[rgb(var(--ledger-ink-rgb)/0.40)]">
-            Aotearoa,{" "}
-            {new Date(release.releaseDate).toLocaleDateString("en-NZ", {
-              month: "long",
-              year: "numeric",
-            })}
-            .
-          </p>
-        )}
-        <div className="flex items-start justify-between gap-8">
-          <div>
-            <h1 className="mb-0 text-2xl font-medium tracking-[-0.01em]">
-              {release.title}
-            </h1>
-            <p className="mt-1 text-sm tabular-nums text-[rgb(var(--ledger-ink-rgb)/0.40)]">
-              {release.releaseType?.toLowerCase() ?? "release"}
-              {release.releaseDate ? ` · ${release.releaseDate}` : ""}
-              {release.duration ? ` · ${release.duration}` : ""}
+      <div className="px-6 pt-16 pb-20 sm:px-12 lg:px-20">
+        <article className="max-w-2xl">
+          {release.releaseDate && (
+            <p className="mb-4 font-mono text-xs tracking-tight text-(--ledger-secondary)">
+              Aotearoa,{" "}
+              {new Date(release.releaseDate).toLocaleDateString("en-NZ", {
+                month: "long",
+                year: "numeric",
+              })}
+              .
             </p>
+          )}
+          <div className="flex items-start justify-between gap-8">
+            <div>
+              <h1 className="mb-0 text-2xl font-medium tracking-[-0.01em]">
+                {release.title}
+              </h1>
+              <p className="mt-1 text-sm text-(--ledger-secondary) tabular-nums">
+                {release.releaseType?.toLowerCase() ?? "release"}
+                {release.releaseDate ? ` · ${release.releaseDate}` : ""}
+                {release.duration ? ` · ${release.duration}` : ""}
+              </p>
+            </div>
+            <div
+              className="relative h-24 w-24 shrink-0 sm:h-32 sm:w-32"
+              style={{ viewTransitionName: "release-cover" }}
+            >
+              <Image
+                src={release.artwork}
+                alt={`${release.title} artwork`}
+                fill
+                priority
+                sizes="8rem"
+                className="object-cover"
+              />
+            </div>
           </div>
-          <div
-            className="relative h-24 w-24 shrink-0 sm:h-32 sm:w-32"
-            style={{ viewTransitionName: "release-cover" }}
-          >
-            <Image
-              src={release.artwork}
-              alt={`${release.title} artwork`}
-              fill
-              priority
-              sizes="8rem"
-              className="object-cover"
-            />
+
+          {release.details && release.details.length > 0 && (
+            <dl className="mt-8 max-w-prose text-sm leading-7 text-(--ledger-secondary)">
+              {release.details.map((detail) => (
+                <div key={detail.label} className="flex gap-3">
+                  <dt className="w-24 shrink-0 text-(--ledger-secondary)">
+                    {detail.label}
+                  </dt>
+                  <dd>{detail.value}</dd>
+                </div>
+              ))}
+            </dl>
+          )}
+
+          {(listenLinks.length > 0 || release.releasePath) && (
+            <div className="mt-10 flex flex-wrap gap-x-5 gap-y-2 border-t border-[rgb(var(--ledger-ink-rgb)/0.10)] pt-4 text-sm">
+              {listenLinks.map(({ label, href }) => (
+                <a
+                  key={label}
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline decoration-[rgb(var(--ledger-ink-rgb)/0.25)] underline-offset-4 transition hover:decoration-(--ledger-ink)"
+                >
+                  {label}
+                </a>
+              ))}
+              {release.releasePath &&
+                release.releasePath !== `/r/${release.slug}` && (
+                  <Link
+                    href={release.releasePath}
+                    className="text-(--ledger-secondary) transition hover:text-(--ledger-ink)"
+                  >
+                    Enter the release room ↗
+                  </Link>
+                )}
+            </div>
+          )}
+
+          {release.previewUrl && (
+            <div className="mt-8">
+              <MinimalExcerpt src={release.previewUrl} title={release.title} />
+            </div>
+          )}
+
+          {lyricVersions.length > 0 && (
+            <section className="mt-12 border-t border-[rgb(var(--ledger-ink-rgb)/0.10)] pt-4">
+              {lyricVersions.map(([version, text]) => (
+                <details key={version} className="group py-2">
+                  <summary className="cursor-pointer list-none text-sm font-medium transition hover:text-(--ledger-secondary)">
+                    <span className="mr-2 inline-block text-(--ledger-secondary) transition-transform group-open:rotate-90">
+                      ›
+                    </span>
+                    {lyricVersions.length > 1
+                      ? `Lyrics — ${version}`
+                      : "Lyrics"}
+                  </summary>
+                  <p className="mt-4 max-w-prose pl-5 text-sm leading-7 whitespace-pre-line text-[rgb(var(--ledger-ink-rgb)/0.70)]">
+                    {text}
+                  </p>
+                </details>
+              ))}
+              {release.credits && (
+                <details className="group border-t border-[rgb(var(--ledger-ink-rgb)/0.10)] py-2">
+                  <summary className="cursor-pointer list-none text-sm font-medium transition hover:text-(--ledger-secondary)">
+                    <span className="mr-2 inline-block text-(--ledger-secondary) transition-transform group-open:rotate-90">
+                      ›
+                    </span>
+                    Notes on the record
+                  </summary>
+                  <ol className="mt-4 max-w-prose space-y-1 pl-5 font-mono text-xs leading-6 text-[rgb(var(--ledger-ink-rgb)/0.60)]">
+                    {release.credits
+                      .split("\n")
+                      .filter(Boolean)
+                      .map((line, index) => (
+                        <li key={index} className="flex gap-3">
+                          <span className="shrink-0 text-(--ledger-secondary) tabular-nums">
+                            {index + 1}.
+                          </span>
+                          <span>{line}</span>
+                        </li>
+                      ))}
+                  </ol>
+                </details>
+              )}
+            </section>
+          )}
+        </article>
+
+        <nav
+          className="mt-16 flex max-w-2xl justify-between gap-6 border-t border-[rgb(var(--ledger-ink-rgb)/0.10)] pt-4 text-sm"
+          aria-label="Adjacent releases"
+        >
+          {prev ? (
+            <Link
+              href={`/r/${prev.slug}`}
+              data-ledger-prev
+              className="text-(--ledger-secondary) transition hover:text-(--ledger-ink)"
+            >
+              ← {prev.title}
+            </Link>
+          ) : (
+            <span />
+          )}
+          {next ? (
+            <Link
+              href={`/r/${next.slug}`}
+              data-ledger-next
+              className="text-right text-(--ledger-secondary) transition hover:text-(--ledger-ink)"
+            >
+              {next.title} →
+            </Link>
+          ) : (
+            <span />
+          )}
+        </nav>
+
+        <footer className="mt-24 max-w-2xl border-t border-[rgb(var(--ledger-ink-rgb)/0.12)] pt-4">
+          <div className="flex items-baseline justify-between gap-8 text-xs text-(--ledger-secondary)">
+            <span className="tabular-nums">
+              {year(release.releaseDate) || "—"} · Maxwell Young
+            </span>
+            <LedgerLightSwitch />
           </div>
-        </div>
-
-        {release.details && release.details.length > 0 && (
-          <dl className="mt-8 max-w-prose text-sm leading-7 text-[rgb(var(--ledger-ink-rgb)/0.50)]">
-            {release.details.map((detail) => (
-              <div key={detail.label} className="flex gap-3">
-                <dt className="w-24 shrink-0 text-[rgb(var(--ledger-ink-rgb)/0.35)]">{detail.label}</dt>
-                <dd>{detail.value}</dd>
-              </div>
-            ))}
-          </dl>
-        )}
-
-        {(listenLinks.length > 0 || release.releasePath) && (
-          <div className="mt-10 flex flex-wrap gap-x-5 gap-y-2 border-t border-[rgb(var(--ledger-ink-rgb)/0.10)] pt-4 text-sm">
-            {listenLinks.map(({ label, href }) => (
-              <a
-                key={label}
-                href={href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline decoration-[rgb(var(--ledger-ink-rgb)/0.25)] underline-offset-4 transition hover:decoration-(--ledger-ink)"
-              >
-                {label}
-              </a>
-            ))}
-            {release.releasePath && release.releasePath !== `/r/${release.slug}` && (
-              <Link
-                href={release.releasePath}
-                className="text-[rgb(var(--ledger-ink-rgb)/0.40)] transition hover:text-(--ledger-ink)"
-              >
-                Enter the release room ↗
-              </Link>
-            )}
-          </div>
-        )}
-
-        {release.previewUrl && (
-          <div className="mt-8">
-            <MinimalExcerpt src={release.previewUrl} title={release.title} />
-          </div>
-        )}
-
-        {lyricVersions.length > 0 && (
-          <section className="mt-12 border-t border-[rgb(var(--ledger-ink-rgb)/0.10)] pt-4">
-            {lyricVersions.map(([version, text]) => (
-              <details key={version} className="group py-2">
-                <summary className="cursor-pointer list-none text-sm font-medium transition hover:text-[rgb(var(--ledger-ink-rgb)/0.50)]">
-                  <span className="mr-2 inline-block text-[rgb(var(--ledger-ink-rgb)/0.30)] transition-transform group-open:rotate-90">
-                    ›
-                  </span>
-                  {lyricVersions.length > 1 ? `Lyrics — ${version}` : "Lyrics"}
-                </summary>
-                <p className="mt-4 max-w-prose whitespace-pre-line pl-5 text-sm leading-7 text-[rgb(var(--ledger-ink-rgb)/0.70)]">
-                  {text}
-                </p>
-              </details>
-            ))}
-            {release.credits && (
-              <details className="group border-t border-[rgb(var(--ledger-ink-rgb)/0.10)] py-2">
-                <summary className="cursor-pointer list-none text-sm font-medium transition hover:text-[rgb(var(--ledger-ink-rgb)/0.50)]">
-                  <span className="mr-2 inline-block text-[rgb(var(--ledger-ink-rgb)/0.30)] transition-transform group-open:rotate-90">
-                    ›
-                  </span>
-                  Notes on the record
-                </summary>
-                <ol className="mt-4 max-w-prose space-y-1 pl-5 font-mono text-xs leading-6 text-[rgb(var(--ledger-ink-rgb)/0.60)]">
-                  {release.credits
-                    .split("\n")
-                    .filter(Boolean)
-                    .map((line, index) => (
-                      <li key={index} className="flex gap-3">
-                        <span className="shrink-0 tabular-nums text-[rgb(var(--ledger-ink-rgb)/0.35)]">
-                          {index + 1}.
-                        </span>
-                        <span>{line}</span>
-                      </li>
-                    ))}
-                </ol>
-              </details>
-            )}
-          </section>
-        )}
-      </article>
-
-      <nav
-        className="mt-16 flex max-w-2xl justify-between gap-6 border-t border-[rgb(var(--ledger-ink-rgb)/0.10)] pt-4 text-sm"
-        aria-label="Adjacent releases"
-      >
-        {prev ? (
-          <Link
-            href={`/r/${prev.slug}`}
-            data-ledger-prev
-            className="text-[rgb(var(--ledger-ink-rgb)/0.40)] transition hover:text-(--ledger-ink)"
-          >
-            ← {prev.title}
-          </Link>
-        ) : (
-          <span />
-        )}
-        {next ? (
-          <Link
-            href={`/r/${next.slug}`}
-            data-ledger-next
-            className="text-right text-[rgb(var(--ledger-ink-rgb)/0.40)] transition hover:text-(--ledger-ink)"
-          >
-            {next.title} →
-          </Link>
-        ) : (
-          <span />
-        )}
-      </nav>
-
-      <footer className="mt-24 max-w-2xl border-t border-[rgb(var(--ledger-ink-rgb)/0.12)] pt-4">
-        <div className="flex items-baseline justify-between gap-8 text-xs text-[rgb(var(--ledger-ink-rgb)/0.35)]">
-          <span className="tabular-nums">
-            {year(release.releaseDate) || "—"} · Maxwell Young
-          </span>
-          <LedgerLightSwitch />
-        </div>
-      </footer>
+        </footer>
       </div>
     </main>
   );
