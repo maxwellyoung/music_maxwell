@@ -20,13 +20,17 @@ export default async function Home({
 }: {
   searchParams: Promise<{ variant?: string }>;
 }) {
-  const { variant } = await searchParams;
-  if (process.env.NODE_ENV !== "production" && variant !== "original") {
-    return (
-      <Suspense fallback={null}>
-        <DesignPrototype releases={releases.map(summarizeRelease)} />
-      </Suspense>
-    );
+  // Only read searchParams in development: awaiting it in production makes the
+  // page dynamic, which defeats `revalidate` and runs the notes query per hit.
+  if (process.env.NODE_ENV !== "production") {
+    const { variant } = await searchParams;
+    if (variant !== "original") {
+      return (
+        <Suspense fallback={null}>
+          <DesignPrototype releases={releases.map(summarizeRelease)} />
+        </Suspense>
+      );
+    }
   }
   return (
     <MinimalIndex
