@@ -1,7 +1,12 @@
 import assert from "node:assert/strict";
 import test from "node:test";
 
-import { createReleaseMetadata } from "../lib/releaseMetadata.ts";
+import sitemap from "../app/sitemap.ts";
+import {
+  createReleaseDescription,
+  createReleaseMetadata,
+  homepageDescription,
+} from "../lib/releaseMetadata.ts";
 import { createPublicReleaseManifest } from "../lib/releaseManifest.ts";
 import {
   lyricLineAt,
@@ -85,6 +90,69 @@ test("release metadata is generated from the catalogue identity", () => {
   assert.equal(metadata.alternates?.canonical, "/r/1kiss");
   assert.equal(metadata.openGraph?.url, "/r/1kiss");
   assert.deepEqual(metadata.twitter?.images, ["/artworks/1kiss.jpg"]);
+
+  const releaseWithoutPath = getReleaseBySlug("flying")!;
+  const fallbackMetadata = createReleaseMetadata(releaseWithoutPath, {
+    description: createReleaseDescription(releaseWithoutPath),
+  });
+  assert.equal(fallbackMetadata.alternates?.canonical, "/r/flying");
+  assert.equal(fallbackMetadata.openGraph?.url, "/r/flying");
+});
+
+test("public metadata descriptions are factual and useful", () => {
+  assert.ok(homepageDescription.length >= 120);
+  assert.ok(homepageDescription.length <= 160);
+  for (const fact of [
+    "official Maxwell Young release archive",
+    "lyrics",
+    "artwork",
+    "credits",
+    "listening links",
+  ]) {
+    assert.ok(homepageDescription.includes(fact));
+  }
+
+  for (const release of releases) {
+    const description = createReleaseDescription(release);
+    assert.ok(description.length >= 120, `${release.slug} is too short`);
+    assert.ok(description.length <= 160, `${release.slug} is too long`);
+    assert.ok(description.includes(release.title));
+    assert.ok(description.includes("Maxwell Young"));
+    assert.ok(description.includes("artwork"));
+    assert.ok(description.includes("lyrics"));
+    assert.ok(description.includes("listening links"));
+    assert.equal(description.includes("credits"), Boolean(release.credits));
+  }
+});
+
+test("sitemap contains canonical public reads and excludes private or write routes", () => {
+  const urls = sitemap().map((entry) => entry.url);
+  const count = (url: string) => urls.filter((candidate) => candidate === url).length;
+  const origin = "https://www.maxwellyoung.info";
+
+  for (const path of [
+    "/artwork",
+    "/artwork/sneakin-drinks",
+    "/questions",
+    "/forum",
+  ]) {
+    assert.equal(count(`${origin}${path}`), 1, path);
+  }
+  for (const release of releases) {
+    const path = release.releasePath ?? `/r/${release.slug}`;
+    assert.equal(count(`${origin}${path}`), 1, path);
+  }
+  for (const path of [
+    "/index-of-everything",
+    "/forum/new",
+    "/login",
+    "/settings",
+    "/lab",
+    "/auth/signin",
+  ]) {
+    assert.equal(count(`${origin}${path}`), 0, path);
+  }
+  assert.equal(urls.some((url) => url.includes("?")), false);
 });
 
 test("the downstream manifest exposes only stable public release data", () => {

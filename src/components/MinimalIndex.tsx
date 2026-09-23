@@ -36,7 +36,8 @@ export default function MinimalIndex({
       {/* Letterhead: the wordmark alone, two-tone, nothing else. */}
       <header className="px-6 pt-10 sm:px-12 lg:px-20">
         <h1 className="mb-0 leading-none">
-          <LedgerWordmark />
+          <span className="sr-only">Maxwell Young</span>
+          <LedgerWordmark decorative />
         </h1>
       </header>
 

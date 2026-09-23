@@ -1,6 +1,6 @@
 import type { MetadataRoute } from "next";
 
-import releases from "~/data/releases";
+import releases from "../data/releases.ts";
 
 const origin = "https://www.maxwellyoung.info";
 
@@ -30,6 +30,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     ...releasePages,
     ...minimalReleasePages,
     { url: `${origin}/artwork`, changeFrequency: "monthly", priority: 0.5 },
+    {
+      url: `${origin}/artwork/sneakin-drinks`,
+      changeFrequency: "monthly",
+      priority: 0.4,
+    },
+    { url: `${origin}/questions`, changeFrequency: "monthly", priority: 0.5 },
+    { url: `${origin}/forum`, changeFrequency: "daily", priority: 0.5 },
     { url: `${origin}/quiz`, changeFrequency: "monthly", priority: 0.4 },
     { url: `${origin}/privacy`, changeFrequency: "yearly", priority: 0.2 },
   ];

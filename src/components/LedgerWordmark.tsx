@@ -4,13 +4,15 @@ import Image from "next/image";
 // 220KB+ SVG; ink mode inverts it via .ledger-wordmark in globals.css.
 export default function LedgerWordmark({
   className = "h-8 w-auto",
+  decorative = false,
 }: {
   className?: string;
+  decorative?: boolean;
 }) {
   return (
     <Image
       src="/icons/maxwellyoung2.png"
-      alt="Maxwell Young"
+      alt={decorative ? "" : "Maxwell Young"}
       width={1024}
       height={483}
       priority

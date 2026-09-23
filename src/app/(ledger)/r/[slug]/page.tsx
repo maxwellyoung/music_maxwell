@@ -6,6 +6,10 @@ import LedgerLightSwitch from "~/components/LedgerLightSwitch";
 import LedgerWordmark from "~/components/LedgerWordmark";
 import MinimalExcerpt from "~/components/MinimalExcerpt";
 import releases, { getReleaseBySlug } from "~/data/releases";
+import {
+  createReleaseDescription,
+  createReleaseMetadata,
+} from "~/lib/releaseMetadata";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -30,12 +34,9 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const release = getReleaseBySlug((await params).slug);
   if (!release) return {};
-  return {
-    title: `${release.title} | Maxwell Young`,
-    description: `${release.title} by Maxwell Young — ${release.releaseType ?? "release"}, ${release.releaseDate ?? ""}. Lyrics, credits, and listening links.`,
-    alternates: { canonical: release.releasePath ?? `/r/${release.slug}` },
-    twitter: { card: "summary_large_image" },
-  };
+  return createReleaseMetadata(release, {
+    description: createReleaseDescription(release),
+  });
 }
 
 export default async function MinimalReleasePage({ params }: Props) {
