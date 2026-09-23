@@ -4,12 +4,12 @@ import MarginNotes from "~/components/MarginNotes";
 import DesignPrototype from "~/components/DesignPrototype";
 import MinimalIndex from "~/components/MinimalIndex";
 import releases from "~/data/releases";
+import { homepageDescription } from "~/lib/releaseMetadata";
 import { summarizeRelease } from "~/lib/releaseSummary";
 
 export const metadata: Metadata = {
   title: "Maxwell Young — Music, releases, and archive",
-  description:
-    "Maxwell Young releases, artwork, lyrics, films, credits, and archive.",
+  description: homepageDescription,
   alternates: { canonical: "/" },
 };
 
@@ -24,7 +24,7 @@ export default async function Home({
   // page dynamic, which defeats `revalidate` and runs the notes query per hit.
   if (process.env.NODE_ENV !== "production") {
     const { variant } = await searchParams;
-    if (variant !== "original") {
+    if (variant === "A" || variant === "B" || variant === "C") {
       return (
         <Suspense fallback={null}>
           <DesignPrototype releases={releases.map(summarizeRelease)} />
@@ -36,7 +36,7 @@ export default async function Home({
     <MinimalIndex
       releases={releases.map(summarizeRelease)}
       notesSlot={
-        <Suspense fallback={null}>
+        <Suspense key="margin-notes" fallback={null}>
           <MarginNotes />
         </Suspense>
       }

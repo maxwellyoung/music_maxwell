@@ -6,6 +6,7 @@ import { ArrowLeft, ArrowUpRight, Download } from "lucide-react";
 export const metadata: Metadata = {
   title: "Sneakin Drinks Artwork | Maxwell Young",
   description: "Artwork for Sneakin Drinks Into Bars by Maxwell Young.",
+  alternates: { canonical: "/artwork/sneakin-drinks" },
   openGraph: {
     images: ["/artworks/SneakinDrinksIntoBars.jpg"],
   },

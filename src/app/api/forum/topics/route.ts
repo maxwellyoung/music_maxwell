@@ -3,9 +3,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "~/lib/auth";
 import { prisma } from "~/lib/prisma";
 import { triggerNewForumTopic } from "~/lib/pusherServer";
-import { containsBannedWords } from "~/lib/constants";
 import {
-  createTopicSchema,
   deleteTopicSchema,
   listTopicsSchema,
 } from "~/lib/validations";
@@ -16,96 +14,22 @@ import {
 } from "~/lib/anonAuthor";
 import { getReleaseWallWhere } from "~/lib/forum";
 import { rateLimit } from "~/lib/rate-limit";
+import { createTopicPostHandler } from "~/lib/forumWriteHandlers";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
 const anonLimiter = rateLimit({ interval: 60_000, uniqueTokenPerInterval: 500 });
 
-export async function POST(request: Request) {
-  const session = await getServerSession(authOptions);
-  let authorId = session?.user?.id;
-  if (!authorId) {
-    // Unsigned notes are allowed for now — two per minute per address.
-    const limited = await anonLimiter.check(
-      2,
-      `anon-topic:${requestIp(request)}`,
-    );
-    if (!limited.success) {
-      return NextResponse.json(
-        { error: "Slow down — a couple of unsigned notes a minute." },
-        { status: 429 },
-      );
-    }
-  }
-
-  try {
-    const parseResult = createTopicSchema.safeParse(await request.json());
-    if (!parseResult.success) {
-      return NextResponse.json(
-        { error: parseResult.error.errors[0]?.message ?? "Invalid input" },
-        { status: 400 },
-      );
-    }
-    const { title, content } = parseResult.data;
-
-    // Check for offensive/banned words in title or content
-    if (containsBannedWords(title) || containsBannedWords(content)) {
-      return NextResponse.json(
-        { error: "Your topic contains inappropriate language." },
-        { status: 400 },
-      );
-    }
-
-    // The database is only consulted once the note itself has passed.
-    if (!authorId) {
-      if (!(await anonymousWallCeiling(6))) {
-        return NextResponse.json(
-          { error: "The square is busy — try again in a minute." },
-          { status: 429 },
-        );
-      }
-      authorId = await anonymousAuthorId();
-    }
-
-    const topic = await prisma.topic.create({
-      data: {
-        title,
-        content,
-        authorId,
-      },
-      include: {
-        author: { select: { name: true, username: true } },
-        _count: { select: { replies: true } },
-      },
-    });
-
-    // Broadcast new topic event
-    await triggerNewForumTopic({
-      id: topic.id,
-      title: topic.title,
-      content: topic.content,
-      createdAt: topic.createdAt,
-      updatedAt: topic.updatedAt,
-      author: topic.author,
-      _count: topic._count,
-    });
-
-    return NextResponse.json({
-      id: topic.id,
-      title: topic.title,
-      content: topic.content,
-      createdAt: topic.createdAt,
-      updatedAt: topic.updatedAt,
-      authorId: topic.authorId,
-    });
-  } catch {
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 },
-    );
-  }
-}
+export const POST = createTopicPostHandler({
+  getSession: () => getServerSession(authOptions),
+  checkLimit: (limit, token) => anonLimiter.check(limit, token),
+  requestIp,
+  anonymousWallCeiling,
+  anonymousAuthorId,
+  createTopic: (input) => prisma.topic.create(input),
+  broadcastTopic: triggerNewForumTopic,
+});
 
 export async function DELETE(request: Request) {
   const session = await getServerSession(authOptions);

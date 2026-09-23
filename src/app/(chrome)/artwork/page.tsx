@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   title: "Artwork | Maxwell Young",
   description:
     "Every Maxwell Young cover in one place — singles, EPs, and albums from the official catalogue.",
+  alternates: { canonical: "/artwork" },
 };
 
 const releaseYear = (date?: string) => date?.match(/\d{4}$/)?.[0] ?? "";

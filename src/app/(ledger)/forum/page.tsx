@@ -64,12 +64,12 @@ export default async function ForumPage({
     <SquareShell back={{ href: "/", label: "index" }} monument>
       {/* Standfirst: what the room is, and the one thing to do in it. */}
       <section className="max-w-2xl" aria-label="Town square">
-        <p className="text-xl leading-snug sm:text-2xl">
+        <h1 className="mb-0 text-xl leading-snug font-normal sm:text-2xl">
           <span className="font-semibold">Town square.</span>{" "}
           <span className="text-(--ledger-secondary)">
             Notes left around the releases.
           </span>
-        </p>
+        </h1>
         <div className="mt-5 flex flex-wrap items-end justify-between gap-x-8 gap-y-4">
           <p className="mb-0 flex items-baseline gap-x-5 text-sm">
             <Link

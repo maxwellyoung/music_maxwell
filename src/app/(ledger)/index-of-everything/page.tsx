@@ -34,9 +34,9 @@ export default function AppendixPage() {
       </header>
 
       <div className="px-6 pt-16 pb-20 sm:px-12 lg:px-20">
-        <p className="mb-10 font-mono text-xs text-(--ledger-secondary)">
+        <h1 className="mb-10 font-mono text-xs leading-[inherit] font-normal text-(--ledger-secondary)">
           Appendix. The part about the archive.
-        </p>
+        </h1>
 
         <div className="overflow-x-auto">
           <table className="w-full max-w-5xl border-collapse font-mono text-xs leading-6">
