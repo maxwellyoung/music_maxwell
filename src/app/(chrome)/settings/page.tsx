@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { signOut, useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
-import { ArrowLeft, ArrowUpRight, ExternalLink, Save } from "lucide-react";
+import { ArrowLeft, ArrowUpRight, Save } from "lucide-react";
 import { Button } from "~/components/ui/button";
 import {
   Dialog,
@@ -202,14 +202,6 @@ export default function SettingsPage() {
                 <ArrowUpRight className="h-4 w-4 transition-transform group-hover:-translate-y-1 group-hover:translate-x-1" />
               </Link>
             )}
-            <button
-              type="button"
-              onClick={() => router.push("/change-password")}
-              className="mt-5 inline-flex min-h-11 items-center gap-2 text-xs font-bold uppercase tracking-[0.16em] text-foreground/50 transition hover:text-foreground"
-            >
-              Password settings
-              <ExternalLink className="h-3.5 w-3.5" />
-            </button>
           </aside>
 
           <div>
