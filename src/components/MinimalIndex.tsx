@@ -95,7 +95,7 @@ export default function MinimalIndex({
               data-recent-sleeves
             >
               <ol className="flex w-max gap-3">
-                {recentReleases.map((release) => (
+                {recentReleases.map((release, index) => (
                   <li
                     key={release.slug}
                     className="w-[36vw] min-w-34 max-w-40 shrink-0"
@@ -109,6 +109,7 @@ export default function MinimalIndex({
                           src={release.artwork}
                           alt={`${release.title} artwork`}
                           fill
+                          loading={index < 3 ? "eager" : "lazy"}
                           sizes="(max-width: 377px) 136px, (max-width: 444px) 36vw, 160px"
                           className="object-cover"
                         />
