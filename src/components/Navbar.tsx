@@ -5,29 +5,13 @@ import { AnimatePresence, motion } from "framer-motion";
 import { signOut, useSession } from "next-auth/react";
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 
 export default function Navbar() {
-  const pathname = usePathname();
   const { data: session } = useSession();
-  const isForum = pathname.startsWith("/forum");
-  // /classic hosts the pre-minimal homepage and keeps its transparent hero nav.
-  const isHome = pathname === "/classic";
-  // The ledger surfaces (/, /r/*) and /lab experiments carry their own chrome.
-  const isChromeless =
-    pathname === "/" ||
-    pathname.startsWith("/r/") ||
-    pathname.startsWith("/lab");
-
-  if (isChromeless) return null;
 
   return (
     <header
-      className={
-        isHome
-          ? "absolute inset-x-0 top-0 z-30 text-white"
-          : "sticky top-0 z-30 border-b border-foreground/15 bg-background/90 text-foreground backdrop-blur-xl"
-      }
+      className="sticky top-0 z-30 border-b border-foreground/15 bg-background/90 text-foreground backdrop-blur-xl"
     >
       <nav className="mx-auto flex h-20 w-full max-w-[1440px] items-center justify-between px-5 sm:h-24 sm:px-8 lg:px-12">
         <div className="flex flex-1 items-center">
@@ -42,7 +26,7 @@ export default function Navbar() {
               alt=""
               width={254}
               height={352}
-              className={`h-5 w-5 object-contain transition ${isHome ? "invert" : ""}`}
+              className="h-5 w-5 object-contain transition"
               aria-hidden="true"
             />
             <span className="hidden sm:inline">Archive</span>
@@ -60,7 +44,7 @@ export default function Navbar() {
             width={1024}
             height={483}
             priority
-            className={`h-9 w-auto sm:h-11 ${isHome ? "invert" : ""}`}
+            className="h-9 w-auto sm:h-11"
           />
         </Link>
 
@@ -83,7 +67,7 @@ export default function Navbar() {
                       alt=""
                       width={556}
                       height={807}
-                      className={`h-6 w-6 object-contain transition ${isHome ? "invert" : ""}`}
+                      className="h-6 w-6 object-contain transition"
                       aria-hidden="true"
                     />
                   </motion.button>
@@ -115,33 +99,7 @@ export default function Navbar() {
                   </AlertDialog.Content>
                 </AlertDialog.Portal>
               </AlertDialog.Root>
-            ) : (
-              isForum && (
-                <motion.div
-                  key="login"
-                  initial={{ opacity: 0, y: -6 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -6 }}
-                  transition={{ duration: 0.18 }}
-                >
-                  <Link
-                    href="/login"
-                    className="group flex h-11 w-11 items-center justify-center opacity-70 transition hover:text-primary hover:opacity-100 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-current"
-                    aria-label="Log in"
-                    title="Log in"
-                  >
-                    <Image
-                      src="/icons/login.svg"
-                      alt=""
-                      width={288}
-                      height={286}
-                      className="h-6 w-6 object-contain transition"
-                      aria-hidden="true"
-                    />
-                  </Link>
-                </motion.div>
-              )
-            )}
+            ) : null}
           </AnimatePresence>
         </div>
       </nav>
