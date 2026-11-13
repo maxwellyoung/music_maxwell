@@ -38,6 +38,14 @@ const nextConfig = {
       { source: "/turn-it-up", destination: "/r/turn-it-up", permanent: true },
       { source: "/flying", destination: "/r/flying", permanent: true },
       { source: "/wintour", destination: "/r/wintour", permanent: true },
+      // The standalone cover gallery retired 2026-11-13: the archive and
+      // release sheets already show every sleeve.
+      { source: "/artwork", destination: "/", permanent: true },
+      {
+        source: "/artwork/sneakin-drinks",
+        destination: "/r/sneakin-drinks-into-bars",
+        permanent: true,
+      },
     ];
   },
   async headers() {

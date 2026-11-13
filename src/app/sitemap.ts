@@ -29,12 +29,6 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: origin, changeFrequency: "weekly", priority: 1 },
     ...releasePages,
     ...minimalReleasePages,
-    { url: `${origin}/artwork`, changeFrequency: "monthly", priority: 0.5 },
-    {
-      url: `${origin}/artwork/sneakin-drinks`,
-      changeFrequency: "monthly",
-      priority: 0.4,
-    },
     { url: `${origin}/questions`, changeFrequency: "monthly", priority: 0.5 },
     { url: `${origin}/forum`, changeFrequency: "daily", priority: 0.5 },
     { url: `${origin}/quiz`, changeFrequency: "monthly", priority: 0.4 },

@@ -99,22 +99,6 @@ export const updateProfileSchema = z.object({
   }),
 });
 
-// Demo schemas
-export const createDemoSchema = z.object({
-  title: z.string().min(1, "Title is required").max(200, "Title too long"),
-  description: z.string().max(2000, "Description too long").optional(),
-  link: z.string().url("Invalid URL").optional().or(z.literal("")),
-  status: z.enum(["unfinished", "finished", "archived"]).optional(),
-});
-
-export const createDemoCommentSchema = z.object({
-  author: z.string().min(1).max(80).optional(),
-  content: z
-    .string()
-    .min(1, "Content is required")
-    .max(2000, "Comment too long"),
-});
-
 // Report schema
 export const createReportSchema = z.object({
   replyId: z.string().min(1, "Reply ID is required"),
@@ -132,6 +116,4 @@ export type ForgotPasswordInput = z.infer<typeof forgotPasswordSchema>;
 export type ResetPasswordInput = z.infer<typeof resetPasswordSchema>;
 export type SetUsernameInput = z.infer<typeof setUsernameSchema>;
 export type UpdateProfileInput = z.infer<typeof updateProfileSchema>;
-export type CreateDemoInput = z.infer<typeof createDemoSchema>;
-export type CreateDemoCommentInput = z.infer<typeof createDemoCommentSchema>;
 export type CreateReportInput = z.infer<typeof createReportSchema>;

@@ -130,12 +130,7 @@ test("sitemap contains canonical public reads and excludes private or write rout
   const count = (url: string) => urls.filter((candidate) => candidate === url).length;
   const origin = "https://www.maxwellyoung.info";
 
-  for (const path of [
-    "/artwork",
-    "/artwork/sneakin-drinks",
-    "/questions",
-    "/forum",
-  ]) {
+  for (const path of ["/questions", "/forum"]) {
     assert.equal(count(`${origin}${path}`), 1, path);
   }
   for (const release of releases) {
@@ -149,6 +144,7 @@ test("sitemap contains canonical public reads and excludes private or write rout
     "/settings",
     "/lab",
     "/auth/signin",
+    "/artwork",
   ]) {
     assert.equal(count(`${origin}${path}`), 0, path);
   }
