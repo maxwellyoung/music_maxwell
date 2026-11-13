@@ -76,20 +76,12 @@ export default function MinimalIndex({
             className="mt-12 lg:hidden"
             aria-labelledby="recent-releases-heading"
           >
-            <div className="flex max-w-2xl items-baseline justify-between gap-6">
-              <h2
-                id="recent-releases-heading"
-                className="mb-0 text-sm leading-none font-medium"
-              >
-                Recent releases
-              </h2>
-              <Link
-                href="/artwork"
-                className="text-xs text-(--ledger-secondary) underline decoration-[rgb(var(--ledger-ink-rgb)/0.20)] underline-offset-4 transition hover:text-(--ledger-ink) focus-visible:ring-2 focus-visible:ring-(--ledger-ink) focus-visible:outline-hidden"
-              >
-                All artwork
-              </Link>
-            </div>
+            <h2
+              id="recent-releases-heading"
+              className="mb-0 text-sm leading-none font-medium"
+            >
+              Recent releases
+            </h2>
             <div
               className="-mx-6 mt-4 overflow-x-auto px-6 pb-3 sm:-mx-12 sm:px-12"
               data-recent-sleeves
