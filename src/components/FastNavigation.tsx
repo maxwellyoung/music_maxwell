@@ -3,17 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-/**
- * Starts client-side navigation on mouse down instead of waiting for the
- * click that follows on release, which takes the length of the press
- * (typically 80-120 ms) off every in-site navigation. The click still fires
- * afterwards; by then the router is already on that URL, so it is a no-op.
- *
- * Only plain left-button presses on same-origin page links are taken over.
- * Modified clicks, new-tab links, downloads, files and in-page anchors keep
- * the browser's own behaviour, and touch and keyboard are untouched. Add
- * `data-no-fast-nav` to a link (or an ancestor) to opt it out.
- */
+/** Warm internal routes on mouse down while preserving normal click and drag behavior. */
 export function FastNavigation() {
   const router = useRouter();
 
@@ -45,7 +35,7 @@ export function FastNavigation() {
       )
         return;
 
-      router.push(url.pathname + url.search + url.hash);
+      router.prefetch(url.pathname + url.search);
     };
 
     document.addEventListener("mousedown", onMouseDown);
