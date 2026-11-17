@@ -15,6 +15,7 @@ export default function LedgerWordmark({
       alt={decorative ? "" : "Maxwell Young"}
       width={1024}
       height={483}
+      sizes="68px"
       priority
       className={`ledger-wordmark ${className}`}
     />
