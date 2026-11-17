@@ -39,6 +39,7 @@ CI uses Node 24, runs tests/typecheck/lint/build and audits production dependenc
 - `src/components/`: React components; PascalCase filenames.
 - `src/lib/`: data boundaries, authentication, database and media utilities.
 - `src/styles/globals.css`: shared styles and ledger palette. Use `--ledger-secondary` for quiet but readable text; low-opacity rules are decorative only.
+- `src/fonts/`, `public/fonts/Hand-*.woff2`: subset web fonts and their generated `next/font` declarations. Never edit by hand and never import `geist/font/*` directly: `scripts/fonts/subset.py` (run by hand with `uv run`, not part of the build) writes them from the `geist` package and `scripts/fonts/sources/`. Rerun it when content needs a character outside the kept set, a new weight below 400 or OpenType feature is used, or `geist` is upgraded; its header lists every trigger. Pixel-diff after any rerun.
 - `prisma/schema.prisma`: database schema.
 - `next.config.js`: redirects, security headers, image configuration.
 - Use `~/` imports in application code. Relative `.ts` imports are used by Node tests and their pure utility dependencies.

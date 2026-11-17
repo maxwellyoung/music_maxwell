@@ -1,5 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import {
+  GeistPixelCircle,
+  GeistPixelCircleExt,
+  GeistPixelLine,
+  GeistPixelLineExt,
+} from "~/fonts/geist-pixel";
+
+// The only page that draws the pixel faces, so the only one that loads them.
+const pixelFonts = `${GeistPixelLine.variable} ${GeistPixelLineExt.variable} ${GeistPixelCircle.variable} ${GeistPixelCircleExt.variable}`;
 
 export const metadata: Metadata = {
   title: "Privacy and account data | Maxwell Young",
@@ -10,7 +19,9 @@ export const metadata: Metadata = {
 
 export default function PrivacyPage() {
   return (
-    <main className="min-h-screen bg-[#f2ede4] px-5 py-16 text-[#07090d] sm:px-8 sm:py-24 lg:px-12">
+    <main
+      className={`${pixelFonts} min-h-screen bg-[#f2ede4] px-5 py-16 text-[#07090d] sm:px-8 sm:py-24 lg:px-12`}
+    >
       <div className="mx-auto grid max-w-[1120px] gap-10 lg:grid-cols-[0.28fr_0.72fr]">
         <p className="font-pixel-dot text-xs uppercase tracking-[0.14em] text-[#3157ec]">
           Site note / 01

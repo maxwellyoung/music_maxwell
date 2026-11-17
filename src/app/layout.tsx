@@ -1,9 +1,9 @@
 import "~/styles/globals.css";
-import { GeistPixelCircle, GeistPixelLine } from "geist/font/pixel";
-import { GeistSans } from "geist/font/sans";
 import { type Metadata } from "next";
 import { Analytics } from "@vercel/analytics/next";
 import JsonLd from "~/components/JsonLd";
+import { FastNavigation } from "~/components/FastNavigation";
+import { GeistSans, GeistSansExt } from "~/fonts/geist-sans";
 
 const appUrl =
   process.env.NEXT_PUBLIC_APP_URL ?? "https://www.maxwellyoung.info";
@@ -36,7 +36,7 @@ export default function RootLayout({
     <html
       lang="en"
       suppressHydrationWarning
-      className={`${GeistSans.variable} ${GeistPixelLine.variable} ${GeistPixelCircle.variable}`}
+      className={`${GeistSans.variable} ${GeistSansExt.variable}`}
     >
       <head>
         <script
@@ -67,6 +67,7 @@ export default function RootLayout({
         <link rel="manifest" href="/icons/site.webmanifest" />
       </head>
       <body className="flex min-h-screen flex-col overflow-x-hidden">
+        <FastNavigation />
         <JsonLd
           data={{
             "@context": "https://schema.org",

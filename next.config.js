@@ -10,6 +10,11 @@ import { fileURLToPath } from "node:url";
 const nextConfig = {
   outputFileTracingRoot: dirname(fileURLToPath(import.meta.url)),
   images: {
+    // AVIF first: smaller than WebP for the cover art.
+    formats: ["image/avif", "image/webp"],
+    // Optimized images are cached for 31 days instead of the 4-hour default.
+    // A replaced image needs a new filename to show sooner.
+    minimumCacheTTL: 2678400,
     qualities: [75, 85, 90],
     remotePatterns: [
       {
@@ -85,6 +90,9 @@ const nextConfig = {
     ];
   },
   experimental: {
+    // Styles ship inside the HTML, so first paint needs one round trip
+    // instead of two. The whole stylesheet is small (Tailwind).
+    inlineCss: true,
     serverActions: {
       bodySizeLimit: "2mb",
     },
